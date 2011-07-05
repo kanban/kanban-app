@@ -1,0 +1,105 @@
+.header {
+    border: 1px silver solid;
+    background: #EEEEEE;
+    display: inline-block;
+    width: 100%;
+}
+
+.button {
+    border: 1px white solid;
+    height: 32px;
+    margin: 5px 5px 5px 5px;
+    cursor: pointer;
+	float: left;     
+}
+
+.textOnButton {
+    font: normal 15px verdana;
+    padding: 6px 6px 0px 32px;
+}
+
+.user-home {
+    position: absolute;	
+	font: normal 11px verdana;
+    right: 10px;
+	top: 15px;
+		
+}
+
+.version {
+    position: absolute;	
+	font: normal 11px verdana;
+    right: 10px;
+    top: 30px;
+}	
+
+
+div#add-top-level-item-button {
+    background: url('images/list-add-big.png') top left no-repeat;
+    background-color: #DDDDDD;
+    
+}
+
+div#backlog-button, div#wall, div#complete, div#burn-up-chart-button {
+    background-color: #DDDDDD;
+}
+
+div#print {
+    background-color: #DDDDDD;
+}
+
+div#cumulative-flow-chart-1-button {
+    background: url('images/cumulative-flow-chart.png') top left no-repeat;
+    background-color: #DDDDDD;
+}
+
+div#cumulative-flow-chart-2-button {
+    background: url('images/cumulative-flow-chart.png') top left no-repeat;
+    background-color: #DDDDDD;
+}
+
+div#cycle-time-chart-1-button {
+    background: url('images/cycle-time-chart.png') top left no-repeat;
+    background-color: #DDDDDD;
+}
+
+div#cycle-time-chart-2-button {
+    background: url('images/cycle-time-chart.png') top left no-repeat;
+    background-color: #DDDDDD;
+}
+
+div#newProject {
+    background-color: #DDDDDD;
+}
+div#updateSettings {
+    background-color: #DDDDDD;
+}
+
+div#chart {
+    background-color: #DDDDDD;
+}
+
+div#add-top-level-item-button:hover, div#backlog-button:hover, div#wall:hover, div#complete:hover, div#print:hover,
+ div#cumulative-flow-chart-1-button:hover, div#cumulative-flow-chart-2-button:hover,
+ div#cycle-time-chart-1-button:hover, div#cycle-time-chart-2-button:hover, div#burn-up-chart-button:hover, div#newProject:hover
+ {
+    background-color: #CCCCCC;
+}
+
+.projectPicker {
+  font-family: Verdana;
+  font-size: 12px;
+  margin: 5px 5px 5px 5px;    
+  
+ }
+
+td.dragHandle {
+	
+}
+
+td.showDragHandle {
+	background-image: url(images/updown.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	cursor: move;
+} 

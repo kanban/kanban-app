@@ -1,0 +1,40 @@
+The Kanban App is released under the MIT License with copyright "Copyright (c) 2011 MetService" (see
+licenses/mit-license-kanban.txt). This license covers the entire distribution except the third-party jars in the
+WEB-INF/lib directory and the jquery*.js files.
+
+The majority of the third-party jars contain their own license information (either in the META-INF directory or the root
+of the jar file). For those that don't, see below:
+
+aopalliance-1.0.jar         public domain
+
+jcommon-1.0.16.jar,
+jfreechart-1.0.13.jar       licensed under the LGPL 2.1
+
+jstl-1.2.jar                licensed under the CDDL 1.0 and the GPL 2 with a classpath exception (see
+                            licenses/classpath-exception.txt)
+
+logkit-1.0.1.jar            licensed under the Apache 1.1 license
+
+opencsv-2.1.jar             licensed under the Apache 2.0 license
+
+slf4j-*-1.6.0.jar           licensed under the MIT license (see licenses/mit-license-slf4j.txt)
+
+spring-*-3.0.5.RELEASE.jar  licensed under the Apache 2.0 license (see licenses/spring-notice.txt for the notice file)
+
+
+The jquery*.js files are dual licensed under the MIT license (see licenses/mit-license-jquery.txt) and under the GPL 2.
+
+
+These text of the licenses can be found in the following files:
+
+Apache 1.1  licenses/asl-1.1.txt
+Apache 2.0  licenses/asl-2.0.txt
+CDDL 1.0    licenses/cddl-1.0.txt
+GPL 2       licenses/gpl-2.txt
+LGPL 2.1    licenses/lgpl-2.1.txt
+MIT         see above
+
+
+A reasonable attempt has been made to ensure that this third-party licensing information is correct and that the jars
+are distributed in accordance with the relevant licenses. However, the distributors do not warrant the accuracy of this
+license information or that this distribution complies with its license obligations.

@@ -1,0 +1,61 @@
+If you touch one of these areas with your changes, consider fixing the items below as you go.
+
+** Deployment **
+
+Rename KANBAN_HOME to something like metservice.kanban.home to better match system property naming conventions.
+
+** JSP **
+
+Use something more sophisticated than a JSP import of the header.
+Get the board name from the controller (not through JavaScript inspection of the URL). The board name extraction is brittle. If you add or delete directories from the context path it breaks. [header-javascript.js]
+add.jsp and edit.jsp should be the same page
+XHTMLify the rest of the JSP (currently it's just project.jsp)
+Consider separate .js and (majority of) .css files from xhtml file (making .js and .css static?).
+
+** Phase and PhaseSequenceIndex **
+
+Better name than "PhaseSequenceIndex", maybe "PhaseDefinition".
+Maybe make it PhaseSequenceIndex immutable.
+Why are phases equal if their names are equal? What's going on in PhaseTest?
+
+** KanbanService and Controller **
+
+Controller tests should clean up temporary files and should not modify the checked in feature.csv and story.csv files. In other words, port KanbanControllerLegacyTest to KanbanControllerTest.
+Perhaps remove KanbanService.
+Perhaps rename KanbanService to something like KanbanHome or KanbanProjectCollection.
+DefaultKanbanService.getKanban().
+Use "project" instead of "projectName" throughout controller.
+Use a more Spring-like mechanism for passing phase dates to editFeature on the controller.
+Better transaction control.
+Break up controller into separate controllers depending on the granularity of data they operate on. 
+
+** KanbanProject **
+
+Don't hold the kanban configuration as a property of kanbanproject and remove the constructor that takes a configuration.
+Store just enough configuration to satisfy the client code.
+
+** Changes affecting a lot of classes **
+
+Following BDD-style test naming convention for all tests.
+Use joda-time for dates.
+The names TestKanbanBoardBuilder and KanbanBoardBuilder are too similar considering they are unconnected classes.
+The 6 ignored tests.
+
+** WorkItemTree **
+
+Work item tree should be a proper data structure, with parents having a direct reference to their children and vice versa. This structure should be assembled when read out of the file. The "Work Item Tree" class should be removed or scaled down.
+And there should be a root work item!
+
+** POM **
+
+Remove warning
+
+** Other projects **
+
+Remove the need for general utils dependencies exclusions.
+Report dependency issues to JWebUnit.
+
+** Future **
+
+In the end-to-end test, when JUnit 4.9 comes out use a @ClassRule for the Kanban home directory
+

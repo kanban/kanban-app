@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+<TITLE></TITLE>
+</HEAD>
+<BODY LANG="en-NZ" DIR="LTR">
+    <H1>How to set up the Kanban App</H1>
+    <H2>Prerequisites</H2>
+    <P>The Kanban App is a Java web application archive
+        (&quot;war&quot; file). To run it you need to have a box running
+        a Java web application server such as Tomcat or Jetty. Ideally
+        you should have experience with deploying Java web applications
+        to your application server and you will need to know the host
+        name and port number of your application server.</P>
+    <H2>Deploy kanban.war</H2>
+    <P>Deploy the kanban.war file to the web application server.
+        Application servers typically allow you to do this by copying
+        the war file to the application server's webapps directory.
+        There may also be an &quot;manager&quot; website you can connect
+        to that will allow you to deploy the war file by uploading it
+        from a web page.</P>
+    <H2>Verify deployment</H2>
+    <P>Verify the installation. Navigate to
+        http://&lt;host&gt;:&lt;port&gt;/kanban. If you are connecting
+        from the box that is running the web application server you can
+        use &quot;localhost&quot; for &lt;host&gt;. The port is probably
+        either 80 (the standard port) or 8080. If you connect to this
+        URL you should see a page like this:
+    <DIV STYLE="border: 1px solid; padding: 0px 15px 0px 15px">
+        <h1>Kanban App</h1>
+        <table>
+            <tr>
+                <th style="text-align: left">Version</th>
+                <td>24</td>
+            </tr>
+            <tr>
+                <th style="text-align: left">Kanban Home</th>
+                <td>/home/username/.kanban</td>
+            </tr>
+        </table>
+        <p>
+            <a href="">Click here</a> to create the Kanban Home
+            directory with a sample project.
+        </p>
+    </DIV>
+    <H2>Configure a project</H2>
+    <P>Click where it says “click here” and the Kanban App will
+        create you a sample project to experiment with. You can create
+        other projects by clicking the “Create Project” button from
+        within the sample project.</P>
+    <H2>Verify configuration</H2>
+    <P>You should now see one project listed, the sample project.
+        Click on the project and check that you can navigate to the
+        Backlog, Wall and Completed pages. Experiment with creating
+        features and stories and verify that you can move them through
+        all their phases.</P>
+    <H1>The project configuration</H1>
+    <P>We don't have a configuration UI at this stage, so to set up
+        a project you need to copy an existing project or build the
+        project structure and create a kanban.properties file by hand:</P>
+    <PRE>&lt;kanban home&gt;/&lt;project name&gt;/kanban.properties</PRE>
+    <H2>Declare the work-item types</H2>
+    <P>The work item types are the categories of work item like
+        features and stories. You declare them like this:</P>
+    <PRE>workItemTypes=feature,story </PRE>
+    <H2>Configure the work-item types</H2>
+    <P>Then, for each work item type you specify its parent, its
+        phases and the colours to use on the web page:</P>
+    <PRE>workItemTypes.feature.parent=root 
+workItemTypes.feature.phases=Backlog,Design,Implement,Accept,Complete 
+workItemTypes.feature.cardColour=6698FF 
+workItemTypes.feature.backgroundColour=C6DEFF 
+
+workItemTypes.story.parent=feature 
+workItemTypes.story.phases=Development,Test 
+workItemTypes.story.cardColour=ECD672 
+workItemTypes.story.backgroundColour=FAF8CC</PRE>
+    <P>The &quot;parent&quot; property creates a hierarchy. In this
+        case, stories are subtypes of features and features are the root
+        work item type.</P>
+    <H2>Configure the board phases</H2>
+    <P>Finally you specify which phases should appear on the Wall
+        and Completed boards:</P>
+    <PRE>boards.wall=Design,Implement,Development,Test,Accept 
+boards.completed=Complete</PRE>
+    <P>So in this case the &quot;wall&quot; board contains phases
+        for both features and stories, but the &quot;completed&quot;
+        board only contains features. The &quot;backlog&quot; board only
+        ever contains the top-level work items (i.e. features), and it
+        is hard-coded to list items in the first phase in the sequence
+        (in our example, the Backlog phase).</P>
+    <P>There are error messages in the stack trace if the project
+        configuration is wrong. Hopefully these are pretty clear.</P>
+    <P>
+</BODY>
+</HTML>
