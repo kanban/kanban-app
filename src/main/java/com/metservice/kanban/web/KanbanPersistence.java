@@ -43,4 +43,8 @@ public class KanbanPersistence {
             file.write(workItemsForItem);
         }
     }
+    
+    public Collection<KanbanCsvFile> getFiles() {
+        return files;
+    }
 }
