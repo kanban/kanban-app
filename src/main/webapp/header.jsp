@@ -15,7 +15,8 @@
 
 <%
 KanbanProject project = (KanbanProject) request.getAttribute("project");
-TreeNode<WorkItemType> topLevel = project.getWorkItemTypes().getRoot();
+WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
+TreeNode<WorkItemType> topLevel = workItemTypes.getRoot();
 WorkItemType secondLevel = null;
 if (topLevel.hasChildren()) {
 	secondLevel = topLevel.getChild(0).getValue();
@@ -28,6 +29,7 @@ request.setAttribute("service", service);
 request.setAttribute("listOfProjects", listOfProjects);
 request.setAttribute("currentProjectName", currentProjectName);
 request.setAttribute("secondLevel", secondLevel);
+request.setAttribute("workItemTypes", workItemTypes);
 %>
 <form id="header" method="post" action="">
     <div class="header">
@@ -40,6 +42,12 @@ request.setAttribute("secondLevel", secondLevel);
 				        <option <c:if test="${projectName == currentProjectName}">selected</c:if>>${projectName}</option>
 					</c:forEach>
 			</select>        
+        </div>
+        <div id="download">
+            Download (csv) 
+            <c:forEach var="workItemType" items="${workItemTypes}">
+                <div class="download-workitemtype" id="${workItemType.name}-download-button" onclick="javascript:download('${currentProjectName}', '${workItemType.name}');">${workItemType.name}</div>
+            </c:forEach>
         </div>
         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" ><div class ="textOnButton">Add ${project.workItemTypes.root.value}</div></div>
         <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
