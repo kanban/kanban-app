@@ -93,8 +93,8 @@
 					<includes>
 						<include>**/*Test.java</include>
 					</includes>
-					<!--  For some reason Jetty can't find the TLD files with the system 
-						class loader. --> 
+					<!-- For some reason Jetty can't find the TLD files with the system 
+						class loader. -->
 					<useSystemClassLoader>false</useSystemClassLoader>
 				</configuration>
 			</plugin>
@@ -291,8 +291,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:svn:svn://code/ISDEV/Java/kanban/trunk</connection>
+		<connection>scm:git:git@github.com:kanban/kanban-app.git</connection>
 	</scm>
+
 	<distributionManagement>
 		<repository>
 			<id>metservice-release-repository</id>
