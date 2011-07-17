@@ -294,15 +294,9 @@
 	</scm>
 
 	<distributionManagement>
-		<repository>
-			<id>metservice-release-repository</id>
-			<name>MetService Nexus Release</name>
-			<url>http://code.met.co.nz:8080/nexus/content/repositories/releases</url>
+	    <repository>
+	        <id>GitHub</id>
+	        <url>https://github.com/kanban/kanban-app/downloads</url>
 		</repository>
-		<snapshotRepository>
-			<id>metservice-snapshot-repository</id>
-			<name>MetService Nexus Snapshots</name>
-			<url>http://code.met.co.nz:8080/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
 	</distributionManagement>
 </project>
