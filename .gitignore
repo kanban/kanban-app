@@ -1,4 +1,2 @@
-### Maven target dir ###
-target/
-/.settings/
-*.temp
+/target
+/bin
