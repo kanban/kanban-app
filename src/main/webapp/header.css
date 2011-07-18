@@ -86,7 +86,8 @@ div#chart {
 
 div#add-top-level-item-button:hover, div#backlog-button:hover, div#wall:hover, div#complete:hover, div#print:hover,
  div#cumulative-flow-chart-1-button:hover, div#cumulative-flow-chart-2-button:hover,
- div#cycle-time-chart-1-button:hover, div#cycle-time-chart-2-button:hover, div#burn-up-chart-button:hover, div#newProject:hover
+ div#cycle-time-chart-1-button:hover, div#cycle-time-chart-2-button:hover, div#burn-up-chart-button:hover, 
+ div#newProject:hover, div.csvdownload:hover
  {
     background-color: #CCCCCC;
 }
