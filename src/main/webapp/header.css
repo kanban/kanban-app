@@ -68,6 +68,11 @@ div#cycle-time-chart-2-button {
     background-color: #DDDDDD;
 }
 
+div.csvdownload {
+    background: url('images/document-save-2.png') top left no-repeat;
+    background-color: #DDDDDD;
+}
+
 div#newProject {
     background-color: #DDDDDD;
 }

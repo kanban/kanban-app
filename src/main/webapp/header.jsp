@@ -43,12 +43,6 @@ request.setAttribute("workItemTypes", workItemTypes);
 					</c:forEach>
 			</select>        
         </div>
-        <div id="download">
-            Download (csv) 
-            <c:forEach var="workItemType" items="${workItemTypes}">
-                <div class="download-workitemtype" id="${workItemType.name}-download-button" onclick="javascript:download('${currentProjectName}', '${workItemType.name}');">${workItemType.name}</div>
-            </c:forEach>
-        </div>
         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" ><div class ="textOnButton">Add ${project.workItemTypes.root.value}</div></div>
         <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
         <div id="wall" class="button" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
@@ -65,6 +59,9 @@ request.setAttribute("workItemTypes", workItemTypes);
 		</c:if>
 
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
+        <c:forEach var="workItemType" items="${workItemTypes}">
+            <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${currentProjectName}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
+        </c:forEach>
         <div id="newProject" class="button" onclick="javascript:changeSettings(true);" ><div class ="textOnButton">New Project</div></div>
     </div>
 </form>
