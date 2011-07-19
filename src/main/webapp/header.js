@@ -3,6 +3,11 @@ function getContext() {
     return "/" + pathArray[1];
 }
 
+function getRoot() {
+    var pathArray = location.pathname.split('/'); 
+    return "/" + pathArray[1] + "/" + pathArray[2];
+}
+
 function getProjectUrl() {
     var pathArray = location.pathname.split('/'); 
     return "/" + pathArray[1] + "/" + pathArray[2] + "/" + pathArray[3];
@@ -41,6 +46,11 @@ function chart(chartName, workItemTypeName) {
 
 function changeSettings(createNewProject) {
     document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/edit-project?createNewProject=" + createNewProject;
+    document.forms["header"].submit();
+}
+
+function download(currentProjectName, workItemTypeName) {
+    document.forms["header"].action = getRoot() + "/download/" + currentProjectName + "?workItemTypeName=" + workItemTypeName;
     document.forms["header"].submit();
 }
 
