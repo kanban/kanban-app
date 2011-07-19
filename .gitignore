@@ -1,2 +1,2 @@
-### Maven target dir ###
-target/
+/target
+/bin
