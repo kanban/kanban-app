@@ -21,9 +21,9 @@ slf4j-*-1.6.0.jar           licensed under the MIT license (see licenses/mit-lic
 
 spring-*-3.0.5.RELEASE.jar  licensed under the Apache 2.0 license (see licenses/spring-notice.txt for the notice file)
 
-
 The jquery*.js files are dual licensed under the MIT license (see licenses/mit-license-jquery.txt) and under the GPL 2.
 
+document-save-2.png         licensed under GPL2 (http://openiconlibrary.sourceforge.net/gallery2/open_icon_library-full/icons/png/32x32/actions/document-save-2.png_
 
 These text of the licenses can be found in the following files:
 
@@ -32,6 +32,7 @@ Apache 2.0  licenses/asl-2.0.txt
 CDDL 1.0    licenses/cddl-1.0.txt
 GPL 2       licenses/gpl-2.txt
 LGPL 2.1    licenses/lgpl-2.1.txt
+LGPL 3      licenses/lgpl-3.txt
 MIT         see above
 
 
