@@ -15,7 +15,8 @@
 
 <%
 KanbanProject project = (KanbanProject) request.getAttribute("project");
-TreeNode<WorkItemType> topLevel = project.getWorkItemTypes().getRoot();
+WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
+TreeNode<WorkItemType> topLevel = workItemTypes.getRoot();
 WorkItemType secondLevel = null;
 if (topLevel.hasChildren()) {
 	secondLevel = topLevel.getChild(0).getValue();
@@ -28,6 +29,7 @@ request.setAttribute("service", service);
 request.setAttribute("listOfProjects", listOfProjects);
 request.setAttribute("currentProjectName", currentProjectName);
 request.setAttribute("secondLevel", secondLevel);
+request.setAttribute("workItemTypes", workItemTypes);
 %>
 <form id="header" method="post" action="">
     <div class="header">
@@ -57,6 +59,9 @@ request.setAttribute("secondLevel", secondLevel);
 		</c:if>
 
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
+        <c:forEach var="workItemType" items="${workItemTypes}">
+            <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${currentProjectName}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
+        </c:forEach>
         <div id="newProject" class="button" onclick="javascript:changeSettings(true);" ><div class ="textOnButton">New Project</div></div>
     </div>
 </form>

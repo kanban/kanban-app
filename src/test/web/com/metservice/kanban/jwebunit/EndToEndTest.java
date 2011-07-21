@@ -4,6 +4,8 @@ import static com.metservice.kanban.KanbanService.KANBAN_HOME_PROPERTY_NAME;
 import static com.metservice.kanban.jwebunit.BoardPage.openProject;
 import static com.metservice.kanban.tests.util.TestUtils.createTestProject;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.SystemUtils;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.jetty.server.Server;
@@ -13,6 +15,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class EndToEndTest {
 
@@ -104,5 +108,13 @@ public class EndToEndTest {
         ChartPage chartPage = wallPage.clickBurnUpChartButton();
         chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature");
     }
-
+    
+    @Test
+    public void userCanDownloadStories() throws IOException {
+        BoardPage wallPage = openProject("Test project");
+        String responseContent = wallPage.clickDownloadFeaturesButton();
+        File expectedFile = new File(SystemUtils.getUserDir(), "/src/test/resources/end-to-end-test/feature.csv");
+        String expectedContent = FileUtils.readFileToString(expectedFile);
+        assertThat(responseContent, is(expectedContent));
+    }
 }

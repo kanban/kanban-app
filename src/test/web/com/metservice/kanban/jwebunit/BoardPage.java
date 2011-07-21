@@ -75,6 +75,10 @@ public class BoardPage {
         return new ChartPage(tester);
     }
     
+    public String clickDownloadFeaturesButton() {
+        tester.clickElementByXPath("//div[@id='feature-download-button']");
+        return tester.getPageSource();
+    }
 
     public void assertFeatureNotPresent(String name) {
         tester.assertElementNotPresentByXPath("//td[.='" + name + "']");
