@@ -1,6 +1,7 @@
 package com.metservice.kanban.model;
 
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
+import com.metservice.kanban.utils.WorkingDayUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.joda.time.LocalDate;
@@ -145,6 +146,27 @@ public class WorkItem {
             }
         }
         return phaseOnDate;
+    }
+    
+    public Map<String, Integer> getPhaseDurations() {
+        Map<String, Integer> phaseDurations = new HashMap<String, Integer>();
+        
+        LocalDate previousDate = null;
+        String previousPhase = null;
+        for (String phase : this.getType().getPhases()) {
+            LocalDate date = this.getDate(phase);
+            if (date == null) {
+                date = new LocalDate();
+            }
+            if (previousDate != null && previousPhase != null) {
+                int diffInDays = WorkingDayUtils.getWorkingDaysBetween(previousDate, date);
+                phaseDurations.put(previousPhase, diffInDays);
+            }
+            previousDate = date;
+            previousPhase = phase;
+        }
+        
+        return phaseDurations;
     }
 
     private String determineCurrentPhase() {
