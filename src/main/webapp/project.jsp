@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -82,9 +83,9 @@
 .itemName {
 	width: 135px;
 	height: 20px;
-	position: relative;
-	top: 0px;
-	left: 0px;
+	position: absolute;
+	top: 5px;
+	left: 2px;
 	font-family: arial;
 	font-size: 12px;
 	color: #383838;
@@ -100,60 +101,60 @@
 .upIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 130px;
-	top: -18px;
+	top: 5px;
 }
 
 .advanceIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 140px;
-	top: -13px;
+	top: 26px;
 }
 
 .downIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 130px;
-	top: -8px;
+	top: 47px;
 }
 
 .editIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 0px;
-	top: -23px;
+	top: 50px;
 }
 
 .addIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 20px;
-	top: -39px;
+	top: 50px;
 }
 
 .size {
 	border: 1px #BBBBBB dotted;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 13px;
 	left: 40px;
-	top: -53px;
+	top: 50px;
 	font-family: arial;
 	font-style: italic;
 	font-size: 9px;
@@ -163,11 +164,11 @@
 
 .importance {
 	border: 1px #BBBBBB dotted;
-	position: relative;
+	position: absolute;
 	width: 36px;
 	height: 13px;
 	left: 67px;
-	top: -68px;
+	top: 50px;
 	font-family: arial;
 	font-style: italic;
 	font-size: 9px;
@@ -202,6 +203,7 @@
 	width: 155px;
 	margin: 1px 1px 1px 1px;
 	padding: 3px 3px 3px 3px;
+    position: relative;
 }
 
 .<%=name%>:hover {
@@ -278,7 +280,23 @@
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>')"
                             id="work-item-<%=item.getId()%>"
                             class="<%=item.getType().getName()%>">
-                            <div class="itemName">
+                            
+                            <div class="ageIndicator" style="float: left">
+                                <% 
+                                Map<String, Integer> phaseDurations = item.getPhaseDurations();
+                                for (String phase : item.getType().getPhases()) {
+                                    if (phaseDurations.containsKey(phase)) {
+                                        for (int i=0; i < phaseDurations.get(phase); i++) {
+                                %>
+                                        <div style="height:3px; width:3px; color: red; background-color: green; margin-bottom: 1px; margin-right: 1px; float: left"></div>
+                                <%
+                                        }
+                                    }
+                                }
+                                %>
+                            </div>
+                                
+                                <div class="itemName">
 								<%
 									String formattedId = "" + item.getId();
 								    if (item.isExcluded()) {
@@ -323,6 +341,7 @@
                                     }
                                 %>
                             </div>
+                            
                             <div class="editIcon">
                                 <img
                                     class="edit"
@@ -371,8 +390,7 @@
                             <%
                                 }
                             %>
-
-
+                            
 
                         </div></td>
                     <%
