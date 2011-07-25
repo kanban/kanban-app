@@ -1,19 +1,27 @@
 package com.metservice.kanban.model;
 
-import static org.hamcrest.core.Is.is;
+import java.awt.Color;
 import org.junit.Assert;
 import org.junit.Test;
-import com.metservice.kanban.model.Colour;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 
 
 public class ColourTest {
 
     @Test
-    public void testValidColour() {
+    public void testValidHexColour() {
         new Colour("123456");
         new Colour("AABBCC");
         new Colour("BCCD44");
         new Colour("000000");
+    }
+    
+    @Test
+    public void testValidColor() {
+        Colour colour = new Colour(new Color(0, 128, 255));
+        assertThat(colour.toString(), is("#0080FF"));
     }
 
     @Test(expected = IllegalArgumentException.class)

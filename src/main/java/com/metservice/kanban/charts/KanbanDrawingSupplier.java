@@ -15,7 +15,7 @@ public class KanbanDrawingSupplier extends DefaultDrawingSupplier {
         this.numberOfSeries = numberOfSeries;
     }
 
-    private static Color[] getColours(int numberOfSeries) {
+    public static Color[] getColours(int numberOfSeries) {
         Color[] colours = new Color[numberOfSeries];
         for (int i = 0; i < numberOfSeries; i++) {
             double rawHue = (double) i / (double) numberOfSeries;
@@ -30,7 +30,7 @@ public class KanbanDrawingSupplier extends DefaultDrawingSupplier {
         super(paintSequence, paintSequence, null, null, null, null);
 
     }
-
+    
     public int getNumberOfSeries() {
         return numberOfSeries;
     }

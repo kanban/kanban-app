@@ -1,3 +1,9 @@
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Arrays"%>
+<%@page import="java.awt.Color"%>
+<%@page import="java.awt.Paint"%>
+<%@page import="com.metservice.kanban.charts.KanbanDrawingSupplier"%>
 <%@page import="java.util.Map"%>
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -284,11 +290,16 @@
                             <div class="ageIndicator" style="float: left">
                                 <% 
                                 Map<String, Integer> phaseDurations = item.getPhaseDurations();
-                                for (String phase : item.getType().getPhases()) {
+                                List<String> phases = item.getType().getPhases();
+                                
+                                Color[] colors = KanbanDrawingSupplier.getColours(phases.size());
+                                Iterator<Color> colorIterator = Arrays.asList(colors).iterator();
+                                for (String phase : phases) {
+                                    Colour currentColor = new Colour(colorIterator.next());
                                     if (phaseDurations.containsKey(phase)) {
                                         for (int i=0; i < phaseDurations.get(phase); i++) {
                                 %>
-                                        <div style="height:3px; width:3px; color: red; background-color: green; margin-bottom: 1px; margin-right: 1px; float: left"></div>
+                                        <div style="height:3px; width:3px; color: red; background-color: <%=currentColor.toString()%>; margin-bottom: 1px; margin-right: 1px; float: left"></div>
                                 <%
                                         }
                                     }
