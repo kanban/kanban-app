@@ -153,10 +153,11 @@ public class WorkItem {
         
         LocalDate previousDate = null;
         String previousPhase = null;
+        LocalDate today = new LocalDate();
         for (String phase : this.getType().getPhases()) {
             LocalDate date = this.getDate(phase);
             if (date == null) {
-                date = new LocalDate();
+                date = today;
             }
             if (previousDate != null && previousPhase != null) {
                 int diffInDays = WorkingDayUtils.getWorkingDaysBetween(previousDate, date);
@@ -164,6 +165,11 @@ public class WorkItem {
             }
             previousDate = date;
             previousPhase = phase;
+        }
+        //Last item will always have a duration between it's start date and now.
+        if (previousDate != null && previousPhase != null) {
+            int diffInDays = WorkingDayUtils.getWorkingDaysBetween(previousDate, today);
+            phaseDurations.put(previousPhase, diffInDays);
         }
         
         return phaseDurations;

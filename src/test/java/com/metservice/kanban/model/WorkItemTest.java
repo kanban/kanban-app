@@ -197,19 +197,38 @@ public class WorkItemTest {
     }
     
     @Test
-    public void getPhaseDurationsHasCorrectDurations() throws ParseException{
+    public void getPhaseDurationsHasCorrectDurationsPartial() throws ParseException{
         WorkItem workItem = new WorkItem(1, type);
         workItem.setDate("phase1", formatter.parse("10/07/2011"));
         workItem.setDate("phase2", formatter.parse("18/07/2011"));
 
         Map<String, Integer> phaseDurations = workItem.getPhaseDurations();
         
-        assertThat(phaseDurations.keySet().size(), is(3));
+        assertThat(phaseDurations.keySet().size(), is(4));
         assertThat(phaseDurations.get("phase1"), is(5));
         LocalDate today = new LocalDate();
         int days = WorkingDayUtils.
                 getWorkingDaysBetween(formatter.parse("18/07/2011"), today);
         assertThat(phaseDurations.get("phase2"), is(days));
-        assertThat(phaseDurations.containsKey("phase3"), is(false));
+        assertThat(phaseDurations.get("phase3"), is(0));
+    }
+    
+    @Test
+    public void getPhaseDurationsHasCorrectDurationsComplete() throws ParseException{
+        WorkItem workItem = new WorkItem(1, type);
+        workItem.setDate("phase1", formatter.parse("10/07/2011"));
+        workItem.setDate("phase2", formatter.parse("18/07/2011"));
+        workItem.setDate("phase3", formatter.parse("25/07/2011"));
+
+        Map<String, Integer> phaseDurations = workItem.getPhaseDurations();
+        
+        assertThat(phaseDurations.keySet().size(), is(4));
+        assertThat(phaseDurations.get("phase1"), is(5));
+        assertThat(phaseDurations.get("phase2"), is(5));
+        
+        LocalDate today = new LocalDate();
+        int days = WorkingDayUtils.
+                getWorkingDaysBetween(formatter.parse("25/07/2011"), today);
+        assertThat(phaseDurations.get("phase3"), is(days));
     }
 }
