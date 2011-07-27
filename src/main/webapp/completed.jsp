@@ -114,42 +114,6 @@
 	text-align: left;
 }
 
-.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover
-	{
-	-moz-opacity: 0.5;
-	opacity: 0.5;
-}
-
-.upIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 5px;
-}
-
-.advanceIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 140px;
-	top: 26px;
-}
-
-.downIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 47px;
-}
-
 .editIcon {
 	-moz-opacity: 1;
 	opacity: 1;
@@ -157,16 +121,6 @@
 	width: 16px;
 	height: 16px;
 	left: 0px;
-	top: 50px;
-}
-
-.addIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 20px;
 	top: 50px;
 }
 
@@ -198,29 +152,20 @@
 	color: #383838;
 }
 
-.markedToPrint {
-	border: 1px silver solid;
-	background: #EEEEEE;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-}
-
 .horizontalLine {
 	border-top: 2px black solid;
 }
 
-<%			String boardType = (String) request.getAttribute("boardType");
-            BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
+<%		
+    String boardType = (String) request.getAttribute("boardType");
+    BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
 
-            WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
-            for (WorkItemType workItemType : workItemTypes) {
-                String name =
-                    workItemType.getName();
-                Colour cardColour = workItemType.getCardColour();
-                Colour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
-	background: <%=cardColour.toString()%>;
+    WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
+    for (WorkItemType workItemType : workItemTypes) {
+        String name = workItemType.getName();
+ %> 
+.<%=name%> {
+	background: ${type.cardColour};
 	height: 60px;
 	width: 155px;
 	margin: 1px 1px 1px 1px;
@@ -230,16 +175,7 @@
 
 .<%=name%>:hover {
 	border: 1px black solid;
-	background: <%=cardColour.toString()%>;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-}
-
-.markedToPrint:hover {
-	border: 1px black solid;
-	background: #CCCCCC;
+	background: ${type.cardColour};
 	height: 60px;
 	width: 155px;
 	margin: 1px 1px 1px 1px;
@@ -247,7 +183,7 @@
 }
 
 .<%=name%>-header {
-	background: <%=cardColour.toString()%>;
+	background: ${type.cardColour};
 	border: 1px #989898 dotted;
 	height: 30px;
 	width: 164px;
@@ -257,7 +193,7 @@
 }
 
 .<%=name%>-background {
-	background: <%=backgroundColour.toString()%>;
+	background: ${type.backgroundColour};
 	border: 1px #C8C8C8 dotted;
 	width: 155px;
 	height: 30px;
@@ -274,9 +210,8 @@
                 <%
                     KanbanBoardColumnList columns = project.getColumns(board);
 
-                                    for (KanbanBoardColumn column : columns) {
-
-                                        String type = column.getWorkItemType().getName();
+                    for (KanbanBoardColumn column : columns) {
+                        String type = column.getWorkItemType().getName();
                 %>
                 <th class="<%=type%>-header"><%=column.getPhase()%></th>
                 <%
@@ -285,57 +220,49 @@
             </tr>
             <%
                 KanbanBoard kanbanBoard = project.getBoard(board);
-
-            
                 for (KanbanBoardRow row : kanbanBoard) {
-                    
-                    %><tr class="<%= row.hasItemOfType(rootType) ? "horizontalLine" : ""%>"><%
-                    
+            %>
+                    <tr class="<%= row.hasItemOfType(rootType) ? "horizontalLine" : ""%>">
+                    <%
                     for (KanbanCell cell : row) {
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                     %>
 
-
                     <td class="<%=item.getType().getName()%>-background">
                         <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>')"
                             id="work-item-<%=item.getId()%>"
                             class="<%=item.getType().getName()%>">
                             
                             <div class="age-container">
                                 <% 
                                 
-                                //Map<String, Integer> phaseDurations = item.getPhaseDurations();
-                                //List<String> itemPhases = item.getType().getPhases();
+                                Map<String, Integer> phaseDurations = item.getPhaseDurations();
+                                List<String> itemPhases = item.getType().getPhases();
                                 
                                 //There doesn't appear to be a straightforward way of always getting
                                 //the wall columns so this is hardcoded.  We need the wallBoard columns
-                                //particularly so we can still display the time spent in each phase on
-                                //the Completed items board.
-                                //BoardIdentifier wallBoard = BoardIdentifier.valueOf("WALL");
-                                //KanbanBoardColumnList wallColumns = project.getColumns(wallBoard);
-                                //List<String> wallPhases = new ArrayList<String>();
-                                //for (KanbanBoardColumn column : wallColumns) {
-                                //        wallPhases.add(column.getPhase());
-                                //}
+                                //particularly so we can display the time spent in each wall phase.
+                                BoardIdentifier wallBoard = BoardIdentifier.valueOf("WALL");
+                                KanbanBoardColumnList wallColumns = project.getColumns(wallBoard);
+                                List<String> wallPhases = new ArrayList<String>();
+                                for (KanbanBoardColumn column : wallColumns) {
+                                        wallPhases.add(column.getPhase());
+                                }
                                 
-                                //List<String> phases = ListUtils.retainAll(itemPhases, wallPhases);
+                                List<String> phases = ListUtils.retainAll(itemPhases, wallPhases);
                                 
-                                //Color[] colors = KanbanDrawingSupplier.getColours(phases.size());
-                                //Iterator<Color> colorIterator = Arrays.asList(colors).iterator();
-                                //for (String phase : phases) {
-                                //    Colour currentColor = new Colour(colorIterator.next());
-                                //    if (phaseDurations.containsKey(phase)) {
-                                //        for (int i=0; i < phaseDurations.get(phase); i++) {
-                                
-                                LocalDate phaseStartDate = item.getDate(item.getCurrentPhase());
-                                int days = WorkingDayUtils.getWorkingDaysBetween(phaseStartDate, new LocalDate());
-                                
-                                for (int i=0; i<days; i++) {
+                                Color[] colors = KanbanDrawingSupplier.getColours(phases.size());
+                                Iterator<Color> colorIterator = Arrays.asList(colors).iterator();
+                                for (String phase : phases) {
+                                    Colour currentColor = new Colour(colorIterator.next());
+                                    if (phaseDurations.containsKey(phase)) {
+                                        for (int i=0; i < phaseDurations.get(phase); i++) {
                                 %>
-                                    <div class="age-item"></div>
+                                            <div class="age-item" style="background-color:<%=currentColor.toString()%>"></div>
                                 <%
+                                        }
+                                    }
                                 }
                                 %>
                             </div>
@@ -349,43 +276,6 @@
 								%>                    
                                 <%=formattedId %>: <span class="work-item-name"><%= item.getName() %></span>
                             </div>
-                            <div class="upIcon">
-                                <%
-                                    WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
-                                                if (adjacentWorkItemUp != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
-                                    src="<%=request.getContextPath()%>/images/go-up.png" />
-                                <%
-                                    } 
-                                %>
-                            </div>
-                            <div class="advanceIcon">
-                                <%
-                                    if (!item.isCompleted()) {
-                                %>
-                                <img 
-                                    onclick="javascript:advance(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/go-next.png" />
-                                <%
-                                    }
-                                %>
-                            </div>
-                            <div class="downIcon">
-
-                                <%
-                                    WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
-                                                if (adjacentWorkItemDown != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
-                                    src="<%=request.getContextPath()%>/images/go-down.png" />
-                                <%
-                                    }
-                                %>
-                            </div>
-                            
                             <div class="editIcon">
                                 <img
                                     class="edit"
@@ -393,19 +283,6 @@
                                     id="edit-work-item-<%=item.getId()%>-button"
                                     onclick="javascript:edit(<%=item.getId()%>);"
                                     src="<%=request.getContextPath()%>/images/edit.png" />
-                            </div>
-                            <div class="addIcon">
-                                <%
-                                if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
-                                %>
-                                <img
-                                    class="add"
-                                    alt="Advance"
-                                    onclick="javascript:addChild(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/list-add.png" />
-                                <%
-                                    }
-                                %>
                             </div>
                             <%
                                 if (item.getSize() > 0) {
