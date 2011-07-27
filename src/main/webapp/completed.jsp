@@ -89,150 +89,134 @@
 	border-collapse: collapse;
 }
 
-.age-container {
-    float: left;
-}
-
 .age-item {
-    height:3px;
-    width:3px;
+    height: 12px;
+    width: 5px;
     margin-bottom: 1px;
-    margin-right: 1px;
+    margin-right: 0px;
     float: left;
-    background-color: black;
-}
-
-.itemName {
-	width: 135px;
-	height: 20px;
-	position: absolute;
-	top: 6px;
-	left: 2px;
-	font-family: arial;
-	font-size: 12px;
-	color: #383838;
-	text-align: left;
 }
 
 .editIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: absolute;
 	width: 16px;
 	height: 16px;
-	left: 0px;
-	top: 50px;
 }
 
-.size {
-	border: 1px #BBBBBB dotted;
-	position: absolute;
-	width: 16px;
-	height: 13px;
-	left: 40px;
-	top: 50px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 9px;
-	text-align: center;
-	color: #383838;
-}
-
-.importance {
-	border: 1px #BBBBBB dotted;
-	position: absolute;
-	width: 36px;
-	height: 13px;
-	left: 67px;
-	top: 50px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 9px;
-	text-align: center;
-	color: #383838;
+.editIcon:hover	{
+	-moz-opacity: 0.5;
+	opacity: 0.5;
 }
 
 .horizontalLine {
 	border-top: 2px black solid;
 }
 
+.customizedHeader {
+	background: ${type.cardColour};
+	border-top:1px #989898 dotted;
+    border-left:1px #989898 dotted;
+    border-right:1px #989898 dotted;
+    width: 164px;
+	height:30px;
+	font-family:verdana;
+	font-size:14px;
+	color:black;
+}
+
+.subHeader {
+	background: ${type.cardColour};
+	border-bottom:1px #989898 dotted;
+    border-left:1px #989898 dotted;
+    border-right:1px #989898 dotted;
+	height:10px;
+	font-family:verdana;
+	font-size:10px;
+	color:black;
+}
+
 <%		
     String boardType = (String) request.getAttribute("boardType");
     BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
 
-    WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
-    for (WorkItemType workItemType : workItemTypes) {
-        String name = workItemType.getName();
  %> 
-.<%=name%> {
-	background: ${type.cardColour};
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 3px 3px 3px 3px;
-    position: relative;
-}
 
-.<%=name%>:hover {
+.row:hover {
 	border: 1px black solid;
 	background: ${type.cardColour};
-	height: 60px;
-	width: 155px;
 	margin: 1px 1px 1px 1px;
 	padding: 2px 2px 2px 2px;
 }
 
-.<%=name%>-header {
-	background: ${type.cardColour};
-	border: 1px #989898 dotted;
-	height: 30px;
-	width: 164px;
-	font-family: verdana;
-	font-size: 14px;
-	color: black;
-}
-
-.<%=name%>-background {
+.row {
 	background: ${type.backgroundColour};
 	border: 1px #C8C8C8 dotted;
-	width: 155px;
 	height: 30px;
+    font-family: arial;
+    font-size: 14px;
+	color: #383838;
 }
-<%}%>
 
+td.padded {
+    padding-left: 4px;
+    padding-right: 2px;
+}
 </style>
 </head>
 <body onload="javscript:setPosition();">
     <jsp:include page="header.jsp"/>
     <form id="form" method="post" action="">
-        <table class="kanban">
-            <tr>
-                <%
-                    KanbanBoardColumnList columns = project.getColumns(board);
-
-                    for (KanbanBoardColumn column : columns) {
-                        String type = column.getWorkItemType().getName();
-                %>
-                <th class="<%=type%>-header"><%=column.getPhase()%></th>
-                <%
-                    }
-                %>
-            </tr>
+        <table id="completed-table" class="kanban">
+			<thead>
+				<tr class="customizedHeader">
+					<th colspan="5">${phase}</th>
+				</tr>
+			</thead>
+                <tr class="subHeader">
+					<th></th>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Size</th>
+					<th></th>
+				</tr>
             <%
                 KanbanBoard kanbanBoard = project.getBoard(board);
                 for (KanbanBoardRow row : kanbanBoard) {
             %>
-                    <tr class="<%= row.hasItemOfType(rootType) ? "horizontalLine" : ""%>">
+                    <tr class="row">
                     <%
                     for (KanbanCell cell : row) {
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                     %>
-
-                    <td class="<%=item.getType().getName()%>-background">
-                        <div
-                            id="work-item-<%=item.getId()%>"
-                            class="<%=item.getType().getName()%>">
+                    <td class="edit, padded">
+                        <div class="editIcon">
+                            <img
+                                class="edit"
+                                alt="Edit"
+                                id="edit-work-item-<%=item.getId()%>-button"
+                                onclick="javascript:edit(<%=item.getId()%>);"
+                                src="<%=request.getContextPath()%>/images/edit.png" />
+                        </div>
+                    </td>
+                    <td class="id, padded">
+                        <%
+                        String formattedId = "" + item.getId();
+                        if (item.isExcluded()) {
+                            formattedId = "<span style='text-decoration:line-through';>" + formattedId + "</span>";
+                        }
+						%>                    
+                        <%=formattedId %>
+                    </td>
+                    <td class="name, padded">
+                        <%= item.getName() %>
+                    </td>
+                    <td class="size, padded">
+                        <%=item.getSize()%>
+                    </td>
+                    <td class="age, padded">
+                        <div id="work-item-<%=item.getId()%>" class="<%=item.getType().getName()%>">
                             
                             <div class="age-container">
                                 <% 
@@ -267,66 +251,16 @@
                                 %>
                             </div>
                                 
-                                <div class="itemName">
-								<%
-									String formattedId = "" + item.getId();
-								    if (item.isExcluded()) {
-								        formattedId = "<span style='text-decoration:line-through';>" + formattedId + "</span>";
-								    }
-								%>                    
-                                <%=formattedId %>: <span class="work-item-name"><%= item.getName() %></span>
-                            </div>
-                            <div class="editIcon">
-                                <img
-                                    class="edit"
-                                    alt="Edit"
-                                    id="edit-work-item-<%=item.getId()%>-button"
-                                    onclick="javascript:edit(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/edit.png" />
-                            </div>
-                            <%
-                                if (item.getSize() > 0) {
-                            %>
-                            <div class="size">
-                                <%=item.getSize()%>
-                            </div>
-                            <%
-                                } else {
-                            %>
-                            <div class="size" style="border: 0px"></div>
-                            <%
-                                }
-                            %>
-
-                            <%
-                                if (item.getImportance() > 0) {
-                            %>
-                            <div class="importance">
-                                <%=item.getImportance()%>
-                            </div>
-                            <%
-                                } else {
-                            %>
-                            <div class="importance" style="border: 0px"></div>
-                            <%
-                                }
-                            %>
                             
-
-                        </div></td>
+                           </td>
                     <%
-                        } else {
-                    %><td
-                        class="<%=cell.getWorkItemType().getName()%>-background"></td>
-                    <%
-                        }
+                            }                        
                         }
                     %>
                 </tr>
                 <%
                     }
                 %>
-            
         </table>
     </form>
 </body>
