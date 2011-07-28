@@ -82,17 +82,19 @@
 
 .age-legend {
     height: 10px;
-    float: left;
-    padding: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 .age-item {
     height: 13px;
-    margin-bottom: 1px;
-    margin-right: 0px;
     float: left;
-    font-size: 10px;
+    font-size: 11px;
     text-align: center;
+}
+
+.age-item:hover {
+    font-weight: bold;
 }
 
 .editIcon {
@@ -170,11 +172,11 @@ td.padded {
 					<th>Id</th>
 					<th>Name</th>
 					<th>Size</th>
-					<th>
+					<th> 
                         <%
                             for (int i = 0; i < phases.size(); i++) {
                         %>
-                        <div class="age-legend" style="background-color:<%=htmlColours[i]%>"><%=phases.get(i)%></div>
+                        <span class="age-legend" style="background-color:<%=htmlColours[i]%>"><%=phases.get(i)%></span>
                         <% } %>
                     </th>
 				</tr>
@@ -216,7 +218,6 @@ td.padded {
                     <td class="age, padded">
                         <div id="work-item-<%=item.getId()%>" class="<%=item.getType().getName()%>">
                             
-                            <div class="age-container">
                                 <% 
                                 
                                 Map<String, Integer> phaseDurations = item.getPhaseDurations();
@@ -231,7 +232,7 @@ td.padded {
                                         int phaseDays = phaseDurations.get(phase);
                                         int phaseWidth = (int)Math.floor(phaseDays * pixelsPerDay);
                                 %>
-                                    <div class="age-item" style="width:<%=phaseWidth%>px; background-color:<%=currentColor.toString()%>;">
+                                    <div class="age-item" style="width:<%=phaseWidth%>px; background-color:<%=currentColor%>;">
                                         <% if (phaseWidth > 10) {%>
                                             <%=phaseDays%>
                                         <% } %>
@@ -240,7 +241,6 @@ td.padded {
                                     }
                                 }
                                 %>
-                            </div>
                                 
                             
                            </td>
