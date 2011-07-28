@@ -1,31 +1,27 @@
-<%@page import="com.metservice.kanban.utils.WorkingDayUtils"%>
-<%@page import="org.joda.time.LocalDate"%>
-<%@page import="org.apache.commons.collections.ListUtils"%>
-<%@page import="java.util.Iterator"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Arrays"%>
-<%@page import="java.awt.Color"%>
-<%@page import="java.awt.Paint"%>
-<%@page import="com.metservice.kanban.charts.KanbanDrawingSupplier"%>
-<%@page import="java.util.Map"%>
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<%@page import="com.metservice.kanban.model.KanbanBoardColumnList"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardColumn"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<%@page import="java.util.Arrays"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.awt.Color"%>
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.WorkItem"%>
-<%@page import="com.metservice.kanban.model.WorkItemType"%>
-<%@page import="com.metservice.kanban.model.KanbanProject"%>
+<%@page import="java.util.Map"%>
+<%@page import="org.apache.commons.collections.ListUtils"%>
 <%@page import="com.metservice.kanban.model.Colour"%>
-<%@page import="com.metservice.kanban.model.KanbanProjectConfiguration"%>
-<%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
+<%@page import="com.metservice.kanban.model.WorkItem"%>
+<%@page import="com.metservice.kanban.model.KanbanCell"%>
 <%@page import="com.metservice.kanban.model.KanbanBoard"%>
 <%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.KanbanCell"%>
 <%@page import="com.metservice.kanban.model.BoardIdentifier"%>
+<%@page import="com.metservice.kanban.model.KanbanProject"%>
+<%@page import="com.metservice.kanban.model.KanbanBoardColumn"%>
+<%@page import="com.metservice.kanban.model.KanbanBoardColumnList"%>
+<%@page import="com.metservice.kanban.charts.KanbanDrawingSupplier"%>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -46,40 +42,18 @@
 			  window.scrollTo(0,<%=scrollTo%>);
 			}
 
-			function markUnmarkToPrint(id, type){
-			   var item = document.getElementById(id)
-			   if (item.className == 'markedToPrint') {
-			   	 item.className = type;
-			   } else {
-			     item.className = "markedToPrint";
-			   }
-			}
-			function advance(id){
-			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
-			 document.forms["form"].submit();
-			}
-
 			function edit(id){
 			 document.forms["form"].action = getBoard() + "/edit-item?id=" + id;
 			 document.forms["form"].submit();
 			 
 			}
-			
-        	function addChild(id){
-              document.forms["form"].action = getBoard() + "/add-item?id=" + id;
-              document.forms["form"].submit();
-        	}
-            function move(id, targetId, after){
-              document.forms["form"].action = getBoard() + "/move-item-action?id=" + id + "&targetId=" + targetId + "&scrollTop=" + getYOffset() + "&after=" + after;
-              document.forms["form"].submit();
-            }
-
 //]]> 
 		</script>
 
 <%
     KanbanProject project = (KanbanProject) request.getAttribute("project");
-    WorkItemType rootType = project.getWorkItemTypes().getRoot().getValue();
+    String boardType = (String) request.getAttribute("boardType");
+    BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
 %>
 
 <style type="text/css">
@@ -90,11 +64,12 @@
 }
 
 .age-item {
-    height: 12px;
-    width: 5px;
+    height: 13px;
     margin-bottom: 1px;
     margin-right: 0px;
     float: left;
+    font-size: 10px;
+    text-align: center;
 }
 
 .editIcon {
@@ -135,12 +110,6 @@
 	font-size:10px;
 	color:black;
 }
-
-<%		
-    String boardType = (String) request.getAttribute("boardType");
-    BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
-
- %> 
 
 .row:hover {
 	border: 1px black solid;
@@ -238,14 +207,21 @@ td.padded {
                                 
                                 Color[] colors = KanbanDrawingSupplier.getColours(phases.size());
                                 Iterator<Color> colorIterator = Arrays.asList(colors).iterator();
+                                
+                                int pixelsPerDay = 5;
+                                
                                 for (String phase : phases) {
                                     Colour currentColor = new Colour(colorIterator.next());
                                     if (phaseDurations.containsKey(phase)) {
-                                        for (int i=0; i < phaseDurations.get(phase); i++) {
+                                        int phaseDays = phaseDurations.get(phase);
+                                        int phaseWidth = (int)Math.floor(phaseDays * pixelsPerDay);
                                 %>
-                                            <div class="age-item" style="background-color:<%=currentColor.toString()%>"></div>
+                                    <div class="age-item" style="width:<%=phaseWidth%>px; background-color:<%=currentColor.toString()%>;">
+                                        <% if (phaseWidth > 10) {%>
+                                            <%=phaseDays%>
+                                        <% } %>
+                                    </div>
                                 <%
-                                        }
                                     }
                                 }
                                 %>

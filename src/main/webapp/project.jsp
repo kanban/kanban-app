@@ -1,31 +1,20 @@
-<%@page import="com.metservice.kanban.utils.WorkingDayUtils"%>
-<%@page import="org.joda.time.LocalDate"%>
-<%@page import="org.apache.commons.collections.ListUtils"%>
-<%@page import="java.util.Iterator"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Arrays"%>
-<%@page import="java.awt.Color"%>
-<%@page import="java.awt.Paint"%>
-<%@page import="com.metservice.kanban.charts.KanbanDrawingSupplier"%>
-<%@page import="java.util.Map"%>
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<%@page import="org.joda.time.LocalDate"%>
+<%@page import="com.metservice.kanban.utils.WorkingDayUtils"%>
+<%@page import="com.metservice.kanban.model.WorkItem"%>
+<%@page import="com.metservice.kanban.model.KanbanCell"%>
+<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
+<%@page import="com.metservice.kanban.model.KanbanBoard"%>
 <%@page import="com.metservice.kanban.model.KanbanBoardColumnList"%>
 <%@page import="com.metservice.kanban.model.KanbanBoardColumn"%>
-<%@page import="java.util.List"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.WorkItem"%>
+<%@page import="com.metservice.kanban.model.Colour"%>
+<%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
+<%@page import="com.metservice.kanban.model.BoardIdentifier"%>
 <%@page import="com.metservice.kanban.model.WorkItemType"%>
 <%@page import="com.metservice.kanban.model.KanbanProject"%>
-<%@page import="com.metservice.kanban.model.Colour"%>
-<%@page import="com.metservice.kanban.model.KanbanProjectConfiguration"%>
-<%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
-<%@page import="com.metservice.kanban.model.KanbanBoard"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.KanbanCell"%>
-<%@page import="com.metservice.kanban.model.BoardIdentifier"%>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
