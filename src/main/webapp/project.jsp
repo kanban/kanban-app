@@ -194,6 +194,7 @@
 	width: 155px;
 	margin: 1px 1px 1px 1px;
 	padding: 2px 2px 2px 2px;
+    position: relative;
 }
 
 .horizontalLine {
