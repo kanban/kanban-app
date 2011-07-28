@@ -1,13 +1,21 @@
 package com.metservice.kanban.model;
 
-public class Colour {
+import java.awt.Color;
+
+public class HtmlColour {
     private final String rgbInHexadecimal;
     
-    public Colour(String rgbInHexadecimal) {
+    public HtmlColour(String rgbInHexadecimal) {
         if (!rgbInHexadecimal.matches("\\p{XDigit}{6}")) {
             throw new IllegalArgumentException("invalid colour value: " + rgbInHexadecimal);
         }        
         this.rgbInHexadecimal = rgbInHexadecimal;
+    }
+    
+    public HtmlColour(Color color) {
+        String rgb = Integer.toHexString(color.getRGB());
+        rgb = rgb.substring(2, rgb.length());
+        this.rgbInHexadecimal = rgb.toUpperCase();
     }
     
     @Override

@@ -2,11 +2,13 @@ package com.metservice.kanban.model;
 
 import static com.metservice.kanban.model.WorkItem.ROOT_WORK_ITEM_ID;
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
+import com.metservice.kanban.utils.WorkingDayUtils;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +54,7 @@ public class WorkItemTest {
     public void testPhaseOnDate() throws ParseException {
         // TODO Use TestKanbanBoardBuilder to construct test data instead
 
-        WorkItem workItem = new WorkItem(1, type); 
+        WorkItem workItem = new WorkItem(1, type);
         workItem.setDate("phase1", formatter.parse("14/02/2011"));
         workItem.setDate("phase2", formatter.parse("18/02/2011"));
 
@@ -192,5 +194,41 @@ public class WorkItemTest {
         workItem.setDateAsString("phase", "2011-05-31");
         
         assertThat(workItem.getDate("phase"), is(parseIsoDate("2011-05-31")));
+    }
+    
+    @Test
+    public void getPhaseDurationsHasCorrectDurationsPartial() throws ParseException{
+        WorkItem workItem = new WorkItem(1, type);
+        workItem.setDate("phase1", formatter.parse("10/07/2011"));
+        workItem.setDate("phase2", formatter.parse("18/07/2011"));
+
+        Map<String, Integer> phaseDurations = workItem.getPhaseDurations();
+        
+        assertThat(phaseDurations.keySet().size(), is(4));
+        assertThat(phaseDurations.get("phase1"), is(5));
+        LocalDate today = new LocalDate();
+        int days = WorkingDayUtils.
+                getWorkingDaysBetween(formatter.parse("18/07/2011"), today);
+        assertThat(phaseDurations.get("phase2"), is(days));
+        assertThat(phaseDurations.get("phase3"), is(0));
+    }
+    
+    @Test
+    public void getPhaseDurationsHasCorrectDurationsComplete() throws ParseException{
+        WorkItem workItem = new WorkItem(1, type);
+        workItem.setDate("phase1", formatter.parse("10/07/2011"));
+        workItem.setDate("phase2", formatter.parse("18/07/2011"));
+        workItem.setDate("phase3", formatter.parse("25/07/2011"));
+
+        Map<String, Integer> phaseDurations = workItem.getPhaseDurations();
+        
+        assertThat(phaseDurations.keySet().size(), is(4));
+        assertThat(phaseDurations.get("phase1"), is(5));
+        assertThat(phaseDurations.get("phase2"), is(5));
+        
+        LocalDate today = new LocalDate();
+        int days = WorkingDayUtils.
+                getWorkingDaysBetween(formatter.parse("25/07/2011"), today);
+        assertThat(phaseDurations.get("phase3"), is(days));
     }
 }

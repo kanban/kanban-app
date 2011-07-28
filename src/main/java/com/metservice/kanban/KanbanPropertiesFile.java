@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 import com.metservice.kanban.model.BoardIdentifier;
-import com.metservice.kanban.model.Colour;
+import com.metservice.kanban.model.HtmlColour;
 
 //TODO This class needs unit tests.
 
@@ -59,14 +59,14 @@ public class KanbanPropertiesFile {
         return getCommaSeparatedStrings(propertyKey);
     }
 
-    public Colour getWorkItemTypeCardColour(String workItemType) throws IOException {
+    public HtmlColour getWorkItemTypeCardColour(String workItemType) throws IOException {
         String propertyKey = format("workItemTypes.%s.cardColour", workItemType);
-        return new Colour(getString(propertyKey));
+        return new HtmlColour(getString(propertyKey));
     }
 
-    public Colour getWorkItemTypeBackgroundColour(String workItemType) throws IOException {
+    public HtmlColour getWorkItemTypeBackgroundColour(String workItemType) throws IOException {
         String propertyKey = format("workItemTypes.%s.backgroundColour", workItemType);
-        return new Colour(getString(propertyKey));
+        return new HtmlColour(getString(propertyKey));
     }
 
     private String[] getCommaSeparatedStrings(String propertyKey) throws IOException {
