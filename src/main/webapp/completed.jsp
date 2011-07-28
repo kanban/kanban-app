@@ -175,9 +175,7 @@ td.padded {
 					<th> 
                         <%
                             for (int i = 0; i < phases.size(); i++) {
-                        %>
-                        <span class="age-legend" style="background-color:<%=htmlColours[i]%>"><%=phases.get(i)%></span>
-                        <% } %>
+                        %><span class="age-legend" style="background-color:<%=htmlColours[i]%>"><%=phases.get(i)%></span><% } %>
                     </th>
 				</tr>
             <%
