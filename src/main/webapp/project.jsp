@@ -211,7 +211,11 @@
 	border-top: 2px black solid;
 }
 
-<%			String boardType = (String) request.getAttribute("boardType");
+<%			int cardWidth = 155;
+            int ageItemWidth = 4;
+
+
+            String boardType = (String) request.getAttribute("boardType");
             BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
 
             WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
@@ -222,7 +226,7 @@
                 Colour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
 	background: <%=cardColour.toString()%>;
 	height: 60px;
-	width: 155px;
+	width: <%=cardWidth%>px;
 	margin: 1px 1px 1px 1px;
 	padding: 3px 3px 3px 3px;
     position: relative;
@@ -305,37 +309,22 @@
                             
                             <div class="age-container">
                                 <% 
-                                
-                                //Map<String, Integer> phaseDurations = item.getPhaseDurations();
-                                //List<String> itemPhases = item.getType().getPhases();
-                                
-                                //There doesn't appear to be a straightforward way of always getting
-                                //the wall columns so this is hardcoded.  We need the wallBoard columns
-                                //particularly so we can still display the time spent in each phase on
-                                //the Completed items board.
-                                //BoardIdentifier wallBoard = BoardIdentifier.valueOf("WALL");
-                                //KanbanBoardColumnList wallColumns = project.getColumns(wallBoard);
-                                //List<String> wallPhases = new ArrayList<String>();
-                                //for (KanbanBoardColumn column : wallColumns) {
-                                //        wallPhases.add(column.getPhase());
-                                //}
-                                
-                                //List<String> phases = ListUtils.retainAll(itemPhases, wallPhases);
-                                
-                                //Color[] colors = KanbanDrawingSupplier.getColours(phases.size());
-                                //Iterator<Color> colorIterator = Arrays.asList(colors).iterator();
-                                //for (String phase : phases) {
-                                //    Colour currentColor = new Colour(colorIterator.next());
-                                //    if (phaseDurations.containsKey(phase)) {
-                                //        for (int i=0; i < phaseDurations.get(phase); i++) {
-                                
                                 LocalDate phaseStartDate = item.getDate(item.getCurrentPhase());
                                 int days = WorkingDayUtils.getWorkingDaysBetween(phaseStartDate, new LocalDate());
                                 
-                                for (int i=0; i<days; i++) {
+                                int itemsPerRow = (int) Math.floor(cardWidth/(double)ageItemWidth);
+                                
+                                
+                                for (int i=0; i<days && i < itemsPerRow; i++) {
+                                    if (i == itemsPerRow - 1) {
                                 %>
-                                    <div class="age-item"></div>
-                                <%
+                                        <div class="age-item" style="background-color: red; width: 6px; "></div>
+                                <%  
+                                    } else { 
+                                %>
+                                        <div class="age-item"></div>
+                                <%    
+                                    }
                                 }
                                 %>
                             </div>
