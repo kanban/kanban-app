@@ -1,3 +1,4 @@
+<%@page import="com.metservice.kanban.model.WorkItemType"%>
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -12,7 +13,7 @@
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
 <%@page import="org.apache.commons.collections.ListUtils"%>
-<%@page import="com.metservice.kanban.model.Colour"%>
+<%@page import="com.metservice.kanban.model.HtmlColour"%>
 <%@page import="com.metservice.kanban.model.WorkItem"%>
 <%@page import="com.metservice.kanban.model.KanbanCell"%>
 <%@page import="com.metservice.kanban.model.KanbanBoard"%>
@@ -53,7 +54,23 @@
 <%
     KanbanProject project = (KanbanProject) request.getAttribute("project");
     String boardType = (String) request.getAttribute("boardType");
+    WorkItemType type = (WorkItemType) request.getAttribute("type");
     BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
+    
+    //There doesn't appear to be a straightforward way of always getting
+    //the wall columns so this is hardcoded.  We need the wallBoard columns
+    //particularly so we can display the time spent in each wall phase.
+    BoardIdentifier wallBoard = BoardIdentifier.valueOf("WALL");
+    KanbanBoardColumnList wallColumns = project.getColumns(wallBoard);
+    List<String> wallPhases = new ArrayList<String>();
+    for (KanbanBoardColumn column : wallColumns) {
+            wallPhases.add(column.getPhase());
+    }
+
+    List<String> itemPhases = type.getPhases();
+    List<String> phases = ListUtils.retainAll(itemPhases, wallPhases);
+    
+    HtmlColour[] htmlColours = KanbanDrawingSupplier.getHtmlColours(phases.size());
 %>
 
 <style type="text/css">
@@ -61,6 +78,12 @@
 	margin: 10px 0px 0px 0px;
 	background: whitesmoke;
 	border-collapse: collapse;
+}
+
+.age-legend {
+    height: 10px;
+    float: left;
+    padding: 3px;
 }
 
 .age-item {
@@ -147,7 +170,13 @@ td.padded {
 					<th>Id</th>
 					<th>Name</th>
 					<th>Size</th>
-					<th></th>
+					<th>
+                        <%
+                            for (int i = 0; i < phases.size(); i++) {
+                        %>
+                        <div class="age-legend" style="background-color:<%=htmlColours[i]%>"><%=phases.get(i)%></div>
+                        <% } %>
+                    </th>
 				</tr>
             <%
                 KanbanBoard kanbanBoard = project.getBoard(board);
@@ -191,27 +220,13 @@ td.padded {
                                 <% 
                                 
                                 Map<String, Integer> phaseDurations = item.getPhaseDurations();
-                                List<String> itemPhases = item.getType().getPhases();
                                 
-                                //There doesn't appear to be a straightforward way of always getting
-                                //the wall columns so this is hardcoded.  We need the wallBoard columns
-                                //particularly so we can display the time spent in each wall phase.
-                                BoardIdentifier wallBoard = BoardIdentifier.valueOf("WALL");
-                                KanbanBoardColumnList wallColumns = project.getColumns(wallBoard);
-                                List<String> wallPhases = new ArrayList<String>();
-                                for (KanbanBoardColumn column : wallColumns) {
-                                        wallPhases.add(column.getPhase());
-                                }
-                                
-                                List<String> phases = ListUtils.retainAll(itemPhases, wallPhases);
-                                
-                                Color[] colors = KanbanDrawingSupplier.getColours(phases.size());
-                                Iterator<Color> colorIterator = Arrays.asList(colors).iterator();
+                                Iterator<HtmlColour> colorIterator = Arrays.asList(htmlColours).iterator();
                                 
                                 int pixelsPerDay = 5;
                                 
                                 for (String phase : phases) {
-                                    Colour currentColor = new Colour(colorIterator.next());
+                                    HtmlColour currentColor = colorIterator.next();
                                     if (phaseDurations.containsKey(phase)) {
                                         int phaseDays = phaseDurations.get(phase);
                                         int phaseWidth = (int)Math.floor(phaseDays * pixelsPerDay);

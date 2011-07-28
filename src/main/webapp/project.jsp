@@ -10,7 +10,7 @@
 <%@page import="com.metservice.kanban.model.KanbanBoard"%>
 <%@page import="com.metservice.kanban.model.KanbanBoardColumnList"%>
 <%@page import="com.metservice.kanban.model.KanbanBoardColumn"%>
-<%@page import="com.metservice.kanban.model.Colour"%>
+<%@page import="com.metservice.kanban.model.HtmlColour"%>
 <%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
 <%@page import="com.metservice.kanban.model.BoardIdentifier"%>
 <%@page import="com.metservice.kanban.model.WorkItemType"%>
@@ -211,8 +211,8 @@
             for (WorkItemType workItemType : workItemTypes) {
                 String name =
                     workItemType.getName();
-                Colour cardColour = workItemType.getCardColour();
-                Colour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
+                HtmlColour cardColour = workItemType.getCardColour();
+                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
 	background: <%=cardColour.toString()%>;
 	height: 60px;
 	width: <%=cardWidth%>px;

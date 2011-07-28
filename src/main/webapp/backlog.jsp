@@ -9,7 +9,6 @@
 <%@page import="com.metservice.kanban.model.WorkItem"%>
 <%@page import="com.metservice.kanban.model.WorkItemType"%>
 <%@page import="com.metservice.kanban.model.KanbanProject"%>
-<%@page import="com.metservice.kanban.model.Colour"%>
 <%@page import="com.metservice.kanban.model.KanbanProjectConfiguration"%>
 <%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
 <%@page import="com.metservice.kanban.model.KanbanBoard"%>

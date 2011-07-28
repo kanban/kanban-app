@@ -1,5 +1,6 @@
 package com.metservice.kanban.charts;
 
+import com.metservice.kanban.model.HtmlColour;
 import java.awt.Color;
 import java.awt.Paint;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
@@ -21,6 +22,15 @@ public class KanbanDrawingSupplier extends DefaultDrawingSupplier {
             double rawHue = (double) i / (double) numberOfSeries;
             double rebalancedHue = hueRebalancer.balance(rawHue);
             colours[i] = Color.getHSBColor((float) rebalancedHue, 0.75f, 1.0f);
+        }
+        return colours;
+    }
+    
+    public static HtmlColour[] getHtmlColours(int numberOfSeries) {
+        Color[] colors = getColours(numberOfSeries);
+        HtmlColour[] colours = new HtmlColour[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            colours[i] = new HtmlColour(colors[i]);
         }
         return colours;
     }
