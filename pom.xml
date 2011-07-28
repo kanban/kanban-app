@@ -308,8 +308,8 @@
 
 	<distributionManagement>
 	    <repository>
-	        <id>GitHub</id>
-	        <url>https://github.com/kanban/kanban-app/downloads</url>
+	        <id>metservice-releases</id>
+	        <url>http://code:8080/nexus/content/repositories/releases/</url>
 		</repository>
 	</distributionManagement>
 </project>
