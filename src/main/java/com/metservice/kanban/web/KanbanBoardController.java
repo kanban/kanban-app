@@ -36,6 +36,8 @@ import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemTree;
 import com.metservice.kanban.model.WorkItemType;
 import com.metservice.kanban.utils.DateUtils;
+import java.util.Collections;
+import org.apache.commons.collections.CollectionUtils;
 
 //TODO This class needs unit tests.
 
@@ -92,6 +94,11 @@ public class KanbanBoardController {
             model.put("type", project.getWorkItemTypes().getRoot().getValue());
             model.put("phase", project.getWorkItemTypes().getRoot().getValue().getPhases().get(0));
             return new ModelAndView("/backlog.jsp", model);
+        } else if (boardType.equals("completed")) {
+            model.put("type", project.getWorkItemTypes().getRoot().getValue());
+            List<String> phases = project.getWorkItemTypes().getRoot().getValue().getPhases();
+            model.put("phase", phases.get(phases.size() - 1));
+            return new ModelAndView("/completed.jsp", model);
         }
         return new ModelAndView("/project.jsp", model);
     }

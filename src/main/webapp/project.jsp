@@ -2,20 +2,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<%@page import="org.joda.time.LocalDate"%>
+<%@page import="com.metservice.kanban.utils.WorkingDayUtils"%>
+<%@page import="com.metservice.kanban.model.WorkItem"%>
+<%@page import="com.metservice.kanban.model.KanbanCell"%>
+<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
+<%@page import="com.metservice.kanban.model.KanbanBoard"%>
 <%@page import="com.metservice.kanban.model.KanbanBoardColumnList"%>
 <%@page import="com.metservice.kanban.model.KanbanBoardColumn"%>
-<%@page import="java.util.List"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.WorkItem"%>
+<%@page import="com.metservice.kanban.model.HtmlColour"%>
+<%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
+<%@page import="com.metservice.kanban.model.BoardIdentifier"%>
 <%@page import="com.metservice.kanban.model.WorkItemType"%>
 <%@page import="com.metservice.kanban.model.KanbanProject"%>
-<%@page import="com.metservice.kanban.model.Colour"%>
-<%@page import="com.metservice.kanban.model.KanbanProjectConfiguration"%>
-<%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
-<%@page import="com.metservice.kanban.model.KanbanBoard"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.KanbanCell"%>
-<%@page import="com.metservice.kanban.model.BoardIdentifier"%>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -79,12 +78,25 @@
 	border-collapse: collapse;
 }
 
+.age-container {
+    float: left;
+}
+
+.age-item {
+    height:3px;
+    width:3px;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    float: left;
+    background-color: black;
+}
+
 .itemName {
 	width: 135px;
 	height: 20px;
-	position: relative;
-	top: 0px;
-	left: 0px;
+	position: absolute;
+	top: 6px;
+	left: 2px;
 	font-family: arial;
 	font-size: 12px;
 	color: #383838;
@@ -100,60 +112,60 @@
 .upIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 130px;
-	top: -18px;
+	top: 5px;
 }
 
 .advanceIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 140px;
-	top: -13px;
+	top: 26px;
 }
 
 .downIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 130px;
-	top: -8px;
+	top: 47px;
 }
 
 .editIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 0px;
-	top: -23px;
+	top: 50px;
 }
 
 .addIcon {
 	-moz-opacity: 1;
 	opacity: 1;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	left: 20px;
-	top: -39px;
+	top: 50px;
 }
 
 .size {
 	border: 1px #BBBBBB dotted;
-	position: relative;
+	position: absolute;
 	width: 16px;
 	height: 13px;
 	left: 40px;
-	top: -53px;
+	top: 50px;
 	font-family: arial;
 	font-style: italic;
 	font-size: 9px;
@@ -163,11 +175,11 @@
 
 .importance {
 	border: 1px #BBBBBB dotted;
-	position: relative;
+	position: absolute;
 	width: 36px;
 	height: 13px;
 	left: 67px;
-	top: -68px;
+	top: 50px;
 	font-family: arial;
 	font-style: italic;
 	font-size: 9px;
@@ -188,20 +200,25 @@
 	border-top: 2px black solid;
 }
 
-<%			String boardType = (String) request.getAttribute("boardType");
+<%			int cardWidth = 155;
+            int ageItemWidth = 4;
+
+
+            String boardType = (String) request.getAttribute("boardType");
             BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
 
             WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
             for (WorkItemType workItemType : workItemTypes) {
                 String name =
                     workItemType.getName();
-                Colour cardColour = workItemType.getCardColour();
-                Colour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
+                HtmlColour cardColour = workItemType.getCardColour();
+                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
 	background: <%=cardColour.toString()%>;
 	height: 60px;
-	width: 155px;
+	width: <%=cardWidth%>px;
 	margin: 1px 1px 1px 1px;
 	padding: 3px 3px 3px 3px;
+    position: relative;
 }
 
 .<%=name%>:hover {
@@ -278,7 +295,30 @@
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>')"
                             id="work-item-<%=item.getId()%>"
                             class="<%=item.getType().getName()%>">
-                            <div class="itemName">
+                            
+                            <div class="age-container">
+                                <% 
+                                LocalDate phaseStartDate = item.getDate(item.getCurrentPhase());
+                                int days = WorkingDayUtils.getWorkingDaysBetween(phaseStartDate, new LocalDate());
+                                
+                                int itemsPerRow = (int) Math.floor(cardWidth/(double)ageItemWidth);
+                                
+                                
+                                for (int i=0; i<days && i < itemsPerRow; i++) {
+                                    if (i == itemsPerRow - 1) {
+                                %>
+                                        <div class="age-item" style="background-color: red; width: 6px; "></div>
+                                <%  
+                                    } else { 
+                                %>
+                                        <div class="age-item"></div>
+                                <%    
+                                    }
+                                }
+                                %>
+                            </div>
+                                
+                                <div class="itemName">
 								<%
 									String formattedId = "" + item.getId();
 								    if (item.isExcluded()) {
@@ -323,6 +363,7 @@
                                     }
                                 %>
                             </div>
+                            
                             <div class="editIcon">
                                 <img
                                     class="edit"
@@ -371,8 +412,7 @@
                             <%
                                 }
                             %>
-
-
+                            
 
                         </div></td>
                     <%

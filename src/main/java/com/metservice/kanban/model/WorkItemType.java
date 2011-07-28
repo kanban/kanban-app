@@ -7,23 +7,23 @@ import java.util.List;
 
 public class WorkItemType {
 
-    private static final Colour DEFAULT_COLOUR = new Colour("FFFFFF");
+    private static final HtmlColour DEFAULT_COLOUR = new HtmlColour("FFFFFF");
 
     private final List<String> phases;
     
     private String name;
-    private Colour cardColour = DEFAULT_COLOUR;
-    private Colour backgroundColour = DEFAULT_COLOUR;
+    private HtmlColour cardColour = DEFAULT_COLOUR;
+    private HtmlColour backgroundColour = DEFAULT_COLOUR;
     
     public WorkItemType(String... phases) {
         this.phases = new ArrayList<String>(asList(phases));
     }
 
-    public void setCardColour(Colour cardColour) {
+    public void setCardColour(HtmlColour cardColour) {
         this.cardColour = cardColour;
     }
 
-    public void setBackgroundColour(Colour backgroundColour) {
+    public void setBackgroundColour(HtmlColour backgroundColour) {
         this.backgroundColour = backgroundColour;
     }
 
@@ -35,11 +35,11 @@ public class WorkItemType {
         return name;
     }
 
-    public Colour getCardColour() {
+    public HtmlColour getCardColour() {
         return cardColour;
     }
 
-    public Colour getBackgroundColour() {
+    public HtmlColour getBackgroundColour() {
         return backgroundColour;
     }
 
