@@ -13,7 +13,7 @@ KanbanService service = new KanbanService();
     <table>
         <tr>
             <th style="text-align:left">Version</th>
-            <td><%= service.getVersion() %></td>            
+            <td><%= service.getVersion() %> - Victoria Branch</td>            
         </tr>
         <tr>
             <th style="text-align:left">Kanban Home</th>

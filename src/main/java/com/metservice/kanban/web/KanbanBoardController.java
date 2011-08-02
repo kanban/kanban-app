@@ -41,6 +41,14 @@ import org.apache.commons.collections.CollectionUtils;
 
 //TODO This class needs unit tests.
 
+/**
+ * @author Nicholas Malcolm - malcolnich - 300170288
+ *
+ */
+/**
+ * @author Nicholas Malcolm - malcolnich - 300170288
+ *
+ */
 @Controller
 @RequestMapping("{projectName}/{board}")
 public class KanbanBoardController {
@@ -136,6 +144,7 @@ public class KanbanBoardController {
         return "../" + boardType + ":" + scrollTop;
     }
 
+    /** Creates empty item model to display in add form with preset parent id. **/   
     @RequestMapping("add-item")
     public synchronized ModelAndView addItem(
             @ModelAttribute("project") KanbanProject project,
@@ -144,28 +153,45 @@ public class KanbanBoardController {
             @RequestParam("id") int id)
         throws IOException {
 
+    	// Search for parent id
         WorkItem parent = project.getWorkItemTree().getWorkItem(id);
         Map<String, Object> model = buildModel(projectName, boardType);
 
+        // Get name of project
         String type = project.getWorkItemTypes().getRoot().getValue().getName();
+        
+        //Set defaults for new item
         String parentName = "";
         int parentId = ROOT_WORK_ITEM_ID;
         String legend = "Add " + type;
+        
+        //Change defaults if we have a parent item
         if (parent != null) {
             parentName = parent.getName();
             parentId = parent.getId();
             type = project.getWorkItemTypes().getTreeNode(parent.getType()).getChild(0).getValue().getName();
             legend = "Add a " + type + " to " + parentName;
         }
-
+        
+        //Pass defaults to the model hash
         model.put("workItem", parent);
         model.put("type", type);
         model.put("legend", legend);
         model.put("parentId", parentId);
 
+        //Render the add form, passing the model with its hash values.
         return new ModelAndView("/add.jsp", model);
     }
 
+    /**
+     * Responds to edit-item request, passes the item in its current state to the edit form
+     * @param project
+     * @param projectName
+     * @param boardType
+     * @param id
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("edit-item")
     public synchronized ModelAndView editItem(
             @ModelAttribute("project") KanbanProject project,
@@ -174,12 +200,18 @@ public class KanbanBoardController {
             @RequestParam("id") Integer id)
         throws IOException {
 
+    	//Get a model ready to take some attributes
         Map<String, Object> model = buildModel(projectName, boardType);
+        
+        //Fetch the item we want to edit
         WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+        
+        //Add some variables to the model hashmap
         model.put("workItem", workItem);
         model.put("children", project.getWorkItemTree().getChildren(id));
         model.put("parentAlternativesList", project.getWorkItemTree().getParentAlternatives(workItem));
-
+        
+        //TODO: Figure out what this does
         Map<String, String> map = new LinkedHashMap<String, String>();
         for (String phase : workItem.getType().getPhases()) {
             LocalDate date = workItem.getDate(phase);
@@ -192,9 +224,15 @@ public class KanbanBoardController {
         }
         model.put("phasesMap", map);
 
+        //Pass the model to edit.jsp
         return new ModelAndView("/edit.jsp", model);
     }
 
+    /** 
+     * Add item to Kanban project
+     * Needs a bunch of parameters in the request.
+     * (Comes from add.jsp) 
+     **/
     @RequestMapping("add-item-action")
     public synchronized RedirectView addItemAction(
             @ModelAttribute("project") KanbanProject project,
@@ -206,19 +244,25 @@ public class KanbanBoardController {
             @RequestParam("size") Integer size,
             @RequestParam("importance") Integer importance,
             @RequestParam("notes") String notes) throws IOException {
-
+    	//Param passed as string, need an int:
         int parentIdAsInteger = Integer.parseInt(parentId);
+        
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
-
+        
+        //Don't let null values get through
         if (size == null) {
             size = 0;
         }
         if (importance == null) {
             importance = 0;
         }
+        
+        //Add it and save it
         project.addWorkItem(parentIdAsInteger, typeAsWorkItemType, name, size, importance, notes, currentLocalDate());
         project.save();
-        return new RedirectView("../" + boardType);
+        
+        //Redirect
+        return new RedirectView("../" + boardType);  
     }
 
     @RequestMapping(value = "print-items", method = RequestMethod.POST)
@@ -265,7 +309,23 @@ public class KanbanBoardController {
         
     }
     
-
+    /**
+     * Responds to a form submission which passes an edited item
+     * 
+     * @param project
+     * @param boardType
+     * @param id
+     * @param parentId
+     * @param name
+     * @param size
+     * @param importance
+     * @param notes
+     * @param excluded
+     * @param request
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     @RequestMapping("edit-item-action")
     public synchronized RedirectView editItemAction(
             @ModelAttribute("project") KanbanProject project,
@@ -283,13 +343,17 @@ public class KanbanBoardController {
         @SuppressWarnings("unchecked")
         Map<String, String[]> parameters = request.getParameterMap();
 
+        //Get the item which is being edited
         WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+        
+        //Save all the updates
         workItem.setName(name);
         workItem.setSize(size == null ? 0 : size);
         workItem.setImportance(importance == null ? 0 : importance);
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
-
+        
+        //TODO Figure this out
         for (String phase : workItem.getType().getPhases()) {
             String key = "date-" + phase;
             String[] valueArray = parameters.get(key);
@@ -300,21 +364,35 @@ public class KanbanBoardController {
             }
         }
 
+        //If it's changed parent, reset the parent.
         if (workItem.getParentId() != parentId) {
             project.getWorkItemTree().reparent(id, parentId);
         }
 
+       //Save the whole project
         project.save();
-
+        
+        //Go home.
         return new RedirectView("../" + boardType);
     }
 
+    
+    /**
+     * Responds to a request to delete an item
+     * 
+     * @param project
+     * @param id - the id of the item you want to delete
+     * @param nextView - the view you want to redirect to
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("delete-item-action")
     public synchronized View deleteWorkItem(
             @ModelAttribute("project") KanbanProject project,
             @RequestParam("id") int id,
             @ModelAttribute("redirectView") View nextView) throws IOException {
-
+    	
+    	//Delete the workitem, save and redirect.
         project.deleteWorkItem(id);
         project.save();
         return nextView;
@@ -367,6 +445,17 @@ public class KanbanBoardController {
         ChartUtilities.writeChartAsPNG(outputStream, chart, 800, 600);
     }
 
+    /**
+     * This does not edit the project, it provides the variables of the current project to the
+     * new project form.
+     * 
+     * @param project
+     * @param projectName
+     * @param boardType
+     * @param createNewProject - whether we want this to create a new project.
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("edit-project")
     public synchronized ModelAndView editProject(
             @ModelAttribute("project") KanbanProject project,
@@ -374,7 +463,13 @@ public class KanbanBoardController {
             @PathVariable("board") String boardType,
             @RequestParam("createNewProject") boolean createNewProject) throws IOException {
 
+    	
+    	//Regardless of whether they want to edit it, or what the value of createNewProject is,
+    	// assume we're creating a new project.
+    	
         Map<String, Object> model = buildModel(projectName, boardType);
+        
+        //Get the settings of this current project and pass it to the form.
         model.put("settings", kanbanService.getProjectConfiguration(projectName).
             getKanbanPropertiesFile().getContentAsString());
 
@@ -394,6 +489,14 @@ public class KanbanBoardController {
         return openProject(projectName, boardType, newProjectName);
     }
 
+    /**
+     * Opens a project and goes to boardType (e.g. wall, backlog etc)
+     * @param projectName
+     * @param boardType
+     * @param newProjectName
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("open-project")
     public synchronized RedirectView openProject(
             @PathVariable("projectName") String projectName,
@@ -403,6 +506,13 @@ public class KanbanBoardController {
         return new RedirectView("/projects/" + newProjectName + "/" + boardType, true);
     }
 
+    /**
+     * Models are a hashmap used to pass attributes to a view.
+     * 
+     * @param projectName
+     * @param boardType
+     * @return the model hashmap
+     */
     private Map<String, Object> buildModel(String projectName, String boardType) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("projectName", projectName);

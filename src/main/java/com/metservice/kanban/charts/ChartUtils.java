@@ -6,6 +6,11 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.model.WorkItem;
 
+/**
+ * Helper class for creating Charts.
+ * @author Janella Espinas, Chris Cooper
+ *
+ */
 public final class ChartUtils {
 
     public static List<LocalDate> getWorkingDaysForWorkItems(List<WorkItem> workItems, LocalDate endDate) {
