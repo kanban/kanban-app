@@ -11,5 +11,8 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/am/rialto/home1/cooperchri1/commons-io-2.0.1/commons-io-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/am/rialto/home1/cooperchri1/commons-io-2.0.1/commons-io-2.0.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="/am/rialto/home1/cooperchri1/commons-io-2.0.1/commons-io-2.0.1-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
