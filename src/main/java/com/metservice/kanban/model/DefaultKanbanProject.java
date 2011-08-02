@@ -8,6 +8,10 @@ import com.metservice.kanban.web.KanbanPersistence;
 
 //TODO This class needs more unit tests.
 
+/**
+ * Chris n Janella
+ */
+
 public class DefaultKanbanProject implements KanbanProject {
 
     private final WorkItemTypeCollection workItemTypes;
@@ -23,11 +27,20 @@ public class DefaultKanbanProject implements KanbanProject {
         this.persistence = persistence;
     }
 
+    /**
+     * Clicking small arrows on wall to advance workitem
+     * Moves workitem to nextphase and logs date of phase start
+     */
     @Override
     public void advance(int id, LocalDate date) {
         tree.getWorkItem(id).advance(date);
     }
 
+    
+    /**
+     * Adds work item to the project from the user or previously added ones in the csv file.
+     * 
+     */
     @Override
     public void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,
             LocalDate backlogDate) {
@@ -43,6 +56,9 @@ public class DefaultKanbanProject implements KanbanProject {
     }
 
 
+    /**
+     * Changes order in which the workitems are displayed on the wall
+     */
     @Override
     public void move(int id, int targetId, boolean after) {
         tree.move(tree.getWorkItem(id), tree.getWorkItem(targetId), after);
@@ -68,11 +84,17 @@ public class DefaultKanbanProject implements KanbanProject {
         persistence.write(tree);
     }
 
+    /**
+     * Change parent of specified work item.
+     */
     @Override
     public void reparentWorkItem(int id, int newParentId) {
         tree.reparent(id, newParentId);
     }
 
+    /**
+     * Gets current KanBan Board
+     */
     @Override
     public KanbanBoard getBoard(BoardIdentifier boardType) {
         KanbanBoardBuilder kanbanBoardBuilder = new KanbanBoardBuilder(columnsByBoard.get(boardType), workItemTypes,
@@ -80,6 +102,9 @@ public class DefaultKanbanProject implements KanbanProject {
         return kanbanBoardBuilder.build();
     }
 
+    /**
+     * Builds backlog screen
+     */
     @Override
     public KanbanBacklog getBacklog() {
         // TODO Why a board builder to build the backlog screen?
@@ -91,16 +116,26 @@ public class DefaultKanbanProject implements KanbanProject {
         KanbanBacklog backlog = kanbanBoardBuilder.buildKanbanBacklog();
         return backlog;
     }
-
+/**
+ * Gets top level type of workitems
+ * @return
+ */
     private WorkItemType getRootWorkItemType() {
         return workItemTypes.getRoot().getValue();
     }
 
+    /**
+     * Returns collection of all workitem types
+     */
     @Override
     public WorkItemTypeCollection getWorkItemTypes() {
         return workItemTypes;
     }
+    
 
+    /**
+     * called when order of backlog changed.
+     */
     @Override
     public void reorder(Integer id, Integer[] newIdList) {
         List<WorkItem> list = new ArrayList<WorkItem>();

@@ -445,6 +445,17 @@ public class KanbanBoardController {
         ChartUtilities.writeChartAsPNG(outputStream, chart, 800, 600);
     }
 
+    /**
+     * This does not edit the project, it provides the variables of the current project to the
+     * new project form.
+     * 
+     * @param project
+     * @param projectName
+     * @param boardType
+     * @param createNewProject - whether we want this to create a new project.
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("edit-project")
     public synchronized ModelAndView editProject(
             @ModelAttribute("project") KanbanProject project,
@@ -452,7 +463,13 @@ public class KanbanBoardController {
             @PathVariable("board") String boardType,
             @RequestParam("createNewProject") boolean createNewProject) throws IOException {
 
+    	
+    	//Regardless of whether they want to edit it, or what the value of createNewProject is,
+    	// assume we're creating a new project.
+    	
         Map<String, Object> model = buildModel(projectName, boardType);
+        
+        //Get the settings of this current project and pass it to the form.
         model.put("settings", kanbanService.getProjectConfiguration(projectName).
             getKanbanPropertiesFile().getContentAsString());
 
@@ -472,6 +489,14 @@ public class KanbanBoardController {
         return openProject(projectName, boardType, newProjectName);
     }
 
+    /**
+     * Opens a project and goes to boardType (e.g. wall, backlog etc)
+     * @param projectName
+     * @param boardType
+     * @param newProjectName
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("open-project")
     public synchronized RedirectView openProject(
             @PathVariable("projectName") String projectName,
