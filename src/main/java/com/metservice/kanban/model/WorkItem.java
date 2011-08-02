@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.joda.time.LocalDate;
 
+/**
+ * A work item is a story. It can have a parent.
+ *
+ *
+ */
 public class WorkItem {
 
     private final int id;
@@ -17,6 +22,7 @@ public class WorkItem {
     private String notes;
     private boolean excluded;
 
+    //Keep track of when this item started a phase
     private final Map<String, LocalDate> datesByPhase = new HashMap<String, LocalDate>();
     private String currentPhase;
     public static final int ROOT_WORK_ITEM_ID = 0;
@@ -42,6 +48,12 @@ public class WorkItem {
         this(id, ROOT_WORK_ITEM_ID, workItemType);
     }
 
+    /**
+     * Default constructor for WorkItem
+     * @param id - id of the item we are creating
+     * @param parentId - parent item's id
+     * @param type - type of WorkItem
+     */
     public WorkItem(int id, int parentId, WorkItemType type) {
         this.id = id;
         this.parentId = parentId;
@@ -189,13 +201,24 @@ public class WorkItem {
         return !type.hasPhaseAfter(currentPhase);
     }
 
+    /**
+     * Advance the phase of this item to the next phase in the phase list
+     * @param date - the date the next phase has started (e.g. right now)
+     */
     public void advance(LocalDate date) {
         if (!type.hasPhaseAfter(currentPhase)) {
             throw new IllegalStateException(this + " cannot advance: it is already in its final phase");
         }
+        //Set the start date of the next phase to date
         setDate(type.getPhaseAfter(currentPhase), date);
     }
 
+    /**
+     * Returns a copy of this WorkItem, with a new parent.
+     * 
+     * @param newParentId
+     * @return
+     */
     public WorkItem withNewParent(int newParentId) {
         WorkItem workItem = new WorkItem(id, newParentId, type);
         workItem.name = name;
