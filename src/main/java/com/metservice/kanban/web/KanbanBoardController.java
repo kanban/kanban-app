@@ -183,6 +183,15 @@ public class KanbanBoardController {
         return new ModelAndView("/add.jsp", model);
     }
 
+    /**
+     * Responds to edit-item request, passes the item in its current state to the edit form
+     * @param project
+     * @param projectName
+     * @param boardType
+     * @param id
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("edit-item")
     public synchronized ModelAndView editItem(
             @ModelAttribute("project") KanbanProject project,
@@ -191,12 +200,18 @@ public class KanbanBoardController {
             @RequestParam("id") Integer id)
         throws IOException {
 
+    	//Get a model ready to take some attributes
         Map<String, Object> model = buildModel(projectName, boardType);
+        
+        //Fetch the item we want to edit
         WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+        
+        //Add some variables to the model hashmap
         model.put("workItem", workItem);
         model.put("children", project.getWorkItemTree().getChildren(id));
         model.put("parentAlternativesList", project.getWorkItemTree().getParentAlternatives(workItem));
-
+        
+        //TODO: Figure out what this does
         Map<String, String> map = new LinkedHashMap<String, String>();
         for (String phase : workItem.getType().getPhases()) {
             LocalDate date = workItem.getDate(phase);
@@ -209,6 +224,7 @@ public class KanbanBoardController {
         }
         model.put("phasesMap", map);
 
+        //Pass the model to edit.jsp
         return new ModelAndView("/edit.jsp", model);
     }
 
@@ -293,7 +309,23 @@ public class KanbanBoardController {
         
     }
     
-
+    /**
+     * Responds to a form submission which passes an edited item
+     * 
+     * @param project
+     * @param boardType
+     * @param id
+     * @param parentId
+     * @param name
+     * @param size
+     * @param importance
+     * @param notes
+     * @param excluded
+     * @param request
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     @RequestMapping("edit-item-action")
     public synchronized RedirectView editItemAction(
             @ModelAttribute("project") KanbanProject project,
@@ -311,13 +343,17 @@ public class KanbanBoardController {
         @SuppressWarnings("unchecked")
         Map<String, String[]> parameters = request.getParameterMap();
 
+        //Get the item which is being edited
         WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+        
+        //Save all the updates
         workItem.setName(name);
         workItem.setSize(size == null ? 0 : size);
         workItem.setImportance(importance == null ? 0 : importance);
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
-
+        
+        //TODO Figure this out
         for (String phase : workItem.getType().getPhases()) {
             String key = "date-" + phase;
             String[] valueArray = parameters.get(key);
@@ -328,12 +364,15 @@ public class KanbanBoardController {
             }
         }
 
+        //If it's changed parent, reset the parent.
         if (workItem.getParentId() != parentId) {
             project.getWorkItemTree().reparent(id, parentId);
         }
 
+       //Save the whole project
         project.save();
-
+        
+        //Go home.
         return new RedirectView("../" + boardType);
     }
 
@@ -431,6 +470,13 @@ public class KanbanBoardController {
         return new RedirectView("/projects/" + newProjectName + "/" + boardType, true);
     }
 
+    /**
+     * Models are a hashmap used to pass attributes to a view.
+     * 
+     * @param projectName
+     * @param boardType
+     * @return the model hashmap
+     */
     private Map<String, Object> buildModel(String projectName, String boardType) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("projectName", projectName);
