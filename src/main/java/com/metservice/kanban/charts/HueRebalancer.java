@@ -1,4 +1,9 @@
 package com.metservice.kanban.charts;
+
+/**
+ * Helper tool to generate aesthetically pleasing colours.
+ * @author Janella Espinas, Chris Cooper
+ */
 public class HueRebalancer {
 
     private final double[] evenlySpreadHsbHues;
