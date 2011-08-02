@@ -41,6 +41,14 @@ import org.apache.commons.collections.CollectionUtils;
 
 //TODO This class needs unit tests.
 
+/**
+ * @author Nicholas Malcolm - malcolnich - 300170288
+ *
+ */
+/**
+ * @author Nicholas Malcolm - malcolnich - 300170288
+ *
+ */
 @Controller
 @RequestMapping("{projectName}/{board}")
 public class KanbanBoardController {
@@ -136,6 +144,7 @@ public class KanbanBoardController {
         return "../" + boardType + ":" + scrollTop;
     }
 
+    /** Creates empty item model to display in add form with preset parent id. **/   
     @RequestMapping("add-item")
     public synchronized ModelAndView addItem(
             @ModelAttribute("project") KanbanProject project,
@@ -144,25 +153,33 @@ public class KanbanBoardController {
             @RequestParam("id") int id)
         throws IOException {
 
+    	// Search for parent id
         WorkItem parent = project.getWorkItemTree().getWorkItem(id);
         Map<String, Object> model = buildModel(projectName, boardType);
 
+        // Get name of project
         String type = project.getWorkItemTypes().getRoot().getValue().getName();
+        
+        //Set defaults for new item
         String parentName = "";
         int parentId = ROOT_WORK_ITEM_ID;
         String legend = "Add " + type;
+        
+        //Change defaults if we have a parent item
         if (parent != null) {
             parentName = parent.getName();
             parentId = parent.getId();
             type = project.getWorkItemTypes().getTreeNode(parent.getType()).getChild(0).getValue().getName();
             legend = "Add a " + type + " to " + parentName;
         }
-
+        
+        //Pass defaults to the model hash
         model.put("workItem", parent);
         model.put("type", type);
         model.put("legend", legend);
         model.put("parentId", parentId);
 
+        //Render the add form, passing the model with its hash values.
         return new ModelAndView("/add.jsp", model);
     }
 
@@ -195,6 +212,11 @@ public class KanbanBoardController {
         return new ModelAndView("/edit.jsp", model);
     }
 
+    /** 
+     * Add item to Kanban project
+     * Needs a bunch of parameters in the request.
+     * (Comes from add.jsp) 
+     **/
     @RequestMapping("add-item-action")
     public synchronized RedirectView addItemAction(
             @ModelAttribute("project") KanbanProject project,
@@ -206,19 +228,25 @@ public class KanbanBoardController {
             @RequestParam("size") Integer size,
             @RequestParam("importance") Integer importance,
             @RequestParam("notes") String notes) throws IOException {
-
+    	//Param passed as string, need an int:
         int parentIdAsInteger = Integer.parseInt(parentId);
+        
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
-
+        
+        //Don't let null values get through
         if (size == null) {
             size = 0;
         }
         if (importance == null) {
             importance = 0;
         }
+        
+        //Add it and save it
         project.addWorkItem(parentIdAsInteger, typeAsWorkItemType, name, size, importance, notes, currentLocalDate());
         project.save();
-        return new RedirectView("../" + boardType);
+        
+        //Redirect
+        return new RedirectView("../" + boardType);  
     }
 
     @RequestMapping(value = "print-items", method = RequestMethod.POST)
