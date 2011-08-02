@@ -3,6 +3,12 @@ package com.metservice.kanban.model;
 import java.io.IOException;
 import org.joda.time.LocalDate;
 
+
+/**
+ * Object representing a kanban project
+ * Chris n Janella.
+ *
+ */
 public interface KanbanProject {
 
     void deleteWorkItem(int i);
