@@ -376,12 +376,23 @@ public class KanbanBoardController {
         return new RedirectView("../" + boardType);
     }
 
+    
+    /**
+     * Responds to a request to delete an item
+     * 
+     * @param project
+     * @param id - the id of the item you want to delete
+     * @param nextView - the view you want to redirect to
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("delete-item-action")
     public synchronized View deleteWorkItem(
             @ModelAttribute("project") KanbanProject project,
             @RequestParam("id") int id,
             @ModelAttribute("redirectView") View nextView) throws IOException {
-
+    	
+    	//Delete the workitem, save and redirect.
         project.deleteWorkItem(id);
         project.save();
         return nextView;
