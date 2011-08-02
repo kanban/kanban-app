@@ -5,6 +5,14 @@ import java.awt.Color;
 import java.awt.Paint;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
 
+
+/**
+ * 
+ * Supplies chart drawing tools, colours, axis etc.
+ * 
+ * chris n Janella
+ *
+ */
 @SuppressWarnings("serial")
 public class KanbanDrawingSupplier extends DefaultDrawingSupplier {
 
