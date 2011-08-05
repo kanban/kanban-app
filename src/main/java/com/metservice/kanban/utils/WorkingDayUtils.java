@@ -6,6 +6,12 @@ import org.joda.time.LocalDate;
 
 //TODO This class needs unit tests.
 
+/**
+ * @author Janella Espinas, Liam O'Connor
+ * 
+ * Helper utilities revolving around letting people enjoying their public holidays and weekends.
+ * After all, isn't that what Labour Day is all about?
+ */
 public class WorkingDayUtils {
 
     private static final String[] publicHolidays = new String[] {
@@ -24,6 +30,12 @@ public class WorkingDayUtils {
         "2011-12-27"
     };
 
+    /**
+     * Takes two dates and works out the number of working days between them.
+     * @param inceptionDate
+     * @param acceptanceDate
+     * @return
+     */
     public static int getWorkingDaysBetween(LocalDate inceptionDate, LocalDate acceptanceDate) {
         int days = 0;
         while(inceptionDate.isBefore(acceptanceDate)) {
@@ -35,7 +47,11 @@ public class WorkingDayUtils {
         return days;
     }
 
-    
+    /**
+     * Takes a date and works out whether or not it is a work day or not.
+     * @param localDate
+     * @return
+     */
     public static boolean isWorkingDay(LocalDate localDate) {
         if (localDate.getDayOfWeek() == SATURDAY || localDate.getDayOfWeek() == SUNDAY) {
             return false;
