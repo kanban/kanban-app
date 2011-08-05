@@ -5,9 +5,8 @@ import org.joda.time.LocalDate;
 
 
 /**
- * Object representing a kanban project
- * Chris n Janella.
- *
+ * The interface for a KanbanProject representation.
+ * @author Janella Espinas, Chris Cooper
  */
 public interface KanbanProject {
 
