@@ -39,6 +39,11 @@ function board(type) {
     document.forms["header"].submit();
 }
 
+function admin() {
+	document.forms["header"].action = getProjectUrl() + "/admin/";
+	document.forms["header"].submit();
+}
+
 function chart(chartName, workItemTypeName) {
     document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/chart?chartName=" + chartName + "&workItemTypeName=" + workItemTypeName;
     document.forms["header"].submit();
