@@ -484,9 +484,24 @@ public class KanbanBoardController {
 		model.put("settings", kanbanService
 				.getProjectConfiguration(projectName).getKanbanPropertiesFile()
 				.getContentAsString());
+		if (createNewProject){
+			return new ModelAndView("/createProject.jsp", model);
+		}
+		else {
+			return new ModelAndView("/editProject.jsp", model);
+		}
+	}
 
-		return new ModelAndView("/createProject.jsp", model);
+	@RequestMapping("edit-project-action")
+	public synchronized RedirectView editProjectAction(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("projectName") String projectName,
+			@PathVariable("board") String boardType,
+			@RequestParam("newProjectName") String newProjectName,
+			@RequestParam("content") String content) throws IOException {
 
+		kanbanService.editProject(newProjectName, content);
+		return openProject(projectName, boardType, newProjectName);
 	}
 
 	@RequestMapping("create-project-action")

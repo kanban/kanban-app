@@ -181,4 +181,16 @@ public class KanbanService {
         File file = new File(newProjectHome, KANBAN_PROPERTIES_FILE_NAME);
         writeStringToFile(file, settings);
     }
+
+	public void editProject(String projectName, String settings) throws IOException {
+		File projectHome = new File(home, projectName);
+
+		if (projectHome.exists()) {
+	        File file = new File(projectHome, KANBAN_PROPERTIES_FILE_NAME);
+	        writeStringToFile(file, settings);
+        }
+		else {
+			throw new IllegalArgumentException("cannot edit a project that does not exist: " + projectName);
+		}
+	}
 }

@@ -11,6 +11,7 @@
 	src="${pageContext.request.contextPath}/jquery.tablednd_0_5.js"></script>
 <%
 KanbanService service = new KanbanService();
+String currentProjectName = (String) request.getAttribute("projectName");
 %>
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/header.css" />
@@ -19,5 +20,6 @@ KanbanService service = new KanbanService();
 	<jsp:include page="header.jsp" />
     <h1>ADMIN PAGE</h1>
     <%= request.getAttribute("username") %>
+    
 </body>
 </html>
