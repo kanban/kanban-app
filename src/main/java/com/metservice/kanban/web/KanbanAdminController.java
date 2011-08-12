@@ -27,32 +27,18 @@ public class KanbanAdminController {
 		this.kanbanService = kanbanService;
 	}
 
+	@ModelAttribute("project")
+	public synchronized KanbanProject populateProject(
+			@PathVariable("projectName") String projectName) throws IOException {
+		return kanbanService.getKanbanProject(projectName);
+	}
+	
 	@RequestMapping("")
     public synchronized ModelAndView admin(
+			@ModelAttribute("project") KanbanProject project,
     		@PathVariable("projectName") String projectName		
     		) throws IOException {
-		System.out.println("admin view");
-//
-//        String scrollTop = extractScrollPositionInfoFromBoardType(boardType);
-//        boardType = cleanBoardType(boardType);
-//
-//        Map<String, Object> model = buildModel(projectName, boardType);
-//
-//        // TODO model used to have kanbanTransaction now it has kanban... need to fix view
-//
-//        model.put("scrollTop", scrollTop == null ? "0" : scrollTop);
-//
-//        if (boardType.equals("backlog")) {
-//            model.put("kanbanBacklog", project.getBacklog());
-//            model.put("type", project.getWorkItemTypes().getRoot().getValue());
-//            model.put("phase", project.getWorkItemTypes().getRoot().getValue().getPhases().get(0));
-//            return new ModelAndView("/backlog.jsp", model);
-//        } else if (boardType.equals("completed")) {
-//            model.put("type", project.getWorkItemTypes().getRoot().getValue());
-//            List<String> phases = project.getWorkItemTypes().getRoot().getValue().getPhases();
-//            model.put("phase", phases.get(phases.size() - 1));
-//            return new ModelAndView("/completed.jsp", model);
-//        }
+
         Map<String, Object> model = buildModel(projectName);
         return new ModelAndView("/admin.jsp", model);
     }

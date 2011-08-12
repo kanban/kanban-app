@@ -110,9 +110,6 @@ public class KanbanBoardController {
 					.getValue().getPhases();
 			model.put("phase", phases.get(phases.size() - 1));
 			return new ModelAndView("/completed.jsp", model);
-		} else if (boardType.equals("admin")) {
-			model.put("username", "hurro!");
-			return new ModelAndView("/admin.jsp", model);
 		}
 		return new ModelAndView("/project.jsp", model);
 	}
