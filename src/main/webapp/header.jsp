@@ -15,6 +15,7 @@
 
 <%
 KanbanProject project = (KanbanProject) request.getAttribute("project");
+String boardType = (String) request.getAttribute("board");
 WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
 TreeNode<WorkItemType> topLevel = workItemTypes.getRoot();
 WorkItemType secondLevel = null;
@@ -47,8 +48,9 @@ request.setAttribute("workItemTypes", workItemTypes);
         <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
         <div id="wall" class="button" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
         <div id="complete" class="button" onclick="javascript:board('completed');" ><div class ="textOnButton">Complete</div></div>
+        <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
-
+		</c:if>
         <div id="cumulative-flow-chart-1-button" class="button" onclick="javascript:chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">${project.workItemTypes.root.value.name}</div></div>
 		<c:if test="${secondLevel != null}" >
 	       <div id="cumulative-flow-chart-2-button" class="button" onclick="javascript:chart('cumulative-flow-chart','${secondLevel.name}');" ><div class ="textOnButton">${secondLevel.name}</div></div>
@@ -57,12 +59,12 @@ request.setAttribute("workItemTypes", workItemTypes);
 		<c:if test="${secondLevel != null}" >
 	        <div id="cycle-time-chart-2-button" class="button" onclick="javascript:chart('cycle-time-chart','${secondLevel.name}');" ><div class ="textOnButton">${secondLevel.name}</div></div>
 		</c:if>
-
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
         <c:forEach var="workItemType" items="${workItemTypes}">
             <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${currentProjectName}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
         </c:forEach>
         <div id="newProject" class="button" onclick="javascript:changeSettings(true);" ><div class ="textOnButton">New Project</div></div>
         <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
+		${boardType}
     </div>
 </form>
