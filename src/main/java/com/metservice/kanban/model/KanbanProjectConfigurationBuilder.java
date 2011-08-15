@@ -44,7 +44,17 @@ public class KanbanProjectConfigurationBuilder {
             List<KanbanBoardColumn> columns = new ArrayList<KanbanBoardColumn>();
             String[] boardPhases = properties.getPhaseSequence(board);
             for (String phase : boardPhases) {
+            	// phase argument specifies the name of the column
                 columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase));
+            }
+            String[] columnLimits = properties.getPhaseWIPLimit(board);
+            for(int i = 0; i < columnLimits.length; i++){
+            	try{
+            		int columnLimit = Integer.parseInt("");
+            		columns.get(i).setWIPLimit(columnLimit);
+            	}catch (NumberFormatException e) {
+					//boo hoo
+				}
             }
             phaseSequences.add(board, new KanbanBoardColumnList(columns));
         }
