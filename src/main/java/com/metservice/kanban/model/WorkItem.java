@@ -21,6 +21,7 @@ public class WorkItem {
     private int importance;
     private String notes;
     private boolean excluded;
+    private boolean stopped; //Whether a story is allowed to progress regardless of stage
 
     //Keep track of when this item started a phase
     private final Map<String, LocalDate> datesByPhase = new HashMap<String, LocalDate>();
@@ -64,6 +65,7 @@ public class WorkItem {
         this.importance = 0;
         this.notes = "";
         this.excluded = false;
+        this.stopped = false;
     }
 
     public int getId() {
@@ -200,7 +202,16 @@ public class WorkItem {
     public boolean isCompleted() {
         return !type.hasPhaseAfter(currentPhase);
     }
-
+    
+    public boolean isStopped() {
+    	return stopped;
+    }
+    
+    public void stop() {
+    	if (stopped==true) { stopped = false; }
+    	else stopped = true;
+    }
+    
     /**
      * Advance the phase of this item to the next phase in the phase list
      * @param date - the date the next phase has started (e.g. right now)
