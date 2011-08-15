@@ -43,10 +43,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author Nicholas Malcolm - malcolnich - 300170288
- *
- */
-/**
- * @author Nicholas Malcolm - malcolnich - 300170288
  * 
  */
 @Controller
