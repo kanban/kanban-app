@@ -75,6 +75,14 @@ public class KanbanBoardControllerLegacyTest {
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
     }
 
+    @Test
+    public void testCreateProject() throws IOException {
+        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", "wall", true);
+        assertThat(modelAndView.getViewName(), is("/createProject.jsp"));
+        assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
+        assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
+    }
+    
     @Ignore
     @Test
     public void testAdvanceItemAction() throws IOException {
