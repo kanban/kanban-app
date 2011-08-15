@@ -62,6 +62,14 @@
               document.forms["form"].action = getBoard() + "/move-item-action?id=" + id + "&targetId=" + targetId + "&scrollTop=" + getYOffset() + "&after=" + after;
               document.forms["form"].submit();
             }
+            //Changes the card color to FIREBRICK!
+            function stop(id, type) {
+            	var item = document.getElementById(id)
+            	if (item.className == 'stopped') {
+            		item.className = type;
+            	}
+            	else { item.className = 'stopped'; }
+            }
 
 //]]> 
 		</script>
@@ -149,6 +157,16 @@
 	top: 50px;
 }
 
+.stopIcon {
+	-moz-opacity: 1;
+	opacity: 1;
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	left: 50px;
+	top: 50px;
+}
+
 .addIcon {
 	-moz-opacity: 1;
 	opacity: 1;
@@ -190,6 +208,16 @@
 .markedToPrint {
 	border: 1px silver solid;
 	background: #EEEEEE;
+	height: 60px;
+	width: 155px;
+	margin: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+    position: relative;
+}
+
+.stopped {
+	border: 1px red solid;
+	background: #800517;
 	height: 60px;
 	width: 155px;
 	margin: 1px 1px 1px 1px;
@@ -342,7 +370,7 @@
                             </div>
                             <div class="advanceIcon">
                                 <%
-                                    if (!item.isCompleted()) {
+                                    if (!item.isCompleted() && !item.isStopped()) {
                                 %>
                                 <img 
                                     onclick="javascript:advance(<%=item.getId()%>);"
@@ -372,6 +400,14 @@
                                     id="edit-work-item-<%=item.getId()%>-button"
                                     onclick="javascript:edit(<%=item.getId()%>);"
                                     src="<%=request.getContextPath()%>/images/edit.png" />
+                            </div>
+                            <div class="stopIcon">
+                                <img
+                                    class="stop"
+                                    alt="Stop"
+                                    id="stop-work-item-<%=item.getId()%>-button"
+                                    onclick="javascript:stop(<%=item.getId()%>, '<%=item.getType().getName()%>');"
+                                    src="<%=request.getContextPath()%>/images/stop.png" />
                             </div>
                             <div class="addIcon">
                                 <%
