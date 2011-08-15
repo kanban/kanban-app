@@ -15,6 +15,8 @@ public interface KanbanProject {
     void save() throws IOException;
 
     void advance(int id, LocalDate date);
+    
+    void stop(int id);
 
     void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,
             LocalDate backlogDate);
