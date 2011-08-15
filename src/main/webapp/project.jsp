@@ -69,6 +69,8 @@
             		item.className = type;
             	}
             	else { item.className = 'stopped'; }
+            	document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id + "&scrollTop=" + getYOffset();
+   			 	document.forms["form"].submit();
             }
 
 //]]> 

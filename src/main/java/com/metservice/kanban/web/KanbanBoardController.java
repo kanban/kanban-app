@@ -138,7 +138,19 @@ public class KanbanBoardController {
 
 		return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
 	}
+	
+	@RequestMapping(value = "stop-item-action", method = RequestMethod.POST)
+	public synchronized RedirectView stopItemAction(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("board") String boardType,
+			@RequestParam("id") String id,
+			@RequestParam("scrollTop") String scrollTop) throws IOException {
 
+		project.stop(parseInt(id));
+		project.save();
+
+		return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+	}
 	private String includeScrollTopPosition(String boardType, String scrollTop) {
 		return "../" + boardType + ":" + scrollTop;
 	}

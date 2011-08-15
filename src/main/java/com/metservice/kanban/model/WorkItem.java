@@ -208,14 +208,10 @@ public class WorkItem {
     }
     
     public void stop() {
-    	stopped = true;
+    	if (stopped==true) { stopped = false; }
+    	else stopped = true;
     }
     
-    //GOOD ENGLUND!
-    public void unstop() {
-    	stopped = false;
-    }
-
     /**
      * Advance the phase of this item to the next phase in the phase list
      * @param date - the date the next phase has started (e.g. right now)

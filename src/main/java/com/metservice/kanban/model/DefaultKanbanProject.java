@@ -42,6 +42,14 @@ public class DefaultKanbanProject implements KanbanProject {
     public void advance(int id, LocalDate date) {
         tree.getWorkItem(id).advance(date);
     }
+    
+    /**
+     * Testing to see if this works
+     */
+    @Override
+    public void stop(int id) {
+    	tree.getWorkItem(id).stop();
+    }
 
     
     /**
