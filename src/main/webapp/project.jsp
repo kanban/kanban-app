@@ -165,7 +165,7 @@
 	position: absolute;
 	width: 16px;
 	height: 16px;
-	left: 50px;
+	left: 110px;
 	top: 50px;
 }
 
