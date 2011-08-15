@@ -34,12 +34,23 @@
 			function setPosition() {
 			  window.scrollTo(0,<%=scrollTo%>);
 			}
-
+			//Changes the card color to FIREBRICK!
+            function stopStory(id,type) {
+            	//document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
+   			 	//document.forms["form"].submit();
+            	var item = document.getElementById(id);
+            	if (item.className=='stopped') {
+            		item.className = type;
+            	}
+            	else { item.className = "stopped"; }
+            	//document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id + "&scrollTop=" + getYOffset();
+   			 	//document.forms["form"].submit();
+            }
 			function markUnmarkToPrint(id, type){
-			   var item = document.getElementById(id)
+			   var item = document.getElementById(id);
 			   if (item.className == 'markedToPrint') {
 			   	 item.className = type;
-			   } else {
+			  } else {
 			     item.className = "markedToPrint";
 			   }
 			}
@@ -61,16 +72,6 @@
             function move(id, targetId, after){
               document.forms["form"].action = getBoard() + "/move-item-action?id=" + id + "&targetId=" + targetId + "&scrollTop=" + getYOffset() + "&after=" + after;
               document.forms["form"].submit();
-            }
-            //Changes the card color to FIREBRICK!
-            function stop(id, type) {
-            	var item = document.getElementById(id)
-            	if (item.className == 'stopped') {
-            		item.className = type;
-            	}
-            	else { item.className = 'stopped'; }
-            	document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id + "&scrollTop=" + getYOffset();
-   			 	document.forms["form"].submit();
             }
 
 //]]> 
@@ -113,7 +114,7 @@
 	text-align: left;
 }
 
-.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover
+.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover,.stopIcon:hover
 	{
 	-moz-opacity: 0.5;
 	opacity: 0.5;
@@ -270,6 +271,15 @@
 	padding: 2px 2px 2px 2px;
 }
 
+.stopped:hover {
+	border: 1px red solid;
+	background: #800517;
+	height: 60px;
+	width: 155px;
+	margin: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+}
+
 .<%=name%>-header {
 	background: <%=cardColour.toString()%>;
 	border: 1px #989898 dotted;
@@ -408,7 +418,7 @@
                                     class="stop"
                                     alt="Stop"
                                     id="stop-work-item-<%=item.getId()%>-button"
-                                    onclick="javascript:stop(<%=item.getId()%>, '<%=item.getType().getName()%>');"
+                                    onclick="javascript:stopStory('work-item-<%=item.getId()%>','<%=item.getType().getName()%>');"
                                     src="<%=request.getContextPath()%>/images/stop.png" />
                             </div>
                             <div class="addIcon">
