@@ -29,7 +29,7 @@ public class KanbanProjectConfigurationBuilder {
 
         return new KanbanProjectConfiguration(projectHome, boardDefinitions, rootWorkItemType, workItemTypes);
     }
-
+// TODO ROB&SEAN WORK!
     private KanbanBoardConfiguration getBoardDefinitions(WorkItemTypeCollection workItemTypes) throws IOException {
         Map<String, WorkItemType> workItemTypesByPhase = new HashMap<String, WorkItemType>();
         for (WorkItemType type : workItemTypes) {
@@ -44,8 +44,20 @@ public class KanbanProjectConfigurationBuilder {
             List<KanbanBoardColumn> columns = new ArrayList<KanbanBoardColumn>();
             String[] boardPhases = properties.getPhaseSequence(board);
             for (String phase : boardPhases) {
-                columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase));
+            	
+            	
+            	
+            	
+            	//Check for '+' which indicates that a 'pre' column is needed
+            	if(phase.charAt(0) == '+'){
+            		columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), ("Pre " + phase.substring(1))));
+            		columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase.substring(1)));
+            	}
+            	else{
+            	columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase));
+            	}
             }
+           
             phaseSequences.add(board, new KanbanBoardColumnList(columns));
         }
         return phaseSequences;
@@ -68,6 +80,7 @@ public class KanbanProjectConfigurationBuilder {
     private List<TreeNode<WorkItemType>> getChildWorkItemTypeTreeNodes(String name) throws IOException {
         List<TreeNode<WorkItemType>> children = new ArrayList<TreeNode<WorkItemType>>();
 
+        	//get all the work item types i.e feature,story
         for (String possibleChildName : properties.getWorkItemTypes()) {
             if (properties.isChildWorkItemType(name, possibleChildName)) {
                 children.add(createWorkItemTypeTreeNode(possibleChildName));

@@ -71,8 +71,10 @@ public class KanbanPropertiesFile {
      * @return
      * @throws IOException
      */
+    // TODO Rob's and Sean's work!!!!!!
     public String[] getPhases(String workItemType) throws IOException {
         String propertyKey = format("workItemTypes.%s.phases", workItemType);
+        //Recognise the '+' symbol and then
         return getCommaSeparatedStrings(propertyKey);
     }
 
