@@ -5,6 +5,7 @@ import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
 import com.metservice.kanban.utils.WorkingDayUtils;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,6 +105,15 @@ public class WorkItemTest {
         assertThat(workItem.getPhaseOnDate(formatter.parse("11/02/2011")), is("phase2"));
         assertThat(workItem.getPhaseOnDate(formatter.parse("12/02/2011")), is("phase2"));
 
+    }
+    
+    @Test
+    public void testStop() throws ParseException {
+    	WorkItem workItem = new WorkItem(1, type); 
+        workItem.setDate("phase1", formatter.parse("10/02/2011"));
+        assertFalse(workItem.isStopped());
+        workItem.stop();
+        assertTrue(workItem.isStopped());        
     }
 
     @Test(expected = IllegalStateException.class)

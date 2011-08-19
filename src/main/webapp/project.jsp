@@ -34,12 +34,25 @@
 			function setPosition() {
 			  window.scrollTo(0,<%=scrollTo%>);
 			}
-
-			function markUnmarkToPrint(id, type){
-			   var item = document.getElementById(id)
-			   if (item.className == 'markedToPrint') {
-			   	 item.className = type;
-			   } else {
+			
+			//Changes the card color to FIREBRICK!
+            function stopStory(id,type) {
+            	//document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
+   			 	//document.forms["form"].submit();
+            	//var item = document.getElementById(id);
+            	//if (item.className=='stopped') {
+            		//item.className = type;
+            	//}
+            	//else { item.className = "stopped"; }
+            	document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id;
+   			 	document.forms["form"].submit();
+            }
+            
+			function markUnmarkToPrint(divId, type, itemId){
+			   var item = document.getElementById(divId);
+			  if (item.className == 'markedToPrint') {
+			  	item.className = type;
+			  } else {
 			     item.className = "markedToPrint";
 			   }
 			}
@@ -103,7 +116,7 @@
 	text-align: left;
 }
 
-.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover
+.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover,.stopIcon:hover
 	{
 	-moz-opacity: 0.5;
 	opacity: 0.5;
@@ -146,6 +159,16 @@
 	width: 16px;
 	height: 16px;
 	left: 0px;
+	top: 50px;
+}
+
+.stopIcon {
+	-moz-opacity: 1;
+	opacity: 1;
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	left: 110px;
 	top: 50px;
 }
 
@@ -197,6 +220,16 @@
     position: relative;
 }
 
+.stopped {
+	border: 1px red solid;
+	background: #800517;
+	height: 60px;
+	width: 155px;
+	margin: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+    position: relative;
+}
+
 .horizontalLine {
 	border-top: 2px black solid;
 }
@@ -234,6 +267,15 @@
 .markedToPrint:hover {
 	border: 1px black solid;
 	background: #CCCCCC;
+	height: 60px;
+	width: 155px;
+	margin: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+}
+
+.stopped:hover {
+	border: 1px red solid;
+	background: #800517;
 	height: 60px;
 	width: 155px;
 	margin: 1px 1px 1px 1px;
@@ -289,13 +331,12 @@
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                     %>
-
-
+                    
                     <td class="<%=item.getType().getName()%>-background">
                         <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>')"
-                            id="work-item-<%=item.getId()%>"
-                            class="<%=item.getType().getName()%>">
+                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
+                            id="work-item-<%=item.getId()%><%=item.isStopped() %>"
+                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
                             
                             <div class="age-container">
                                 <% 
@@ -341,8 +382,9 @@
                                 %>
                             </div>
                             <div class="advanceIcon">
-                                <%
-                                    if (!item.isCompleted()) {
+                            
+                            	<% 
+                            		if (!item.isCompleted()) {
                                 %>
                                 <img 
                                     onclick="javascript:advance(<%=item.getId()%>);"
@@ -372,6 +414,14 @@
                                     id="edit-work-item-<%=item.getId()%>-button"
                                     onclick="javascript:edit(<%=item.getId()%>);"
                                     src="<%=request.getContextPath()%>/images/edit.png" />
+                            </div>
+                            <div class="stopIcon">
+                                <img
+                                    class="stop"
+                                    alt="Stop"
+                                    id="stop-work-item-<%=item.getId()%>-button"
+                                    onclick="javascript:stopStory(<%=item.getId()%>,'<%=item.getType().getName()%>');"
+                                    src="<%=request.getContextPath()%>/images/stop.png" />
                             </div>
                             <div class="addIcon">
                                 <%

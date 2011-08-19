@@ -43,10 +43,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author Nicholas Malcolm - malcolnich - 300170288
- *
- */
-/**
- * @author Nicholas Malcolm - malcolnich - 300170288
  * 
  */
 @Controller
@@ -142,7 +138,21 @@ public class KanbanBoardController {
 
 		return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
 	}
+	
+	@RequestMapping(value = "stop-item-action", method = RequestMethod.POST)
+	public synchronized RedirectView stopItemAction(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("board") String boardType,
+			@RequestParam("id") String id) throws IOException {
 
+		project.stop(parseInt(id));
+		project.save();
+		
+		// Redirect
+		return new RedirectView("../" + boardType);
+
+		//return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+	}
 	private String includeScrollTopPosition(String boardType, String scrollTop) {
 		return "../" + boardType + ":" + scrollTop;
 	}
@@ -455,8 +465,8 @@ public class KanbanBoardController {
 	}
 
 	/**
-	 * This does not edit the project, it provides the variables of the current
-	 * project to the new project form.
+	 * Provides the variables of the current project to either a new project form,
+	 * or to the edit project page, depending on createNewProject's boolean value.
 	 * 
 	 * @param project
 	 * @param projectName
@@ -474,19 +484,17 @@ public class KanbanBoardController {
 			@RequestParam("createNewProject") boolean createNewProject)
 			throws IOException {
 
-		// Regardless of whether they want to edit it, or what the value of
-		// createNewProject is,
-		// assume we're creating a new project.
-
 		Map<String, Object> model = buildModel(projectName, boardType);
 
 		// Get the settings of this current project and pass it to the form.
 		model.put("settings", kanbanService
 				.getProjectConfiguration(projectName).getKanbanPropertiesFile()
 				.getContentAsString());
+		// Create a new project if true
 		if (createNewProject){
 			return new ModelAndView("/createProject.jsp", model);
 		}
+		// else edit the current project
 		else {
 			return new ModelAndView("/editProject.jsp", model);
 		}
@@ -497,11 +505,11 @@ public class KanbanBoardController {
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("projectName") String projectName,
 			@PathVariable("board") String boardType,
-			@RequestParam("newProjectName") String newProjectName,
+			@RequestParam("newProjectName") String editProjectName,
 			@RequestParam("content") String content) throws IOException {
 
-		kanbanService.editProject(newProjectName, content);
-		return openProject(projectName, boardType, newProjectName);
+		kanbanService.editProject(editProjectName, content);
+		return openProject(projectName, boardType, editProjectName);
 	}
 
 	@RequestMapping("create-project-action")
