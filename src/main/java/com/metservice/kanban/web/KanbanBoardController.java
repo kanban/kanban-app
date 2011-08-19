@@ -143,13 +143,15 @@ public class KanbanBoardController {
 	public synchronized RedirectView stopItemAction(
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("board") String boardType,
-			@RequestParam("id") String id,
-			@RequestParam("scrollTop") String scrollTop) throws IOException {
+			@RequestParam("id") String id) throws IOException {
 
 		project.stop(parseInt(id));
 		project.save();
+		
+		// Redirect
+		return new RedirectView("../" + boardType);
 
-		return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+		//return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
 	}
 	private String includeScrollTopPosition(String boardType, String scrollTop) {
 		return "../" + boardType + ":" + scrollTop;

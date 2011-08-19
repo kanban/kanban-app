@@ -1,12 +1,6 @@
 package com.metservice.kanban.csv;
 
-import static com.metservice.kanban.csv.CsvConstants.EXCLUDED_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.IMPORTANCE_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.NAME_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.NOTES_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.PARENT_ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.SIZE_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.*;
 import static com.metservice.kanban.utils.DateUtils.formatIsoDate;
 import java.io.IOException;
 import java.io.Writer;
@@ -17,7 +11,7 @@ import com.metservice.kanban.model.WorkItemType;
 
 public class KanbanCsvWriter {
 
-    private static final int NUMBER_OF_METADATA_COLUMNS = 7;
+    private static final int NUMBER_OF_METADATA_COLUMNS = 8;
 
     private final CSVWriter csvWriter;
     private final List<String> phases;
@@ -43,6 +37,7 @@ public class KanbanCsvWriter {
         data[4] = IMPORTANCE_COLUMN_NAME;
         data[5] = NOTES_COLUMN_NAME;
         data[6] = EXCLUDED_COLUMN_NAME;
+        data[7] = STOPPED_COLUMN_NAME;
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {
@@ -62,6 +57,7 @@ public class KanbanCsvWriter {
         data[4] = Integer.toString(workItem.getImportance());
         data[5] = workItem.getNotes();
         data[6] = "" + workItem.isExcluded();
+        data[7] = "" + workItem.isStopped();
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {

@@ -35,22 +35,24 @@
 			function setPosition() {
 			  window.scrollTo(0,<%=scrollTo%>);
 			}
+			
 			//Changes the card color to FIREBRICK!
             function stopStory(id,type) {
             	//document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
    			 	//document.forms["form"].submit();
-            	var item = document.getElementById(id);
-            	if (item.className=='stopped') {
-            		item.className = type;
-            	}
-            	else { item.className = "stopped"; }
-            	//document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id + "&scrollTop=" + getYOffset();
-   			 	//document.forms["form"].submit();
+            	//var item = document.getElementById(id);
+            	//if (item.className=='stopped') {
+            		//item.className = type;
+            	//}
+            	//else { item.className = "stopped"; }
+            	document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id;
+   			 	document.forms["form"].submit();
             }
-			function markUnmarkToPrint(id, type){
-			   var item = document.getElementById(id);
-			   if (item.className == 'markedToPrint') {
-			   	 item.className = type;
+            
+			function markUnmarkToPrint(divId, type, itemId){
+			   var item = document.getElementById(divId);
+			  if (item.className == 'markedToPrint') {
+			  	item.className = type;
 			  } else {
 			     item.className = "markedToPrint";
 			   }
@@ -345,11 +347,10 @@
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                     %>
-
-
+                    
                     <td class="<%=item.getType().getName()%>-background">
-                        <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>')"
+                        <div <% if (item.isStopped()) { %> class="stopped" <% } %>
+                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
                             id="work-item-<%=item.getId()%>"
                             class="<%=item.getType().getName()%>">
                             
@@ -397,8 +398,9 @@
                                 %>
                             </div>
                             <div class="advanceIcon">
-                                <%
-                                    if (!item.isCompleted() && !item.isStopped()) {
+                            
+                            	<% 
+                            		if (!item.isCompleted()) {
                                 %>
                                 <img 
                                     onclick="javascript:advance(<%=item.getId()%>);"
@@ -434,7 +436,7 @@
                                     class="stop"
                                     alt="Stop"
                                     id="stop-work-item-<%=item.getId()%>-button"
-                                    onclick="javascript:stopStory('work-item-<%=item.getId()%>','<%=item.getType().getName()%>');"
+                                    onclick="javascript:stopStory(<%=item.getId()%>,'<%=item.getType().getName()%>');"
                                     src="<%=request.getContextPath()%>/images/stop.png" />
                             </div>
                             <div class="addIcon">
