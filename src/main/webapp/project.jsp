@@ -333,10 +333,10 @@
                     %>
                     
                     <td class="<%=item.getType().getName()%>-background">
-                        <div <% if (item.isStopped()) { %> class="stopped" <% } %>
+                        <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
-                            id="work-item-<%=item.getId()%>"
-                            class="<%=item.getType().getName()%>">
+                            id="work-item-<%=item.getId()%><%=item.isStopped() %>"
+                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
                             
                             <div class="age-container">
                                 <% 
