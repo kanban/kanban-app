@@ -384,7 +384,7 @@
                             <div class="advanceIcon">
                             
                             	<% 
-                            		if (!item.isCompleted() || !item.isStopped()) {
+                            		if (!item.isCompleted() && !item.isStopped()) {
                                 %>
                                 <img 
                                     onclick="javascript:advance(<%=item.getId()%>);"
