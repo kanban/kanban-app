@@ -336,7 +336,7 @@
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
                             id="work-item-<%=item.getId()%><%=item.isStopped() %>"
-                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
+                            class="<%=item.getType().getName()%>">
                             
                             <div class="age-container">
                                 <% 
@@ -384,7 +384,7 @@
                             <div class="advanceIcon">
                             
                             	<% 
-                            		if (!item.isCompleted()) {
+                            		if (!item.isCompleted() || !item.isStopped()) {
                                 %>
                                 <img 
                                     onclick="javascript:advance(<%=item.getId()%>);"
