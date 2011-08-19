@@ -315,6 +315,7 @@
 										column_index++;
 										int wipLimit = column.getWIPLimit();
                                         String type = column.getWorkItemType().getName();
+                                        //WIP Limit stuff by Nick Malcolm and Chris Cooper
                 %>
                 <th title="WIP Limit: <%=wipLimit%>" class="<%=type%>-header" id="phase_<%= column_index %>"><%=column.getPhase()%></th>
                 <script>

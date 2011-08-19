@@ -12,6 +12,10 @@ import com.metservice.kanban.KanbanPropertiesFile;
 //TODO This class needs unit tests.
 //TODO perhaps rename to factory and replace build methods with create methods
 
+/**
+ * 
+ * WIP Limit by Nicholas Malcolm and Chris Cooper
+ */
 public class KanbanProjectConfigurationBuilder {
 
     private final File projectHome;
