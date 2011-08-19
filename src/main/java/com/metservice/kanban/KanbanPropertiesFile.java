@@ -64,21 +64,6 @@ public class KanbanPropertiesFile {
         String propertyKey = format("boards.%s", boardType.getName());
         return getCommaSeparatedStrings(propertyKey);
     }
-    
-    /**
-     * Returns the WIP limits for phases
-     * @param boardType
-     * @return
-     * @throws IOException
-     */
-    public String[] getPhaseWIPLimit(BoardIdentifier boardType) throws IOException {
-        String propertyKey = format("boards.%s.wipLimit", boardType.getName());
-        try{
-        	return getCommaSeparatedStrings(propertyKey);
-        }catch (Exception e) {
-			return new String[0];
-		}
-    }
 
     /**
      * Returns the phases for a particular workItemType (eg, feature, story).
@@ -89,6 +74,21 @@ public class KanbanPropertiesFile {
     public String[] getPhases(String workItemType) throws IOException {
         String propertyKey = format("workItemTypes.%s.phases", workItemType);
         return getCommaSeparatedStrings(propertyKey);
+    }
+    
+    /**
+     * Returns the WIP limits for phases
+     * @param boardType
+     * @return
+     * @throws IOException
+     */
+    public String[] getPhaseWIPLimit(String workItemType) throws IOException {
+        String propertyKey = format("workItemTypes.%s.wipLimit", workItemType);
+        try{
+        	return getCommaSeparatedStrings(propertyKey);
+        }catch (Exception e) {
+			return new String[0];
+		}
     }
 
     public HtmlColour getWorkItemTypeCardColour(String workItemType) throws IOException {
