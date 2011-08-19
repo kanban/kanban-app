@@ -29,7 +29,7 @@ public class KanbanProjectConfigurationBuilder {
 
         return new KanbanProjectConfiguration(projectHome, boardDefinitions, rootWorkItemType, workItemTypes);
     }
-
+// TODO ROB&SEAN WORK!
     private KanbanBoardConfiguration getBoardDefinitions(WorkItemTypeCollection workItemTypes) throws IOException {
         Map<String, WorkItemType> workItemTypesByPhase = new HashMap<String, WorkItemType>();
         for (WorkItemType type : workItemTypes) {
@@ -78,6 +78,7 @@ public class KanbanProjectConfigurationBuilder {
     private List<TreeNode<WorkItemType>> getChildWorkItemTypeTreeNodes(String name) throws IOException {
         List<TreeNode<WorkItemType>> children = new ArrayList<TreeNode<WorkItemType>>();
 
+        	//get all the work item types i.e feature,story
         for (String possibleChildName : properties.getWorkItemTypes()) {
             if (properties.isChildWorkItemType(name, possibleChildName)) {
                 children.add(createWorkItemTypeTreeNode(possibleChildName));
