@@ -89,7 +89,9 @@ public class EndToEndTest {
         page.clickAdvance("feature 1");
         page.clickAdvance("feature 2");
         WallPage wall = page.clickWallButton();
+        System.out.println("wall clicked");
         wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
+        System.out.println("addstory clicked");
         wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
         wall.clickEditStoryButton("story").assertParentIs("feature 2");
     }

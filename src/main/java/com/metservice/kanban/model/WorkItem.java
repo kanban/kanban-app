@@ -123,6 +123,10 @@ public class WorkItem {
     public void setExcluded(boolean excluded) {
         this.excluded = excluded;
     }
+    
+    public void setStopped(boolean stopped){
+    	this.stopped = stopped;
+    }
 
     public String getCurrentPhase() {
         if (currentPhase == null) {
