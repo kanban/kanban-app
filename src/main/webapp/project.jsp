@@ -48,11 +48,9 @@
    			 	document.forms["form"].submit();
             }
             
-			function markUnmarkToPrint(id, type){
-			   var item = document.getElementById(id);
-			   if (item.className == 'markedToPrint') {
-			   	 item.className = 'stopped';
-			  } else if (item.className == 'stopped') {
+			function markUnmarkToPrint(divId, type, itemId){
+			   var item = document.getElementById(divId);
+			  if (item.className == 'markedToPrint') {
 			  	item.className = type;
 			  } else {
 			     item.className = "markedToPrint";
@@ -333,11 +331,10 @@
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                     %>
-
-
+                    
                     <td class="<%=item.getType().getName()%>-background">
-                        <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>')"
+                        <div <% if (item.isStopped()) { %> class="stopped" <% } %>
+                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
                             id="work-item-<%=item.getId()%>"
                             class="<%=item.getType().getName()%>">
                             
