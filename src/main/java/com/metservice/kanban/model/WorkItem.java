@@ -200,7 +200,7 @@ public class WorkItem {
     }
 
     public boolean isCompleted() {
-        return !type.hasPhaseAfter(currentPhase);
+    	return !type.hasPhaseAfter(currentPhase);
     }
     
     public boolean isStopped() {
