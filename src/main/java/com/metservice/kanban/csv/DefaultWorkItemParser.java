@@ -1,13 +1,6 @@
 package com.metservice.kanban.csv;
 
-import static com.metservice.kanban.csv.CsvConstants.EXCLUDED_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.IMPORTANCE_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.NAME_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.NOTES_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.PARENT_ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.SIZE_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.COLOR_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.*;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemType;
@@ -31,8 +24,9 @@ public class DefaultWorkItemParser implements WorkItemParser {
         int importance = dataRow.getInt(IMPORTANCE_COLUMN_NAME);
         String notes = dataRow.getString(NOTES_COLUMN_NAME);
         boolean excluded = dataRow.getBoolean(EXCLUDED_COLUMN_NAME);
+        boolean stopped = dataRow.getBoolean(STOPPED_COLUMN_NAME);
         String color = dataRow.getString(COLOR_COLUMN_NAME);
-
+        
         WorkItem workItem = new WorkItem(id, parentId, type);
         workItem.setName(name);
         workItem.setSize(size);
@@ -40,7 +34,7 @@ public class DefaultWorkItemParser implements WorkItemParser {
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
         workItem.setColour(color);
-        
+        workItem.setStopped(stopped);
 
         for (String phase : type.getPhases()) {
             LocalDate date = dataRow.getDate(phase);

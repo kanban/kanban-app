@@ -80,19 +80,21 @@ public class EndToEndTest {
         page.clickEditFeatureButton("feature name").assertExcludeBoxIs(true);
     }
 
-//    @Test
-//    public void userCanChangeTheParentOfAWorkItem() {
-//        BoardPage page = openProject("Test project");
-//        page.clickBacklogButton();
-//        page.clickAddFeatureButton().enterName("feature 1").clickSaveButton();
-//        page.clickAddFeatureButton().enterName("feature 2").clickSaveButton();
-//        page.clickAdvance("feature 1");
-//        page.clickAdvance("feature 2");
-//        WallPage wall = page.clickWallButton();
-//        wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
-//        wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
-//        wall.clickEditStoryButton("story").assertParentIs("feature 2");
-//    }
+    @Test
+    public void userCanChangeTheParentOfAWorkItem() {
+        BoardPage page = openProject("Test project");
+        page.clickBacklogButton();
+        page.clickAddFeatureButton().enterName("feature 1").clickSaveButton();
+        page.clickAddFeatureButton().enterName("feature 2").clickSaveButton();
+        page.clickAdvance("feature 1");
+        page.clickAdvance("feature 2");
+        WallPage wall = page.clickWallButton();
+        System.out.println("wall clicked");
+        wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
+        System.out.println("addstory clicked");
+        wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
+        wall.clickEditStoryButton("story").assertParentIs("feature 2");
+    }
 
     @Test
     public void userCanViewAChart() {
@@ -117,4 +119,14 @@ public class EndToEndTest {
         String expectedContent = FileUtils.readFileToString(expectedFile);
         assertThat(responseContent, is(expectedContent));
     }
+    
+    @Test
+    public void columnRedWhenWIPExceeded() throws IOException {
+    	 BoardPage wallPage = openProject("Test project");
+    	 //assert that th id"phase_2" background-color = #f00
+    	//TODO Get help from someone at MetService for writing tests
+    }
+    
+    
+    
 }

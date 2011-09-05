@@ -19,6 +19,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
 
 <title>Kanban</title>
@@ -48,10 +49,15 @@
    			 	document.forms["form"].submit();
             }
             
-			function markUnmarkToPrint(divId, type, itemId){
+			function markUnmarkToPrint(divId, type, isStopped){
 			   var item = document.getElementById(divId);
 			  if (item.className == 'markedToPrint') {
-			  	item.className = type;
+			  	if (isStopped) {
+			  		item.className = "stopped";
+			  	}
+			  	else {
+			  		item.className = type;
+			  	}
 			  } else {
 			     item.className = "markedToPrint";
 			   }
@@ -222,7 +228,7 @@
 
 .stopped {
 	border: 1px red solid;
-	background: #800517;
+	background: #FF0033 !important;
 	height: 60px;
 	width: 155px;
 	margin: 1px 1px 1px 1px;
@@ -309,12 +315,28 @@
             <tr>
                 <%
                     KanbanBoardColumnList columns = project.getColumns(board);
-
+					int column_index = 0;
                                     for (KanbanBoardColumn column : columns) {
-
+										column_index++;
+										int wipLimit = column.getWIPLimit();
                                         String type = column.getWorkItemType().getName();
+                                        //WIP Limit stuff by Nick Malcolm and Chris Cooper
                 %>
-                <th class="<%=type%>-header"><%=column.getPhase()%></th>
+                <th title="WIP Limit: <%=wipLimit%>" class="<%=type%>-header" id="phase_<%= column_index %>"><%=column.getPhase()%></th>
+                <script>
+                	$(document).ready(function(){
+                		var i = 0; 
+                		$('.horizontalLine td:nth-child(<%= column_index %>) .size').each(function(){
+                			var temp = parseInt($(this).html());
+                			if(!isNaN(temp)){
+                				i+=temp;
+                			}
+                		});
+                		if(i > <%= wipLimit %>){
+                			$("#phase_<%=column_index %>").css('background-color', '#f00');
+                		}
+                	});
+                </script>
                 <%
                     }
                 %>
@@ -334,8 +356,8 @@
                     
                     <td class="<%=item.getType().getName()%>-background">
                         <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
-                            id="work-item-<%=item.getId()%><%=item.isStopped() %>"
+                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
+                            id="work-item-<%=item.getId()%>"
                             class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
                             
                             <div class="age-container" style="background-color:<%=item.getColour()%>">
@@ -384,7 +406,7 @@
                             <div class="advanceIcon">
                             
                             	<% 
-                            		if (!item.isCompleted()) {
+                            		if (!item.isCompleted() && !item.isStopped()) {
                                 %>
                                 <img 
                                     onclick="javascript:advance(<%=item.getId()%>);"

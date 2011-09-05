@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+
 import javax.servlet.http.HttpServletRequest;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -103,7 +105,7 @@ public class KanbanBoardController {
 		} else if (boardType.equals("completed")) {
 			model.put("type", project.getWorkItemTypes().getRoot().getValue());
 			List<String> phases = project.getWorkItemTypes().getRoot()
-					.getValue().getPhases();
+			.getValue().getPhases();
 			model.put("phase", phases.get(phases.size() - 1));
 			return new ModelAndView("/completed.jsp", model);
 		}
@@ -138,7 +140,7 @@ public class KanbanBoardController {
 
 		return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
 	}
-	
+
 	@RequestMapping(value = "stop-item-action", method = RequestMethod.POST)
 	public synchronized RedirectView stopItemAction(
 			@ModelAttribute("project") KanbanProject project,
@@ -147,7 +149,7 @@ public class KanbanBoardController {
 
 		project.stop(parseInt(id));
 		project.save();
-		
+
 		// Redirect
 		return new RedirectView("../" + boardType);
 
@@ -163,7 +165,7 @@ public class KanbanBoardController {
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("projectName") String projectName,
 			@PathVariable("board") String boardType, @RequestParam("id") int id)
-			throws IOException {
+	throws IOException {
 
 		// Search for parent id
 		WorkItem parent = project.getWorkItemTree().getWorkItem(id);
@@ -182,7 +184,7 @@ public class KanbanBoardController {
 			parentName = parent.getName();
 			parentId = parent.getId();
 			type = project.getWorkItemTypes().getTreeNode(parent.getType())
-					.getChild(0).getValue().getName();
+			.getChild(0).getValue().getName();
 			legend = "Add a " + type + " to " + parentName;
 		}
 
@@ -435,11 +437,11 @@ public class KanbanBoardController {
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("board") String boardType,
 			@RequestParam("level") String level, OutputStream outputStream)
-			throws IOException {
+	throws IOException {
 
 		WorkItemType type = project.getWorkItemTypes().getByName(level);
 		List<WorkItem> workItemList = project.getWorkItemTree()
-				.getWorkItemsOfType(type);
+		.getWorkItemsOfType(type);
 
 		CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder();
 
@@ -454,12 +456,12 @@ public class KanbanBoardController {
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("board") String boardType,
 			@RequestParam("level") String level, OutputStream outputStream)
-			throws IOException {
+	throws IOException {
 
 		WorkItemType type = project.getWorkItemTypes().getByName(level);
 		CycleTimeChartBuilder builder = new CycleTimeChartBuilder();
 		List<WorkItem> workItemList = project.getWorkItemTree()
-				.getWorkItemsOfType(type);
+		.getWorkItemsOfType(type);
 		CategoryDataset dataset = builder.createDataset(builder
 				.getCompletedWorkItemsInOrderOfCompletion(workItemList));
 		JFreeChart chart = builder.createChart(dataset);
@@ -484,7 +486,7 @@ public class KanbanBoardController {
 			@PathVariable("projectName") String projectName,
 			@PathVariable("board") String boardType,
 			@RequestParam("createNewProject") boolean createNewProject)
-			throws IOException {
+	throws IOException {
 
 		Map<String, Object> model = buildModel(projectName, boardType);
 
@@ -540,7 +542,7 @@ public class KanbanBoardController {
 			@PathVariable("projectName") String projectName,
 			@PathVariable("board") String boardType,
 			@RequestParam("newProjectName") String newProjectName)
-			throws IOException {
+	throws IOException {
 
 		return new RedirectView(
 				"/projects/" + newProjectName + "/" + boardType, true);
@@ -573,4 +575,54 @@ public class KanbanBoardController {
 		chartGenerator.generateBurnUpChart(type, topLevelWorkItems,
 				currentLocalDate(), outputStream);
 	}
+
+	@RequestMapping("add-column-action")
+	public synchronized RedirectView addColumn(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("projectName") String projectName,
+			@PathVariable("board") String boardType,
+			@RequestParam("name") String name) throws IOException {
+
+
+		String orig =  kanbanService
+		.getProjectConfiguration(projectName).getKanbanPropertiesFile()
+		.getContentAsString();
+
+		Scanner sc = new Scanner(orig);
+		String temp ="";
+		String newContent="";
+		boolean addedCol = false;
+
+		while(sc.hasNext()){
+
+			temp = sc.nextLine();
+			if(temp.contains("phases") && !addedCol){
+				addedCol = true;
+				String [] phases = temp.split(",");
+				String last = phases[phases.length-1];
+				last = name+","+last;
+
+				for(int i = 0; i < phases.length-1; i++){
+					newContent += phases[i]+",";
+				}
+				newContent += last+"\n";
+			
+			}
+			else if (temp.contains("boards.wall")){
+				temp += ","+name;
+				newContent += temp+"\n";
+			}
+			else{
+				newContent += temp+"\n";
+			}
+
+
+		}
+
+
+
+		kanbanService.editProject(projectName, newContent );
+		return new RedirectView(
+				"/projects/" + projectName + "/" + boardType, true);
+	} 
 }
