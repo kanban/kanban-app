@@ -350,10 +350,10 @@
                     %>
                     
                     <td class="<%=item.getType().getName()%>-background">
-                        <div <% if (item.isStopped()) { %> class="stopped" <% } %>
+                        <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
                             id="work-item-<%=item.getId()%>"
-                            class="<%=item.getType().getName()%>">
+                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
                             
                             <div class="age-container">
                                 <% 
@@ -401,7 +401,7 @@
                             <div class="advanceIcon">
                             
                             	<% 
-                            		if (!item.isCompleted()) {
+                            		if (!item.isCompleted() && !item.isStopped()) {
                                 %>
                                 <img 
                                     onclick="javascript:advance(<%=item.getId()%>);"

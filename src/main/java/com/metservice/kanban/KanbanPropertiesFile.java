@@ -90,7 +90,7 @@ public class KanbanPropertiesFile {
 			return new String[0];
 		}
     }
-
+    
     public HtmlColour getWorkItemTypeCardColour(String workItemType) throws IOException {
         String propertyKey = format("workItemTypes.%s.cardColour", workItemType);
         return new HtmlColour(getString(propertyKey));

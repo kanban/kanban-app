@@ -182,6 +182,15 @@ public class KanbanService {
         writeStringToFile(file, settings);
     }
 
+    /**
+     * Edits a given project with the given name and settings.
+     * It overwrites the existing .properties file for that project.
+     * If a .properties file for that project does not exist, the project is
+     * not edited.
+     * @param projectName - the project to edit
+     * @param settings - the new settings
+     * @throws IOException
+     */
 	public void editProject(String projectName, String settings) throws IOException {
 		File projectHome = new File(home, projectName);
 

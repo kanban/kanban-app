@@ -123,6 +123,10 @@ public class WorkItem {
     public void setExcluded(boolean excluded) {
         this.excluded = excluded;
     }
+    
+    public void setStopped(boolean stopped){
+    	this.stopped = stopped;
+    }
 
     public String getCurrentPhase() {
         if (currentPhase == null) {
@@ -236,10 +240,10 @@ public class WorkItem {
         workItem.size = size;
         workItem.importance = importance;
         workItem.notes = notes;
-
         workItem.datesByPhase.putAll(datesByPhase);
         workItem.currentPhase = currentPhase;
         workItem.excluded = excluded;
+        workItem.stopped = stopped;
 
         return workItem;
     }
