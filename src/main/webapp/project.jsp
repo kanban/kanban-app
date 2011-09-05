@@ -49,10 +49,15 @@
    			 	document.forms["form"].submit();
             }
             
-			function markUnmarkToPrint(divId, type, itemId){
+			function markUnmarkToPrint(divId, type, isStopped){
 			   var item = document.getElementById(divId);
 			  if (item.className == 'markedToPrint') {
-			  	item.className = type;
+			  	if (isStopped) {
+			  		item.className = "stopped";
+			  	}
+			  	else {
+			  		item.className = type;
+			  	}
 			  } else {
 			     item.className = "markedToPrint";
 			   }
@@ -223,7 +228,7 @@
 
 .stopped {
 	border: 1px red solid;
-	background: #800517;
+	background: #FF0033 !important;
 	height: 60px;
 	width: 155px;
 	margin: 1px 1px 1px 1px;
@@ -351,7 +356,7 @@
                     
                     <td class="<%=item.getType().getName()%>-background">
                         <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.getId()%>)"
+                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
                             id="work-item-<%=item.getId()%>"
                             class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
                             
