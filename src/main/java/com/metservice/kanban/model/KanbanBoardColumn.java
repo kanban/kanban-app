@@ -1,5 +1,11 @@
 package com.metservice.kanban.model;
 
+/**
+ * 
+ * 
+ * WIP Limit by Nicholas Malcolm and Chris Cooper
+ *
+ */
 public class KanbanBoardColumn {
     private final WorkItemType type;
     private final String phase;

@@ -45,4 +45,4 @@
 "4600","18","Send Messages to VMS","0","11","Include any VMS work required by DP","false","false","2011-02-01",,,,,,,
 "2000","23","build and release colville ","0","0",,"false","false","2011-01-21","2011-01-25","2011-01-25","2011-01-25","2011-01-25",,,
 "2100","23","build and release tohu with all modules","0","0",,"false","false","2011-01-21","2011-01-25","2011-01-25","2011-01-25","2011-01-25",,,
-"2200","23","deploy colville to world test env","0","0",,"false","false","2011-01-21","2011-01-25","2011-01-25","2011-01-25","2011-01-25",,,
+"2200","23","deploy colville to world test env","5","0",,"false","false","2011-01-21","2011-01-25",,,,,,

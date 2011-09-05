@@ -1,1 +1,2 @@
-id,parentId,name,size,importance,notes,excluded,stopped,story backlog,story wall,story completed
+id,parentId,name,size,importance,notes,story backlog,story wall,story completed
+92,0,Make Cheese,40,0,,26/07/2011,26/07/2011,

@@ -12,6 +12,10 @@ import com.metservice.kanban.KanbanPropertiesFile;
 //TODO This class needs unit tests.
 //TODO perhaps rename to factory and replace build methods with create methods
 
+/**
+ * 
+ * WIP Limit by Nicholas Malcolm and Chris Cooper
+ */
 public class KanbanProjectConfigurationBuilder {
 
     private final File projectHome;
@@ -43,19 +47,21 @@ public class KanbanProjectConfigurationBuilder {
         for (BoardIdentifier board : BoardIdentifier.values()) {
             List<KanbanBoardColumn> columns = new ArrayList<KanbanBoardColumn>();
             String[] boardPhases = properties.getPhaseSequence(board);
-            for (String phase : boardPhases) {
-            	// phase argument specifies the name of the column
-                columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase));
-            }
-            String[] columnLimits = properties.getPhaseWIPLimit(board);
-            for(int i = 0; i < columnLimits.length; i++){
+            String[] columnLimits = properties.getPhaseWIPLimit(workItemTypesByPhase.get(boardPhases[0]).getName());
+            String phase = "";
+            int wipLimit = -1;
+            for(int i = 0; i < boardPhases.length;i++){
+            	phase = boardPhases[i];
             	try{
-            		int columnLimit = Integer.parseInt("");
-            		columns.get(i).setWIPLimit(columnLimit);
-            	}catch (NumberFormatException e) {
-					//boo hoo
+            		wipLimit = Integer.parseInt(columnLimits[i]);
+            	}catch (Exception e) {
+					// No limit was specified, or it was ""
+            		wipLimit = -1;
 				}
+
+            	columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase, wipLimit));
             }
+
             phaseSequences.add(board, new KanbanBoardColumnList(columns));
         }
         return phaseSequences;

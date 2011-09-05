@@ -19,6 +19,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
 
 <title>Kanban</title>
@@ -314,12 +315,28 @@
             <tr>
                 <%
                     KanbanBoardColumnList columns = project.getColumns(board);
-
+					int column_index = 0;
                                     for (KanbanBoardColumn column : columns) {
-
+										column_index++;
+										int wipLimit = column.getWIPLimit();
                                         String type = column.getWorkItemType().getName();
+                                        //WIP Limit stuff by Nick Malcolm and Chris Cooper
                 %>
-                <th class="<%=type%>-header"><%=column.getPhase()%></th>
+                <th title="WIP Limit: <%=wipLimit%>" class="<%=type%>-header" id="phase_<%= column_index %>"><%=column.getPhase()%></th>
+                <script>
+                	$(document).ready(function(){
+                		var i = 0; 
+                		$('.horizontalLine td:nth-child(<%= column_index %>) .size').each(function(){
+                			var temp = parseInt($(this).html());
+                			if(!isNaN(temp)){
+                				i+=temp;
+                			}
+                		});
+                		if(i > <%= wipLimit %>){
+                			$("#phase_<%=column_index %>").css('background-color', '#f00');
+                		}
+                	});
+                </script>
                 <%
                     }
                 %>
