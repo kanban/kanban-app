@@ -10,6 +10,7 @@ public abstract class CsvConstants {
     public static final String NOTES_COLUMN_NAME = "notes";
     public static final String EXCLUDED_COLUMN_NAME = "excluded";
     public static final String STOPPED_COLUMN_NAME = "stopped";
+    public static final String COLOR_COLUMN_NAME = "colour";
     
     private CsvConstants() {
         // static class: not intended to be instantiated

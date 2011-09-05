@@ -274,7 +274,7 @@ public class KanbanBoardController {
 
 		// Add it and save it
 		project.addWorkItem(parentIdAsInteger, typeAsWorkItemType, name, size,
-				importance, notes, currentLocalDate());
+				importance, notes,"FFFFFF", currentLocalDate());
 		project.save();
 
 		// Redirect
@@ -351,6 +351,7 @@ public class KanbanBoardController {
 			@RequestParam("importance") Integer importance,
 			@RequestParam("notes") String notes,
 			@RequestParam(required = false, value = "excluded") boolean excluded,
+			@RequestParam("color") String color,
 			HttpServletRequest request) throws IOException, ParseException {
 
 		@SuppressWarnings("unchecked")
@@ -365,6 +366,7 @@ public class KanbanBoardController {
 		workItem.setImportance(importance == null ? 0 : importance);
 		workItem.setNotes(notes);
 		workItem.setExcluded(excluded);
+		workItem.setColour(color);
 
 		// TODO Figure this out
 		for (String phase : workItem.getType().getPhases()) {

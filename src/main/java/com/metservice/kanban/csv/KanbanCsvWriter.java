@@ -11,7 +11,7 @@ import com.metservice.kanban.model.WorkItemType;
 
 public class KanbanCsvWriter {
 
-    private static final int NUMBER_OF_METADATA_COLUMNS = 8;
+    private static final int NUMBER_OF_METADATA_COLUMNS = 9;
 
     private final CSVWriter csvWriter;
     private final List<String> phases;
@@ -38,6 +38,7 @@ public class KanbanCsvWriter {
         data[5] = NOTES_COLUMN_NAME;
         data[6] = EXCLUDED_COLUMN_NAME;
         data[7] = STOPPED_COLUMN_NAME;
+        data[8] = COLOR_COLUMN_NAME;
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {
@@ -58,6 +59,7 @@ public class KanbanCsvWriter {
         data[5] = workItem.getNotes();
         data[6] = "" + workItem.isExcluded();
         data[7] = "" + workItem.isStopped();
+        data[8] = workItem.getColour().toString().substring(1);
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {

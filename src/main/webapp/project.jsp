@@ -338,7 +338,7 @@
                             id="work-item-<%=item.getId()%><%=item.isStopped() %>"
                             class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
                             
-                            <div class="age-container">
+                            <div class="age-container" style="background-color:<%=item.getColour()%>">
                                 <% 
                                 LocalDate phaseStartDate = item.getDate(item.getCurrentPhase());
                                 int days = WorkingDayUtils.getWorkingDaysBetween(phaseStartDate, new LocalDate());

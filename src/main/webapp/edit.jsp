@@ -15,7 +15,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/colorpicker.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/eye.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/utils.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/layout.js?ver=1.0.2"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/colorpicker.css" type="text/css" />
+<link rel="stylesheet" media="screen" type="text/css" href="${pageContext.request.contextPath}/layout.css" />
 <title>Kanban: edit a work item</title>
 <style type="text/css">
 legend {
@@ -57,6 +64,7 @@ fieldset.submit {
 	padding-top: 0.2em;
 	text-align: right;
 	font-weight: bold;
+	clear:left;
 }
 </style>
 <script type="text/javascript">
@@ -133,8 +141,15 @@ fieldset.submit {
 			    </c:otherwise>
 			</c:choose>
             <br />
-
+            <label class="labelClass" for="color">Color</label>
+            <input size="10" type="text" id="colorid"
+	                name="color" value="#000000" style="display:none" />
+			<div class="wrapper">
+			<div id="colorSelector"><div style="background-color: #0000ff"></div></div>
+		</div>
         </fieldset>
+        
+        
         
         <c:if test="${!empty children}">
         	<fieldset>

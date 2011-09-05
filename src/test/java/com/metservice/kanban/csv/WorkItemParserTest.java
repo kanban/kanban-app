@@ -1,12 +1,6 @@
 package com.metservice.kanban.csv;
 
-import static com.metservice.kanban.csv.CsvConstants.EXCLUDED_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.IMPORTANCE_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.NAME_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.NOTES_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.PARENT_ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.SIZE_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.*;
 import static com.metservice.kanban.utils.DateUtils.formatIsoDate;
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
 import static org.hamcrest.core.Is.is;
@@ -28,9 +22,9 @@ public class WorkItemParserTest {
         LocalDate date2 = parseIsoDate("2011-06-13");
 
         CsvColumnNames columnNames = new CsvColumnNames("phase 1", ID_COLUMN_NAME, NAME_COLUMN_NAME, "phase 2",
-            IMPORTANCE_COLUMN_NAME, NOTES_COLUMN_NAME, PARENT_ID_COLUMN_NAME, SIZE_COLUMN_NAME, "phase 3", EXCLUDED_COLUMN_NAME);
+            IMPORTANCE_COLUMN_NAME, NOTES_COLUMN_NAME, PARENT_ID_COLUMN_NAME, SIZE_COLUMN_NAME, "phase 3", EXCLUDED_COLUMN_NAME, COLOR_COLUMN_NAME);
         String[] cells = new String[] {
-            formatIsoDate(date1), "77", "work item name", formatIsoDate(date2), "-3", "some notes", "7", "5", "", "true"};
+            formatIsoDate(date1), "77", "work item name", formatIsoDate(date2), "-3", "some notes", "7", "5", "", "true", "FFFFFF"};
 
         DefaultWorkItemParser parser = new DefaultWorkItemParser(type);
         WorkItem workItem = parser.parseWorkItem(columnNames, cells);

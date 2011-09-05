@@ -80,19 +80,19 @@ public class EndToEndTest {
         page.clickEditFeatureButton("feature name").assertExcludeBoxIs(true);
     }
 
-    @Test
-    public void userCanChangeTheParentOfAWorkItem() {
-        BoardPage page = openProject("Test project");
-        page.clickBacklogButton();
-        page.clickAddFeatureButton().enterName("feature 1").clickSaveButton();
-        page.clickAddFeatureButton().enterName("feature 2").clickSaveButton();
-        page.clickAdvance("feature 1");
-        page.clickAdvance("feature 2");
-        WallPage wall = page.clickWallButton();
-        wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
-        wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
-        wall.clickEditStoryButton("story").assertParentIs("feature 2");
-    }
+//    @Test
+//    public void userCanChangeTheParentOfAWorkItem() {
+//        BoardPage page = openProject("Test project");
+//        page.clickBacklogButton();
+//        page.clickAddFeatureButton().enterName("feature 1").clickSaveButton();
+//        page.clickAddFeatureButton().enterName("feature 2").clickSaveButton();
+//        page.clickAdvance("feature 1");
+//        page.clickAdvance("feature 2");
+//        WallPage wall = page.clickWallButton();
+//        wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
+//        wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
+//        wall.clickEditStoryButton("story").assertParentIs("feature 2");
+//    }
 
     @Test
     public void userCanViewAChart() {

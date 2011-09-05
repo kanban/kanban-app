@@ -22,7 +22,8 @@ public class WorkItem {
     private String notes;
     private boolean excluded;
     private boolean stopped; //Whether a story is allowed to progress regardless of stage
-
+    private HtmlColour colour;
+    
     //Keep track of when this item started a phase
     private final Map<String, LocalDate> datesByPhase = new HashMap<String, LocalDate>();
     private String currentPhase;
@@ -66,6 +67,7 @@ public class WorkItem {
         this.notes = "";
         this.excluded = false;
         this.stopped = false;
+        this.colour = new HtmlColour("FFFFFF");
     }
 
     public int getId() {
@@ -240,6 +242,7 @@ public class WorkItem {
         workItem.datesByPhase.putAll(datesByPhase);
         workItem.currentPhase = currentPhase;
         workItem.excluded = excluded;
+        workItem.colour = colour;
 
         return workItem;
     }
@@ -265,4 +268,12 @@ public class WorkItem {
         }
         return name.substring(0, Math.min(name.length(), 40));        
     }
+
+	public void setColour(String colour) {
+		this.colour = new HtmlColour(colour);
+	}
+
+	public HtmlColour getColour() {
+		return colour;
+	}
 }

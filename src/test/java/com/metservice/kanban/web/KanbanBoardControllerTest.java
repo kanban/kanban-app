@@ -109,7 +109,7 @@ public class KanbanBoardControllerTest {
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(),
-            "new feature name", 5, 8, "some notes", true, request);
+            "new feature name", 5, 8, "some notes", true,"FFFFFF", request);
 
         assertThat(feature.getName(), is("new feature name"));
         assertThat(feature.getSize(), is(5));
@@ -133,7 +133,7 @@ public class KanbanBoardControllerTest {
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(),
-            "new feature name", null, null, "some notes", true, new MockHttpServletRequest());
+            "new feature name", null, null, "some notes", true, "FFFFFF", new MockHttpServletRequest());
 
         assertThat(feature.getSize(), is(0));
         assertThat(feature.getImportance(), is(0));
@@ -163,7 +163,7 @@ public class KanbanBoardControllerTest {
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
         kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(),
-            "new name", 4, 1, "new notes", false, request);
+            "new name", 4, 1, "new notes", false, "FFFFFF", request);
 
         WorkItem reparentedStory = tree.getWorkItem(story.getId());
 
@@ -187,7 +187,7 @@ public class KanbanBoardControllerTest {
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
         kanbanController.editItemAction(project, "wall", middleFeature.getId(), middleFeature.getParentId(),
-            "new name", 3, 11, "new notes", false, request);
+            "new name", 3, 11, "new notes", false, "FFFFFF", request);
 
         List<WorkItem> workItems = tree.getChildren(middleFeature.getParentId());
 
