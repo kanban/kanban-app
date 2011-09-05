@@ -66,6 +66,6 @@ request.setAttribute("workItemTypes", workItemTypes);
         <div id="newProject" class="button" onclick="javascript:changeSettings(true);" ><div class ="textOnButton">New Project</div></div>
         <div id="editProject" class="button" onclick="javascript:changeSettings(false);" ><div class ="textOnButton">Edit Project</div></div>
         <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
-		
+		<div id="add-column-button" class="button" onclick="javascript:addColumn();" ><div class ="textOnButton">Add Column</div></div>
     </div>
 </form>

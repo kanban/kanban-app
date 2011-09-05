@@ -106,3 +106,10 @@ function printCards(){
 function setFocus(id) {
 	document.getElementById(id).focus();
 }
+
+
+function addColumn(){
+  var name =  prompt("Column Name:");
+  document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/add-column-action?name=" + name;
+  document.forms["header"].submit();
+}
