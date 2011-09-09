@@ -68,6 +68,9 @@ fieldset.submit {
 }
 </style>
 <script type="text/javascript">
+	$(document).ready(function() {
+		
+	});
 	function deleteThisWorkItem() {
 		var response = confirm("Permanently delete this work item?");
 		if (response == true) {
@@ -143,7 +146,7 @@ fieldset.submit {
             <br />
             <label class="labelClass" for="color">Color</label>
             <input size="10" type="text" id="colorid"
-	                name="color" value="#000000" style="display:none" />
+	                name="color" value="${workItem.colour}" style="display:none" />
 			<div class="wrapper">
 			<div id="colorSelector"><div style="background-color: #0000ff"></div></div>
 		</div>

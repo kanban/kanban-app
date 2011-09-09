@@ -99,6 +99,8 @@
 
 .age-container {
     float: left;
+    width: 100%;
+    height: 4px;
 }
 
 .age-item {
