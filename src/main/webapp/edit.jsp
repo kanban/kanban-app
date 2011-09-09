@@ -148,7 +148,7 @@ fieldset.submit {
             <input size="10" type="text" id="colorid"
 	                name="color" value="${workItem.colour}" style="display:none" />
 			<div class="wrapper">
-			<div id="colorSelector"><div style="background-color: #0000ff"></div></div>
+			<div id="colorSelector"><div style="background-color: ${workItem.colour}"></div></div>
 		</div>
         </fieldset>
         
