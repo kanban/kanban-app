@@ -60,9 +60,6 @@ request.setAttribute("workItemTypes", workItemTypes);
 	        <div id="cycle-time-chart-2-button" class="button" onclick="javascript:chart('cycle-time-chart','${secondLevel.name}');" ><div class ="textOnButton">${secondLevel.name}</div></div>
 		</c:if>
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
-        <c:forEach var="workItemType" items="${workItemTypes}">
-            <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${currentProjectName}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
-        </c:forEach>
         <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
 
 		
