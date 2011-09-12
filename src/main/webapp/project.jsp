@@ -20,8 +20,9 @@
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.css"/>
 <title>Kanban</title>
 <%
     String scrollTopParam = (String) request.getAttribute("scrollTop");
@@ -29,7 +30,20 @@
     if (scrollTopParam != null)
         scrollTo = Integer.parseInt(scrollTopParam);
 %>
-
+<script>
+	$(function() {
+		$("button.dropdown").button({
+            icons: {
+                primary: "ui-icon-gear",
+                secondary: "ui-icon-triangle-1-s"
+            },
+            text: false
+        }).click(function(){
+          return false;
+        });
+	});
+	</script>
+	
 <script type="text/javascript">
 //<![CDATA[
 			function setPosition() {
@@ -159,6 +173,16 @@
 	left: 130px;
 	top: 47px;
 }
+.dropdown {
+	-moz-opacity: 1;
+	opacity: 1;
+	position: absolute;
+	width: 35px;
+	height: 15px;
+	bottom: 2px;
+	left: 2px;
+}
+
 
 .editIcon {
 	-moz-opacity: 1;
@@ -430,8 +454,8 @@
                                     }
                                 %>
                             </div>
-                            
-                            <div class="editIcon">
+                            <button class="dropdown"></button>
+                            <!--<div class="editIcon">
                                 <img
                                     class="edit"
                                     alt="Edit"
@@ -459,7 +483,7 @@
                                 <%
                                     }
                                 %>
-                            </div>
+                            </div>//-->
                             <%
                                 if (item.getSize() > 0) {
                             %>
