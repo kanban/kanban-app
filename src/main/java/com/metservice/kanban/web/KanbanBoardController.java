@@ -625,4 +625,61 @@ public class KanbanBoardController {
 		return new RedirectView(
 				"/projects/" + projectName + "/" + boardType, true);
 	} 
+	
+	
+	@RequestMapping("add-waitingcolumn-action")
+	public synchronized RedirectView addWaitingColumn(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("projectName") String projectName,
+			@PathVariable("board") String boardType,
+			@RequestParam("name") String name) throws IOException {
+
+
+		String orig =  kanbanService
+		.getProjectConfiguration(projectName).getKanbanPropertiesFile()
+		.getContentAsString();
+
+		Scanner sc = new Scanner(orig);
+		String temp ="";
+		String newContent="";
+		boolean addedCol = false;
+
+		while(sc.hasNext()){
+
+			temp = sc.nextLine();
+			if(temp.contains(name)){
+				addedCol = true;
+				String [] phases = temp.split(",|=");
+				String last = phases[phases.length-1];
+				 
+				
+				for(int i = 0; i < phases.length-1; i++){
+					
+					if(phases[i].equals(name)){
+						newContent += "Pre - " + name + "," ;
+					}
+					if(phases[i].contains(".")){
+						newContent += phases[i]+ "=";
+					}
+					else {newContent += phases[i]+",";}
+					
+				}
+				newContent += last+"\n";
+			
+			}
+
+			else{
+				newContent += temp+"\n";
+			}
+
+
+		}
+
+
+
+		kanbanService.editProject(projectName, newContent );
+		return new RedirectView(
+				"/projects/" + projectName + "/" + boardType, true);
+	} 
+	
 }
