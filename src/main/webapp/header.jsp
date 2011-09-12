@@ -64,5 +64,7 @@ request.setAttribute("workItemTypes", workItemTypes);
             <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${currentProjectName}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
         </c:forEach>
         <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
+
+		
     </div>
 </form>
