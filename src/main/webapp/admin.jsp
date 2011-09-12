@@ -20,6 +20,11 @@ String currentProjectName = (String) request.getAttribute("projectName");
 	<jsp:include page="header.jsp" />
     <h1>ADMIN PAGE</h1>
     <%= request.getAttribute("username") %>
+    <!--Use the admin.css file for styling this.  -->
+   	<div id="newProjectLink" class="link" onclick="javascript:changeSettings(true);" ><div class ="textOnButton">New Project</div></div>
+    <div id="editProjectLink" class="link" onclick="javascript:changeSettings(false);" ><div class ="textOnButton">Edit Project</div></div>
+	<div id="add-column-link" class="link" onclick="javascript:addColumn();" ><div class ="textOnButton">Add Column</div></div>
+	<div id="add-waitingcolumn-link" class="link" onclick="javascript:addWaitingColumn();" ><div class ="textOnButton">Add Waiting Column</div></div>
     
 </body>
 </html>

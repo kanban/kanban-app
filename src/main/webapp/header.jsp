@@ -63,10 +63,8 @@ request.setAttribute("workItemTypes", workItemTypes);
         <c:forEach var="workItemType" items="${workItemTypes}">
             <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${currentProjectName}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
         </c:forEach>
-        <div id="newProject" class="button" onclick="javascript:changeSettings(true);" ><div class ="textOnButton">New Project</div></div>
-        <div id="editProject" class="button" onclick="javascript:changeSettings(false);" ><div class ="textOnButton">Edit Project</div></div>
         <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
-		<div id="add-column-button" class="button" onclick="javascript:addColumn();" ><div class ="textOnButton">Add Column</div></div>
-		<div id="add-waitingcolumn-button" class="button" onclick="javascript:addWaitingColumn();" ><div class ="textOnButton">Add Waiting Column</div></div>
+
+		
     </div>
 </form>
