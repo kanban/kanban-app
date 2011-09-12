@@ -120,12 +120,12 @@ public class EndToEndTest {
         assertThat(responseContent, is(expectedContent));
     }
     
-    @Test
-    public void columnRedWhenWIPExceeded() throws IOException {
-    	 BoardPage wallPage = openProject("Test project");
-    	 //assert that th id"phase_2" background-color = #f00
-    	//TODO Get help from someone at MetService for writing tests
-    }
+//    @Test
+//    public void columnRedWhenWIPExceeded() throws IOException {
+//    	 BoardPage wallPage = openProject("Test project");
+//    	 //assert that th id"phase_2" background-color = #f00
+//    	//TODO Get help from someone at MetService for writing tests
+//    }
     
     
     

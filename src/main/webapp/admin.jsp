@@ -14,12 +14,16 @@ KanbanService service = new KanbanService();
 String currentProjectName = (String) request.getAttribute("projectName");
 %>
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/header.css" />
+	href="${pageContext.request.contextPath}/admin.css" />
 </head>
 <body>
 	<jsp:include page="header.jsp" />
     <h1>ADMIN PAGE</h1>
     <%= request.getAttribute("username") %>
+    <!--Use the admin.css file for styling this.  -->
+   	<div id="newProjectLink" class="link" onclick="javascript:changeSettings(true);" ><div>New Project</div></div>
+    <div id="editProjectLink" class="link" onclick="javascript:changeSettings(false);" ><div>Edit Project</div></div>
+	<div id="add-column-link" class="link" onclick="javascript:addColumn();" ><div>Add Column</div></div>
     
 </body>
 </html>
