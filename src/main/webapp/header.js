@@ -113,3 +113,9 @@ function addColumn(){
   document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/add-column-action?name=" + name;
   document.forms["header"].submit();
 }
+
+function addWaitingColumn(){
+	  var name =  prompt("Column Name:");
+	  document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/add-waitingcolumn-action?name=" + name;
+	  document.forms["header"].submit();
+	}
