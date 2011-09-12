@@ -39,7 +39,12 @@
             },
             text: false
         }).click(function(){
+          $("div.dropdown-menu-wrapper").fadeOut(200);
+          $(this).siblings("div.dropdown-menu-wrapper:hidden").fadeIn(200);
           return false;
+        })
+        $(":not(button.dropdown)").click(function(){
+            $("div.dropdown-menu-wrapper").fadeOut(200);
         });
 	});
 	</script>
@@ -183,6 +188,44 @@
 	left: 2px;
 }
 
+.dropdown-menu-wrapper{
+  position: relative;
+  top: 62px;
+  left: -2px;
+}
+
+.dropdown-menu{
+  position:absolute;
+  z-index:7;
+  background:#FFF;
+  border:1px solid #AAA;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+}
+
+.dropdown-menu a{
+  clear:both;
+  display:block;
+  padding:5px;
+  border-bottom:1px solid #AAA;
+  text-decoration: none;
+  font-family: Arial;
+  font-size:12px;
+}
+
+.dropdown-menu a.last{
+  border-bottom: none;
+}
+
+.dropdown-menu a img{
+  padding-right:2px;
+  vertical-align: bottom;
+}
+
+.dropdown-menu a:hover{
+  background-color:#EEE;
+}
 
 .editIcon {
 	-moz-opacity: 1;
@@ -455,35 +498,35 @@
                                 %>
                             </div>
                             <button class="dropdown"></button>
-                            <!--<div class="editIcon">
-                                <img
-                                    class="edit"
-                                    alt="Edit"
+                            <div class="dropdown-menu-wrapper" style="display:none;">
+                              <div class="dropdown-menu">
+                                <a href="javascript:edit(<%=item.getId()%>);">
+                                  <img
+                                  	class="edit"
                                     id="edit-work-item-<%=item.getId()%>-button"
-                                    onclick="javascript:edit(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/edit.png" />
+                                    src="<%=request.getContextPath()%>/images/edit.png" /> 
+                                    Edit</a>
+                                    <%
+                                    if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
+                                    %>
+                                    <a href="javascript:addChild(<%=item.getId()%>);">
+                                    <img
+                                        class="add"
+                                        alt="Advance"
+                                        src="<%=request.getContextPath()%>/images/list-add.png" />
+                                         Add</a>
+                                    <%
+                                        }
+                                    %>
+                                <a href="javascript:stopStory(<%=item.getId()%>,'<%=item.getType().getName()%>');" class="last">
+                                  <img
+                                  	    class="stop"
+                                        id="stop-work-item-<%=item.getId()%>-button"
+                                        src="<%=request.getContextPath()%>/images/stop.png" /> 
+                                        Stop</a>
+                              </div>
                             </div>
-                            <div class="stopIcon">
-                                <img
-                                    class="stop"
-                                    alt="Stop"
-                                    id="stop-work-item-<%=item.getId()%>-button"
-                                    onclick="javascript:stopStory(<%=item.getId()%>,'<%=item.getType().getName()%>');"
-                                    src="<%=request.getContextPath()%>/images/stop.png" />
-                            </div>
-                            <div class="addIcon">
-                                <%
-                                if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
-                                %>
-                                <img
-                                    class="add"
-                                    alt="Advance"
-                                    onclick="javascript:addChild(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/list-add.png" />
-                                <%
-                                    }
-                                %>
-                            </div>//-->
+                            
                             <%
                                 if (item.getSize() > 0) {
                             %>
