@@ -33,6 +33,8 @@ public class DefaultWorkItemParser implements WorkItemParser {
         workItem.setImportance(importance);
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
+        color = ( (color == null || color == "") ? "ffffff" : color);
+        
         workItem.setColour(color);
         workItem.setStopped(stopped);
 
