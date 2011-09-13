@@ -106,10 +106,16 @@ public class KanbanBoardControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-backlog", "10/02/2011");
         request.addParameter("date-completed", "11/02/2011");
-
+        request.addParameter("name", "new feature name");
+        request.addParameter("parentId", feature.getParentId()+"");
+        request.addParameter("notes", "some notes");
+        request.addParameter("size", "5");
+        request.addParameter("importance", "8");
+        request.addParameter("excluded", "on");
+        request.addParameter("color", "FFFFFF");
+        
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(),
-            "new feature name", 5, 8, "some notes", true,"FFFFFF", request);
+        kanbanController.editItemAction(project, "wall", feature.getId(), request);
 
         assertThat(feature.getName(), is("new feature name"));
         assertThat(feature.getSize(), is(5));
@@ -130,11 +136,18 @@ public class KanbanBoardControllerTest {
 
         KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
-
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        
+        request.addParameter("parentId", feature.getParentId()+"");
+        request.addParameter("name", "new feature name");
+        request.addParameter("size", "");
+        request.addParameter("importance", "");
+        request.addParameter("notes", "some notes");
+        request.addParameter("excluded", "on");
+        request.addParameter("color", "FFFFFF");
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(),
-            "new feature name", null, null, "some notes", true, "FFFFFF", new MockHttpServletRequest());
-
+        kanbanController.editItemAction(project, "wall", feature.getId(), request);
+        
         assertThat(feature.getSize(), is(0));
         assertThat(feature.getImportance(), is(0));
 
@@ -160,10 +173,17 @@ public class KanbanBoardControllerTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
+        
+        request.addParameter("parentId", feature2.getId()+"");
+        request.addParameter("name", "new name");
+        request.addParameter("size", "4");
+        request.addParameter("importance", "1");
+        request.addParameter("notes", "new notes");
+        request.addParameter("excluded", "false");
+        request.addParameter("color", "FFFFFF");
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(),
-            "new name", 4, 1, "new notes", false, "FFFFFF", request);
+        kanbanController.editItemAction(project, "wall", story.getId(), request);
 
         WorkItem reparentedStory = tree.getWorkItem(story.getId());
 
@@ -184,10 +204,17 @@ public class KanbanBoardControllerTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
+        
+        request.addParameter("parentId", middleFeature.getParentId()+"");
+        request.addParameter("name", "new name");
+        request.addParameter("size", "3");
+        request.addParameter("importance", "11");
+        request.addParameter("notes", "new notes");
+        request.addParameter("excluded", "false");
+        request.addParameter("color", "FFFFFF");
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", middleFeature.getId(), middleFeature.getParentId(),
-            "new name", 3, 11, "new notes", false, "FFFFFF", request);
+        kanbanController.editItemAction(project, "wall", middleFeature.getId(), request);
 
         List<WorkItem> workItems = tree.getChildren(middleFeature.getParentId());
 

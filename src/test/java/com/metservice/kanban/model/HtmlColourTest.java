@@ -34,16 +34,6 @@ public class HtmlColourTest {
         new HtmlColour("G332222");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInvalidExpression() {
-        new HtmlColour("#332222");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testInvalidExpression2() {
-        new HtmlColour("#000000");
-    }
-
     @Test
     public void testToString() {
         HtmlColour colour = new HtmlColour("FF0011");
