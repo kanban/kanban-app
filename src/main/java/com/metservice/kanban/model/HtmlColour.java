@@ -6,6 +6,9 @@ public class HtmlColour {
     private final String rgbInHexadecimal;
     
     public HtmlColour(String rgbInHexadecimal) {
+    	if(rgbInHexadecimal.startsWith("#")){
+    		rgbInHexadecimal = rgbInHexadecimal.substring(1);
+    	}
         if (!rgbInHexadecimal.matches("\\p{XDigit}{6}")) {
             throw new IllegalArgumentException("invalid colour value: " + rgbInHexadecimal);
         }        

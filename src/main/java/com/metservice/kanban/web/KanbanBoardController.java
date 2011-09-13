@@ -330,14 +330,6 @@ public class KanbanBoardController {
 	 * 
 	 * @param project
 	 * @param boardType
-	 * @param id
-	 * @param parentId
-	 * @param name
-	 * @param size
-	 * @param importance
-	 * @param notes
-	 * @param excluded
-	 * @param request
 	 * @return
 	 * @throws IOException
 	 * @throws ParseException
@@ -347,25 +339,44 @@ public class KanbanBoardController {
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("board") String boardType,
 			@RequestParam("id") int id,
-			@RequestParam("parentId") int parentId,
-			@RequestParam("name") String name,
-			@RequestParam("size") Integer size,
-			@RequestParam("importance") Integer importance,
-			@RequestParam("notes") String notes,
-			@RequestParam(required = false, value = "excluded") boolean excluded,
-			@RequestParam("color") String color,
 			HttpServletRequest request) throws IOException, ParseException {
 
 		@SuppressWarnings("unchecked")
-		Map<String, String[]> parameters = request.getParameterMap();
-
+		
+		
 		// Get the item which is being edited
 		WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+		
+		Map<String, String[]> parameters = request.getParameterMap();
+		
+		String temp = request.getParameter("parentId");
+		int parentId = temp == null ? workItem.getParentId() : Integer.parseInt(temp);
+		
+		temp = request.getParameter("name");
+		String name = temp == null ? workItem.getName() : request.getParameter("name");
+		
+		temp = request.getParameter("size");
+		temp = (temp == null ? workItem.getSize()+"" : (temp.equals("") ? "0" : temp));
+		int size = Integer.parseInt(temp);
+		
+		temp = request.getParameter("importance");
+		temp = (temp == null ? workItem.getImportance()+"" : (temp.equals("") ? "0" : temp));
+		int importance = Integer.parseInt(temp);
+		
+		temp = request.getParameter("notes");
+		String notes = temp == null? workItem.getNotes() : request.getParameter("notes");
+		
+		temp = request.getParameter("color");
+		String color = temp == null ? workItem.getColour().toString() : request.getParameter("color");
+	
+		temp = request.getParameter("excluded");
+		boolean excluded = temp == null ? false : temp.equals("on");
+
 
 		// Save all the updates
 		workItem.setName(name);
-		workItem.setSize(size == null ? 0 : size);
-		workItem.setImportance(importance == null ? 0 : importance);
+		workItem.setSize(size);
+		workItem.setImportance(importance);
 		workItem.setNotes(notes);
 		workItem.setExcluded(excluded);
 		workItem.setColour(color);
@@ -374,12 +385,15 @@ public class KanbanBoardController {
 		for (String phase : workItem.getType().getPhases()) {
 			String key = "date-" + phase;
 			String[] valueArray = parameters.get(key);
-			if (valueArray == null || valueArray[0].trim().isEmpty()) {
-				workItem.setDate(phase, null);
-			} else {
-				workItem.setDate(phase,
-						parseConventionalNewZealandDate(valueArray[0]));
+			if(valueArray != null){
+				if (valueArray[0].trim().isEmpty()) {
+					workItem.setDate(phase, null);
+				} else {
+					workItem.setDate(phase,
+							parseConventionalNewZealandDate(valueArray[0]));
+				}
 			}
+			
 		}
 
 		// If it's changed parent, reset the parent.
