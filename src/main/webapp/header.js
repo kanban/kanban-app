@@ -119,3 +119,10 @@ function addWaitingColumn(){
 	  document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/add-waitingcolumn-action?name=" + name;
 	  document.forms["header"].submit();
 	}
+
+function deleteColumn(){
+	var name = prompt("Column Name:")
+	document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/delete-column-action?name=" + name;
+	document.forms["header"].submit();
+	alert("Done");
+}

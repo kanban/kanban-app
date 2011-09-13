@@ -47,7 +47,12 @@ request.setAttribute("workItemTypes", workItemTypes);
     	  <a href="javascript:addWaitingColumn();">
     	    Add Waiting Column
     	  </a>
-    	</li>
+      </li>
+     <li>
+      <a href="javascript:deleteColumn();" >
+        Delete Column
+      </a>
+     </li>
     </ul>
     
     <h2>Export</h2>

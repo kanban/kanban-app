@@ -593,7 +593,7 @@ public class KanbanBoardController {
 		String newContent="";
 		boolean addedCol = false;
 
-		while(sc.hasNext()){
+		while(sc.hasNext() && name != null && name != ""){
 
 			temp = sc.nextLine();
 			if(temp.contains("phases") && !addedCol){
@@ -644,7 +644,7 @@ public class KanbanBoardController {
 		String newContent="";
 		boolean addedCol = false;
 
-		while(sc.hasNext()){
+		while(sc.hasNext() && name != null && name != ""){
 
 			temp = sc.nextLine();
 			if(temp.contains(name)){
@@ -682,4 +682,64 @@ public class KanbanBoardController {
 				"/projects/" + projectName + "/" + boardType, true);
 	} 
 	
+	@RequestMapping("delete-column-action")
+	public synchronized RedirectView deleteColumn(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("projectName") String projectName,
+			@PathVariable("board") String boardType,
+			@RequestParam("name") String name) throws IOException {
+
+
+		String orig =  kanbanService
+		.getProjectConfiguration(projectName).getKanbanPropertiesFile()
+		.getContentAsString();
+
+		Scanner sc = new Scanner(orig);
+		String temp ="";
+		String newContent="";
+
+		while(sc.hasNext() && name != null && name != ""){
+
+			temp = sc.nextLine();
+			if(temp.contains(name)){
+				String [] phases = temp.split(",|=");
+				//String last = phases[phases.length-1];
+				 
+				
+				for(int i = 0; i <= phases.length-1; i++){
+					
+					if(phases[i].equals(name)){ 
+						//DO NOTHING 
+					}
+					else {
+						if (i == 0) {
+							newContent += phases[i]+"=";
+						}
+						else if (i == 1) {
+							newContent += phases[i];
+						}
+						else {
+							newContent += ","+phases[i];
+						}
+						
+					}
+					
+				}
+				newContent += "\n";
+			
+			}
+
+			else{
+				newContent += temp+"\n";
+			}
+
+
+		}
+
+
+
+		kanbanService.editProject(projectName, newContent );
+		return new RedirectView(
+				"/projects/" + projectName + "/" + boardType, true);
+	} 
 }
