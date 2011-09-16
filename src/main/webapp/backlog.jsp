@@ -46,7 +46,40 @@
 		          $(this).addClass('showDragHandle');
    		    }, function() {
    		          $(this.cells[0]).removeClass('showDragHandle');
-   		    });    		
+   		    });
+   		  
+   		$(".formify").click(function(){
+   		  
+   		  //Dont add an input to a td with an input in it already!
+   		  if ($(this).children("input").size() > 0){
+   		    return false;
+   		  }
+   		  
+   		  //Change the content to an input tag and autopopulate the value
+   		  $(this).html("<input value=\"" + $(this).html().trim() + "\" data-role=\"" + $(this).attr("data-role") + "\" style=\"width: 50%\" />");
+   		  
+   		  //Add the tooltip for name
+   		  if($(this).attr("data-role") == "name"){
+   		    $(this).append("<span style=\'color:#aaa\'>Press <b>Enter</b> to save</span>");
+   		  }
+   		  
+   		  //When the user presses enter, save it
+   		  $(this).find("input").keypress(function(event) {
+   		    
+   		    if (event.which == 13){
+   		      $.ajax({
+               type: "POST",
+               url: window.location.pathname + "/edit-item-action",
+               data: "id=" + $(this).parents("tr").attr("id") + "&" + $(this).attr("data-role") + "=" + $(this).val(),
+             });
+             
+          //And reset the input back to normal.   
+  		    $(this).parent().html($(this).val()).removeClass("formified").addClass("formify");
+   		    }
+   		    
+   		  });
+   		});
+   		        		
      });
 </script>
 
@@ -202,13 +235,13 @@
 						    </td>
 						</c:otherwise>
 					</c:choose>
-					<td class="itemName" >${cell.workItem.name}</td>
-					<td class="size" >
+					<td class="itemName formify" data-role="name">${cell.workItem.name}</td>
+					<td class="size formify" data-role="size" >
 						<c:if test="${cell.workItem.size > 0 }">
 	                       ${cell.workItem.size}
 						</c:if>
 					</td>
-					<td class="importance">
+					<td class="importance formify" data-role="importance">
 						<c:if test="${cell.workItem.importance > 0 }">
 							${cell.workItem.importance}
 						</c:if>
