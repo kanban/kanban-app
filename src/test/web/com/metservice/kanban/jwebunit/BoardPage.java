@@ -28,7 +28,7 @@ public class BoardPage {
     }
     
     public BoardPage clickAdvance(String name) {
-        String xPath ="//td[.='" + name + "']/../td[7]/img"; 
+        String xPath ="//td[.='" + name + "']/../td[8]/img"; 
         tester.assertElementPresentByXPath(xPath);            
         tester.clickElementByXPath(xPath);
         return this;

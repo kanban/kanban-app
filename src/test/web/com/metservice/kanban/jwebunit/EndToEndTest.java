@@ -93,7 +93,7 @@ public class EndToEndTest {
 
     	//TODO Fix to check dropdown menu 
         wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
-        //System.out.println("addstory clicked");
+        System.out.println("addstory clicked");
         
         wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
         wall.clickEditStoryButton("story").assertParentIs("feature 2");
