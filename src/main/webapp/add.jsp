@@ -75,7 +75,7 @@ fieldset.submit {
 				name="importance" /> <br /> <label class="labelClass" for="notes">Notes:</label>
 			<textarea name="notes" rows="5" cols="40"></textarea>
 			<label class="labelClass" for="color">Color</label>
-            <input size="10" type="text" id="color"
+            <input size="10" type="text" id="colorid"
 	                name="color" value="#FFFFFF" style="display:none" />
 	        <br />
 			<div class="wrapper">
