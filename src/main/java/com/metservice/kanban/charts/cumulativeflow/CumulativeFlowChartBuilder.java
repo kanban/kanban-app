@@ -20,30 +20,27 @@ import com.metservice.kanban.utils.Day;
 
 public class CumulativeFlowChartBuilder {
 
-    
     public CategoryDataset createDataset(List<String> phases, List<WorkItem> workItemList) throws IOException {
-        
+
         CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, currentLocalDate());
-        for(WorkItem workItem: workItemList) {
+        for (WorkItem workItem : workItemList) {
             matrix.registerWorkItem(workItem);
         }
-        
+
         List<LocalDate> dates = matrix.getOrderedListOfDates();
         double[][] data = matrix.getData();
         Day[] days = getListOfDays(dates);
         return DatasetUtilities.createCategoryDataset(getPhasesInInverseOrder(phases), days, data);
     }
-    
-    
+
     private String[] getPhasesInInverseOrder(List<String> phases) {
         String[] invertedPhases = new String[phases.size()];
-        int k = phases.size()-1;
-        for(String phase: phases) {
+        int k = phases.size() - 1;
+        for (String phase : phases) {
             invertedPhases[k--] = phase;
         }
         return invertedPhases;
     }
-
 
     public JFreeChart createChart(CategoryDataset dataset) {
 
@@ -58,9 +55,8 @@ public class CumulativeFlowChartBuilder {
             false
             );
 
-        
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        
+
         plot.setForegroundAlpha(1f);
         plot.setBackgroundPaint(Color.WHITE);
         plot.setDomainGridlinesVisible(true);
@@ -71,7 +67,7 @@ public class CumulativeFlowChartBuilder {
         final CategoryAxis domainAxis = plot.getDomainAxis();
         domainAxis.setLowerMargin(0.0);
         domainAxis.setUpperMargin(0.0);
-        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
 
         // change the auto tick unit selection to integer units only...
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
@@ -82,13 +78,11 @@ public class CumulativeFlowChartBuilder {
 
     private Day[] getListOfDays(List<LocalDate> dates) {
         Day[] days = new Day[dates.size()];
-        int i=0;
-        for(LocalDate date: dates) {
+        int i = 0;
+        for (LocalDate date : dates) {
             days[i++] = new Day(date);
         }
         return days;
     }
-    
+
 }
-
-

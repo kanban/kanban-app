@@ -249,22 +249,21 @@ public class KanbanBoardController {
         project.save();
         return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
     }
-    
+
     @RequestMapping("reorder")
     public synchronized RedirectView reorder(
-        @ModelAttribute("project") KanbanProject project,
-        @PathVariable("board") String boardType,
-        @RequestParam("id") Integer id,
-        @RequestParam("ids") Integer[] ids,
-        @RequestParam("scrollTop") String scrollTop) throws IOException {
-        
+            @ModelAttribute("project") KanbanProject project,
+            @PathVariable("board") String boardType,
+            @RequestParam("id") Integer id,
+            @RequestParam("ids") Integer[] ids,
+            @RequestParam("scrollTop") String scrollTop) throws IOException {
+
         project.reorder(id, ids);
         project.save();
-        
+
         return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
-        
+
     }
-    
 
     @RequestMapping("edit-item-action")
     public synchronized RedirectView editItemAction(
@@ -349,7 +348,8 @@ public class KanbanBoardController {
 
         CategoryDataset dataset = builder.createDataset(type.getPhases(), workItemList);
         JFreeChart chart = builder.createChart(dataset);
-        ChartUtilities.writeChartAsPNG(outputStream, chart, 800, 600);
+        int width = dataset.getColumnCount() * 15;
+        ChartUtilities.writeChartAsPNG(outputStream, chart, width < 800 ? 800 : width, 600);
     }
 
     @RequestMapping("cycle-time-chart.png")
@@ -364,7 +364,8 @@ public class KanbanBoardController {
         List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type);
         CategoryDataset dataset = builder.createDataset(builder.getCompletedWorkItemsInOrderOfCompletion(workItemList));
         JFreeChart chart = builder.createChart(dataset);
-        ChartUtilities.writeChartAsPNG(outputStream, chart, 800, 600);
+        int width = dataset.getColumnCount() * 15;
+        ChartUtilities.writeChartAsPNG(outputStream, chart, width < 800 ? 800 : width, 600);
     }
 
     @RequestMapping("edit-project")
