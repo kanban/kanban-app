@@ -46,11 +46,26 @@
         $(":not(button.dropdown)").click(function(){
             $("div.dropdown-menu-wrapper").fadeOut(200);
         });
+
+        
+	    //Table header stuff
+	    var header = $("#kanbantable thead");
+	    $("body").append("<table class=\"kanban\" id=\"headercopy\"><thead>"+header.html()+"</thead></table>");
+	     
+	     var header_pos = header.position().top+header.height();
+	    $(window).scroll(function () { 
+	      if($("body").scrollTop() >= header_pos){
+	        $("#headercopy").fadeIn();
+	      }else{
+	        $("#headercopy").fadeOut();
+	      }
+	    });
 	});
 	</script>
 	
 <script type="text/javascript">
 //<![CDATA[
+  
 			function setPosition() {
 			  window.scrollTo(0,<%=scrollTo%>);
 			}
@@ -112,8 +127,19 @@
 <style type="text/css">
 .kanban {
 	margin: 10px 0px 0px 0px;
-	background: whitesmoke;
 	border-collapse: collapse;
+}
+
+table#headercopy{
+  position: fixed;
+  top: -10px;
+  z-index: 1000;
+  opacity: 0.7;
+  display: none;
+}
+
+table#headercopy .feature-header{
+  background-color: #fff;
 }
 
 .age-container {
@@ -380,7 +406,8 @@
 <body onload="javscript:setPosition();">
     <jsp:include page="header.jsp"/>
     <form id="form" method="post" action="">
-        <table class="kanban">
+        <table class="kanban" id="kanbantable">
+          <thead>
             <tr>
                 <%
                     KanbanBoardColumnList columns = project.getColumns(board);
@@ -410,6 +437,8 @@
                     }
                 %>
             </tr>
+          </thead>
+          <tbody>
             <%
                 KanbanBoard kanbanBoard = project.getBoard(board);
 
@@ -569,7 +598,7 @@
                 <%
                     }
                 %>
-            
+          </tbody>
         </table>
     </form>
 </body>
