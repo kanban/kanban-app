@@ -401,7 +401,7 @@
                 				i+=temp;
                 			}
                 		});
-                		if(i > <%= wipLimit %>){
+                		if(i > <%= wipLimit %> && <%= wipLimit %> > -1) {
                 			$("#phase_<%=column_index %>").css('background-color', '#f00');
                 		}
                 	});
