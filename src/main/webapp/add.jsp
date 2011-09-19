@@ -12,6 +12,13 @@
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js" ></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/colorpicker.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/eye.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/utils.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/layout.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/colorpicker.css" type="text/css" />
+<link rel="stylesheet" media="screen" type="text/css" href="${pageContext.request.contextPath}/layout.css" />
 
 <style type="text/css">
 legend {
@@ -52,6 +59,8 @@ fieldset.submit {
 	font-weight: bold;
 }
 </style>
+<script type="text/javascript">
+</script>
 </head>
 <body onload="setFocus('name-field');">
 	<jsp:include page="header.jsp" />
@@ -65,6 +74,16 @@ fieldset.submit {
 				for="importance">Importance:</label> <input size=10 type="text"
 				name="importance" /> <br /> <label class="labelClass" for="notes">Notes:</label>
 			<textarea name="notes" rows="5" cols="40"></textarea>
+			<label class="labelClass" for="color">Color</label>
+            <input size="10" type="text" id="colorid"
+	                name="color" value="#FFFFFF" style="display:none" />
+	        <br />
+			<div class="wrapper">
+				<div id="colorSelector">
+					<div style="background-color: #FFFFFF">
+					</div>
+				</div>
+			</div>
 		</fieldset>
 		<fieldset class="submit">
 			<button id="save-button" type="submit">Save</button>

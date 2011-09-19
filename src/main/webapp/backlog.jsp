@@ -211,6 +211,7 @@
 					<th ></th>
 					<th ></th>
 					<th ></th>
+					<th ></th>
 				</tr>
 			</thead>
 
@@ -236,6 +237,7 @@
 						</c:otherwise>
 					</c:choose>
 					<td class="itemName formify" data-role="name">${cell.workItem.name}</td>
+					<td style="background-color:${cell.workItem.colour}; width: 25px; border: 1px solid #000"></td>
 					<td class="size formify" data-role="size" >
 						<c:if test="${cell.workItem.size > 0 }">
 	                       ${cell.workItem.size}
