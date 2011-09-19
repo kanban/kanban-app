@@ -30,7 +30,7 @@
     if (scrollTopParam != null)
         scrollTo = Integer.parseInt(scrollTopParam);
 %>
-<script>
+<script type="text/javascript">
 	$(function() {
 		$("button.dropdown").button({
             icons: {
@@ -50,9 +50,10 @@
         
 	    //Table header stuff
 	    var header = $("#kanbantable thead");
-	    $("body").append("<table class=\"kanban\" id=\"headercopy\"><thead>"+header.html()+"</thead></table>");
+	    $("body").append('<table class="kanban" id="headercopy"><thead></thead></table>')
+	    $("#headercopy thead").append($("#kanbantable thead th").clone());
 	     
-	     var header_pos = header.position().top+header.height();
+	    var header_pos = header.position().top+header.height();
 	    $(window).scroll(function () { 
 	      if($("body").scrollTop() >= header_pos){
 	        $("#headercopy").fadeIn();
