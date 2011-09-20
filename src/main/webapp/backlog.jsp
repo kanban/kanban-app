@@ -47,6 +47,16 @@
    		    }, function() {
    		          $(this.cells[0]).removeClass('showDragHandle');
    		    });
+   		    
+   		function saveItem(element){
+   		  $.ajax({
+           type: "POST",
+           url: window.location.pathname + "/edit-item-action",
+           data: "id=" + element.parents("tr").attr("id") + "&" + element.attr("data-role") + "=" + element.val(),
+         });
+         
+         element.parent().html(element.val()).removeClass("formified").addClass("formify");
+   		}
    		  
    		$(".formify").click(function(){
    		  
@@ -54,6 +64,11 @@
    		  if ($(this).children("input").size() > 0){
    		    return false;
    		  }
+   		  
+   		  //Find all other inputs and save them
+   		  $.each($("input"), function(index, value){
+   		    saveItem($(this));
+   		  });
    		  
    		  //Change the content to an input tag and autopopulate the value
    		  $(this).html("<input value=\"" + $(this).html().trim() + "\" data-role=\"" + $(this).attr("data-role") + "\" style=\"width: 50%\" />");
@@ -67,14 +82,7 @@
    		  $(this).find("input").keypress(function(event) {
    		    
    		    if (event.which == 13){
-   		      $.ajax({
-               type: "POST",
-               url: window.location.pathname + "/edit-item-action",
-               data: "id=" + $(this).parents("tr").attr("id") + "&" + $(this).attr("data-role") + "=" + $(this).val(),
-             });
-             
-          //And reset the input back to normal.   
-  		    $(this).parent().html($(this).val()).removeClass("formified").addClass("formify");
+   		      saveItem($(this));
    		    }
    		    
    		  });
