@@ -108,6 +108,18 @@
 
 
 <style type="text/css">
+
+table{
+  width: 100%;
+	font-family: arial;
+	font-size: 14px;
+	color: #383838;
+}
+
+td.small{
+  width: 20px;
+}
+
 .dragClass {
 	background: ${type.cardColour};
 }
@@ -118,18 +130,6 @@
 	border-collapse: collapse;
 }
 
-.itemName {
-	width: 800px;
-	height: 20px;
-	position: relative;
-	top: 0px;
-	left: 20px;
-	font-family: arial;
-	font-size: 14px;
-	color: #383838;
-	text-align: left;
-	cursor:default
-}
 
 .upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover
 	{
@@ -157,28 +157,6 @@
 	width: 16px;
 	height: 16px;
 	cursor:default
-}
-
-.size {
-	position: relative;
-	width: 16px;
-	height: 13px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 14px;
-	text-align: center;
-	color: #383838;
-}
-
-.importance {
-	position: relative;
-	width: 50px;
-	height: 13px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 14px;
-	text-align: center;
-	color: #383838;
 }
 
 .horizontalLine {
@@ -237,18 +215,21 @@
 						</c:otherwise>
 					</c:choose>
 					<td class="itemName formify" data-role="name">${cell.workItem.name}</td>
-					<td style="background-color:${cell.workItem.colour}; width: 25px; border: 1px solid #000"></td>
-					<td class="size formify" data-role="size" >
+					<td class="small color">
+					  <div style="background-color:${cell.workItem.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
+					  </div>
+					</td>
+					<td class="small formify" data-role="size" >
 						<c:if test="${cell.workItem.size > 0 }">
 	                       ${cell.workItem.size}
 						</c:if>
 					</td>
-					<td class="importance formify" data-role="importance">
+					<td class="small formify" data-role="importance">
 						<c:if test="${cell.workItem.importance > 0 }">
 							${cell.workItem.importance}
 						</c:if>
 					</td>
-					<td class="advanceIcon" align="center" >
+					<td class="small advanceIcon" align="center" >
 							<c:if test="${! item.inFinalPhase}">
 								<img onclick="javascript:advance(${cell.workItem.id});"
 									src="<%=request.getContextPath()%>/images/go-next.png" />

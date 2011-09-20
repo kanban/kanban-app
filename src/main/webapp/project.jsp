@@ -126,7 +126,9 @@
 %>
 
 <style type="text/css">
-.kanban {
+table {
+  width: 100%;
+  color: #f00;
 	margin: 10px 0px 0px 0px;
 	border-collapse: collapse;
 }
@@ -159,7 +161,7 @@ table#headercopy .feature-header{
 }
 
 .itemName {
-	width: 135px;
+	width: 80%;
 	height: 20px;
 	position: absolute;
 	top: 6px;
@@ -176,35 +178,24 @@ table#headercopy .feature-header{
 	opacity: 0.5;
 }
 
-.upIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 5px;
+.icons{
+  width: 10%;
+  position:absolute;
+  right: 0px;
+  top: 10px;
 }
 
-.advanceIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 140px;
-	top: 26px;
+.upIcon, .downIcon, .advanceItem{
+  width: 16px;
+  height: 16px;
 }
 
-.downIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 47px;
+.upIcon, .downIcon {
+	position: relative;
+	right: 10px;
 }
+
+
 .dropdown {
 	-moz-opacity: 1;
 	opacity: 1;
@@ -313,23 +304,11 @@ table#headercopy .feature-header{
 }
 
 .markedToPrint {
-	border: 1px silver solid;
 	background: #EEEEEE;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-    position: relative;
 }
 
 .stopped {
-	border: 1px red solid;
 	background: #FF0033 !important;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-    position: relative;
 }
 
 .horizontalLine {
@@ -348,40 +327,28 @@ table#headercopy .feature-header{
                 String name =
                     workItemType.getName();
                 HtmlColour cardColour = workItemType.getCardColour();
-                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
-	background: <%=cardColour.toString()%>;
-	height: 60px;
-	width: <%=cardWidth%>px;
-	margin: 1px 1px 1px 1px;
-	padding: 3px 3px 3px 3px;
-    position: relative;
+                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> 
+div[data-role="card"]{
+  height: 60px;
+	width: 95%;
+	margin: 1px;
+	padding: 3px;
+  position: relative;
 }
 
-.<%=name%>:hover {
-	border: 1px black solid;
+.card:hover{
+  border: 1px black solid;
+	padding: 2px;
+}
+                
+.<%=name%> {
 	background: <%=cardColour.toString()%>;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
+	
 }
 
 .markedToPrint:hover {
 	border: 1px black solid;
 	background: #CCCCCC;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-}
-
-.stopped:hover {
-	border: 1px red solid;
-	background: #800517;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
 }
 
 .<%=name%>-header {
@@ -457,7 +424,7 @@ table#headercopy .feature-header{
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
                             id="work-item-<%=item.getId()%>"
-                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
+                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>" data-role="card">
                             
                             <div class="age-container" style="background-color:<%=item.getColour()%>">
                                 <% 
@@ -490,42 +457,44 @@ table#headercopy .feature-header{
 								%>                    
                                 <%=formattedId %>: <span class="work-item-name"><%= item.getName() %></span>
                             </div>
-                            <div class="upIcon">
-                                <%
-                                    WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
-                                                if (adjacentWorkItemUp != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
-                                    src="<%=request.getContextPath()%>/images/go-up.png" />
-                                <%
-                                    } 
-                                %>
-                            </div>
-                            <div class="advanceIcon">
+                            <div class="icons">
+                              <div class="upIcon">
+                                  <%
+                                      WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
+                                                  if (adjacentWorkItemUp != null) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
+                                      src="<%=request.getContextPath()%>/images/go-up.png" />
+                                  <%
+                                      } 
+                                  %>
+                              </div>
+                              <div class="advanceIcon">
                             
-                            	<% 
-                            		if (!item.isCompleted() && !item.isStopped()) {
-                                %>
-                                <img 
-                                    onclick="javascript:advance(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/go-next.png" />
-                                <%
-                                    }
-                                %>
-                            </div>
-                            <div class="downIcon">
+                              	<% 
+                              		if (!item.isCompleted() && !item.isStopped()) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:advance(<%=item.getId()%>);"
+                                      src="<%=request.getContextPath()%>/images/go-next.png" />
+                                  <%
+                                      }
+                                  %>
+                              </div>
+                              <div class="downIcon">
 
-                                <%
-                                    WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
-                                                if (adjacentWorkItemDown != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
-                                    src="<%=request.getContextPath()%>/images/go-down.png" />
-                                <%
-                                    }
-                                %>
+                                  <%
+                                      WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
+                                                  if (adjacentWorkItemDown != null) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
+                                      src="<%=request.getContextPath()%>/images/go-down.png" />
+                                  <%
+                                      }
+                                  %>
+                              </div>
                             </div>
                             <button class="dropdown"></button>
                             <div class="dropdown-menu-wrapper" style="display:none;">
