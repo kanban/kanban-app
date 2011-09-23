@@ -132,13 +132,12 @@ public class KanbanBoardController {
 	public synchronized RedirectView advanceItemAction(
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("board") String boardType,
-			@RequestParam("id") String id,
-			@RequestParam("scrollTop") String scrollTop) throws IOException {
+			@RequestParam("id") String id) throws IOException {
 
 		project.advance(parseInt(id), currentLocalDate());
 		project.save();
 
-		return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+		return new RedirectView("../" + boardType);
 	}
 
 	@RequestMapping(value = "stop-item-action", method = RequestMethod.POST)

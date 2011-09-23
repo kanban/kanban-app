@@ -61,7 +61,7 @@ public class BoardPage {
     }
 
     private WorkItemPage clickEditButton(String workItemTypeName, String workItemName) {
-        tester.clickElementByXPath("//td[.='" + workItemName + "']/../td[2]/img");
+        tester.clickElementByXPath("//td[.='" + workItemName + "']/../td[2]/a");
         return new WorkItemPage(tester);
     }
 
