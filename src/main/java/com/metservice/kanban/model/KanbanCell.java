@@ -51,6 +51,8 @@ public class KanbanCell implements Cloneable {
         this.workItem = workItem;
     }
     
+  
+    
     @Override
     protected KanbanCell clone() {
         try {

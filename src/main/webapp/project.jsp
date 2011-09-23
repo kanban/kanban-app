@@ -339,6 +339,7 @@ div[data-role="card"]{
 .card:hover{
   border: 1px black solid;
 	padding: 2px;
+
 }
                 
 .<%=name%> {
@@ -418,12 +419,15 @@ div[data-role="card"]{
                     for (KanbanCell cell : row) {
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
+                            String notes = item.getNotes();
                     %>
+                  
                     
                     <td class="<%=item.getType().getName()%>-background">
+                      
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
-                            id="work-item-<%=item.getId()%>"
+                            id="work-item-<%=item.getId()%>" title="Story discription: <%=notes%>"
                             class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>" data-role="card">
                             
                             <div class="age-container" style="background-color:<%=item.getColour()%>">
