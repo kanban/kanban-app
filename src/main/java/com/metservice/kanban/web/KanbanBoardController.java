@@ -371,7 +371,7 @@ public class KanbanBoardController {
 		String color = temp == null ? workItem.getColour().toString() : request.getParameter("color");
 	
 		temp = request.getParameter("excluded");
-		boolean excluded = temp == null ? false : temp.equals("on");
+		boolean excluded = temp == null ? workItem.isExcluded() : temp.equals("on");
 
 
 		// Save all the updates
