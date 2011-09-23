@@ -614,17 +614,27 @@ public class KanbanBoardController {
 				addedCol = true;
 				String [] phases = temp.split(",");
 				String last = phases[phases.length-1];
+				//FOr when cancel is hit on the add column button
+				if(name.equals("null")){
+				}
+				else{
 				last = name+","+last;
+				}
 
 				for(int i = 0; i < phases.length-1; i++){
 					newContent += phases[i]+",";
 				}
-				newContent += last+"\n";
-			
+					newContent += last+"\n";
+				
 			}
 			else if (temp.contains("boards.wall")){
+				//FOr when cancel is hit on the add column button
+				if(name.equals("null")){
+					newContent += temp+"\n";				}
+				else{
 				temp += ","+name;
 				newContent += temp+"\n";
+				}
 			}
 			else{
 				newContent += temp+"\n";
@@ -632,13 +642,14 @@ public class KanbanBoardController {
 
 
 		}
-
-
-
+		//For when Ok button is pressed and no input is entered
+		if(newContent.length() < 10){
+			newContent = orig;
+		}
 		kanbanService.editProject(projectName, newContent );
 		return new RedirectView(
 				"/projects/" + projectName + "/" + boardType, true);
-	} 
+	}
 	
 	
 	@RequestMapping("add-waitingcolumn-action")
@@ -656,18 +667,15 @@ public class KanbanBoardController {
 		Scanner sc = new Scanner(orig);
 		String temp ="";
 		String newContent="";
-		boolean addedCol = false;
-
+		
 		while(sc.hasNext() && name != null && name != ""){
 
 			temp = sc.nextLine();
 			if(temp.contains(name)){
-				addedCol = true;
 				String [] phases = temp.split(",|=");
-				String last = phases[phases.length-1];
 				 
 				
-				for(int i = 0; i < phases.length-1; i++){
+				for(int i = 0; i < phases.length; i++){
 					
 					if(phases[i].equals(name)){
 						newContent += "Pre - " + name + "," ;
@@ -678,8 +686,17 @@ public class KanbanBoardController {
 					else {newContent += phases[i]+",";}
 					
 				}
-				newContent += last+"\n";
+				newContent += "\n";
 			
+			}
+			else if (temp.contains("boards.wall")){
+				//FOr when cancel is hit on the add column button
+				if(name.equals("null")){
+					newContent += temp+"\n";				}
+				else{
+				temp += ","+name;
+				newContent += temp+"\n";
+				}
 			}
 
 			else{
@@ -688,13 +705,15 @@ public class KanbanBoardController {
 
 
 		}
-
-
-
+		if(newContent.length() < 10){
+			newContent = orig;
+		}
+		
 		kanbanService.editProject(projectName, newContent );
+		
 		return new RedirectView(
 				"/projects/" + projectName + "/" + boardType, true);
-	} 
+	}
 	
 	@RequestMapping("delete-column-action")
 	public synchronized RedirectView deleteColumn(
@@ -716,9 +735,7 @@ public class KanbanBoardController {
 
 			temp = sc.nextLine();
 			if(temp.contains(name)){
-				String [] phases = temp.split(",|=");
-				//String last = phases[phases.length-1];
-				 
+				String [] phases = temp.split(",|=");				 
 				
 				for(int i = 0; i <= phases.length-1; i++){
 					
@@ -729,30 +746,31 @@ public class KanbanBoardController {
 						if (i == 0) {
 							newContent += phases[i]+"=";
 						}
-						else if (i == 1) {
+						else if (i == phases.length -1) {
+							newContent += phases[i];
+						}
+						else if(i == phases.length -2 && name.equals(phases[phases.length-1])) {
 							newContent += phases[i];
 						}
 						else {
-							newContent += ","+phases[i];
-						}
-						
+							
+							newContent += phases[i] +",";
+						}	
 					}
-					
 				}
 				newContent += "\n";
-			
 			}
-
 			else{
 				newContent += temp+"\n";
 			}
-
-
+		}		
+		
+		if(newContent.length() < 10){
+			newContent = orig;
 		}
-
-
-
+		
 		kanbanService.editProject(projectName, newContent );
+		
 		return new RedirectView(
 				"/projects/" + projectName + "/" + boardType, true);
 	} 
