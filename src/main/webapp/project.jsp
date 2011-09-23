@@ -30,7 +30,7 @@
     if (scrollTopParam != null)
         scrollTo = Integer.parseInt(scrollTopParam);
 %>
-<script>
+<script type="text/javascript">
 	$(function() {
 		$("button.dropdown").button({
             icons: {
@@ -46,11 +46,27 @@
         $(":not(button.dropdown)").click(function(){
             $("div.dropdown-menu-wrapper").fadeOut(200);
         });
+
+        
+	    //Table header stuff
+	    var header = $("#kanbantable thead");
+	    $("body").append('<table class="kanban" id="headercopy"><thead></thead></table>')
+	    $("#headercopy thead").append($("#kanbantable thead th").clone());
+	     
+	    var header_pos = header.position().top+header.height();
+	    $(window).scroll(function () { 
+	      if($("body").scrollTop() >= header_pos){
+	        $("#headercopy").fadeIn();
+	      }else{
+	        $("#headercopy").fadeOut();
+	      }
+	    });
 	});
 	</script>
 	
 <script type="text/javascript">
 //<![CDATA[
+  
 			function setPosition() {
 			  window.scrollTo(0,<%=scrollTo%>);
 			}
@@ -110,10 +126,23 @@
 %>
 
 <style type="text/css">
-.kanban {
+table {
+  width: 100%;
+  color: #f00;
 	margin: 10px 0px 0px 0px;
-	background: whitesmoke;
 	border-collapse: collapse;
+}
+
+table#headercopy{
+  position: fixed;
+  top: -10px;
+  z-index: 1000;
+  opacity: 0.7;
+  display: none;
+}
+
+table#headercopy .feature-header{
+  background-color: #fff;
 }
 
 .age-container {
@@ -132,7 +161,7 @@
 }
 
 .itemName {
-	width: 135px;
+	width: 80%;
 	height: 20px;
 	position: absolute;
 	top: 6px;
@@ -149,35 +178,24 @@
 	opacity: 0.5;
 }
 
-.upIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 5px;
+.icons{
+  width: 10%;
+  position:absolute;
+  right: 0px;
+  top: 10px;
 }
 
-.advanceIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 140px;
-	top: 26px;
+.upIcon, .downIcon, .advanceItem{
+  width: 16px;
+  height: 16px;
 }
 
-.downIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 47px;
+.upIcon, .downIcon {
+	position: relative;
+	right: 10px;
 }
+
+
 .dropdown {
 	-moz-opacity: 1;
 	opacity: 1;
@@ -286,23 +304,11 @@
 }
 
 .markedToPrint {
-	border: 1px silver solid;
 	background: #EEEEEE;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-    position: relative;
 }
 
 .stopped {
-	border: 1px red solid;
 	background: #FF0033 !important;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-    position: relative;
 }
 
 .horizontalLine {
@@ -321,40 +327,28 @@
                 String name =
                     workItemType.getName();
                 HtmlColour cardColour = workItemType.getCardColour();
-                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
-	background: <%=cardColour.toString()%>;
-	height: 60px;
-	width: <%=cardWidth%>px;
-	margin: 1px 1px 1px 1px;
-	padding: 3px 3px 3px 3px;
-    position: relative;
+                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> 
+div[data-role="card"]{
+  height: 60px;
+	width: 95%;
+	margin: 1px;
+	padding: 3px;
+  position: relative;
 }
 
-.<%=name%>:hover {
-	border: 1px black solid;
+.card:hover{
+  border: 1px black solid;
+	padding: 2px;
+}
+                
+.<%=name%> {
 	background: <%=cardColour.toString()%>;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
+	
 }
 
 .markedToPrint:hover {
 	border: 1px black solid;
 	background: #CCCCCC;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-}
-
-.stopped:hover {
-	border: 1px red solid;
-	background: #800517;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
 }
 
 .<%=name%>-header {
@@ -380,7 +374,8 @@
 <body onload="javscript:setPosition();">
     <jsp:include page="header.jsp"/>
     <form id="form" method="post" action="">
-        <table class="kanban">
+        <table class="kanban" id="kanbantable">
+          <thead>
             <tr>
                 <%
                     KanbanBoardColumnList columns = project.getColumns(board);
@@ -401,7 +396,7 @@
                 				i+=temp;
                 			}
                 		});
-                		if(i > <%= wipLimit %>){
+                		if(i > <%= wipLimit %> && <%= wipLimit %> > -1) {
                 			$("#phase_<%=column_index %>").css('background-color', '#f00');
                 		}
                 	});
@@ -410,6 +405,8 @@
                     }
                 %>
             </tr>
+          </thead>
+          <tbody>
             <%
                 KanbanBoard kanbanBoard = project.getBoard(board);
 
@@ -427,7 +424,7 @@
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
                             id="work-item-<%=item.getId()%>"
-                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>">
+                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>" data-role="card">
                             
                             <div class="age-container" style="background-color:<%=item.getColour()%>">
                                 <% 
@@ -460,42 +457,44 @@
 								%>                    
                                 <%=formattedId %>: <span class="work-item-name"><%= item.getName() %></span>
                             </div>
-                            <div class="upIcon">
-                                <%
-                                    WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
-                                                if (adjacentWorkItemUp != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
-                                    src="<%=request.getContextPath()%>/images/go-up.png" />
-                                <%
-                                    } 
-                                %>
-                            </div>
-                            <div class="advanceIcon">
+                            <div class="icons">
+                              <div class="upIcon">
+                                  <%
+                                      WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
+                                                  if (adjacentWorkItemUp != null) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
+                                      src="<%=request.getContextPath()%>/images/go-up.png" />
+                                  <%
+                                      } 
+                                  %>
+                              </div>
+                              <div class="advanceIcon">
                             
-                            	<% 
-                            		if (!item.isCompleted() && !item.isStopped()) {
-                                %>
-                                <img 
-                                    onclick="javascript:advance(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/go-next.png" />
-                                <%
-                                    }
-                                %>
-                            </div>
-                            <div class="downIcon">
+                              	<% 
+                              		if (!item.isCompleted() && !item.isStopped()) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:advance(<%=item.getId()%>);"
+                                      src="<%=request.getContextPath()%>/images/go-next.png" />
+                                  <%
+                                      }
+                                  %>
+                              </div>
+                              <div class="downIcon">
 
-                                <%
-                                    WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
-                                                if (adjacentWorkItemDown != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
-                                    src="<%=request.getContextPath()%>/images/go-down.png" />
-                                <%
-                                    }
-                                %>
+                                  <%
+                                      WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
+                                                  if (adjacentWorkItemDown != null) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
+                                      src="<%=request.getContextPath()%>/images/go-down.png" />
+                                  <%
+                                      }
+                                  %>
+                              </div>
                             </div>
                             <button class="dropdown"></button>
                             <div class="dropdown-menu-wrapper" style="display:none;">
@@ -569,7 +568,7 @@
                 <%
                     }
                 %>
-            
+          </tbody>
         </table>
     </form>
 </body>

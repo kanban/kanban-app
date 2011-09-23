@@ -259,7 +259,8 @@ public class KanbanBoardController {
 			@RequestParam("name") String name,
 			@RequestParam("size") Integer size,
 			@RequestParam("importance") Integer importance,
-			@RequestParam("notes") String notes) throws IOException {
+			@RequestParam("notes") String notes, 
+			@RequestParam("color") String color) throws IOException {
 		// Param passed as string, need an int:
 		int parentIdAsInteger = Integer.parseInt(parentId);
 
@@ -276,7 +277,7 @@ public class KanbanBoardController {
 
 		// Add it and save it
 		project.addWorkItem(parentIdAsInteger, typeAsWorkItemType, name, size,
-				importance, notes,"FFFFFF", currentLocalDate());
+				importance, notes,color, currentLocalDate());
 		project.save();
 
 		// Redirect

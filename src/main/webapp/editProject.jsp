@@ -73,8 +73,8 @@ text-align: right;
 		  Edit ${currentProjectName} properties
 	    </legend>
 	
-		<label class="labelClass" for="newProjectName">Name:</label> 
-		<input size=10 type="text" disabled="disabled" name="newProjectName" value="${currentProjectName}" />
+		<label class="labelClass"  style="display:none;" for="newProjectName">Name:</label> 
+		<input size=10 type="text" name="newProjectName" style="display:none;" value="${currentProjectName}" />
 	
 	    <label class="labelClass" for="name">Settings:</label> 
 	    <textarea name="content" rows="25" cols="100">${settings}</textarea>

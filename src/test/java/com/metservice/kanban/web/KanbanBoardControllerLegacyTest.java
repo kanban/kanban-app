@@ -96,7 +96,7 @@ public class KanbanBoardControllerLegacyTest {
     @Test
     public void testAddItemAction() throws IOException {
         RedirectView view = kanbanController.addItemAction(kanban, "test-project", "wall", "0", "feature", "test",
-            5, 10, "");
+            5, 10, "", "000FFF");
         assertThat(view.getUrl(), is("../wall"));
     }
 

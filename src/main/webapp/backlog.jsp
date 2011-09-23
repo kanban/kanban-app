@@ -47,6 +47,16 @@
    		    }, function() {
    		          $(this.cells[0]).removeClass('showDragHandle');
    		    });
+   		    
+   		function saveItem(element){
+   		  $.ajax({
+           type: "POST",
+           url: window.location.pathname + "/edit-item-action",
+           data: "id=" + element.parents("tr").attr("id") + "&" + element.attr("data-role") + "=" + element.val(),
+         });
+         
+         element.parent().html(element.val()).removeClass("formified").addClass("formify");
+   		}
    		  
    		$(".formify").click(function(){
    		  
@@ -54,6 +64,11 @@
    		  if ($(this).children("input").size() > 0){
    		    return false;
    		  }
+   		  
+   		  //Find all other inputs and save them
+   		  $.each($("input"), function(index, value){
+   		    saveItem($(this));
+   		  });
    		  
    		  //Change the content to an input tag and autopopulate the value
    		  $(this).html("<input value=\"" + $(this).html().trim() + "\" data-role=\"" + $(this).attr("data-role") + "\" style=\"width: 50%\" />");
@@ -67,14 +82,7 @@
    		  $(this).find("input").keypress(function(event) {
    		    
    		    if (event.which == 13){
-   		      $.ajax({
-               type: "POST",
-               url: window.location.pathname + "/edit-item-action",
-               data: "id=" + $(this).parents("tr").attr("id") + "&" + $(this).attr("data-role") + "=" + $(this).val(),
-             });
-             
-          //And reset the input back to normal.   
-  		    $(this).parent().html($(this).val()).removeClass("formified").addClass("formify");
+   		      saveItem($(this));
    		    }
    		    
    		  });
@@ -108,6 +116,18 @@
 
 
 <style type="text/css">
+
+table{
+  width: 100%;
+	font-family: arial;
+	font-size: 14px;
+	color: #383838;
+}
+
+td.small{
+  width: 20px;
+}
+
 .dragClass {
 	background: ${type.cardColour};
 }
@@ -118,18 +138,6 @@
 	border-collapse: collapse;
 }
 
-.itemName {
-	width: 800px;
-	height: 20px;
-	position: relative;
-	top: 0px;
-	left: 20px;
-	font-family: arial;
-	font-size: 14px;
-	color: #383838;
-	text-align: left;
-	cursor:default
-}
 
 .upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover
 	{
@@ -157,28 +165,6 @@
 	width: 16px;
 	height: 16px;
 	cursor:default
-}
-
-.size {
-	position: relative;
-	width: 16px;
-	height: 13px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 14px;
-	text-align: center;
-	color: #383838;
-}
-
-.importance {
-	position: relative;
-	width: 50px;
-	height: 13px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 14px;
-	text-align: center;
-	color: #383838;
 }
 
 .horizontalLine {
@@ -211,6 +197,7 @@
 					<th ></th>
 					<th ></th>
 					<th ></th>
+					<th ></th>
 				</tr>
 			</thead>
 
@@ -236,17 +223,21 @@
 						</c:otherwise>
 					</c:choose>
 					<td class="itemName formify" data-role="name">${cell.workItem.name}</td>
-					<td class="size formify" data-role="size" >
+					<td class="small color">
+					  <div style="background-color:${cell.workItem.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
+					  </div>
+					</td>
+					<td class="small formify" data-role="size" >
 						<c:if test="${cell.workItem.size > 0 }">
 	                       ${cell.workItem.size}
 						</c:if>
 					</td>
-					<td class="importance formify" data-role="importance">
+					<td class="small formify" data-role="importance">
 						<c:if test="${cell.workItem.importance > 0 }">
 							${cell.workItem.importance}
 						</c:if>
 					</td>
-					<td class="advanceIcon" align="center" >
+					<td class="small advanceIcon" align="center" >
 							<c:if test="${! item.inFinalPhase}">
 								<img onclick="javascript:advance(${cell.workItem.id});"
 									src="<%=request.getContextPath()%>/images/go-next.png" />
