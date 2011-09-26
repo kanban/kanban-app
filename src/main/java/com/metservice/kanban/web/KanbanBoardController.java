@@ -253,29 +253,31 @@ public class KanbanBoardController {
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("projectName") String projectName,
 			@PathVariable("board") String boardType,
-			@RequestParam("parentId") String parentId,
-			@RequestParam("type") String type,
 			@RequestParam("name") String name,
-			@RequestParam("size") Integer size,
-			@RequestParam("importance") Integer importance,
-			@RequestParam("notes") String notes, 
-			@RequestParam("color") String color) throws IOException {
-		// Param passed as string, need an int:
-		int parentIdAsInteger = Integer.parseInt(parentId);
+			HttpServletRequest request) throws IOException {
+		
+		//Default parentID to 0
+		String temp = request.getParameter("parentId");
+		int parentId = temp == null ? 0 : Integer.parseInt(temp);
+		
+		temp = request.getParameter("size");
+		//size defaults to 0
+		int size = (temp == null ? 0 : (temp.equals("") ? 0 : Integer.parseInt(temp)));
+		
+		temp = request.getParameter("importance");
+		int importance = (temp == null ? 0 : (temp.equals("") ? 0 : Integer.parseInt(temp)));
+		
+		String notes = request.getParameter("notes");
+		
+		String color = request.getParameter("color");
+		
+		String workItemType = request.getParameter("type");
 
 		WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(
-				type);
-
-		// Don't let null values get through
-		if (size == null) {
-			size = 0;
-		}
-		if (importance == null) {
-			importance = 0;
-		}
+				workItemType);
 
 		// Add it and save it
-		project.addWorkItem(parentIdAsInteger, typeAsWorkItemType, name, size,
+		project.addWorkItem(parentId, typeAsWorkItemType, name, size,
 				importance, notes,color, currentLocalDate());
 		project.save();
 
