@@ -58,8 +58,28 @@ fieldset.submit {
 	text-align: right;
 	font-weight: bold;
 }
+
+
+.presetColor{
+  width:25px;
+  height:25px;
+  border:1px solid #000000;
+  float:left;
+  margin:3px;
+}
+
+.wrapper div{
+  float:left;
+}
 </style>
 <script type="text/javascript">
+$(document).ready(function() {
+	$(".presetColor").click(function () {
+	  var col = rgbToHex($(this).css("background-color"));
+    $('#colorSelector').ColorPickerSetColor(col);
+    $('#colorSelector div').css("background-color", "#" + col);
+	});
+});
 </script>
 </head>
 <body onload="setFocus('name-field');">
@@ -83,6 +103,15 @@ fieldset.submit {
 					<div style="background-color: #FFFFFF">
 					</div>
 				</div>
+  			<div>
+  		    <div class="presetColor" style="background:#D96666;"></div>
+  		    <div class="presetColor" style="background:#F2A640;"></div>
+  		    <div class="presetColor" style="background:#fbff00;"></div>
+  		    <div class="presetColor" style="background:#7EC225;"></div>
+  		    <div class="presetColor" style="background:#59BFB3;"></div>
+  		    <div class="presetColor" style="background:#668CD9;"></div>
+  		    <div class="presetColor" style="background:#B373B3;"></div>
+  		  </div>
 			</div>
 		</fieldset>
 		<fieldset class="submit">

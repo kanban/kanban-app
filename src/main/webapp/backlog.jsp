@@ -87,34 +87,24 @@
    		    
    		  });
    		});
-   		        		
+  $(".advance").click(function(){
+    var parent = $(this).parents("tr");
+    $.ajax({
+       type: "POST",
+       url: window.location.pathname + "/advance-item-action",
+       data: "id=" + parent.attr("id")
      });
+     parent.hide();
+  });    	
+});
 </script>
-
+<%
+    KanbanProject project = (KanbanProject) request.getAttribute("project");
+%>
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/header.css" />
 
 <title>Kanban</title>
-
-<script type="text/javascript">
-//<![CDATA[
-			function setPosition() {
-			  window.scrollTo(0,${scrollTop});
-			}
-			function advance(id){
-			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
-			 document.forms["form"].submit();
-			}
-
-			function edit(id){
-			 document.forms["form"].action = getBoard() + "/edit-item?id=" + id;
-			 document.forms["form"].submit();
-			}
-			
-//]]> 
-		</script>
-
-
 <style type="text/css">
 
 table{
@@ -183,10 +173,9 @@ td.small{
 }
 </style>
 </head>
-<body onload="javscript:setPosition();">
+<body>
 	<jsp:include page="header.jsp" />
 
-	<form id="form" method="post" action="">
 		<table id="backlog-table" class="kanban">
 			<thead>
 				<tr class="customizedHeader">
@@ -206,9 +195,10 @@ td.small{
 				<tr id="${cell.workItem.id}" class="horizontalLine">
 					<td class="dragHandle" style="width:35px" ></td>  				
 					<td class="editIcon">
+					<a href="<%= request.getContextPath() + "/projects/" + request.getAttribute("projectName") %>/backlog/edit-item?id=${cell.workItem.id}">
 							<img id="edit-work-item-${cell.workItem.id}-button"
-								onclick="javascript:edit(${cell.workItem.id});"
 								src="<%=request.getContextPath()%>/images/edit.png" />
+					</a>
 					</td>
 					<c:choose>
 						<c:when test="${cell.workItem.excluded}">
@@ -239,7 +229,7 @@ td.small{
 					</td>
 					<td class="small advanceIcon" align="center" >
 							<c:if test="${! item.inFinalPhase}">
-								<img onclick="javascript:advance(${cell.workItem.id});"
+								<img class="advance"
 									src="<%=request.getContextPath()%>/images/go-next.png" />
 							</c:if>
 					</td>
@@ -247,6 +237,5 @@ td.small{
 			</c:forEach>
 
 		</table>
-	</form>
 </body>
 </html>

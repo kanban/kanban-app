@@ -66,10 +66,26 @@ fieldset.submit {
 	font-weight: bold;
 	clear:left;
 }
+
+.presetColor{
+  width:25px;
+  height:25px;
+  border:1px solid #000000;
+  float:left;
+  margin:3px;
+}
+
+.wrapper div{
+  float:left;
+}
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-		
+		$(".presetColor").click(function () {
+		  var col = rgbToHex($(this).css("background-color"));
+      $('#colorSelector').ColorPickerSetColor(col);
+      $('#colorSelector div').css("background-color", "#" + col);
+		});
 	});
 	function deleteThisWorkItem() {
 		var response = confirm("Permanently delete this work item?");
@@ -77,7 +93,6 @@ fieldset.submit {
 			document.forms["delete"].submit();
 		}
 	}
-	
 </script>
 </head>
 <body>
@@ -148,9 +163,22 @@ fieldset.submit {
             <input size="10" type="text" id="colorid"
 	                name="color" value="${workItem.colour}" style="display:none" />
 			<div class="wrapper">
-			<div id="colorSelector"><div style="background-color: ${workItem.colour}"></div></div>
-		</div>
-        </fieldset>
+			  <div id="colorSelector">
+  			  <div style="background-color: ${workItem.colour}">
+  			  </div>
+  			</div>
+  			<div>
+  		    <div class="presetColor" style="background:#D96666;"></div>
+  		    <div class="presetColor" style="background:#F2A640;"></div>
+  		    <div class="presetColor" style="background:#fbff00;"></div>
+  		    <div class="presetColor" style="background:#7EC225;"></div>
+  		    <div class="presetColor" style="background:#59BFB3;"></div>
+  		    <div class="presetColor" style="background:#668CD9;"></div>
+  		    <div class="presetColor" style="background:#B373B3;"></div>
+  		  </div>
+		  </div>
+
+    </fieldset>
         
         
         
