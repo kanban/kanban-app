@@ -32,6 +32,14 @@ request.setAttribute("currentProjectName", currentProjectName);
 request.setAttribute("secondLevel", secondLevel);
 request.setAttribute("workItemTypes", workItemTypes);
 %>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#graphs").click(function(){
+            $(".nav").slideToggle();
+        });
+    });
+</script>
 <form id="header" method="post" action="">
     <div class="header">
         <div class="user-home">${service.home.absolutePath}</div>
