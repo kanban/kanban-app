@@ -31,7 +31,6 @@
     		    onDrop: function(table, row) {
 	    	            var rows = table.tBodies[0].rows;
 	    	            var ids = [];
-	    	            //Ignore the last row
 	    	            for (var i=0; i<rows.length-1; i++) {
 	    	                if (rows[i].id != "") {
 	        	            	ids.push(rows[i].id);
@@ -67,7 +66,7 @@
    		  }
    		  
    		  //Find all other inputs and save them
-   		  $.each($("input"), function(index, value){
+   		  $.each($("tr:not(tr.nodrag) input"), function(index, value){
    		    saveItem($(this));
    		  });
    		  
