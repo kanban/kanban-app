@@ -274,7 +274,10 @@ public class WorkItem {
     }
 
 	public void setColour(String colour) {
-		this.colour = new HtmlColour(colour);
+		if(colour != null && colour.length() > 0){
+			this.colour = new HtmlColour(colour);
+		}
+		
 	}
 
 	public HtmlColour getColour() {
