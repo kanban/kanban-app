@@ -41,11 +41,11 @@
     		    dragHandle: "dragHandle"
     		});
     		
-   		   $("#backlog-table tr").hover(function() {
+   		   $("#backlog-table tr:not(tr.nodrag)").hover(function() {
 		          $(this.cells[0]).addClass('showDragHandle');
 		          $(this).addClass('showDragHandle');
    		    }, function() {
-   		          $(this.cells[0]).removeClass('showDragHandle');
+   		        $(this.cells[0]).removeClass('showDragHandle');
    		    });
    		    
    		function saveItem(element){
@@ -95,7 +95,28 @@
        data: "id=" + parent.attr("id")
      });
      parent.hide();
-  });    	
+  }); 
+  
+  $("tr#new_story input").keypress(function(event) {
+    if (event.which == 13){
+      var row = $(this).parents("tr#new_story");
+      var name = row.find("input[name=name]").val();
+      var size = row.find("input[name=size]").val();
+      var importance = row.find("input[name=importance]").val();
+      var type = row.find("input[name=type]").val();
+      $.ajax({
+         type: "GET",
+         url: window.location.pathname + "/add-item-action",
+         data: "type="+type+"&name="+name+"&size="+size+"&importance="+importance,
+         success: function(){
+             window.location.reload();
+         },
+         error: function(){
+             alert("Failed to create story");
+          }
+       });
+    }	    
+	});  	
 });
 </script>
 <%
@@ -189,9 +210,9 @@ td.small{
 					<th ></th>
 				</tr>
 			</thead>
-
+      <tbody>
 			<c:forEach var="cell" items="${kanbanBacklog}">
-
+      
 				<tr id="${cell.workItem.id}" class="horizontalLine">
 					<td class="dragHandle" style="width:35px" ></td>  				
 					<td class="editIcon">
@@ -235,7 +256,29 @@ td.small{
 					</td>
 				</tr>
 			</c:forEach>
-
-		</table>
+      <tr id="new_story" class="nodrop nodrag">
+          <td></td>
+          <td>+</td>
+          
+          <td></td>
+          <td>
+            <input name="name"  style="width:75%" />
+            <span style="color:#aaa">Press <b>Enter</b> to create new story</span>
+          </td>
+          <td class="small color">
+					  <!-- <div style="background-color:${cell.workItem.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
+					  </div> -->
+					</td>
+					<td class="small" data-role="size" >
+            <input name="size" style="width:50%" />
+					</td>
+					<td class="small" data-role="importance">
+            <input name="importance" style="width:50%" />
+            
+        		<input type="hidden" name="type" value="${type}" />
+					</td>
+      </tr>
+    </tbody>
+	</table>
 </body>
 </html>
