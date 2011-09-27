@@ -31,7 +31,8 @@
     		    onDrop: function(table, row) {
 	    	            var rows = table.tBodies[0].rows;
 	    	            var ids = [];
-	    	            for (var i=0; i<rows.length; i++) {
+	    	            //Ignore the last row
+	    	            for (var i=0; i<rows.length-1; i++) {
 	    	                if (rows[i].id != "") {
 	        	            	ids.push(rows[i].id);
 	    	                }
