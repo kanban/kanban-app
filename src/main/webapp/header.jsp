@@ -13,6 +13,7 @@
 <%@page import="com.metservice.kanban.model.WorkItemType"%>
 <%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
 
+
 <%
 KanbanProject project = (KanbanProject) request.getAttribute("project");
 String boardType = (String) request.getAttribute("board");
@@ -32,7 +33,6 @@ request.setAttribute("currentProjectName", currentProjectName);
 request.setAttribute("secondLevel", secondLevel);
 request.setAttribute("workItemTypes", workItemTypes);
 %>
-
 <script type="text/javascript">
     $(document).ready(function(){
         $("#graphs").click(function(){
@@ -40,6 +40,7 @@ request.setAttribute("workItemTypes", workItemTypes);
         });
     });
 </script>
+
 <form id="header" method="post" action="">
     <div class="header">
         <div class="user-home">${service.home.absolutePath}</div>
@@ -59,14 +60,24 @@ request.setAttribute("workItemTypes", workItemTypes);
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
 		</c:if>
-        <div id="cumulative-flow-chart-1-button" class="button" onclick="javascript:chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">${project.workItemTypes.root.value.name}</div></div>
-		<c:if test="${secondLevel != null}" >
-	       <div id="cumulative-flow-chart-2-button" class="button" onclick="javascript:chart('cumulative-flow-chart','${secondLevel.name}');" ><div class ="textOnButton">${secondLevel.name}</div></div>
-		</c:if>
-        <div id="cycle-time-chart-1-button" class="button" onclick="javascript:chart('cycle-time-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">${project.workItemTypes.root.value.name}</div></div>
-		<c:if test="${secondLevel != null}" >
-	        <div id="cycle-time-chart-2-button" class="button" onclick="javascript:chart('cycle-time-chart','${secondLevel.name}');" ><div class ="textOnButton">${secondLevel.name}</div></div>
-		</c:if>
+      <!-- Start of graph menu -->
+			
+					<div id="graphs" class="button"> <div class ="textOnButton"
+                            >Graphs</div>
+            <ul class="nav">
+                <div class="graphs">
+				    <li class="listButton"> <div class ="textOnButton" id ="cumulative-flow-chart-1-button"onclick="javascript:chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');" >${project.workItemTypes.root.value.name}</div></li>
+                    <li class="listButton">
+                                <c:if test="${secondLevel != null}" ><div class ="textOnButton" id="cumulative-flow-chart-2-button" onclick="javascript:chart('cumulative-flow-chart','${secondLevel.name}');">${secondLevel.name}</div></c:if>
+                    </li>
+                    <li class="listButton"> <div class ="textOnButton" id="cycle-time-chart-1-button" onclick="javascript:chart('cycle-time-chart','${project.workItemTypes.root.value.name}');">${project.workItemTypes.root.value.name}</div></li>
+                    <li class="listButton">
+                                <c:if test="${secondLevel != null}" > <div class ="textOnButton" id="cycle-time-chart-2-button" onclick="javascript:chart('cycle-time-chart','${secondLevel.name}');" >${secondLevel.name}</div></c:if>
+                    </li>
+                </div>
+                </ul></div>				
+			
+			<!-- End of graph buttons -->
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
         <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
 
