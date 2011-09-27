@@ -5,10 +5,14 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import com.metservice.kanban.KanbanService;
@@ -92,11 +96,18 @@ public class KanbanBoardControllerLegacyTest {
 
     // This modifies the feature.csv file which then needs checking back in to SVN.
     // TODO We need to move our test working data out of the src hierarchy.
+    // NOTE: Edited by Nick & Janella
     @Ignore
     @Test
     public void testAddItemAction() throws IOException {
-        RedirectView view = kanbanController.addItemAction(kanban, "test-project", "wall", "0", "feature", "test",
-            5, 10, "", "000FFF");
+    	MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("parentId", "0");
+        request.addParameter("type", "feature");
+        request.addParameter("size", "5");
+        request.addParameter("importance", "10");
+        request.addParameter("notes", "");
+        request.addParameter("color", "000FFF");
+        RedirectView view = kanbanController.addItemAction(kanban, "test-project", "wall", "test", request);
         assertThat(view.getUrl(), is("../wall"));
     }
 
