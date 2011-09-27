@@ -50,7 +50,9 @@ public class WallPage {
 
         // If this fails, we found the <div> but couldn't find the <img> inside it.
         tester.clickElementByXPath(
-            "//div[@class='feature' and .//span[@class='work-item-name' and .='" + name + "']]//img[@class='add']");
+            "//div[@class='feature' and .//span[@class='work-item-name' and .='" + name 
+            + "']]//div//div//a[@class='add']");
+
         return new WorkItemPage(tester);
     }
 
@@ -63,9 +65,15 @@ public class WallPage {
     }
 
     private WorkItemPage clickEditButton(String workItemTypeName, String workItemName) {
+    	// if this fails, the drop down menu button is not present
+    	tester.clickElementByXPath("//div[@class='story' and .//span[@class='work-item-name' and .='story']]//button");
+    	// if this fails, the edit menu item is not present
+    	tester.assertElementPresentByXPath(
+        	"//div[@class='story' and .//span[@class='work-item-name' and .='story']]//div//div//a[@class='edit']");
+    	// if this fails, we were unable to click the element
         tester.clickElementByXPath("//div["
             + "@class='" + workItemTypeName + "' and .//span[@class='work-item-name' and .='" + workItemName + "']]"
-            + "//img[@class='edit']");
+            + "//div//div//a[@class='edit']");
         return new WorkItemPage(tester);
     }
 
