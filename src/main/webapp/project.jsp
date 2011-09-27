@@ -428,7 +428,7 @@ div[data-role="card"]{
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
                             id="work-item-<%=item.getId()%>" title="Story discription: <%=notes%>"
-                            class="<%=item.getType().getName()%> <%= item.isStopped() ? "stopped" : "" %>" data-role="card">
+                            class="<%=item.getType().getName()%><%= item.isStopped() ? " stopped" : "" %>" data-role="card">
                             
                             <div class="age-container" style="background-color:<%=item.getColour()%>">
                                 <% 
@@ -503,7 +503,7 @@ div[data-role="card"]{
                             <button class="dropdown"></button>
                             <div class="dropdown-menu-wrapper" style="display:none;">
                               <div class="dropdown-menu">
-                                <a href="javascript:edit(<%=item.getId()%>);">
+                                <a class="edit" href="javascript:edit(<%=item.getId()%>);">
                                   <img
                                   	class="edit"
                                     id="edit-work-item-<%=item.getId()%>-button"
@@ -512,7 +512,7 @@ div[data-role="card"]{
                                     <%
                                     if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
                                     %>
-                                    <a href="javascript:addChild(<%=item.getId()%>);">
+                                    <a class="add" href="javascript:addChild(<%=item.getId()%>);">
                                     <img
                                         class="add"
                                         alt="Advance"
