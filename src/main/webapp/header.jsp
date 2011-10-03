@@ -36,7 +36,8 @@ request.setAttribute("workItemTypes", workItemTypes);
 <script type="text/javascript">
     $(document).ready(function(){
         $("#graphs").click(function(){
-            $(".nav").slideToggle();
+            $("#graph_dropdown").fadeToggle();
+            $("#graphs").toggleClass("active");
         });
     });
 </script>
@@ -55,28 +56,53 @@ request.setAttribute("workItemTypes", workItemTypes);
         </div>
         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" ><div class ="textOnButton">Add ${project.workItemTypes.root.value}</div></div>
         <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
+<<<<<<< HEAD
         <div id="wall" class="button" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
         <div id="journal" class="button" onclick="javascript:board('journal');" ><div class ="textOnButton">Journal</div></div>
+=======
+        <div id="wall" class="button fancy" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
+>>>>>>> 67452bedbad091a28ecb3d56ecb8757a72e4c954
         <div id="complete" class="button" onclick="javascript:board('completed');" ><div class ="textOnButton">Complete</div></div>
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
 		</c:if>
       <!-- Start of graph menu -->
 			
-					<div id="graphs" class="button"> <div class ="textOnButton"
-                            >Graphs</div>
-            <ul class="nav">
-                <div class="graphs">
-				    <li class="listButton"> <div class ="textOnButton" id ="cumulative-flow-chart-1-button"onclick="javascript:chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');" >${project.workItemTypes.root.value.name}</div></li>
-                    <li class="listButton">
-                                <c:if test="${secondLevel != null}" ><div class ="textOnButton" id="cumulative-flow-chart-2-button" onclick="javascript:chart('cumulative-flow-chart','${secondLevel.name}');">${secondLevel.name}</div></c:if>
-                    </li>
-                    <li class="listButton"> <div class ="textOnButton" id="cycle-time-chart-1-button" onclick="javascript:chart('cycle-time-chart','${project.workItemTypes.root.value.name}');">${project.workItemTypes.root.value.name}</div></li>
-                    <li class="listButton">
-                                <c:if test="${secondLevel != null}" > <div class ="textOnButton" id="cycle-time-chart-2-button" onclick="javascript:chart('cycle-time-chart','${secondLevel.name}');" >${secondLevel.name}</div></c:if>
-                    </li>
-                </div>
-                </ul></div>				
+					<div id="graphs" class="button">
+					  <div class ="textOnButton">
+					    Graphs
+					  </div>
+          </div>	
+          <div id="graph_dropdown">
+            <a id="cumulative-flow-chart-1-button"  onclick="javascript:
+chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');
+return false;" >
+              <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />
+	            ${project.workItemTypes.root.value.name}
+	          </a>
+			      
+            <c:if test="${secondLevel != null}" >
+              <a id="cumulative-flow-chart-2-button" onclick="javascript:
+              chart('cumulative-flow-chart','${secondLevel.name}');return false;">
+                <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />${secondLevel.name}
+              </div>
+            </c:if>
+           
+              <a id="cycle-time-chart-1-button" onclick="javascript:
+                chart('cycle-time-chart','${project.workItemTypes.root.value.name}');
+                return false;">
+                <img src="${pageContext.request.contextPath}/images/cycle-time-chart.png" />
+                  ${project.workItemTypes.root.value.name}
+              </a>
+            
+            <c:if test="${secondLevel != null}" >
+              <a id="cycle-time-chart-2-button" onclick="javascript:
+              chart('cycle-time-chart','${secondLevel.name}');return false;" >
+              <img src="${pageContext.request.contextPath}/images/cycle-time-chart.png" />
+                ${secondLevel.name}
+              </a>
+            </c:if>
+          </div>			
 			
 			<!-- End of graph buttons -->
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>

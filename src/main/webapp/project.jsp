@@ -50,12 +50,12 @@
         
 	    //Table header stuff
 	    var header = $("#kanbantable thead");
-	    $("body").append('<table class="kanban" id="headercopy"><thead></thead></table>')
-	    $("#headercopy thead").append($("#kanbantable thead th").clone());
+	    $("body").append('<table class="kanban" id="headercopy"><thead></thead></table>');
+      $("#headercopy thead").append($("#kanbantable thead th").clone());
 	     
-	    var header_pos = header.position().top+header.height();
+	    var header_pos = header.offset().top+header.height();
 	    $(window).scroll(function () { 
-	      if($("body").scrollTop() >= header_pos){
+	      if($(window).scrollTop() >= header_pos){
 	        $("#headercopy").fadeIn();
 	      }else{
 	        $("#headercopy").fadeOut();
@@ -139,6 +139,7 @@ table#headercopy{
   z-index: 1000;
   opacity: 0.7;
   display: none;
+  width:99%;
 }
 
 table#headercopy .feature-header{
@@ -334,6 +335,9 @@ div[data-role="card"]{
 	margin: 1px;
 	padding: 3px;
   position: relative;
+  -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+         border-radius: 5px;
 }
 
 .card:hover{
