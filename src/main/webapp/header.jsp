@@ -37,7 +37,7 @@ request.setAttribute("workItemTypes", workItemTypes);
     $(document).ready(function(){
         $("#graphs").click(function(){
             $("#graph_dropdown").fadeToggle();
-            $("#graphs").toggleClass("active")
+            $("#graphs").toggleClass("active");
         });
     });
 </script>
