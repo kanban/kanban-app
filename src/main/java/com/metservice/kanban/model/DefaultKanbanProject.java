@@ -198,4 +198,16 @@ public class DefaultKanbanProject implements KanbanProject {
         tree.reorder(tree.getWorkItem(id), list);
     }
     
+    @Override
+    public String getJournalText() {
+    	String catchString = "";
+    	 try {
+			catchString = persistence.journalRead();
+    	 } catch (IOException e) {
+			e.printStackTrace();
+    	 }
+    	return catchString;
+    }
+    
+    
 }

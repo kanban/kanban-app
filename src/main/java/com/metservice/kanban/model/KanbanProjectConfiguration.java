@@ -31,6 +31,10 @@ public class KanbanProjectConfiguration {
     public File getDataFile(WorkItemType workItemType) {
         return new File(projectHome, workItemType.getName() + ".csv");
     }
+    
+    public File getJournalFile() {
+    	return new File(projectHome, "journal.txt");
+    }
 
     public KanbanBoardConfiguration getPhaseSequences() {
         return phaseSequences;

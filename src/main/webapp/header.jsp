@@ -56,6 +56,7 @@ request.setAttribute("workItemTypes", workItemTypes);
         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" ><div class ="textOnButton">Add ${project.workItemTypes.root.value}</div></div>
         <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
         <div id="wall" class="button" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
+        <div id="journal" class="button" onclick="javascript:board('journal');" ><div class ="textOnButton">Journal</div></div>
         <div id="complete" class="button" onclick="javascript:board('completed');" ><div class ="textOnButton">Complete</div></div>
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
