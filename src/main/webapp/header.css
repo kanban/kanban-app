@@ -85,7 +85,7 @@ background-color: #DDDDDD;
 }
 
 .textOnButton {
-    font: normal 15px verdana;
+    font: normal 15px verdana, arial, sans-serif;
 }
 
 .user-home {
