@@ -50,12 +50,11 @@
         
 	    //Table header stuff
 	    var header = $("#kanbantable thead");
-	    $("body").append('<table class="kanban" id="headercopy"><thead>'+$("#kanbantable thead").html()+'</thead></table>')
-	    //$("#headercopy thead").append($("#kanbantable thead th").clone());
+	    $("body").append('<table class="kanban" id="headercopy"><thead></thead></table>');
+      $("#headercopy thead").append($("#kanbantable thead th").clone());
 	     
 	    var header_pos = header.offset().top+header.height();
 	    $(window).scroll(function () { 
-	      console.log($(window).scrollTop() + " >= " + header_pos + "?");
 	      if($(window).scrollTop() >= header_pos){
 	        $("#headercopy").fadeIn();
 	      }else{
