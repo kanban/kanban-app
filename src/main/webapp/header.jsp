@@ -81,8 +81,7 @@ return false;" >
             <c:if test="${secondLevel != null}" >
               <a id="cumulative-flow-chart-2-button" onclick="javascript:
               chart('cumulative-flow-chart','${secondLevel.name}');return false;">
-                <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />${secondLevel.name}
-              </div>
+                <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />${secondLevel.name}</a>
             </c:if>
            
               <a id="cycle-time-chart-1-button" onclick="javascript:
