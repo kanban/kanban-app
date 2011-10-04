@@ -43,7 +43,7 @@ public class BurnUpDatasetGeneratorTest {
 
         WorkItem workItem2 = newBacklogItemWithSize(1);
         
-        BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(workItem1, workItem2), DATE.plusDays(1));
+        BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(workItem1, workItem2), null, DATE.plusDays(1));
         CategoryDataset data = datasetFactory.createDataset(model);
         
         assertThat(data.getValue(COMPLETE, DATE.plusDays(2)).intValue(), is(2));
@@ -54,7 +54,7 @@ public class BurnUpDatasetGeneratorTest {
         WorkItem excludedWorkItem = newBacklogItemWithSize(6);
         excludedWorkItem.setExcluded(true);
         
-        BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(excludedWorkItem), DATE);
+        BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(excludedWorkItem), null, DATE);
         CategoryDataset data = datasetFactory.createDataset(model);
 
         assertThat(data.getValue(BACKLOG, DATE).doubleValue(), is(0.0));

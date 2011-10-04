@@ -45,7 +45,7 @@ function admin() {
 }
 
 function chart(chartName, workItemTypeName) {
-    document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/chart?chartName=" + chartName + "&workItemTypeName=" + workItemTypeName;
+    document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/chart?chartName=" + chartName + "&workItemTypeName=" + workItemTypeName + "&startDate=&endDate=";
     document.forms["header"].submit();
 }
 
