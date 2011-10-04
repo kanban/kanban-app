@@ -54,7 +54,9 @@ request.setAttribute("workItemTypes", workItemTypes);
 					</c:forEach>
 			</select>        
         </div>
-        <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" ><div class ="textOnButton">Add ${project.workItemTypes.root.value}</div></div>
+        <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" >
+        	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div>
+        </div>
         <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
         <div id="wall" class="button fancy" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
         <div id="journal" class="button" onclick="javascript:board('journal');" ><div class ="textOnButton">Journal</div></div>
@@ -80,8 +82,7 @@ return false;" >
             <c:if test="${secondLevel != null}" >
               <a id="cumulative-flow-chart-2-button" onclick="javascript:
               chart('cumulative-flow-chart','${secondLevel.name}');return false;">
-                <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />${secondLevel.name}
-              </div>
+                <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />${secondLevel.name}</a>
             </c:if>
            
               <a id="cycle-time-chart-1-button" onclick="javascript:

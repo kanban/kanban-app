@@ -535,6 +535,80 @@ public class KanbanBoardController {
 		kanbanService.editProject(editProjectName, content);
 		return openProject(projectName, boardType, editProjectName);
 	}
+	
+	@RequestMapping("edit-wiplimit-action")
+	public synchronized ModelAndView editWIPLimitAction(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("projectName") String projectName,
+			@RequestParam("columnName") String columnName,
+			@RequestParam("columnType") String columnType,
+			@RequestParam("wipLimit") String wipLimit) throws IOException, ParseException {
+
+		@SuppressWarnings("unchecked")
+		
+		
+		String content = kanbanService
+		.getProjectConfiguration(projectName).getKanbanPropertiesFile()
+		.getContentAsString();
+		
+		Scanner sc = new Scanner(content);
+		String temp ="";
+		String newContent= "";
+
+		//Keep track of how many columns there are
+		int totalColumns = 0;
+		//This is set once, 
+		int insertAfterComma = -1;
+		
+		String wipLine = "workItemTypes."+columnType+".wipLimit=";
+		
+		while(sc.hasNext()){
+
+			temp = sc.nextLine();
+			//Find out where the new wipLimit should go
+			if(temp.contains("workItemTypes."+columnType+".phases=")){
+				String columns = temp.split("=")[1];
+				for(String column : columns.split(",")){
+					if(column.equals(columnName)){
+						insertAfterComma = totalColumns;
+					}
+					
+					totalColumns++;
+					
+				}
+			}
+			if(temp.contains(wipLine)){
+				String wipLimits = temp.split("=")[1];
+				String[] limits = wipLimits.split(",");
+				//limts.count should == totalColumns
+				String newLimits = "";
+				
+				String limit = "";
+				for(int i = 0; i < totalColumns; i++){
+					//Get the old limit
+					try{
+						limit = limits[i];
+					}catch(ArrayIndexOutOfBoundsException e){
+						//Set default if no limit
+						limit = "-1";
+					}
+					//Do we need to set it to a new limit?
+					if(i == insertAfterComma){
+						//Set the new limit
+						limit = wipLimit;
+					}
+					
+					newLimits += limit+",";
+				}
+				temp = wipLine+newLimits;
+			}
+			newContent += temp+"\n";
+		}
+		
+		kanbanService.editProject(projectName, newContent );
+		
+        return new ModelAndView("/admin.jsp", null);
+	}
 
 	@RequestMapping("create-project-action")
 	public synchronized RedirectView createProjectAction(

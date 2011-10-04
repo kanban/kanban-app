@@ -66,7 +66,7 @@ public class BoardPage {
     }
 
     public ChartPage clickFeatureCycleTimeChartButton() {
-        tester.clickElementByXPath("//div[@id='cycle-time-chart-1-button']");
+        tester.clickElementByXPath("//a[@id='cycle-time-chart-1-button']");
         return new ChartPage(tester);
     }
     

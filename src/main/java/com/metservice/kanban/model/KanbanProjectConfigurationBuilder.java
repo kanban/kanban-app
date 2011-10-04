@@ -36,10 +36,21 @@ public class KanbanProjectConfigurationBuilder {
 // TODO ROB&SEAN WORK!
     private KanbanBoardConfiguration getBoardDefinitions(WorkItemTypeCollection workItemTypes) throws IOException {
         Map<String, WorkItemType> workItemTypesByPhase = new HashMap<String, WorkItemType>();
+        Map<String, Integer> wipLimitsByPhase = new HashMap<String, Integer>();
         for (WorkItemType type : workItemTypes) {
+        	
             String[] phases = properties.getPhases(type.getName());
-            for (String phase : phases) {
-                workItemTypesByPhase.put(phase, type);
+            String[] columnLimits = properties.getPhaseWIPLimit(type.getName());
+            int wipLimit =-1;
+            for (int i=0; i<phases.length; i++) {
+            	try{
+            		wipLimit=Integer.parseInt(columnLimits[i]);
+            	}catch (Exception e) {
+            		// No limit was specified, or it was ""
+            		wipLimit = -1;
+				}
+            	wipLimitsByPhase.put(phases[i],wipLimit);
+                workItemTypesByPhase.put(phases[i], type);
             }
         }
         
@@ -47,19 +58,10 @@ public class KanbanProjectConfigurationBuilder {
         for (BoardIdentifier board : BoardIdentifier.values()) {
             List<KanbanBoardColumn> columns = new ArrayList<KanbanBoardColumn>();
             String[] boardPhases = properties.getPhaseSequence(board);
-            String[] columnLimits = properties.getPhaseWIPLimit(workItemTypesByPhase.get(boardPhases[0]).getName());
             String phase = "";
-            int wipLimit = -1;
             for(int i = 0; i < boardPhases.length;i++){
             	phase = boardPhases[i];
-            	try{
-            		wipLimit = Integer.parseInt(columnLimits[i]);
-            	}catch (Exception e) {
-					// No limit was specified, or it was ""
-            		wipLimit = -1;
-				}
-
-            	columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase, wipLimit));
+            	columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase, wipLimitsByPhase.get(phase)));
             }
 
             phaseSequences.add(board, new KanbanBoardColumnList(columns));
