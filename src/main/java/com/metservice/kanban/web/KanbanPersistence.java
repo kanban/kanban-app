@@ -1,6 +1,9 @@
 package com.metservice.kanban.web;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,7 +64,7 @@ public class KanbanPersistence {
     	Scanner sc = new Scanner(journalFile);
     	while (sc.hasNext()) {
     		String tmpString = sc.nextLine();
-    		textFile += tmpString + "\n";
+    		textFile += tmpString  + "<br />";
     	}
     	sc.close();
     	return textFile;
@@ -77,6 +80,19 @@ public class KanbanPersistence {
             List<WorkItem> workItemsForItem = workItems.getWorkItemsOfType(file.getWorkItemType());
             file.write(workItemsForItem);
         }
+    }
+    
+    public void write(String textForFile) throws IOException {
+    	FileOutputStream flusher = new FileOutputStream(journalFile);
+    	flusher.write((new String()).getBytes());
+    	flusher.close();
+    	BufferedWriter writer = new BufferedWriter(new FileWriter(journalFile));
+    	String[] lines = textForFile.split("<br /");
+    	for (String line : lines) {
+    		writer.write(line);
+    		writer.newLine();
+    	}
+    	writer.close();
     }
     
     /**
