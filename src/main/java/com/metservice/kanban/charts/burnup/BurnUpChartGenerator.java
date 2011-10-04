@@ -9,7 +9,7 @@ import com.metservice.kanban.model.WorkItemType;
 
 public interface BurnUpChartGenerator {
 
-    void generateBurnUpChart(WorkItemType type, List<WorkItem> workItems, LocalDate date, OutputStream outputStream)
+    void generateBurnUpChart(WorkItemType type, List<WorkItem> workItems, LocalDate startDate, LocalDate date, OutputStream outputStream)
         throws IOException;
 
 }

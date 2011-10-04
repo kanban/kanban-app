@@ -8,14 +8,26 @@
     <head>
   <script type="text/javascript"
   	src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript"
+  	src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.css"/>
+        <script>
+        $(function() {
+        	$( "#startDate" ).datepicker();
+        	$( "#endDate" ).datepicker();
+        }); 
+        </script>
+
         <title>Kanban</title>
     </head>
     
     <body>
         <jsp:include page="header.jsp"/>
-    
-        <div><img src="${imageName}?level=${workItemTypeName}" alt="[chart]"></img></div>
+    <p>StartDate: <input id="startDate" type="text"></p>
+    <p>EndDate: <input id="endDate" type="text"></p>
+        <div><img src="${imageName}?level=${workItemTypeName}&startDate=${startDate}&endDate=${endDate}" alt="[chart]"></img></div>
+   
     </body>
 </html>

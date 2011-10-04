@@ -18,7 +18,7 @@ public class ChartUtilsTest {
 
     @Test
     public void canReturnWorkingDaysForEmptyWorkItemsList() {
-        List<LocalDate> dates = ChartUtils.getWorkingDaysForWorkItems(Collections.<WorkItem> emptyList(),
+        List<LocalDate> dates = ChartUtils.getWorkingDaysForWorkItems(Collections.<WorkItem> emptyList(), null,
             parseIsoDate("2011-06-13"));
         assertThat(dates, IsCollectionWithSize.hasSize(1));
         assertThat(dates.get(0), is(parseIsoDate("2011-06-13")));
@@ -29,7 +29,7 @@ public class ChartUtilsTest {
         WorkItem workItem = new WorkItem(1, new WorkItemType("phase"));
         workItem.setDateAsString("phase", "2011-06-10");
 
-        List<LocalDate> dates = ChartUtils.getWorkingDaysForWorkItems(asList(workItem), parseIsoDate("2011-06-13"));
+        List<LocalDate> dates = ChartUtils.getWorkingDaysForWorkItems(asList(workItem), null, parseIsoDate("2011-06-13"));
 
         assertThat(dates.get(0), is(parseIsoDate("2011-06-10")));
         assertThat(dates.get(1), is(parseIsoDate("2011-06-13")));

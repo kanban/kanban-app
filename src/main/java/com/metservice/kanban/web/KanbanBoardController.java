@@ -6,10 +6,13 @@ import static com.metservice.kanban.utils.DateUtils.parseConventionalNewZealandD
 import static java.lang.Integer.parseInt;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -441,12 +444,16 @@ public class KanbanBoardController {
 	public synchronized ModelAndView chart(
 			@RequestParam("chartName") String chartName,
 			@RequestParam("workItemTypeName") String workItemTypeName,
-			@PathVariable("projectName") String projectName) {
+			@PathVariable("projectName") String projectName,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate) {
 
 		ModelAndView modelAndView = new ModelAndView("/chart.jsp");
 		modelAndView.addObject("workItemTypeName", workItemTypeName);
 		modelAndView.addObject("imageName", chartName + ".png");
 		modelAndView.addObject("projectName", projectName);
+		modelAndView.addObject("startDate", startDate);
+		modelAndView.addObject("endDate", endDate);
 		return modelAndView;
 	}
 
@@ -660,14 +667,32 @@ public class KanbanBoardController {
 	public void burnUpChartPng(
 			@ModelAttribute("project") KanbanProject project,
 			@ModelAttribute("chartGenerator") BurnUpChartGenerator chartGenerator,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate,
 			OutputStream outputStream) throws IOException {
 
 		WorkItemTree tree = project.getWorkItemTree();
 		WorkItemType type = project.getWorkItemTypes().getRoot().getValue();
 		List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type);
+		
+		LocalDate start = null;
+		LocalDate end = null;
+		
+		try {
+			start = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(startDate));
+		} catch (ParseException e) {
+			// keep start as null
+		}
+		
 
-		chartGenerator.generateBurnUpChart(type, topLevelWorkItems,
-				currentLocalDate(), outputStream);
+		try {
+			end = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
+		} catch (ParseException e) {
+			// keep end as null
+		}
+
+		chartGenerator.generateBurnUpChart(type, topLevelWorkItems, start,
+				end, outputStream);
 	}
 
 	@RequestMapping("add-column-action")

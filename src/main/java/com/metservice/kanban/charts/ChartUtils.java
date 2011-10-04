@@ -1,10 +1,12 @@
 package com.metservice.kanban.charts;
 
+import static com.metservice.kanban.utils.DateUtils.currentLocalDate;
 import static com.metservice.kanban.utils.WorkingDayUtils.isWorkingDay;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.model.WorkItem;
+import com.metservice.kanban.utils.DateUtils;
 
 /**
  * Helper class for creating Charts.
@@ -13,12 +15,15 @@ import com.metservice.kanban.model.WorkItem;
  */
 public final class ChartUtils {
 
-    public static List<LocalDate> getWorkingDaysForWorkItems(List<WorkItem> workItems, LocalDate endDate) {
-        LocalDate startDate = getFirstDate(workItems);
-        if (startDate == null) {
-            startDate = endDate;
+    public static List<LocalDate> getWorkingDaysForWorkItems(List<WorkItem> workItems, LocalDate startDate, LocalDate endDate) {
+        if (startDate == null){
+        	startDate = ChartUtils.getFirstDate(workItems);
+
+            if (startDate == null) {
+                startDate = endDate;
+            }
         }
-        return getWorkingDays(startDate, endDate);
+    	return getWorkingDays(startDate, endDate);
     }
 
     public static LocalDate getFirstDate(Iterable<WorkItem> workItems) {

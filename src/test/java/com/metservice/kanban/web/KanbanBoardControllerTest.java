@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -224,7 +225,7 @@ public class KanbanBoardControllerTest {
     @Test
     public void presentsChartPage() {
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        ModelAndView modelAndView = kanbanController.chart("cool-chart", "feature", "projectName");
+        ModelAndView modelAndView = kanbanController.chart("cool-chart", "feature", "projectName", "", "");
 
         assertThat(modelAndView.getViewName(), is("/chart.jsp"));
         assertThat((String) modelAndView.getModelMap().get("workItemTypeName"), is("feature"));
@@ -252,13 +253,12 @@ public class KanbanBoardControllerTest {
         OutputStream outputStream = mock(OutputStream.class);
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.burnUpChartPng(project, chartGenerator, outputStream);
-
+        
+        kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), outputStream);
         ArgumentCaptor<List> workItemsCaptor = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<OutputStream> outputStreamCaptor = ArgumentCaptor.forClass(OutputStream.class);
         verify(chartGenerator).generateBurnUpChart(
-            eq(featureType), workItemsCaptor.capture(), eq(new LocalDate()), outputStreamCaptor.capture());
-
+            eq(featureType), workItemsCaptor.capture(), (LocalDate) eq(null), (LocalDate) eq(null), outputStreamCaptor.capture());
         assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), hasItems(feature1, feature2));
         assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), not(hasItem(story)));
         assertThat(outputStreamCaptor.getValue(), is(outputStream));
