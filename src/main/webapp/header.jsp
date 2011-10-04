@@ -58,7 +58,12 @@ request.setAttribute("workItemTypes", workItemTypes);
         	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div>
         </div>
         <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
+<<<<<<< HEAD
+        <div id="wall" class="button" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
+        <div id="journal" class="button" onclick="javascript:board('journal');" ><div class ="textOnButton">Journal</div></div>
+=======
         <div id="wall" class="button fancy" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
+>>>>>>> 67452bedbad091a28ecb3d56ecb8757a72e4c954
         <div id="complete" class="button" onclick="javascript:board('completed');" ><div class ="textOnButton">Complete</div></div>
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>

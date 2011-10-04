@@ -36,4 +36,6 @@ public interface KanbanProject {
     KanbanBoard getBoard(BoardIdentifier boardType);
 
     WorkItemTypeCollection getWorkItemTypes();
+    
+    String getJournalText();
 }

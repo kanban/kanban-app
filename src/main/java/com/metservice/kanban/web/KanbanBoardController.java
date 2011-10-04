@@ -109,6 +109,10 @@ public class KanbanBoardController {
 			model.put("phase", phases.get(phases.size() - 1));
 			return new ModelAndView("/completed.jsp", model);
 		}
+		else if (boardType.equals("journal")) {
+			model.put("kanbanJournal", project.getJournalText());
+			return new ModelAndView("/journal.jsp", model);
+		}
 		return new ModelAndView("/project.jsp", model);
 	}
 
