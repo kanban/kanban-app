@@ -1,9 +1,12 @@
 package com.metservice.kanban.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
+
 import com.metservice.kanban.csv.KanbanCsvFile;
 import com.metservice.kanban.model.DefaultWorkItemTree;
 import com.metservice.kanban.model.KanbanProjectConfiguration;
@@ -19,6 +22,7 @@ import com.metservice.kanban.model.WorkItemType;
  */
 public class KanbanPersistence {
     private final Collection<KanbanCsvFile> files = new ArrayList<KanbanCsvFile>();
+    private File journalFile;
 
     /**
      * Default constructor for KanbanPersistence. Reads filenames from a given KanbanProjectConfiguration
@@ -31,6 +35,7 @@ public class KanbanPersistence {
             KanbanCsvFile file = new KanbanCsvFile(configuration.getDataFile(workItemType),
                 workItemType);
             files.add(file);
+            journalFile = configuration.getJournalFile();
         }
     }
 
@@ -49,6 +54,17 @@ public class KanbanPersistence {
             }
         }
         return index;
+    }
+    
+    public String journalRead() throws IOException {
+    	String textFile = "";
+    	Scanner sc = new Scanner(journalFile);
+    	while (sc.hasNext()) {
+    		String tmpString = sc.nextLine();
+    		textFile += tmpString + "\n";
+    	}
+    	sc.close();
+    	return textFile;
     }
     
     /**

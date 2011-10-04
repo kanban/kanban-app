@@ -6,11 +6,64 @@
 }
 
 .button {
-    border: 1px white solid;
-    height: 32px;
-    margin: 5px 5px 5px 5px;
-    cursor: pointer;
+  border: 1px white solid;
+  margin: 5px;
+  cursor: pointer;
 	float: left;     
+	-webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  background-color: #CCCCCC;
+  font-weight: bold;
+	font-size: 16px;
+	color: #ffffff;
+	padding: 4px 20px 7px 20px;
+	background: -moz-linear-gradient(
+		top,
+		#999999 0%,
+		#666666);
+	background: -webkit-gradient(
+		linear, left top, left bottom, 
+		from(#999999),
+		to(#666666));
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid #949494;
+	-moz-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.25),
+		inset 0px 0px 2px rgba(255,255,255,0.7);
+	-webkit-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.25),
+		inset 0px 0px 2px rgba(255,255,255,0.7);
+	text-shadow:
+		0px 1px 0px rgba(255,255,255,0),
+		0px -1px 0px rgba(0,0,0,0.2);
+}
+
+
+.button:hover{
+  background-color: #666;
+	background: -moz-linear-gradient(
+		top,
+		#666 0%,
+		#333);
+	background: -webkit-gradient(
+		linear, left top, left bottom, 
+		from(#666),
+		to(#333));
+}
+
+.button:active, .button.active{
+  background-color: #999;
+	background: -moz-linear-gradient(
+		top,
+		#666 0%,
+		#999);
+	background: -webkit-gradient(
+		linear, left top, left bottom, 
+		from(#666),
+		to(#999));
 }
 
 .listButton {
@@ -32,9 +85,7 @@ background-color: #DDDDDD;
 }
 
 .textOnButton {
-
     font: normal 15px verdana;
-    padding: 6px 6px 10px 32px;
 }
 
 .user-home {
@@ -51,67 +102,8 @@ background-color: #DDDDDD;
     top: 30px;
 }	
 
-
-div#add-top-level-item-button {
-    background: url('images/list-add-big.png') top left no-repeat;
-    background-color: #DDDDDD;
-    
-}
-
-div#backlog-button, div#wall, div#complete, div#burn-up-chart-button {
-    background-color: #DDDDDD;
-}
-
-div#print {
-    background-color: #DDDDDD;
-}
-
-div#graphs {
-    background-color: #DDDDDD;
-}
-
-div#cumulative-flow-chart-1-button {
-    background: url('images/cumulative-flow-chart.png') top left no-repeat;
-    background-color: #DDDDDD;
-}
-
-div#cumulative-flow-chart-2-button {
-    background: url('images/cumulative-flow-chart.png') top left no-repeat;
-    background-color: #DDDDDD;
-}
-
-div#cycle-time-chart-1-button {
-    background: url('images/cycle-time-chart.png') top left no-repeat;
-    background-color: #DDDDDD;
-}
-
-div#cycle-time-chart-2-button {
-    background: url('images/cycle-time-chart.png') top left no-repeat;
-    background-color: #DDDDDD;
-}
-
-div.csvdownload {
-    background: url('images/document-save-2.png') top left no-repeat;
-    background-color: #DDDDDD;
-}
-
-div#newProject {
-    background-color: #DDDDDD;
-}
-div#updateSettings {
-    background-color: #DDDDDD;
-}
-
 div#chart {
     background-color: #DDDDDD;
-}
-
-div#add-top-level-item-button:hover, div#backlog-button:hover, div#wall:hover, div#complete:hover, div#print:hover,
- div#cumulative-flow-chart-1-button:hover, div#cumulative-flow-chart-2-button:hover,
- div#cycle-time-chart-1-button:hover, div#cycle-time-chart-2-button:hover, div#burn-up-chart-button:hover, 
- div#newProject:hover, div.csvdownload:hover
- {
-    background-color: #CCCCCC;
 }
 
 .projectPicker {
@@ -131,3 +123,48 @@ td.showDragHandle {
 	background-position: center center;
 	cursor: move;
 } 
+
+#graph_dropdown{
+  position: absolute;
+  left: 562px;
+  top:67px;
+  z-index: 10000;
+  background-color: #999;
+  border: 1px solid #fff;
+  display: block;
+	-moz-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 2px rgba(255,255,255,0.7);
+	-webkit-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 2px rgba(255,255,255,0.7);
+	text-shadow:
+		1px 1px 1px rgba(0,0,0,0.8)
+  	0px -1px 0px rgba(255,255,255,0.2);
+  display: none;
+  	-webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+}
+
+#graph_dropdown a{
+  clear: both;
+  display: block;
+  padding: 7px;
+  font: 16px Arial;
+  color: #fff;
+  cursor: pointer;
+	-webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+}
+
+#graph_dropdown a:hover{
+  background-color: #666;
+}
+
+#graph_dropdown img{
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
