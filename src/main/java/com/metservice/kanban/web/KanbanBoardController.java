@@ -416,6 +416,18 @@ public class KanbanBoardController {
 		// Go home.
 		return new RedirectView("../" + boardType);
 	}
+	
+	@RequestMapping("edit-journal-action")
+	public synchronized RedirectView editJournalAction(
+			@ModelAttribute("project") KanbanProject project,
+			@PathVariable("board") String boardType,
+			@RequestParam("journalText") String journalText,
+			HttpServletRequest request) throws IOException, ParseException {
+		
+		project.writeJournalText(journalText);
+		return new RedirectView("../" + boardType);
+		
+	}
 
 	/**
 	 * Responds to a request to delete an item

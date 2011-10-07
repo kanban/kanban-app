@@ -64,10 +64,10 @@
 	});
 	</script>
 	
-	<script type="text/javascript">
+		<script type="text/javascript">
 	<!--
 		
-		var editing = faslse;
+		var editing = false;
 		
 		if (document.getElementById && document.createElement) {
 			var submitButton = document.createElement('BUTTON');
@@ -91,19 +91,26 @@
 			if (obj.nodeName == 'HTML') return;
 			var x = obj.innerHTML;
 			var y = document.createElement('TEXTAREA');
-		//	y.appendChild(document.createTextNode(x));
+			y.appendChild(document.createTextNode(x));
 			var z = obj.parentNode;
 			z.insertBefore(y,obj);
-			z.insertBefore(butt,obj);
+			z.insertBefore(submitButton,obj);
 			z.removeChild(obj);
 			y.value = x;
 			y.focus();
+			y.style.height = 500 + "px";
+			y.style.width = 500 + "px";
 			editing = true;
 			return false;
 		}
 		
 		function saveEdit() {
 			var area = document.getElementsByTagName('TEXTAREA')[0];
+			$.ajax({
+				type: "POST",
+				url: window.location.pathname + "/edit-journal-action",
+				data: "journalText=" + $(area).val(),
+			});
 			var y = document.createElement('P');
 			var z = area.parentNode;
 			y.innerHTML = area.value;
@@ -119,9 +126,17 @@
 
 	// -->
 	</script>
+	
 </head>
 <body onload="javscript:setPosition();">
     <jsp:include page="header.jsp"/>
+    <script>
+    
+    </script>
+    
+   
     <p>${kanbanJournal}</p>
+    
+    </textarea>
 </body>
 </html>
