@@ -15,11 +15,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/colorpicker.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/eye.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/utils.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/layout.js?ver=1.0.2"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/colorpicker.css" type="text/css" />
 <link rel="stylesheet" media="screen" type="text/css" href="${pageContext.request.contextPath}/layout.css" />
