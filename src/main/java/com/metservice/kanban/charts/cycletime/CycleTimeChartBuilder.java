@@ -16,13 +16,14 @@ import org.jfree.chart.renderer.category.GradientBarPainter;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.joda.time.LocalDate;
+
 import com.metservice.kanban.charts.KanbanDrawingSupplier;
 import com.metservice.kanban.model.WorkItem;
 
 
 public class CycleTimeChartBuilder {
 
-    
     public CategoryDataset createDataset(Collection<WorkItem> listOfItems) throws IOException {
         List<CycleTimeColumn> listOfColumns = convertFromWorkItemToCycleTimeColumns(listOfItems);
         DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
@@ -36,10 +37,10 @@ public class CycleTimeChartBuilder {
         return defaultcategorydataset;   
     }
 
-    
     public Collection<WorkItem> getCompletedWorkItemsInOrderOfCompletion(Collection<WorkItem> workItemList) {
         List<WorkItem> selectedWorkItems = new ArrayList<WorkItem>();
         for (WorkItem workItem : workItemList) {
+        	
             if (!workItem.isExcluded() && workItem.isCompleted()) {
                 selectedWorkItems.add(workItem);
             }
