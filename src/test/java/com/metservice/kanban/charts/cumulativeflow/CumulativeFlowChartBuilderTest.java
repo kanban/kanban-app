@@ -16,7 +16,7 @@ public class CumulativeFlowChartBuilderTest {
     public void testDataSet() throws ParseException, IOException {
         WorkItemType type = new WorkItemType("phase1", "phase2", "phase3", "phase4");
         List<WorkItem> workItems = CumulativeFlowChartMatrixTest.buildListFirstCase(type);
-        CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder();
+        CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder(null, null);
         builder.createDataset(type.getPhases(), workItems);
         
     }
@@ -25,7 +25,7 @@ public class CumulativeFlowChartBuilderTest {
     public void testDataSetIsInCorrectOrder() throws ParseException, IOException {
         WorkItemType type = new WorkItemType("phase1", "phase2", "phase3", "phase4");
         List<WorkItem> workItems = CumulativeFlowChartMatrixTest.buildListFirstCase(type);
-        CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder();
+        CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder(null, null);
         CategoryDataset dataset = builder.createDataset(type.getPhases(), workItems);
         assertThat(dataset.getRowKey(0).toString(), is("phase4"));
         assertThat(dataset.getRowKey(1).toString(), is("phase3"));

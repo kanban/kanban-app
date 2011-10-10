@@ -477,6 +477,8 @@ public class KanbanBoardController {
 	public synchronized void cumulativeFlowChartPng(
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("board") String boardType,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate,
 			@RequestParam("level") String level, OutputStream outputStream)
 	throws IOException {
 
@@ -484,7 +486,21 @@ public class KanbanBoardController {
 		List<WorkItem> workItemList = project.getWorkItemTree()
 		.getWorkItemsOfType(type);
 
-		CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder();
+		LocalDate start = null;
+		LocalDate end = null;
+		try {
+			start = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(startDate));
+		} catch (ParseException e) {
+			// keep start as null
+		}
+		try {
+			end = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
+		} catch (ParseException e) {
+			// keep end as null
+		}
+		
+		// add start and end date params here
+		CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder(start, end);
 
 		CategoryDataset dataset = builder.createDataset(type.getPhases(),
 				workItemList);
@@ -496,6 +512,8 @@ public class KanbanBoardController {
 	public synchronized void cycleTimeChartPng(
 			@ModelAttribute("project") KanbanProject project,
 			@PathVariable("board") String boardType,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate,
 			@RequestParam("level") String level, OutputStream outputStream)
 	throws IOException {
 
@@ -503,6 +521,7 @@ public class KanbanBoardController {
 		CycleTimeChartBuilder builder = new CycleTimeChartBuilder();
 		List<WorkItem> workItemList = project.getWorkItemTree()
 		.getWorkItemsOfType(type);
+		
 		CategoryDataset dataset = builder.createDataset(builder
 				.getCompletedWorkItemsInOrderOfCompletion(workItemList));
 		JFreeChart chart = builder.createChart(dataset);
@@ -697,8 +716,6 @@ public class KanbanBoardController {
 		} catch (ParseException e) {
 			// keep start as null
 		}
-		
-
 		try {
 			end = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
 		} catch (ParseException e) {

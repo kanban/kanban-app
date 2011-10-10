@@ -38,6 +38,9 @@ margin: 5px 0 40px 10px;
         	$("#startDate").datepicker({ dateFormat: 'dd/mm/yy' });
         	$("#endDate").datepicker({ dateFormat: 'dd/mm/yy' });
         	$("#chartName").val($("#chartName").val().substring(0, $("#chartName").val().length - 4));
+        	if ($("#chartName").val() == "cycle-time-chart"){
+        		$("form#dateForm").hide();
+        	}
         });
         </script>
 
@@ -46,7 +49,7 @@ margin: 5px 0 40px 10px;
     <!-- ${pageContext.request.contextPath}/projects/<%= request.getAttribute("projectName") %>/wall/ -->
     <body>
         <jsp:include page="header.jsp"/>
-        <form action="chart" >
+        <form action="chart" id="dateForm">
         	<fieldset>
 	            <p>StartDate: <input name="startDate"  id="startDate" type="text"/></p>
 	   			<p>EndDate: <input name="endDate" id="endDate" type="text"/></p>
