@@ -82,12 +82,12 @@ public class KanbanPersistence {
         }
     }
     
-    public void write(String textForFile) throws IOException {
+    public void journalWrite(String textForFile) throws IOException {
     	FileOutputStream flusher = new FileOutputStream(journalFile);
     	flusher.write((new String()).getBytes());
     	flusher.close();
     	BufferedWriter writer = new BufferedWriter(new FileWriter(journalFile));
-    	String[] lines = textForFile.split("<br /");
+    	String[] lines = textForFile.split("<br>");
     	for (String line : lines) {
     		writer.write(line);
     		writer.newLine();

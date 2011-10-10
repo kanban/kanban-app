@@ -209,5 +209,14 @@ public class DefaultKanbanProject implements KanbanProject {
     	return catchString;
     }
     
+    @Override
+    public void writeJournalText(String journalText) {
+    	try {
+			persistence.journalWrite(journalText);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
     
 }

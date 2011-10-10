@@ -38,4 +38,6 @@ public interface KanbanProject {
     WorkItemTypeCollection getWorkItemTypes();
     
     String getJournalText();
+    
+    void writeJournalText(String journalText);
 }
