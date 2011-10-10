@@ -225,7 +225,8 @@ public class KanbanBoardControllerTest {
     @Test
     public void presentsChartPage() {
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        ModelAndView modelAndView = kanbanController.chart("cool-chart", "feature", "projectName", "", "");
+        KanbanProject project = mock(KanbanProject.class);
+        ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature", "projectName", "", "");
 
         assertThat(modelAndView.getViewName(), is("/chart.jsp"));
         assertThat((String) modelAndView.getModelMap().get("workItemTypeName"), is("feature"));

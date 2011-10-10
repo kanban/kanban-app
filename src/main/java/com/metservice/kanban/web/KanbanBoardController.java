@@ -454,6 +454,7 @@ public class KanbanBoardController {
 
 	@RequestMapping("chart")
 	public synchronized ModelAndView chart(
+			@ModelAttribute("project") KanbanProject project,
 			@RequestParam("chartName") String chartName,
 			@RequestParam("workItemTypeName") String workItemTypeName,
 			@PathVariable("projectName") String projectName,
@@ -466,6 +467,7 @@ public class KanbanBoardController {
 		modelAndView.addObject("projectName", projectName);
 		modelAndView.addObject("startDate", startDate);
 		modelAndView.addObject("endDate", endDate);
+		modelAndView.addObject("kanbanJournal", project.getJournalText());
 		return modelAndView;
 	}
 

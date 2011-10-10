@@ -4,6 +4,26 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
+<style type="text/css">
+
+body {
+font-family: arial;
+}
+
+h1,h2,h3 {
+font-family: arial;
+}
+
+p {
+font-family: arial;
+}
+
+.journalArea {
+margin: 5px 0 40px 10px;
+}
+
+</style>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
   <script type="text/javascript"
@@ -39,6 +59,6 @@
         </form>
 
         <div><img src="${imageName}?level=${workItemTypeName}&startDate=${startDate}&endDate=${endDate}" alt="[chart]" /></div>
-   
+   		<div class=journalArea><h1>Journal</h1>${kanbanJournal}</div>
     </body>
 </html>

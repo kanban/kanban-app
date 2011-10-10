@@ -64,7 +64,7 @@ public class KanbanPersistence {
     	Scanner sc = new Scanner(journalFile);
     	while (sc.hasNext()) {
     		String tmpString = sc.nextLine();
-    		textFile += tmpString  + "<br />";
+    		textFile += tmpString;
     	}
     	sc.close();
     	return textFile;
@@ -87,11 +87,7 @@ public class KanbanPersistence {
     	flusher.write((new String()).getBytes());
     	flusher.close();
     	BufferedWriter writer = new BufferedWriter(new FileWriter(journalFile));
-    	String[] lines = textForFile.split("<br>");
-    	for (String line : lines) {
-    		writer.write(line);
-    		writer.newLine();
-    	}
+    	writer.write(textForFile);
     	writer.close();
     }
     

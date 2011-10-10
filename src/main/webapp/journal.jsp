@@ -16,6 +16,29 @@
 <%@page import="com.metservice.kanban.model.WorkItemType"%>
 <%@page import="com.metservice.kanban.model.KanbanProject"%>
 
+<style type="text/css">
+
+body {
+font-family: arial;
+}
+
+h1,h2,h3 {
+font-family: arial;
+}
+
+p {
+font-family: arial;
+}
+
+.textTypingArea {
+margin: 10px 0px 40px 10px;
+border:1px solid grey;
+width:780px;
+padding: 10px;
+}
+
+</style>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
@@ -85,7 +108,7 @@
 				obj = obj.parentNode;
 			}
 			if (obj.tagName == 'TEXTAREA' || obj.tagName == 'A') return;
-			while (obj.nodeName != 'P' && obj.nodeName != 'HTML') {
+			while (obj.className != 'textTypingArea' && obj.nodeName != 'HTML') {
 				obj = obj.parentNode;
 			}
 			if (obj.nodeName == 'HTML') return;
@@ -99,7 +122,9 @@
 			y.value = x;
 			y.focus();
 			y.style.height = 500 + "px";
-			y.style.width = 500 + "px";
+			y.style.width = 800 + "px";
+			y.style.marginTop = 10 + "px";
+			y.style.marginLeft = 10 + "px";
 			editing = true;
 			return false;
 		}
@@ -111,7 +136,8 @@
 				url: window.location.pathname + "/edit-journal-action",
 				data: "journalText=" + $(area).val(),
 			});
-			var y = document.createElement('P');
+			var y = document.createElement('div');
+			y.className = "textTypingArea";
 			var z = area.parentNode;
 			y.innerHTML = area.value;
 			z.insertBefore(y,area);
@@ -135,7 +161,7 @@
     </script>
     
    
-    <p>${kanbanJournal}</p>
+    <div class=textTypingArea>${kanbanJournal}</div>
     
     </textarea>
 </body>
