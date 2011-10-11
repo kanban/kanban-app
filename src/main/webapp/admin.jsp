@@ -58,7 +58,7 @@ request.setAttribute("workItemTypes", workItemTypes);
      </li>
     </ul>
     
-    
+<!--    
     <select>
     <%
         String boardType = "wall";
@@ -76,7 +76,7 @@ request.setAttribute("workItemTypes", workItemTypes);
       </option>
     <%    } %>
     </select> <a href="#" onclick="prompt('Enter new WIP Limit');return false;">Set WIP Limit</a>
-    
+ -->    
     <h2>Export</h2>
     
     <c:forEach var="workItemType" items="${workItemTypes}">
