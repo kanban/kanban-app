@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.metservice</groupId>
@@ -102,6 +103,7 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>7.4.0.v20110414</version>
 				<configuration>
+					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<webAppConfig>
 						<contextPath>/kanban</contextPath>
 					</webAppConfig>
@@ -135,13 +137,13 @@
 		</plugins>
 	</build>
 
-        <repositories>
-            <repository>
-              <id>osgeo</id>
-              <name>Open Source Geospatial Foundation Repository</name>
-              <url>http://download.osgeo.org/webdav/geotools/</url>
-            </repository>
-        </repositories>
+	<repositories>
+		<repository>
+			<id>osgeo</id>
+			<name>Open Source Geospatial Foundation Repository</name>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<!-- Compile -->
@@ -170,7 +172,7 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.5</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
@@ -312,9 +314,9 @@
 	</scm>
 
 	<distributionManagement>
-	    <repository>
-	        <id>metservice-releases</id>
-	        <url>http://code:8080/nexus/content/repositories/releases/</url>
+		<repository>
+			<id>metservice-releases</id>
+			<url>http://code:8080/nexus/content/repositories/releases/</url>
 		</repository>
 	</distributionManagement>
 </project>

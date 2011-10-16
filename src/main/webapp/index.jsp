@@ -30,7 +30,8 @@ KanbanService service = new KanbanService();
         
     	<%
     	    for (String projectName : listOfProjects) {
-    	%><a href="projects/<%=projectName%>/wall"><%=projectName%></a>
+    	%><a href="projects/<%=projectName%>/wall"><%=projectName%></a> ::
+    	<a href="pet/<%=projectName%>/project">P.E.T. for <%=projectName%></a> 
     	<br />
     	<%
     	    }
