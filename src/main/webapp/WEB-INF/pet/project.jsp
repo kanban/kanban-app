@@ -7,32 +7,35 @@
 <html>
 
 <head>
-<title>Project Estimation Tool for Kanban</title>
-<link rel="stylesheet" type="text/css" href="/kanban/header.css"/>
+		<title>Project Estimation Tool for Kanban</title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
 
-<style type="text/css">
-table {
-	border-collapse: collapse;
-}
-
-td,th {
-	border: solid 2px black;
-	padding: 3px;
-}
-
-table.nolines td {
-	border: none;
-	padding: 0px;
-}
-</style>
-
-<script type="text/javascript">
-	function changeProjectProperty(promptName, submitName) {
-		var value = prompt("Change " + promptName + " to?");
-		document.getElementById("projectPropertyNameHiddenField").value = submitName;
-		document.getElementById("projectPropertyValueHiddenField").value = value;
+	<style type="text/css">
+	table {
+		border-collapse: collapse;
 	}
-</script>
+	
+	td,th {
+		border: solid 2px black;
+		padding: 3px;
+	}
+	
+	table.nolines td {
+		border: none;
+		padding: 0px;
+	}
+	body {
+		font: normal 11px verdana;
+	}
+	</style>
+
+	<script type="text/javascript">
+		function changeProjectProperty(promptName, submitName) {
+			var value = prompt("Change " + promptName + " to?");
+			document.getElementById("projectPropertyNameHiddenField").value = submitName;
+			document.getElementById("projectPropertyValueHiddenField").value = value;
+		}
+	</script>
 </head>
 
 <body>
@@ -48,23 +51,22 @@ table.nolines td {
 			<tr>
 				<td>Budget</td>
 				<td>$${project.budget}</td>
-				<td><input id="projectPropertyNameHiddenField" type="hidden"
-					name="name" value="" /> <input
-					id="projectPropertyValueHiddenField" type="hidden" name="value"
-					value="" /> <input type="submit" value="Edit"
-					onclick="changeProjectProperty('budget', 'budget');" /></td>
+				<td>
+					<input id="projectPropertyNameHiddenField" type="hidden" name="name" value="" /> 
+					<input id="projectPropertyValueHiddenField" type="hidden" name="value" value="" /> 
+					<input type="submit" value="Edit" onclick="changeProjectProperty('budget', 'budget');" />
+				</td>
 			</tr>
 			<tr>
 				<td>Cost so far</td>
 				<td>$${project.costSoFar}</td>
-				<td><input type="submit" value="Edit"
-					onclick="changeProjectProperty('cost so far', 'costSoFar');" /></td>
+				<td><input type="submit" value="Edit" onclick="changeProjectProperty('cost so far', 'costSoFar');" /></td>
 			</tr>
 			<tr>
 				<td>Cost per point (estimated)</td>
 				<td>$${project.estimatedCostPerPoint}</td>
-				<td><input type="submit" value="Edit"
-					onclick="changeProjectProperty('estimated cost per point', 'estimatedCostPerPoint');" />
+				<td>
+					<input type="submit" value="Edit" onclick="changeProjectProperty('estimated cost per point', 'estimatedCostPerPoint');" />
 				</td>
 			</tr>
 		</table>
@@ -84,7 +86,7 @@ table.nolines td {
 			<th>Best Case</th>
 			<th>Worst Case</th>
 			<th>Best Case</th>
-			<th>Worst Case</th>
+			<th>Worst Case <span title="This is description of Worst Case Estimate">(?)</span></th>
 		</tr>
 		<c:forEach items="${project.budgetEntries}" var="entry" varStatus="status">
 			<tr
@@ -96,10 +98,17 @@ table.nolines td {
 								<form action="set-feature-included-in-estimates">
 									<div>
 										<input type="hidden" name="id" value="${entry.feature.id}" />
-										<input type="hidden" name="value"
-											value="${entry.feature.mustHave ? 'false' : 'true'}" /> <input
-											type="submit"
-											value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
+										
+										<input type="hidden" name="value" value="${entry.feature.mustHave ? 'false' : 'true'}" /> 
+
+										<c:choose>
+										 	<c:when test="${entry.canChangeImportance}">
+												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
+											</c:when>
+											<c:otherwise>
+												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" disabled="disabled" title="You must reorder this item to change its priority" />
+											</c:otherwise>
+										</c:choose>
 									</div>
 								</form>
 							</td>
@@ -113,14 +122,14 @@ table.nolines td {
 									</div>
 								</form>
 							</td>
-							<td>
-								<form action="complete-feature">
-									<div>
-										<input type="hidden" name="id" value="${entry.feature.id}" />
-										<input type="submit" value="Complete" disabled="disabled" title="To complete use wall" />
-									</div>
-								</form>
-							</td>
+<!-- 							<td> -->
+<!-- 								<form action="complete-feature"> -->
+<!-- 									<div> -->
+<%-- 										<input type="hidden" name="id" value="${entry.feature.id}" /> --%>
+<!-- 										<input type="submit" value="Complete" disabled="disabled" title="To complete feature use the wall" /> -->
+<!-- 									</div> -->
+<!-- 								</form> -->
+<!-- 							</td> -->
 						</tr>
 					</table>
 				</td>

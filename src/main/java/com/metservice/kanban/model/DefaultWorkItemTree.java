@@ -135,7 +135,7 @@ public final class DefaultWorkItemTree implements WorkItemTree {
     public Collection<WorkItem> getParentAlternatives(WorkItem workItem) {
         return workItem.getParentId() == ROOT_WORK_ITEM_ID
             ? Collections.<WorkItem> singleton(getRoot())
-                : getChildren(getParent(workItem).getParentId());
+            : getChildren(getParent(workItem).getParentId());
     }
 
     public WorkItem getRoot() {
@@ -149,31 +149,32 @@ public final class DefaultWorkItemTree implements WorkItemTree {
             addWorkItem(workItem);
         }
     }
-    
+
     private List<WorkItem> filteredList(WorkItem workItem, List<WorkItem> workItemList) {
         List<WorkItem> newList = new ArrayList<WorkItem>();
-        for(WorkItem item: workItemList) {
+        for (WorkItem item : workItemList) {
             if (item.getCurrentPhase() == workItem.getCurrentPhase() && item != workItem) {
                 newList.add(item);
             }
         }
         return newList;
     }
-    
+
     private void verifyReorder(WorkItem workItem, List<WorkItem> workItemList) {
         List<WorkItem> currentList = filteredList(workItem, workItemsByParentId.get(workItem.getParentId()));
         List<WorkItem> newList = filteredList(workItem, workItemList);
 
         if (!Arrays.equals(currentList.toArray(), newList.toArray())) {
-            throw new IllegalStateException("Tree was changed by someone else.\nCurrent\n" + currentList + "\nNew\n" + newList);
+            throw new IllegalStateException("Tree was changed by someone else.\nCurrent\n" + currentList + "\nNew\n"
+                + newList);
         }
     }
-    
+
     @Override
     public void reorder(WorkItem workItem, List<WorkItem> workItemList) {
         verifyReorder(workItem, workItemList);
         int pos = workItemList.indexOf(workItem);
-        move(workItem, pos == 0 ? null : workItemList.get(pos-1), true);
+        move(workItem, pos == 0 ? null : workItemList.get(pos - 1), true);
     }
 
     @Override
@@ -181,7 +182,21 @@ public final class DefaultWorkItemTree implements WorkItemTree {
         List<WorkItem> siblings = workItemsByParentId.get(workItem.getParentId());
         siblings.remove(workItem);
         int pos = siblings.indexOf(target) + (after ? 1 : 0);
-        siblings.add(pos < 0? siblings.size(): pos, workItem);
+        siblings.add(pos < 0 ? siblings.size() : pos, workItem);
+
+        if (target != null) {
+            // Update must have for items. If moving "nice to have" over "must have", it becomes "must have"
+            if (!after) {
+                if (!workItem.isMustHave() && target.isMustHave()) {
+                    workItem.setMustHave(true);
+                }
+            }
+            // If moving "must have" below "nice to have" it becomes "nice to have"
+            else {
+                if (workItem.isMustHave() && !target.isMustHave()) {
+                    workItem.setMustHave(false);
+                }
+            }
+        }
     }
-    
 }

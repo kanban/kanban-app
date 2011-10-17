@@ -6,7 +6,12 @@
 <html>
 
 <head>
-<title>${pageTitle}</title>
+	<title>${pageTitle}</title>
+	<style>
+	body {
+		font: normal 11px verdana;
+	}
+	</style>
 </head>
 
 <body>
@@ -35,6 +40,7 @@
         <p>
             <input type="hidden" name="id" value="${feature.id}" />
             <input type="submit" value="Save" />
+            <a href="project">Cancel</a>
         </p>
     </form>
 </body>

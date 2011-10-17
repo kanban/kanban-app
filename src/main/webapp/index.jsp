@@ -21,23 +21,27 @@ KanbanService service = new KanbanService();
         </tr>
     </table>
     
+    <h2>Projects</h2>
+    
     <%
     if (service.getHome().exists()) {
         Collection<String> listOfProjects = service.getProjects();
     %>
-        
-        <h2>Projects</h2>
+
+    	<table>
         
     	<%
     	    for (String projectName : listOfProjects) {
-    	%><a href="projects/<%=projectName%>/wall"><%=projectName%></a> ::
-    	<a href="pet/<%=projectName%>/project">P.E.T. for <%=projectName%></a> 
-    	<br />
-    	<%
-    	    }
     	%>
+    	<tr>
+    		<td><a href="projects/<%=projectName%>/wall"><%=projectName%></a></td>
+    		<td>Open <a href="pet/<%=projectName%>/project">P.E.T.</a></td>
+    	</tr> 
+    	<%
+   			}
+    	%>
+    	</table>
         <p><%= listOfProjects.size() %> project(s)</p>
-        
     <%
     } else {
     %>
