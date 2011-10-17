@@ -10,6 +10,8 @@
 	<context:annotation-config />
 	
 	<bean class="com.metservice.pet.ProjectEstimationToolController" />
+	<bean class="com.metservice.pet.PetDao" />
+	<bean class="com.metservice.kanban.KanbanService" />
 
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.UrlBasedViewResolver">

@@ -23,8 +23,8 @@
         <fieldset>
             <legend>Point estimate</legend>
             <p>
-                Best guess<br />
-                <input name="bestGuessEstimate" value="${feature.bestGuessEstimate}" />
+                Best case<br />
+                <input name="bestGuessEstimate" value="${feature.bestCaseEstimate}" />
             </p>
             <p>
                 Worst case<br />

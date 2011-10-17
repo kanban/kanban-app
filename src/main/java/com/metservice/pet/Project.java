@@ -1,11 +1,10 @@
 package com.metservice.pet;
 
-import static java.lang.Math.round;
-import static java.lang.Math.sqrt;
-
+import static java.lang.Math.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import com.metservice.kanban.model.KanbanProject;
 
 public class Project {
 	private final List<Feature> plannedFeatures = new ArrayList<Feature>();
@@ -19,6 +18,9 @@ public class Project {
 	
 	private int nextFeatureId = 0;
 	
+    private String projectName;
+    private KanbanProject kanbanProject;
+
 	public Feature getFeature(int id) {
 		return plannedFeatures.get(getIndexOfFeature(id));
 	}
@@ -189,4 +191,16 @@ public class Project {
 	public List<Feature> getCompletedFeatures() {
 		return completedFeatures;
 	}
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String name) {
+        this.projectName = name;
+    }
+
+    public void setKanbanProject(KanbanProject kanbanProject) {
+        this.kanbanProject = kanbanProject;
+    }
 }

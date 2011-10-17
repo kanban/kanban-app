@@ -5,7 +5,7 @@ public class Feature {
 
 	private int id = BLANK_ID;
 	private String description;
-	private int bestGuessEstimate;
+	private int bestCaseEstimate;
 	private int worstCaseEstimate;
 	
 	public Feature() {		
@@ -13,7 +13,7 @@ public class Feature {
 
 	public Feature(String description, int bestGuessEstimate, int worstCaseEstimate) {
 		this.description = description;
-		this.bestGuessEstimate = bestGuessEstimate;
+		this.bestCaseEstimate = bestGuessEstimate;
 		this.worstCaseEstimate = worstCaseEstimate;
 	}
 	
@@ -34,11 +34,11 @@ public class Feature {
 	}
 
 	public int getBestGuessEstimate() {
-		return bestGuessEstimate;
+		return bestCaseEstimate;
 	}
 
 	public void setBestGuessEstimate(int bestGuessEstimate) {
-		this.bestGuessEstimate = bestGuessEstimate;
+		this.bestCaseEstimate = bestGuessEstimate;
 	}
 
 	public int getWorstCaseEstimate() {
@@ -50,7 +50,7 @@ public class Feature {
 	}
 
 	public int getVariance() {
-		int deviation = worstCaseEstimate - bestGuessEstimate;
+		int deviation = worstCaseEstimate - bestCaseEstimate;
 		return deviation * deviation;
 	}
 }

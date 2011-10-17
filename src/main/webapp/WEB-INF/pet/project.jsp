@@ -37,6 +37,11 @@ table.nolines td {
 <body>
 	<h1>Project Estimation Tool</h1>
 
+	<p>
+		<a href='../..'>Go back to main Kanban site</a> <br/>
+		<a href='../../projects/${project.projectName}/wall'>Goto project <b>${project.projectName}</b> wall</a>
+	</p>
+
 	<form action="set-project-property">
 		<table>
 			<tr>
@@ -75,9 +80,9 @@ table.nolines td {
 			<th colspan="2">Running estimate</th>
 		</tr>
 		<tr>
-			<th>Best Guess</th>
+			<th>Best Case</th>
 			<th>Worst Case</th>
-			<th>Best Guess</th>
+			<th>Best Case</th>
 			<th>Worst Case</th>
 		</tr>
 		<c:forEach items="${project.budgetEntries}" var="entry">
@@ -174,6 +179,7 @@ table.nolines td {
 
 	<p>Cost per point so far: $${project.costPerPointSoFar}</p>
 
+<!-- 
 	<hr />
 
 	<div style="background-color: #FFCCCC">
@@ -185,6 +191,7 @@ table.nolines td {
 			</p>
 		</form>
 	</div>
+-->	
 </body>
 
 </html>
