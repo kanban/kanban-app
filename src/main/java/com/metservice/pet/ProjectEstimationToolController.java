@@ -99,11 +99,6 @@ public class ProjectEstimationToolController {
         workItem.setMustHave(includedInEstimates);
         petDao.storeUpdatedFeatures(project);
 
-        //        if (includedInEstimates) {
-        //            project.includeFeature(id);
-        //        } else {
-        //            project.excludeFeature(id);
-        //        }
         return new RedirectView("project");
     }
 
@@ -116,6 +111,9 @@ public class ProjectEstimationToolController {
         } else {
             throw new IllegalArgumentException("direction = " + direction);
         }
+
+        // change feature priority
+
         return new RedirectView("project");
     }
 

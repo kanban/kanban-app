@@ -7,7 +7,7 @@
 <html>
 
 <head>
-<title>Project Estimation Tool</title>
+<title>Project Estimation Tool for Kanban</title>
 <link rel="stylesheet" type="text/css" href="/kanban/header.css"/>
 
 <style type="text/css">
@@ -36,7 +36,7 @@ table.nolines td {
 </head>
 
 <body>
-	<h1>Project Estimation Tool</h1>
+	<h1>Project Estimation Tool for Kanban</h1>
 
 	<p>
 		<a href='../..'>Go back to main Kanban site</a> <br/>

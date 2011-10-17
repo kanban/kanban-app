@@ -10,9 +10,9 @@ public class Feature {
     private String description;
     private int bestCaseEstimate;
     private int worstCaseEstimate;
-    private WorkItem workItem;
-
     private boolean mustHave;
+
+    private WorkItem workItem;
 
     public Feature() {}
 
