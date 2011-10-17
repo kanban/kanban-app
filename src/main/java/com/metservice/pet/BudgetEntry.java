@@ -2,11 +2,10 @@ package com.metservice.pet;
 
 public class BudgetEntry {
 	private Feature feature;
-	private boolean mustHave;
-	private int bestGuessCumulativeCost;
+	private int bestCaseCumulativeCost;
 	private int worstCaseCumulativeCost;
 	private boolean overBudgetInWorstCase;
-	private boolean overBudgetInBestGuess;
+	private boolean overBudgetInBestCase;
 	
 	public BudgetEntry() {
 	}
@@ -19,20 +18,12 @@ public class BudgetEntry {
 		return feature;
 	}
 	
-	public void setMustHave(boolean mustHave) {
-		this.mustHave = mustHave;
+	public void setBestCaseCumulativeCost(int bestCaseCumulativeCost) {
+		this.bestCaseCumulativeCost = bestCaseCumulativeCost;
 	}
 	
-	public boolean isMustHave() {
-		return mustHave;
-	}
-	
-	public void setBestGuessCumulativeCost(int bestGuessCumulativeCost) {
-		this.bestGuessCumulativeCost = bestGuessCumulativeCost;
-	}
-	
-	public int getBestGuessCumulativeCost() {
-		return bestGuessCumulativeCost;
+	public int getBestCaseCumulativeCost() {
+		return bestCaseCumulativeCost;
 	}
 	
 	public void setWorstCaseCumulativeCost(int worstCaseCumulativeCost) {
@@ -43,12 +34,12 @@ public class BudgetEntry {
 		return worstCaseCumulativeCost;
 	}
 	
-	public void setOverBudgetInBestGuess(boolean overBudgetInBestGuess) {
-		this.overBudgetInBestGuess = overBudgetInBestGuess;
+	public void setOverBudgetInBestCase(boolean overBudgetInBestCase) {
+		this.overBudgetInBestCase = overBudgetInBestCase;
 	}
 	
-	public boolean isOverBudgetInBestGuess() {
-		return overBudgetInBestGuess;
+	public boolean isOverBudgetInBestCase() {
+		return overBudgetInBestCase;
 	}
 	
 	public void setOverBudgetInWorstCase(boolean overBudgetInWorstCase) {

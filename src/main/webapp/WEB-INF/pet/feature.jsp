@@ -17,14 +17,15 @@
             <legend>Feature</legend>
             <p>
                 Description<br />
-                <input name="description" size="60" value="${feature.description}" />
+                <input name="description" size="60" value="${feature.description}" disabled="disabled" />
+                <span style="color: #CCCCCC">To edit description go to the project wall</span>
             </p>
         </fieldset>
         <fieldset>
             <legend>Point estimate</legend>
             <p>
                 Best case<br />
-                <input name="bestGuessEstimate" value="${feature.bestCaseEstimate}" />
+                <input name="bestCaseEstimate" value="${feature.bestCaseEstimate}" />
             </p>
             <p>
                 Worst case<br />

@@ -8,6 +8,7 @@
 
 <head>
 <title>Project Estimation Tool</title>
+<link rel="stylesheet" type="text/css" href="/kanban/header.css"/>
 
 <style type="text/css">
 table {
@@ -87,7 +88,7 @@ table.nolines td {
 		</tr>
 		<c:forEach items="${project.budgetEntries}" var="entry">
 			<tr
-				style="background: ${entry.mustHave ? (entry.overBudgetInWorstCase ? 'Red' : 'Khaki') : (entry.overBudgetInBestGuess ? 'LightGrey' : 'White') }">
+				style="background: ${entry.feature.mustHave ? (entry.overBudgetInWorstCase ? 'Red' : 'Khaki') : (entry.overBudgetInBestCase ? 'LightGrey' : 'White') }">
 				<td>
 					<table class="nolines">
 						<tr>
@@ -96,9 +97,9 @@ table.nolines td {
 									<div>
 										<input type="hidden" name="id" value="${entry.feature.id}" />
 										<input type="hidden" name="value"
-											value="${entry.mustHave ? 'false' : 'true'}" /> <input
+											value="${entry.feature.mustHave ? 'false' : 'true'}" /> <input
 											type="submit"
-											value="${entry.mustHave ? 'Nice to Have' : 'Must Have'}" />
+											value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
 									</div>
 								</form>
 							</td>
@@ -140,24 +141,20 @@ table.nolines td {
 					</form>
 				</td>
 				<td
-					style="${!entry.mustHave && entry.overBudgetInBestGuess ? 'text-decoration: line-through;' : ''}">${entry.feature.description}</td>
-				<td>${entry.mustHave ? 'Must have' : 'Nice to have'}</td>
-				<td>${entry.feature.bestGuessEstimate}</td>
+					style="${!entry.feature.mustHave && entry.overBudgetInBestCase ? 'text-decoration: line-through;' : ''}">${entry.feature.description}</td>
+				<td>${entry.feature.mustHave ? 'Must have' : 'Nice to have'}</td>
+				<td>${entry.feature.bestCaseEstimate}</td>
 				<td>${entry.feature.worstCaseEstimate}</td>
 				<td
-					style="${!entry.mustHave && entry.overBudgetInBestGuess ? 'text-decoration: line-through;' : ''}">$${entry.bestGuessCumulativeCost}</td>
+					style="${!entry.feature.mustHave && entry.overBudgetInBestCase ? 'text-decoration: line-through;' : ''}">$${entry.bestCaseCumulativeCost}</td>
 				<td
-					style="${!entry.mustHave && entry.overBudgetInBestGuess ? 'text-decoration: line-through;' : ''}">$${entry.worstCaseCumulativeCost}</td>
+					style="${!entry.feature.mustHave && entry.overBudgetInBestCase ? 'text-decoration: line-through;' : ''}">$${entry.worstCaseCumulativeCost}</td>
 			</tr>
 		</c:forEach>
 		<tr>
 			<td colspan="2" />
 			<td colspan="6">
-				<form action="add-feature">
-					<div>
-						<input type="submit" value="Add feature" />
-					</div>
-				</form>
+				<span style="color: #777777">To add features go to project wall</span>
 			</td>
 		</tr>
 	</table>
@@ -172,7 +169,7 @@ table.nolines td {
 		<c:forEach items="${project.completedFeatures}" var="feature">
 			<tr>
 				<td>${feature.description}</td>
-				<td>${feature.bestGuessEstimate}</td>
+				<td>${feature.bestCaseEstimate}</td>
 			</tr>
 		</c:forEach>
 	</table>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import com.metservice.kanban.model.WorkItem;
 
 @Controller
 @RequestMapping("/{projectName}")
@@ -25,6 +26,7 @@ public class ProjectEstimationToolController {
     @ModelAttribute("project")
     public synchronized Project populateProject(@PathVariable("projectName") String projectName) throws IOException {
         Project project = petDao.loadProject(projectName);
+
         return project;
     }
 
@@ -68,23 +70,40 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("save-feature")
-    public RedirectView saveFeature(int id, Feature feature, @ModelAttribute("project") Project project) {
-        if (feature.getId() == Feature.BLANK_ID) {
-            project.addFeature(feature);
-        } else {
-            project.setFeature(id, feature);
-        }
+    public RedirectView saveFeature(int id, Feature feature, @ModelAttribute("project") Project project)
+        throws IOException {
+
+        assert feature.getId() != Feature.BLANK_ID;
+
+        project.setFeature(id, feature);
+
+        // get WI for feature
+        WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(feature.getId());
+        // update WI from feature
+        workItem.setBestCaseEstimate(feature.getBestCaseEstimate());
+        workItem.setWorstCaseEstimate(feature.getWorstCaseEstimate());
+
+        petDao.storeUpdatedFeatures(project);
+
         return new RedirectView("project");
     }
 
     @RequestMapping("set-feature-included-in-estimates")
-    public RedirectView excludeFeature(int id, boolean value, @ModelAttribute("project") Project project) {
+    public RedirectView excludeFeature(int id, boolean value, @ModelAttribute("project") Project project)
+        throws IOException {
         boolean includedInEstimates = value;
-        if (includedInEstimates) {
-            project.includeFeature(id);
-        } else {
-            project.excludeFeature(id);
-        }
+
+        Feature feature = project.getFeature(id);
+        feature.setMustHave(includedInEstimates);
+        WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(feature.getId());
+        workItem.setMustHave(includedInEstimates);
+        petDao.storeUpdatedFeatures(project);
+
+        //        if (includedInEstimates) {
+        //            project.includeFeature(id);
+        //        } else {
+        //            project.excludeFeature(id);
+        //        }
         return new RedirectView("project");
     }
 
@@ -106,15 +125,8 @@ public class ProjectEstimationToolController {
         return new RedirectView("project");
     }
 
-    @RequestMapping("reset-demo")
-    public RedirectView resetDemo(@ModelAttribute("project") Project project) {
-        project = DemoProjectFactory.createDemoProject();
-        return new RedirectView("project");
-    }
-
     @RequestMapping("/")
     public RedirectView root() {
         return new RedirectView("project");
     }
-
 }

@@ -1,10 +1,10 @@
 package com.metservice.kanban.model;
 
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
-import com.metservice.kanban.utils.WorkingDayUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.joda.time.LocalDate;
+import com.metservice.kanban.utils.WorkingDayUtils;
 
 public class WorkItem {
 
@@ -16,9 +16,12 @@ public class WorkItem {
     private int importance;
     private String notes;
     private boolean excluded;
+    private boolean mustHave;
 
     private final Map<String, LocalDate> datesByPhase = new HashMap<String, LocalDate>();
     private String currentPhase;
+    private int bestCaseEstimate;
+    private int worstCaseEstimate;
     public static final int ROOT_WORK_ITEM_ID = 0;
 
     public WorkItem(int id, WorkItemType type, String advanceToPhase) {
@@ -52,6 +55,9 @@ public class WorkItem {
         this.importance = 0;
         this.notes = "";
         this.excluded = false;
+        this.bestCaseEstimate = 0;
+        this.worstCaseEstimate = 0;
+        this.mustHave = false;
     }
 
     public int getId() {
@@ -230,5 +236,29 @@ public class WorkItem {
             return null;
         }
         return name.substring(0, Math.min(name.length(), 40));        
+    }
+
+    public int getBestCaseEstimate() {
+        return bestCaseEstimate;
+    }
+
+    public void setBestCaseEstimate(int bestCaseEstimate) {
+        this.bestCaseEstimate = bestCaseEstimate;
+    }
+
+    public int getWorstCaseEstimate() {
+        return worstCaseEstimate;
+    }
+
+    public void setWorstCaseEstimate(int worstCaseEstimate) {
+        this.worstCaseEstimate = worstCaseEstimate;
+    }
+
+    public boolean isMustHave() {
+        return mustHave;
+    }
+
+    public void setMustHave(boolean mustHave) {
+        this.mustHave = mustHave;
     }
 }

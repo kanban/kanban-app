@@ -1,6 +1,7 @@
 package com.metservice.pet;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.lang.SystemUtils;
@@ -16,6 +17,7 @@ public class PetDaoTest {
     @Before
     public void setUp() {
         petDao = new PetDao();
+
         service = new KanbanService(new File(SystemUtils.getUserDir(), "/target/test-classes"));
         petDao.setKanbanService(service);
     }
@@ -34,10 +36,6 @@ public class PetDaoTest {
         
         Project p2 = petDao.loadProject(projectname);
         
-        //        assertNotSame(1234, p2.getBudget());
-        //        assertNotSame(100, p2.getCostSoFar());
-        //        assertNotSame(10, p2.getEstimatedCostPerPoint());
-
         petDao.storeProjectEstimates(project);
         
         p2 = petDao.loadProject(projectname);
@@ -50,6 +48,9 @@ public class PetDaoTest {
     @Test
     public void fileWithProjectEstimatesDoesNotExistReturnZeros() throws IOException {
         String projectname = "empty-project";
+
+        service = mock(KanbanService.class);
+        petDao.setKanbanService(service);
 
         Project project = petDao.loadProject(projectname);
 
