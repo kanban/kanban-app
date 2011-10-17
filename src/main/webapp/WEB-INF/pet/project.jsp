@@ -86,7 +86,7 @@ table.nolines td {
 			<th>Best Case</th>
 			<th>Worst Case</th>
 		</tr>
-		<c:forEach items="${project.budgetEntries}" var="entry">
+		<c:forEach items="${project.budgetEntries}" var="entry" varStatus="status">
 			<tr
 				style="background: ${entry.feature.mustHave ? (entry.overBudgetInWorstCase ? 'Red' : 'Khaki') : (entry.overBudgetInBestCase ? 'LightGrey' : 'White') }">
 				<td>
@@ -109,7 +109,7 @@ table.nolines td {
 								<form action="edit-feature">
 									<div>
 										<input type="hidden" name="id" value="${entry.feature.id}" />
-										<input type="submit" value="Edit" />
+										<input type="submit" value="Edit Est." />
 									</div>
 								</form>
 							</td>
@@ -117,7 +117,7 @@ table.nolines td {
 								<form action="complete-feature">
 									<div>
 										<input type="hidden" name="id" value="${entry.feature.id}" />
-										<input type="submit" value="Complete" />
+										<input type="submit" value="Complete" disabled="disabled" title="To complete use wall" />
 									</div>
 								</form>
 							</td>
@@ -127,16 +127,29 @@ table.nolines td {
 				<td>
 					<form action="move-feature">
 						<div>
-							<input type="hidden" name="id" value="${entry.feature.id}" /> <input
-								type="hidden" name="direction" value="up" /> <input
-								type="submit" value="↑" />
+							<input type="hidden" name="id" value="${entry.feature.id}" /> 
+							<input type="hidden" name="direction" value="up" /> 
+							<c:if test="${entry.prevFeature == null}">
+								<input type="submit" value="↑" disabled="disabled"/>
+							</c:if>
+							<c:if test="${entry.prevFeature != null}">
+								<input type="hidden" name="targetId" value="${entry.prevFeature.id}" />
+								<input type="submit" value="↑"/>
+							</c:if>
 						</div>
 					</form>
 					<form action="move-feature">
 						<div>
-							<input type="hidden" name="id" value="${entry.feature.id}" /> <input
-								type="hidden" name="direction" value="down" /> <input
-								type="submit" value="↓" />
+							<input type="hidden" name="id" value="${entry.feature.id}" /> 
+							<input type="hidden" name="direction" value="down" /> 
+							
+							<c:if test="${entry.nextFeature == null}">
+								<input type="submit" value="↓" disabled="disabled"/>
+							</c:if>
+							<c:if test="${entry.nextFeature != null}">
+								<input type="hidden" name="targetId" value="${entry.nextFeature.id}" />
+								<input type="submit" value="↓" />
+							</c:if>
 						</div>
 					</form>
 				</td>

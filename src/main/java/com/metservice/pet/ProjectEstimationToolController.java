@@ -103,16 +103,13 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("move-feature")
-    public RedirectView moveFeature(int id, String direction, @ModelAttribute("project") Project project) {
-        if (direction.equals("up")) {
-            project.moveFeatureUp(id);
-        } else if (direction.equals("down")) {
-            project.moveFeatureDown(id);
-        } else {
-            throw new IllegalArgumentException("direction = " + direction);
-        }
+    public RedirectView moveFeature(int id, int targetId, String direction, @ModelAttribute("project") Project project)
+        throws IOException {
 
-        // change feature priority
+        boolean after = "down".equals(direction);
+
+        project.getKanbanProject().move(id, targetId, after);
+        project.getKanbanProject().save();
 
         return new RedirectView("project");
     }

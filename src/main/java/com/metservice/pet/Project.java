@@ -54,12 +54,23 @@ public class Project {
 
     public List<BudgetEntry> getBudgetEntries() {
         List<BudgetEntry> entries = new ArrayList<BudgetEntry>();
-        for (Feature feature : plannedFeatures) {
-            BudgetEntry entry = new BudgetEntry();
-            entry.setFeature(feature);
 
+        for (int i = 0; i < plannedFeatures.size(); i++) {
+            Feature previous = null;
+            Feature next = null;
+            if (i > 0) {
+                previous = plannedFeatures.get(i - 1);
+            }
+            if (i < plannedFeatures.size() - 1) {
+                next = plannedFeatures.get(i + 1);
+            }
+            Feature current = plannedFeatures.get(i);
+            BudgetEntry entry = new BudgetEntry();
+
+            entry.setFeature(current, previous, next);
             entries.add(entry);
         }
+
 
         calculateCumulativeCostBestGuess(entries);
         calculateCumulativeCostWorstCase(entries);
