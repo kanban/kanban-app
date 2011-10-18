@@ -11,12 +11,17 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
 
 	<script type="text/javascript">
-		function changeProjectProperty(promptName, submitName) {
-			var value = prompt("Change " + promptName + " to?");
-			document.getElementById("projectPropertyNameHiddenField").value = submitName;
-			document.getElementById("projectPropertyValueHiddenField").value = value;
+		function changeProjectProperty(promptName, submitName, oldValue) {
+			var value = prompt("Change " + promptName + " to?", oldValue);
+			if (value != null && value != "") {
+				document.getElementById("projectPropertyNameHiddenField").value = submitName;
+				document.getElementById("projectPropertyValueHiddenField").value = value;
+				return true;
+			}
+			return false;
 		}
 	</script>
+	
 </head>
 
 <body class="main">
@@ -35,19 +40,19 @@
 				<td>
 					<input id="projectPropertyNameHiddenField" type="hidden" name="name" value="" /> 
 					<input id="projectPropertyValueHiddenField" type="hidden" name="value" value="" /> 
-					<input type="submit" value="Edit" onclick="changeProjectProperty('budget', 'budget');" />
+					<input type="submit" value="Edit" onclick="return changeProjectProperty('budget', 'budget', '${project.budget}');" />
 				</td>
 			</tr>
 			<tr>
 				<td>Cost so far <img src="${pageContext.request.contextPath}/images/question.png" title="Please update this field regularly" /></td>
 				<td>$ ${project.costSoFar}</td>
-				<td><input type="submit" value="Edit" onclick="changeProjectProperty('cost so far', 'costSoFar');" /></td>
+				<td><input type="submit" value="Edit" onclick="return changeProjectProperty('cost so far', 'costSoFar', '${project.costSoFar}');" /></td>
 			</tr>
 			<tr>
 				<td>Cost per point (estimated) <img src="${pageContext.request.contextPath}/images/question.png" title="Compare this value with 'Cost per point so far'" /></td>
 				<td>$ ${project.estimatedCostPerPoint}</td>
 				<td>
-					<input type="submit" value="Edit" onclick="changeProjectProperty('estimated cost per point', 'estimatedCostPerPoint');" />
+					<input type="submit" value="Edit" onclick="return changeProjectProperty('estimated cost per point', 'estimatedCostPerPoint', '${project.estimatedCostPerPoint}');" />
 				</td>
 			</tr>
 			<tr>
