@@ -108,4 +108,40 @@ td.showDragHandle {
 	background-repeat: no-repeat;
 	background-position: center center;
 	cursor: move;
-} 
+}
+
+
+table.pet {
+	border-collapse: collapse;
+}
+
+table.pet td,th {
+	border: solid 1px #999999;
+	padding: 2px 5px 2px 5px;
+	
+}
+
+table.nolines td {
+	border: none;
+	padding: 0px;
+}
+
+.main {
+	font: normal 11px verdana;
+}
+
+.mustHaveOk {
+	background-color: khaki;
+}
+.mustHaveOver {
+	background-color: #ff2222;
+}
+.niceHaveOk {
+	background-color: white;
+}
+.niceHaveOver {
+	background-color: lightgrey;
+}
+td.niceHaveOver {
+	text-decoration: line-through;
+}

@@ -212,8 +212,6 @@ public class Project {
     public void setKanbanProject(KanbanProject kanbanProject) {
         this.kanbanProject = kanbanProject;
 
-        // fill complete features
-
         if (kanbanProject == null) {
             completedFeatures.clear();
             plannedFeatures.clear();

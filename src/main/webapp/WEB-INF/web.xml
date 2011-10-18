@@ -26,4 +26,22 @@
 		<servlet-name>petDispatcher</servlet-name>
 		<url-pattern>/pet/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>welcomeDispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>WEB-INF/dispatcher-welcome-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>welcomeDispatcher</servlet-name>
+		<url-pattern>/welcome</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+ 		<welcome-file>welcome</welcome-file>
+ 		<welcome-file>redirect.jsp</welcome-file>
+	</welcome-file-list>
 </web-app>

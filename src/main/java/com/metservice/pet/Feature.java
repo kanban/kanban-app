@@ -16,17 +16,16 @@ public class Feature {
 
     public Feature() {}
 
-    public Feature(String description, int bestCaseEstimate, int worstCaseEstimate) {
+    public Feature(int id, String description, int bestCaseEstimate, int worstCaseEstimate, boolean mustHave) {
         this.description = description;
         this.bestCaseEstimate = bestCaseEstimate;
         this.worstCaseEstimate = worstCaseEstimate;
+        this.id = id;
+        this.mustHave = mustHave;
     }
 
     public Feature(WorkItem wi) {
-        this(wi.getName(), wi.getBestCaseEstimate(), wi.getWorstCaseEstimate());
-
-        this.id = wi.getId();
-        this.mustHave = wi.isMustHave();
+        this(wi.getId(), wi.getName(), wi.getBestCaseEstimate(), wi.getWorstCaseEstimate(), wi.isMustHave());
 
         this.workItem = wi;
     }

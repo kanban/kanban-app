@@ -66,7 +66,6 @@ public class PetDao {
     }
 
     public void storeUpdatedFeatures(Project project) throws IOException {
-        //                kanbanService.getKanbanProject(PET_BUDGET)
         project.getKanbanProject().save();
     }
 

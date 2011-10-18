@@ -7,27 +7,8 @@
 <html>
 
 <head>
-		<title>Project Estimation Tool for Kanban</title>
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-
-	<style type="text/css">
-	table {
-		border-collapse: collapse;
-	}
-	
-	td,th {
-		border: solid 2px black;
-		padding: 3px;
-	}
-	
-	table.nolines td {
-		border: none;
-		padding: 0px;
-	}
-	body {
-		font: normal 11px verdana;
-	}
-	</style>
+	<title>Project Estimation Tool for Kanban</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
 
 	<script type="text/javascript">
 		function changeProjectProperty(promptName, submitName) {
@@ -38,7 +19,7 @@
 	</script>
 </head>
 
-<body>
+<body class="main">
 	<h1>Project Estimation Tool for Kanban</h1>
 
 	<p>
@@ -47,10 +28,10 @@
 	</p>
 
 	<form action="set-project-property">
-		<table>
+		<table class="pet">
 			<tr>
 				<td>Budget</td>
-				<td>$${project.budget}</td>
+				<td>$ ${project.budget}</td>
 				<td>
 					<input id="projectPropertyNameHiddenField" type="hidden" name="name" value="" /> 
 					<input id="projectPropertyValueHiddenField" type="hidden" name="value" value="" /> 
@@ -58,13 +39,13 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Cost so far</td>
-				<td>$${project.costSoFar}</td>
+				<td>Cost so far <img src="${pageContext.request.contextPath}/images/question.png" title="Please update this field regularly" /></td>
+				<td>$ ${project.costSoFar}</td>
 				<td><input type="submit" value="Edit" onclick="changeProjectProperty('cost so far', 'costSoFar');" /></td>
 			</tr>
 			<tr>
 				<td>Cost per point (estimated)</td>
-				<td>$${project.estimatedCostPerPoint}</td>
+				<td>$ ${project.estimatedCostPerPoint}</td>
 				<td>
 					<input type="submit" value="Edit" onclick="changeProjectProperty('estimated cost per point', 'estimatedCostPerPoint');" />
 				</td>
@@ -74,9 +55,9 @@
 
 	<h2>Planned features</h2>
 
-	<table class="lined">
+	<table class="pet">
 		<tr>
-			<th rowspan="2" colspan="2"></th>
+			<th rowspan="2" colspan="2">Actions</th>
 			<th rowspan="2">Description</th>
 			<th rowspan="2">Importance</th>
 			<th colspan="2">Feature points</th>
@@ -86,11 +67,13 @@
 			<th>Best Case</th>
 			<th>Worst Case</th>
 			<th>Best Case</th>
-			<th>Worst Case <span title="This is description of Worst Case Estimate">(?)</span></th>
+			<th>Worst Case <img src="${pageContext.request.contextPath}/images/question.png" title="Yes, this is not a simple sum of worst cases for features" /></th>
 		</tr>
 		<c:forEach items="${project.budgetEntries}" var="entry" varStatus="status">
-			<tr
-				style="background: ${entry.feature.mustHave ? (entry.overBudgetInWorstCase ? 'Red' : 'Khaki') : (entry.overBudgetInBestCase ? 'LightGrey' : 'White') }">
+		
+			<c:set var="tagClass" value="${entry.feature.mustHave ? (entry.overBudgetInWorstCase ? 'mustHaveOver' : 'mustHaveOk') : (entry.overBudgetInBestCase ? 'niceHaveOver' : 'niceHaveOk') }" scope="page" />
+		
+			<tr class="${tagClass}">
 				<td>
 					<table class="nolines">
 						<tr>
@@ -98,7 +81,7 @@
 								<form action="set-feature-included-in-estimates">
 									<div>
 										<input type="hidden" name="id" value="${entry.feature.id}" />
-										
+
 										<input type="hidden" name="value" value="${entry.feature.mustHave ? 'false' : 'true'}" /> 
 
 										<c:choose>
@@ -122,14 +105,6 @@
 									</div>
 								</form>
 							</td>
-<!-- 							<td> -->
-<!-- 								<form action="complete-feature"> -->
-<!-- 									<div> -->
-<%-- 										<input type="hidden" name="id" value="${entry.feature.id}" /> --%>
-<!-- 										<input type="submit" value="Complete" disabled="disabled" title="To complete feature use the wall" /> -->
-<!-- 									</div> -->
-<!-- 								</form> -->
-<!-- 							</td> -->
 						</tr>
 					</table>
 				</td>
@@ -138,13 +113,16 @@
 						<div>
 							<input type="hidden" name="id" value="${entry.feature.id}" /> 
 							<input type="hidden" name="direction" value="up" /> 
-							<c:if test="${entry.prevFeature == null}">
-								<input type="submit" value="↑" disabled="disabled"/>
-							</c:if>
-							<c:if test="${entry.prevFeature != null}">
-								<input type="hidden" name="targetId" value="${entry.prevFeature.id}" />
-								<input type="submit" value="↑"/>
-							</c:if>
+
+							<c:choose>
+								<c:when test="${entry.prevFeature == null}">
+									<input type="submit" value="↑" disabled="disabled"/>
+								</c:when>
+								<c:otherwise>
+									<input type="hidden" name="targetId" value="${entry.prevFeature.id}" />
+									<input type="submit" value="↑"/>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</form>
 					<form action="move-feature">
@@ -152,65 +130,61 @@
 							<input type="hidden" name="id" value="${entry.feature.id}" /> 
 							<input type="hidden" name="direction" value="down" /> 
 							
-							<c:if test="${entry.nextFeature == null}">
-								<input type="submit" value="↓" disabled="disabled"/>
-							</c:if>
-							<c:if test="${entry.nextFeature != null}">
-								<input type="hidden" name="targetId" value="${entry.nextFeature.id}" />
-								<input type="submit" value="↓" />
-							</c:if>
+							<c:choose>
+								<c:when test="${entry.nextFeature == null}">
+									<input type="submit" value="↓" disabled="disabled"/>
+								</c:when>
+								<c:otherwise>
+									<input type="hidden" name="targetId" value="${entry.nextFeature.id}" />
+									<input type="submit" value="↓" />
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</form>
 				</td>
-				<td
-					style="${!entry.feature.mustHave && entry.overBudgetInBestCase ? 'text-decoration: line-through;' : ''}">${entry.feature.description}</td>
-				<td>${entry.feature.mustHave ? 'Must have' : 'Nice to have'}</td>
+				<td class="${tagClass}">${entry.feature.description}</td>
+				<td><i>${entry.feature.mustHave ? 'Must have' : 'Nice to have'}</i></td>
 				<td>${entry.feature.bestCaseEstimate}</td>
 				<td>${entry.feature.worstCaseEstimate}</td>
-				<td
-					style="${!entry.feature.mustHave && entry.overBudgetInBestCase ? 'text-decoration: line-through;' : ''}">$${entry.bestCaseCumulativeCost}</td>
-				<td
-					style="${!entry.feature.mustHave && entry.overBudgetInBestCase ? 'text-decoration: line-through;' : ''}">$${entry.worstCaseCumulativeCost}</td>
+				<td class="${tagClass}">$ ${entry.bestCaseCumulativeCost}</td>
+				<td class="${tagClass}">$ ${entry.worstCaseCumulativeCost}</td>
 			</tr>
 		</c:forEach>
 		<tr>
 			<td colspan="2" />
 			<td colspan="6">
-				<span style="color: #777777">To add features go to project wall</span>
+				<span style="color: #777777">To add more features go to project wall</span>
 			</td>
 		</tr>
+	</table>
+	
+	<h4>Legend</h4>
+	<table class="pet">
+		<tr class="mustHaveOk"><td>Must have features</td></tr>
+		<tr class="mustHaveOver"><td>Must have features over the budget (Worst Case)</td></tr>
+		<tr class="niceHaveOk"><td>Nice have features</td></tr>
+		<tr class="niceHaveOver"><td>Nice have features over the budget (Best Case)</td></tr>
 	</table>
 
 	<h2>Complete features</h2>
 
-	<table class="lined">
+	<table class="pet">
 		<tr>
 			<th>Description</th>
 			<th>Feature points</th>
 		</tr>
 		<c:forEach items="${project.completedFeatures}" var="feature">
-			<tr>
+			<c:set var="tagClass" value="${feature.mustHave ? 'mustHaveOk' : 'niceHaveOk' }" scope="page" />
+
+			<tr class="${tagClass}">
 				<td>${feature.description}</td>
 				<td>${feature.bestCaseEstimate}</td>
 			</tr>
 		</c:forEach>
 	</table>
 
-	<p>Cost per point so far: $${project.costPerPointSoFar}</p>
+	<p>Cost per point so far: $ ${project.costPerPointSoFar}</p>
 
-<!-- 
-	<hr />
-
-	<div style="background-color: #FFCCCC">
-		To be removed:
-
-		<form action="reset-demo">
-			<p>
-				<input type="submit" value="Reset the awesome demo" />
-			</p>
-		</form>
-	</div>
--->	
 </body>
 
 </html>

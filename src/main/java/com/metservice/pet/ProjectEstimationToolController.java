@@ -36,8 +36,11 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("set-project-property")
-    public RedirectView setBudget(String name, int value, @ModelAttribute("project") Project project)
+    public RedirectView setBudget(String name, int value, @PathVariable("projectName") String projectName)
         throws IOException {
+
+        Project project = populateProject(projectName);
+
         if (name.equals("budget")) {
             project.setBudget(value);
         } else if (name.equals("costSoFar")) {
@@ -97,6 +100,7 @@ public class ProjectEstimationToolController {
         feature.setMustHave(includedInEstimates);
         WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(feature.getId());
         workItem.setMustHave(includedInEstimates);
+
         petDao.storeUpdatedFeatures(project);
 
         return new RedirectView("project");
@@ -111,12 +115,6 @@ public class ProjectEstimationToolController {
         project.getKanbanProject().move(id, targetId, after);
         project.getKanbanProject().save();
 
-        return new RedirectView("project");
-    }
-
-    @RequestMapping("complete-feature")
-    public RedirectView completeFeature(int id, @ModelAttribute("project") Project project) {
-        project.completeFeature(id);
         return new RedirectView("project");
     }
 
