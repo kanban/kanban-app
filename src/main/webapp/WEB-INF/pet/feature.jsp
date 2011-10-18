@@ -30,11 +30,11 @@
             <legend>Point estimate</legend>
             <p>
                 Best case<br />
-                <input name="bestCaseEstimate" value="${feature.bestCaseEstimate}" />
+                <input name="bestCaseEstimate" value="${feature.workItem.bestCaseEstimate}" />
             </p>
             <p>
                 Worst case<br />
-                <input name="worstCaseEstimate" value="${feature.worstCaseEstimate}" />
+                <input name="worstCaseEstimate" value="${feature.workItem.worstCaseEstimate}" />
             </p>
         </fieldset>
         <p>

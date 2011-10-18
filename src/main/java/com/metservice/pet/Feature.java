@@ -8,24 +8,18 @@ public class Feature {
 
     private int id = BLANK_ID;
     private String description;
-    private int bestCaseEstimate;
-    private int worstCaseEstimate;
-    private boolean mustHave;
 
     private WorkItem workItem;
 
     public Feature() {}
 
-    public Feature(int id, String description, int bestCaseEstimate, int worstCaseEstimate, boolean mustHave) {
+    public Feature(int id, String description) {
         this.description = description;
-        this.bestCaseEstimate = bestCaseEstimate;
-        this.worstCaseEstimate = worstCaseEstimate;
         this.id = id;
-        this.mustHave = mustHave;
     }
 
     public Feature(WorkItem wi) {
-        this(wi.getId(), wi.getName(), wi.getBestCaseEstimate(), wi.getWorstCaseEstimate(), wi.isMustHave());
+        this(wi.getId(), wi.getName());
 
         this.workItem = wi;
     }
@@ -46,32 +40,12 @@ public class Feature {
         this.description = description;
     }
 
-    public int getBestCaseEstimate() {
-        return bestCaseEstimate;
-    }
-
-    public void setBestCaseEstimate(int bestCaseEstimate) {
-        this.bestCaseEstimate = bestCaseEstimate;
-    }
-
-    public int getWorstCaseEstimate() {
-        return worstCaseEstimate;
-    }
-
-    public void setWorstCaseEstimate(int worstCaseEstimate) {
-        this.worstCaseEstimate = worstCaseEstimate;
-    }
-
     public int getVariance() {
-        int deviation = worstCaseEstimate - bestCaseEstimate;
+        int deviation = workItem.getWorstCaseEstimate() - workItem.getBestCaseEstimate();
         return deviation * deviation;
     }
 
-    public void setMustHave(boolean mustHave) {
-        this.mustHave = mustHave;
-    }
-
-    public boolean isMustHave() {
-        return mustHave;
+    public WorkItem getWorkItem() {
+        return workItem;
     }
 }

@@ -36,10 +36,8 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("set-project-property")
-    public RedirectView setBudget(String name, int value, @PathVariable("projectName") String projectName)
+    public RedirectView setBudget(String name, int value, @ModelAttribute("project") Project project)
         throws IOException {
-
-        Project project = populateProject(projectName);
 
         if (name.equals("budget")) {
             project.setBudget(value);
@@ -73,18 +71,18 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("save-feature")
-    public RedirectView saveFeature(int id, Feature feature, @ModelAttribute("project") Project project)
+    public RedirectView saveFeature(int id, int bestCaseEstimate, int worstCaseEstimate,
+                                    @ModelAttribute("project") Project project)
         throws IOException {
 
-        assert feature.getId() != Feature.BLANK_ID;
-
-        project.setFeature(id, feature);
+        assert id != Feature.BLANK_ID;
+        assert id != 0;
 
         // get WI for feature
-        WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(feature.getId());
+        WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(id);
         // update WI from feature
-        workItem.setBestCaseEstimate(feature.getBestCaseEstimate());
-        workItem.setWorstCaseEstimate(feature.getWorstCaseEstimate());
+        workItem.setBestCaseEstimate(bestCaseEstimate);
+        workItem.setWorstCaseEstimate(worstCaseEstimate);
 
         petDao.storeUpdatedFeatures(project);
 
@@ -97,9 +95,7 @@ public class ProjectEstimationToolController {
         boolean includedInEstimates = value;
 
         Feature feature = project.getFeature(id);
-        feature.setMustHave(includedInEstimates);
-        WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(feature.getId());
-        workItem.setMustHave(includedInEstimates);
+        feature.getWorkItem().setMustHave(includedInEstimates);
 
         petDao.storeUpdatedFeatures(project);
 

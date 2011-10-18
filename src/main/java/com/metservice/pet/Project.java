@@ -83,7 +83,7 @@ public class Project {
         int cumulativePoints = 0;
 
         for (BudgetEntry entry : entries) {
-            cumulativePoints += entry.getFeature().getBestCaseEstimate();
+            cumulativePoints += entry.getFeature().getWorkItem().getBestCaseEstimate();
 
             entry.setBestCaseCumulativeCost(costSoFar + cumulativePoints * estimatedCostPerPoint);
         }
@@ -142,7 +142,7 @@ public class Project {
     private int getCompletedPoints() {
         int sum = 0;
         for (Feature feature : completedFeatures) {
-            sum += feature.getBestCaseEstimate();
+            sum += feature.getWorkItem().getBestCaseEstimate();
         }
         return sum;
     }

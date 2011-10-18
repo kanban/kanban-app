@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<%@ page pageEncoding="UTF-8"%>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <html>
@@ -44,10 +44,16 @@
 				<td><input type="submit" value="Edit" onclick="changeProjectProperty('cost so far', 'costSoFar');" /></td>
 			</tr>
 			<tr>
-				<td>Cost per point (estimated)</td>
+				<td>Cost per point (estimated) <img src="${pageContext.request.contextPath}/images/question.png" title="Compare this value with 'Cost per point so far'" /></td>
 				<td>$ ${project.estimatedCostPerPoint}</td>
 				<td>
 					<input type="submit" value="Edit" onclick="changeProjectProperty('estimated cost per point', 'estimatedCostPerPoint');" />
+				</td>
+			</tr>
+			<tr>
+				<td>Cost per point so far <img src="${pageContext.request.contextPath}/images/question.png" title="This value is based on Complete features and 'Cost so far'" /></td>
+				<td>$ ${project.costPerPointSoFar}</td>
+				<td>
 				</td>
 			</tr>
 		</table>
@@ -71,7 +77,7 @@
 		</tr>
 		<c:forEach items="${project.budgetEntries}" var="entry" varStatus="status">
 		
-			<c:set var="tagClass" value="${entry.feature.mustHave ? (entry.overBudgetInWorstCase ? 'mustHaveOver' : 'mustHaveOk') : (entry.overBudgetInBestCase ? 'niceHaveOver' : 'niceHaveOk') }" scope="page" />
+			<c:set var="tagClass" value="${entry.feature.workItem.mustHave ? (entry.overBudgetInWorstCase ? 'mustHaveOver' : 'mustHaveOk') : (entry.overBudgetInBestCase ? 'niceHaveOver' : 'niceHaveOk') }" scope="page" />
 		
 			<tr class="${tagClass}">
 				<td>
@@ -82,14 +88,14 @@
 									<div>
 										<input type="hidden" name="id" value="${entry.feature.id}" />
 
-										<input type="hidden" name="value" value="${entry.feature.mustHave ? 'false' : 'true'}" /> 
+										<input type="hidden" name="value" value="${entry.feature.workItem.mustHave ? 'false' : 'true'}" /> 
 
 										<c:choose>
 										 	<c:when test="${entry.canChangeImportance}">
-												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
+												<input type="submit" value="${entry.feature.workItem.mustHave ? 'Nice to Have' : 'Must Have'}" />
 											</c:when>
 											<c:otherwise>
-												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" disabled="disabled" title="You must reorder this item to change its priority" />
+												<input type="submit" value="${entry.feature.workItem.mustHave ? 'Nice to Have' : 'Must Have'}" disabled="disabled" title="You must reorder this item to change its priority" />
 											</c:otherwise>
 										</c:choose>
 									</div>
@@ -143,9 +149,9 @@
 					</form>
 				</td>
 				<td class="${tagClass}">${entry.feature.description}</td>
-				<td><i>${entry.feature.mustHave ? 'Must have' : 'Nice to have'}</i></td>
-				<td>${entry.feature.bestCaseEstimate}</td>
-				<td>${entry.feature.worstCaseEstimate}</td>
+				<td><i>${entry.feature.workItem.mustHave ? 'Must have' : 'Nice to have'}</i></td>
+				<td>${entry.feature.workItem.bestCaseEstimate}</td>
+				<td>${entry.feature.workItem.worstCaseEstimate}</td>
 				<td class="${tagClass}">$ ${entry.bestCaseCumulativeCost}</td>
 				<td class="${tagClass}">$ ${entry.worstCaseCumulativeCost}</td>
 			</tr>
@@ -160,10 +166,10 @@
 	
 	<h4>Legend</h4>
 	<table class="pet">
-		<tr class="mustHaveOk"><td>Must have features</td></tr>
-		<tr class="mustHaveOver"><td>Must have features over the budget (Worst Case)</td></tr>
-		<tr class="niceHaveOk"><td>Nice have features</td></tr>
-		<tr class="niceHaveOver"><td>Nice have features over the budget (Best Case)</td></tr>
+		<tr class="mustHaveOk"><td>'Must have' features</td></tr>
+		<tr class="mustHaveOver"><td>'Must have' features over the budget (Worst Case)</td></tr>
+		<tr class="niceHaveOk"><td>'Nice to have' features</td></tr>
+		<tr class="niceHaveOver"><td>'Nice to have' features over the budget (Best Case)</td></tr>
 	</table>
 
 	<h2>Complete features</h2>
@@ -171,20 +177,19 @@
 	<table class="pet">
 		<tr>
 			<th>Description</th>
-			<th>Feature points</th>
+			<th>Feature points <img src="${pageContext.request.contextPath}/images/question.png" title="This field shows 'Best Case' estimate for the feature" /></th>
 		</tr>
 		<c:forEach items="${project.completedFeatures}" var="feature">
-			<c:set var="tagClass" value="${feature.mustHave ? 'mustHaveOk' : 'niceHaveOk' }" scope="page" />
+			<c:set var="tagClass" value="${feature.workItem.mustHave ? 'mustHaveOk' : 'niceHaveOk' }" scope="page" />
 
 			<tr class="${tagClass}">
 				<td>${feature.description}</td>
-				<td>${feature.bestCaseEstimate}</td>
+				<td>${feature.workItem.bestCaseEstimate}</td>
 			</tr>
 		</c:forEach>
 	</table>
 
 	<p>Cost per point so far: $ ${project.costPerPointSoFar}</p>
-
 </body>
 
 </html>
