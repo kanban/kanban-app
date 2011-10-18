@@ -145,3 +145,13 @@ table.nolines td {
 td.niceHaveOver {
 	text-decoration: line-through;
 }
+
+body.welcome {
+	 margin-left: auto; 
+	 margin-right: auto; 
+	 width: 800px;
+	 margin-top: 50px;
+	 margin-bottom: auto;
+	 border: #cccccc solid thin;
+	 padding: 10px 10px 10px 10px;
+}

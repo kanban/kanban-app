@@ -6,7 +6,7 @@
 <title>Kanban App by metservice.com</title>
 </head>
 
-<body class="main">
+<body class="main welcome">
     <h1>Kanban App</h1>
     
     <table class="pet">

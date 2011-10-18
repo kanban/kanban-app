@@ -1,24 +1,26 @@
 package com.metservice.pet;
 
+import com.metservice.kanban.model.WorkItem;
+
 public class BudgetEntry {
 
-    private Feature feature;
+    private WorkItem feature;
     private int bestCaseCumulativeCost;
     private int worstCaseCumulativeCost;
     private boolean overBudgetInWorstCase;
     private boolean overBudgetInBestCase;
-    private Feature nextFeature;
-    private Feature prevFeature;
+    private WorkItem nextFeature;
+    private WorkItem prevFeature;
 
     public BudgetEntry() {}
 
-    public void setFeature(Feature feature, Feature prevFeature, Feature nextFeature) {
+    public void setFeature(WorkItem feature, WorkItem prevFeature, WorkItem nextFeature) {
         this.feature = feature;
         this.prevFeature = prevFeature;
         this.nextFeature = nextFeature;
     }
 
-    public Feature getFeature() {
+    public WorkItem getFeature() {
         return feature;
     }
 
@@ -54,29 +56,29 @@ public class BudgetEntry {
         return overBudgetInWorstCase;
     }
 
-    public Feature getNextFeature() {
+    public WorkItem getNextFeature() {
         return nextFeature;
     }
 
-    public Feature getPrevFeature() {
+    public WorkItem getPrevFeature() {
         return prevFeature;
     }
 
     public boolean getCanChangeImportance() {
         // if it's the last feature and is must, can be changed to nice
-        if (nextFeature == null && feature.getWorkItem().isMustHave()) {
+        if (nextFeature == null && feature.isMustHave()) {
             return true;
         }
 
-        if (prevFeature == null && !feature.getWorkItem().isMustHave()) {
+        if (prevFeature == null && !feature.isMustHave()) {
             return true;
         }
 
-        if (nextFeature != null && feature.getWorkItem().isMustHave() != nextFeature.getWorkItem().isMustHave()) {
+        if (nextFeature != null && feature.isMustHave() != nextFeature.isMustHave()) {
             return true;
         }
 
-        if (prevFeature != null && feature.getWorkItem().isMustHave() != prevFeature.getWorkItem().isMustHave()) {
+        if (prevFeature != null && feature.isMustHave() != prevFeature.isMustHave()) {
             return true;
         }
         return false;

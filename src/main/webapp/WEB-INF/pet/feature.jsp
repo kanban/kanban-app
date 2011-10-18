@@ -22,7 +22,7 @@
             <legend>Feature</legend>
             <p>
                 Description<br />
-                <input name="description" size="60" value="${feature.description}" disabled="disabled" />
+                <input name="description" size="60" value="${feature.name}" disabled="disabled" />
                 <span style="color: #CCCCCC">To edit description go to the project wall</span>
             </p>
         </fieldset>
@@ -30,11 +30,11 @@
             <legend>Point estimate</legend>
             <p>
                 Best case<br />
-                <input name="bestCaseEstimate" value="${feature.workItem.bestCaseEstimate}" />
+                <input name="bestCaseEstimate" value="${feature.bestCaseEstimate}" />
             </p>
             <p>
                 Worst case<br />
-                <input name="worstCaseEstimate" value="${feature.workItem.worstCaseEstimate}" />
+                <input name="worstCaseEstimate" value="${feature.worstCaseEstimate}" />
             </p>
         </fieldset>
         <p>

@@ -52,15 +52,6 @@ public class ProjectEstimationToolController {
         return new RedirectView("project");
     }
 
-    @RequestMapping("add-feature")
-    public ModelAndView addFeature() {
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("pageTitle", "Add feature");
-        model.put("feature", new Feature());
-
-        return new ModelAndView("/feature.jsp", model);
-    }
-
     @RequestMapping("edit-feature")
     public ModelAndView editFeature(int id, @ModelAttribute("project") Project project) {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -75,7 +66,6 @@ public class ProjectEstimationToolController {
                                     @ModelAttribute("project") Project project)
         throws IOException {
 
-        assert id != Feature.BLANK_ID;
         assert id != 0;
 
         // get WI for feature
@@ -94,8 +84,8 @@ public class ProjectEstimationToolController {
         throws IOException {
         boolean includedInEstimates = value;
 
-        Feature feature = project.getFeature(id);
-        feature.getWorkItem().setMustHave(includedInEstimates);
+        WorkItem feature = project.getFeature(id);
+        feature.setMustHave(includedInEstimates);
 
         petDao.storeUpdatedFeatures(project);
 

@@ -261,4 +261,9 @@ public class WorkItem {
     public void setMustHave(boolean mustHave) {
         this.mustHave = mustHave;
     }
+
+    public int getVariance() {
+        int deviation = getWorstCaseEstimate() - getBestCaseEstimate();
+        return deviation * deviation;
+    }
 }

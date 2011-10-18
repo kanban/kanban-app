@@ -9,10 +9,10 @@ import com.metservice.kanban.model.WorkItem;
 
 public class Project {
 
-    private final List<Feature> plannedFeatures = new ArrayList<Feature>();
+    private final List<WorkItem> plannedFeatures = new ArrayList<WorkItem>();
     private int numberOfIncludedFeatures = 0;
 
-    private final List<Feature> completedFeatures = new ArrayList<Feature>();
+    private final List<WorkItem> completedFeatures = new ArrayList<WorkItem>();
 
     private int budget = 0;
     private int estimatedCostPerPoint = 0;
@@ -24,22 +24,12 @@ public class Project {
 
     private KanbanProject kanbanProject;
 
-    public Feature getFeature(int id) {
+    public WorkItem getFeature(int id) {
         return plannedFeatures.get(getIndexOfFeature(id));
     }
 
-    public int addFeature(Feature feature) {
-        int id = nextFeatureId;
-        nextFeatureId++;
 
-        feature.setId(id);
-        plannedFeatures.add(numberOfIncludedFeatures, feature);
-        numberOfIncludedFeatures++;
-
-        return id;
-    }
-
-    public void setFeature(int id, Feature feature) {
+    public void setFeature(int id, WorkItem feature) {
         plannedFeatures.set(getIndexOfFeature(id), feature);
     }
 
@@ -56,15 +46,15 @@ public class Project {
         List<BudgetEntry> entries = new ArrayList<BudgetEntry>();
 
         for (int i = 0; i < plannedFeatures.size(); i++) {
-            Feature previous = null;
-            Feature next = null;
+            WorkItem previous = null;
+            WorkItem next = null;
             if (i > 0) {
                 previous = plannedFeatures.get(i - 1);
             }
             if (i < plannedFeatures.size() - 1) {
                 next = plannedFeatures.get(i + 1);
             }
-            Feature current = plannedFeatures.get(i);
+            WorkItem current = plannedFeatures.get(i);
             BudgetEntry entry = new BudgetEntry();
 
             entry.setFeature(current, previous, next);
@@ -83,7 +73,7 @@ public class Project {
         int cumulativePoints = 0;
 
         for (BudgetEntry entry : entries) {
-            cumulativePoints += entry.getFeature().getWorkItem().getBestCaseEstimate();
+            cumulativePoints += entry.getFeature().getBestCaseEstimate();
 
             entry.setBestCaseCumulativeCost(costSoFar + cumulativePoints * estimatedCostPerPoint);
         }
@@ -141,8 +131,8 @@ public class Project {
 
     private int getCompletedPoints() {
         int sum = 0;
-        for (Feature feature : completedFeatures) {
-            sum += feature.getWorkItem().getBestCaseEstimate();
+        for (WorkItem feature : completedFeatures) {
+            sum += feature.getBestCaseEstimate();
         }
         return sum;
     }
@@ -173,7 +163,7 @@ public class Project {
             throw new IllegalArgumentException("already at top: featrue id = " + id);
         }
 
-        Feature feature = plannedFeatures.remove(index);
+        WorkItem feature = plannedFeatures.remove(index);
         plannedFeatures.add(index - 1, feature);
     }
 
@@ -183,13 +173,13 @@ public class Project {
             throw new IllegalArgumentException("already at bottom: id = " + id);
         }
 
-        Feature feature = plannedFeatures.remove(index);
+        WorkItem feature = plannedFeatures.remove(index);
         plannedFeatures.add(index + 1, feature);
     }
 
     public void completeFeature(int id) {
         int index = getIndexOfFeature(id);
-        Feature feature = plannedFeatures.remove(index);
+        WorkItem feature = plannedFeatures.remove(index);
 
         if (index < numberOfIncludedFeatures) {
             numberOfIncludedFeatures--;
@@ -197,7 +187,7 @@ public class Project {
         completedFeatures.add(feature);
     }
 
-    public List<Feature> getCompletedFeatures() {
+    public List<WorkItem> getCompletedFeatures() {
         return completedFeatures;
     }
 
@@ -222,13 +212,11 @@ public class Project {
             for (WorkItem wi : workItemList) {
                 if (wi.getType().getName().equalsIgnoreCase("feature")) {
 
-                    Feature f = new Feature(wi);
-
                     if (wi.isCompleted()) {
-                        completedFeatures.add(f);
+                        completedFeatures.add(wi);
                     }
                     else {
-                        plannedFeatures.add(f);
+                        plannedFeatures.add(wi);
                     }
                 }
             }

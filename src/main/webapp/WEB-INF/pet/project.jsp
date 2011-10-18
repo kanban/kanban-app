@@ -13,10 +13,17 @@
 	<script type="text/javascript">
 		function changeProjectProperty(promptName, submitName, oldValue) {
 			var value = prompt("Change " + promptName + " to?", oldValue);
-			if (value != null && value != "") {
-				document.getElementById("projectPropertyNameHiddenField").value = submitName;
-				document.getElementById("projectPropertyValueHiddenField").value = value;
-				return true;
+			if (value != null && value != "" && value != oldValue) {
+				value = parseInt(value);
+				
+				if (value == NaN) {
+					alert("Please enter a number")
+				}
+				else {
+					document.getElementById("projectPropertyNameHiddenField").value = submitName;
+					document.getElementById("projectPropertyValueHiddenField").value = value;
+					return true;
+				}
 			}
 			return false;
 		}
@@ -36,7 +43,7 @@
 		<table class="pet">
 			<tr>
 				<td>Budget</td>
-				<td>$ ${project.budget}</td>
+				<td>$${project.budget}</td>
 				<td>
 					<input id="projectPropertyNameHiddenField" type="hidden" name="name" value="" /> 
 					<input id="projectPropertyValueHiddenField" type="hidden" name="value" value="" /> 
@@ -45,19 +52,19 @@
 			</tr>
 			<tr>
 				<td>Cost so far <img src="${pageContext.request.contextPath}/images/question.png" title="Please update this field regularly" /></td>
-				<td>$ ${project.costSoFar}</td>
+				<td>$${project.costSoFar}</td>
 				<td><input type="submit" value="Edit" onclick="return changeProjectProperty('cost so far', 'costSoFar', '${project.costSoFar}');" /></td>
 			</tr>
 			<tr>
 				<td>Cost per point (estimated) <img src="${pageContext.request.contextPath}/images/question.png" title="Compare this value with 'Cost per point so far'" /></td>
-				<td>$ ${project.estimatedCostPerPoint}</td>
+				<td>$${project.estimatedCostPerPoint}</td>
 				<td>
 					<input type="submit" value="Edit" onclick="return changeProjectProperty('estimated cost per point', 'estimatedCostPerPoint', '${project.estimatedCostPerPoint}');" />
 				</td>
 			</tr>
 			<tr>
 				<td>Cost per point so far <img src="${pageContext.request.contextPath}/images/question.png" title="This value is based on Complete features and 'Cost so far'" /></td>
-				<td>$ ${project.costPerPointSoFar}</td>
+				<td>$${project.costPerPointSoFar}</td>
 				<td>
 				</td>
 			</tr>
@@ -82,7 +89,7 @@
 		</tr>
 		<c:forEach items="${project.budgetEntries}" var="entry" varStatus="status">
 		
-			<c:set var="tagClass" value="${entry.feature.workItem.mustHave ? (entry.overBudgetInWorstCase ? 'mustHaveOver' : 'mustHaveOk') : (entry.overBudgetInBestCase ? 'niceHaveOver' : 'niceHaveOk') }" scope="page" />
+			<c:set var="tagClass" value="${entry.feature.mustHave ? (entry.overBudgetInWorstCase ? 'mustHaveOver' : 'mustHaveOk') : (entry.overBudgetInBestCase ? 'niceHaveOver' : 'niceHaveOk') }" scope="page" />
 		
 			<tr class="${tagClass}">
 				<td>
@@ -93,14 +100,14 @@
 									<div>
 										<input type="hidden" name="id" value="${entry.feature.id}" />
 
-										<input type="hidden" name="value" value="${entry.feature.workItem.mustHave ? 'false' : 'true'}" /> 
+										<input type="hidden" name="value" value="${entry.feature.mustHave ? 'false' : 'true'}" /> 
 
 										<c:choose>
 										 	<c:when test="${entry.canChangeImportance}">
-												<input type="submit" value="${entry.feature.workItem.mustHave ? 'Nice to Have' : 'Must Have'}" />
+												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
 											</c:when>
 											<c:otherwise>
-												<input type="submit" value="${entry.feature.workItem.mustHave ? 'Nice to Have' : 'Must Have'}" disabled="disabled" title="You must reorder this item to change its priority" />
+												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" disabled="disabled" title="You must reorder this item to change its priority" />
 											</c:otherwise>
 										</c:choose>
 									</div>
@@ -153,12 +160,12 @@
 						</div>
 					</form>
 				</td>
-				<td class="${tagClass}">${entry.feature.description}</td>
-				<td><i>${entry.feature.workItem.mustHave ? 'Must have' : 'Nice to have'}</i></td>
-				<td>${entry.feature.workItem.bestCaseEstimate}</td>
-				<td>${entry.feature.workItem.worstCaseEstimate}</td>
-				<td class="${tagClass}">$ ${entry.bestCaseCumulativeCost}</td>
-				<td class="${tagClass}">$ ${entry.worstCaseCumulativeCost}</td>
+				<td class="${tagClass}">${entry.feature.name}</td>
+				<td><i>${entry.feature.mustHave ? 'Must have' : 'Nice to have'}</i></td>
+				<td>${entry.feature.bestCaseEstimate}</td>
+				<td>${entry.feature.worstCaseEstimate}</td>
+				<td class="${tagClass}">$${entry.bestCaseCumulativeCost}</td>
+				<td class="${tagClass}">$${entry.worstCaseCumulativeCost}</td>
 			</tr>
 		</c:forEach>
 		<tr>
@@ -185,16 +192,16 @@
 			<th>Feature points <img src="${pageContext.request.contextPath}/images/question.png" title="This field shows 'Best Case' estimate for the feature" /></th>
 		</tr>
 		<c:forEach items="${project.completedFeatures}" var="feature">
-			<c:set var="tagClass" value="${feature.workItem.mustHave ? 'mustHaveOk' : 'niceHaveOk' }" scope="page" />
+			<c:set var="tagClass" value="${feature.mustHave ? 'mustHaveOk' : 'niceHaveOk' }" scope="page" />
 
 			<tr class="${tagClass}">
-				<td>${feature.description}</td>
-				<td>${feature.workItem.bestCaseEstimate}</td>
+				<td>${feature.name}</td>
+				<td>${feature.bestCaseEstimate}</td>
 			</tr>
 		</c:forEach>
 	</table>
 
-	<p>Cost per point so far: $ ${project.costPerPointSoFar}</p>
+	<p>Cost per point so far: $${project.costPerPointSoFar}</p>
 </body>
 
 </html>
