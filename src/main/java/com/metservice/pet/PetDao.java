@@ -15,6 +15,7 @@ import com.metservice.kanban.model.KanbanProject;
 @Service
 public class PetDao {
 
+    private static final String PET_PROPERTIES = "pet.properties";
     private static final String PET_COSTPERPOINT = "pet.costperpoint";
     private static final String PET_COSTSOFAR = "pet.costsofar";
     private static final String PET_BUDGET = "pet.budget";
@@ -72,12 +73,11 @@ public class PetDao {
     @Autowired
     public void setKanbanService(KanbanService kanbanService) {
         this.kanbanService = kanbanService;
-        System.out.println("Set kanban service");
     }
 
     private File getPropsFile(String projectName) {
         File home = new File(kanbanService.getHome(), projectName);
-        File propsFile = new File(home, "pet.properties");
+        File propsFile = new File(home, PET_PROPERTIES);
         return propsFile;
     }
 }

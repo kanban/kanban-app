@@ -18,8 +18,6 @@ public class Project {
     private int estimatedCostPerPoint = 0;
     private int costSoFar = 0;
 
-    private int nextFeatureId = 0;
-
     private String projectName;
 
     private KanbanProject kanbanProject;
