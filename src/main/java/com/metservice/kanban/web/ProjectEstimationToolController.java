@@ -1,4 +1,4 @@
-package com.metservice.pet;
+package com.metservice.kanban.web;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,17 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import com.metservice.kanban.model.WorkItem;
+import com.metservice.pet.PetDao;
+import com.metservice.pet.Project;
 
 @Controller
-@RequestMapping("/{projectName}")
+@RequestMapping("/{projectName}/pet")
 public class ProjectEstimationToolController {
 
-    private PetDao petDao;
+    private static final String PET_PROJECT_JSP = "pet/project.jsp";
+    private static final String PET_FEATURE_JSP = "pet/feature.jsp";
 
     @Autowired
-    public void setPetDao(PetDao petDao) {
-        this.petDao = petDao;
-    }
+    private PetDao petDao;
 
     @ModelAttribute("project")
     public synchronized Project populateProject(@PathVariable("projectName") String projectName) throws IOException {
@@ -32,7 +33,7 @@ public class ProjectEstimationToolController {
 
     @RequestMapping("project")
     public ModelAndView showProject(@ModelAttribute("project") Project project) {
-        return new ModelAndView("/project.jsp", "project", project);
+        return new ModelAndView(PET_PROJECT_JSP, "project", project);
     }
 
     @RequestMapping("set-project-property")
@@ -58,7 +59,7 @@ public class ProjectEstimationToolController {
         model.put("pageTitle", "Edit feature");
         model.put("feature", project.getFeature(id));
 
-        return new ModelAndView("/feature.jsp", model);
+        return new ModelAndView(PET_FEATURE_JSP, model);
     }
 
     @RequestMapping("save-feature")

@@ -63,24 +63,4 @@ public class BudgetEntry {
     public WorkItem getPrevFeature() {
         return prevFeature;
     }
-
-    public boolean getCanChangeImportance() {
-        // if it's the last feature and is must, can be changed to nice
-        if (nextFeature == null && feature.isMustHave()) {
-            return true;
-        }
-
-        if (prevFeature == null && !feature.isMustHave()) {
-            return true;
-        }
-
-        if (nextFeature != null && feature.isMustHave() != nextFeature.isMustHave()) {
-            return true;
-        }
-
-        if (prevFeature != null && feature.isMustHave() != prevFeature.isMustHave()) {
-            return true;
-        }
-        return false;
-    }
 }

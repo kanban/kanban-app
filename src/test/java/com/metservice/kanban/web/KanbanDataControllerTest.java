@@ -1,6 +1,7 @@
 package com.metservice.kanban.web;
 
-import com.metservice.kanban.KanbanService;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -8,8 +9,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import com.metservice.kanban.KanbanService;
 
 public class KanbanDataControllerTest {
 
@@ -22,7 +22,8 @@ public class KanbanDataControllerTest {
     
     @Test
     public void downloadCsv() throws IOException {
-        KanbanDataController dataController = new KanbanDataController(fakeKanbanService);
+        KanbanDataController dataController = new KanbanDataController();
+        dataController.setKanbanService(fakeKanbanService);
         MockHttpServletResponse response = new MockHttpServletResponse();
         dataController.download("test-project", "story", response);
         assertThat((String)response.getHeader("Content-Disposition"), is("attachment; filename=\"story.csv\""));

@@ -183,21 +183,6 @@ public final class DefaultWorkItemTree implements WorkItemTree {
         siblings.remove(workItem);
         int pos = siblings.indexOf(target) + (after ? 1 : 0);
         siblings.add(pos < 0? siblings.size(): pos, workItem);
-        
-        if (target != null) {
-            // Update must have for items. If moving "nice to have" over "must have", it becomes "must have"
-            if (!after) {
-                if (!workItem.isMustHave() && target.isMustHave()) {
-                    workItem.setMustHave(true);
-                }
-            }
-            // If moving "must have" below "nice to have" it becomes "nice to have"
-            else {
-                if (workItem.isMustHave() && !target.isMustHave()) {
-                    workItem.setMustHave(false);
-                }
-            }
-        }
     }
     
 }

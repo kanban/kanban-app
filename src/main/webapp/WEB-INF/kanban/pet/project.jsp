@@ -35,8 +35,8 @@
 	<h1>Project Estimation Tool for Kanban</h1>
 
 	<p>
-		<a href='../..'>Go back to main Kanban site</a> <br/>
-		<a href='../../projects/${project.projectName}/wall'>Goto project <b>${project.projectName}</b> wall</a>
+		<a href='../../..'>Go back to main Kanban site</a> <br/>
+		<a href='../wall'>Goto project <b>${project.projectName}</b> wall</a>
 	</p>
 
 	<form action="set-project-property">
@@ -102,14 +102,7 @@
 
 										<input type="hidden" name="value" value="${entry.feature.mustHave ? 'false' : 'true'}" /> 
 
-										<c:choose>
-										 	<c:when test="${entry.canChangeImportance}">
-												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
-											</c:when>
-											<c:otherwise>
-												<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" disabled="disabled" title="You must reorder this item to change its priority" />
-											</c:otherwise>
-										</c:choose>
+										<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
 									</div>
 								</form>
 							</td>

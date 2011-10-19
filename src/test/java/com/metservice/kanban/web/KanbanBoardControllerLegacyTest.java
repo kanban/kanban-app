@@ -5,9 +5,6 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -27,7 +24,8 @@ public class KanbanBoardControllerLegacyTest {
     @Before
     public void setup() throws IOException {
         fakeKanbanService = new KanbanService(new File(SystemUtils.getUserDir(), "/src/test/resources"));
-        kanbanController = new KanbanBoardController(fakeKanbanService);
+        kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(fakeKanbanService);
         kanban = fakeKanbanService.getKanbanProject("test-project");
     }
 

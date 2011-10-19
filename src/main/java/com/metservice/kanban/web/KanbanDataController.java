@@ -1,18 +1,19 @@
 package com.metservice.kanban.web;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.model.KanbanProjectConfiguration;
 import com.metservice.kanban.model.WorkItemType;
-import java.io.File;
-import java.io.FileInputStream;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.io.IOUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller for reading and storing configurations from the CSV data and 
@@ -22,22 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class KanbanDataController {
 
+    @Autowired
     private KanbanService kanbanService;
 
     /**
      * Default constructor for KanbanDataController. Initialises its own KanbanService.
      */
     public KanbanDataController() {
-        this.kanbanService = new KanbanService();
     }
 
-    /**
-     * Constructor for KanbanDataController given a KanbanService.
-     * @param kanbanService - the core KanbanService
-     */
-    public KanbanDataController(KanbanService kanbanService) {
-        this.kanbanService = kanbanService;
-    }
+
     
     /**
      * Populates the Kanban application with a given project name and WorkItemType. This application
@@ -62,5 +57,9 @@ public class KanbanDataController {
         response.setContentLength((int)file.length());
         response.setHeader("Content-Disposition","attachment; filename=\"" + file.getName() +"\"");
         IOUtils.copy(new FileInputStream(file), response.getOutputStream());
+    }
+
+    public void setKanbanService(KanbanService kanbanService) {
+        this.kanbanService = kanbanService;
     }
 }

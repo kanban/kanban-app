@@ -2,11 +2,14 @@ package com.metservice.kanban.web;
 
 import static com.metservice.kanban.utils.DateUtils.parseConventionalNewZealandDate;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsCollectionContaining.*;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -42,13 +45,15 @@ public class KanbanBoardControllerTest {
 
         when(kanbanService.getKanbanProject("project")).thenReturn(kanban);
 
-        KanbanBoardController kanbanController = new KanbanBoardController(kanbanService);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(kanbanService);
         assertThat(kanbanController.populateProject("project"), is(kanban));
     }
 
     @Test
     public void modelContainsRedirectViewThatReturnsToTheBoard() {
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
 
         RedirectView redirectView = kanbanController.populateRedirectView("project", "board");
 
@@ -61,7 +66,8 @@ public class KanbanBoardControllerTest {
         KanbanProject project = mock(KanbanProject.class);
         View expectedView = mock(View.class);
 
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
         View actualView = kanbanController.deleteWorkItem(project, 3, expectedView);
 
         verify(project).deleteWorkItem(3);
@@ -82,7 +88,8 @@ public class KanbanBoardControllerTest {
         
         // Phases by board, persistence and service aren't used
         KanbanProject project = new DefaultKanbanProject(null, null, tree, null, null);
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
 
         ModelAndView modelAndView = kanbanController.editItem(project, "project name", "backlog",
             feature.getId());
@@ -112,7 +119,8 @@ public class KanbanBoardControllerTest {
         request.addParameter("excluded", "on");
         request.addParameter("color", "FFFFFF");
         
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), request);
 
         assertThat(feature.getName(), is("new feature name"));
@@ -143,7 +151,8 @@ public class KanbanBoardControllerTest {
         request.addParameter("notes", "some notes");
         request.addParameter("excluded", "on");
         request.addParameter("color", "FFFFFF");
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), request);
         
         assertThat(feature.getSize(), is(0));
@@ -180,7 +189,8 @@ public class KanbanBoardControllerTest {
         request.addParameter("excluded", "false");
         request.addParameter("color", "FFFFFF");
 
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", story.getId(), request);
 
         WorkItem reparentedStory = tree.getWorkItem(story.getId());
@@ -211,7 +221,8 @@ public class KanbanBoardControllerTest {
         request.addParameter("excluded", "false");
         request.addParameter("color", "FFFFFF");
 
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", middleFeature.getId(), request);
 
         List<WorkItem> workItems = tree.getChildren(middleFeature.getParentId());
@@ -221,7 +232,8 @@ public class KanbanBoardControllerTest {
 
     @Test
     public void presentsChartPage() {
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
         KanbanProject project = mock(KanbanProject.class);
         ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature", "projectName", "", "");
 
@@ -250,7 +262,8 @@ public class KanbanBoardControllerTest {
         BurnUpChartGenerator chartGenerator = mock(BurnUpChartGenerator.class);
         OutputStream outputStream = mock(OutputStream.class);
 
-        KanbanBoardController kanbanController = new KanbanBoardController(null);
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        kanbanController.setKanbanService(null);
         
         kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), outputStream);
         ArgumentCaptor<List> workItemsCaptor = ArgumentCaptor.forClass(List.class);

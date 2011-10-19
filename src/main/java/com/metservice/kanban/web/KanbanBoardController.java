@@ -18,6 +18,7 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
 import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,15 +49,12 @@ import com.metservice.kanban.utils.DateUtils;
 @RequestMapping("{projectName}/{board}")
 public class KanbanBoardController {
 
+    @Autowired
     private KanbanService kanbanService;
 
     public KanbanBoardController() {
-        this.kanbanService = new KanbanService();
     }
 
-    public KanbanBoardController(KanbanService kanbanService) {
-        this.kanbanService = kanbanService;
-    }
 
     @ModelAttribute("project")
     public synchronized KanbanProject populateProject(
@@ -900,7 +898,11 @@ public class KanbanBoardController {
 
         kanbanService.editProject(projectName, newContent);
 
-        return new RedirectView(
-            "/projects/" + projectName + "/" + boardType, true);
+        return new RedirectView("/projects/" + projectName + "/" + boardType, true);
+    }
+
+
+    public void setKanbanService(KanbanService kanbanService) {
+        this.kanbanService = kanbanService;
     }
 }
