@@ -30,7 +30,7 @@
             <legend>Point estimate</legend>
             <p>
                 Average case<br />
-                <input name="bestCaseEstimate" value="${feature.bestCaseEstimate}" />
+                <input name="averageCaseEstimate" value="${feature.averageCaseEstimate}" />
             </p>
             <p>
                 Worst case<br />

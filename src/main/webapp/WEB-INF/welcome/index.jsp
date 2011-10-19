@@ -1,9 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
+
 <head>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-<title>Kanban App by MetService</title>
+	<jsp:include page="../kanban/include/header-head.jsp"/>
+	<title>Kanban App by MetService</title>
 </head>
 
 <body class="main welcome">

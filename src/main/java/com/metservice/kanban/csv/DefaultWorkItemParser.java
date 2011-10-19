@@ -40,7 +40,7 @@ public class DefaultWorkItemParser implements WorkItemParser {
         
         workItem.setColour(color);
         workItem.setStopped(stopped);
-        workItem.setBestCaseEstimate(bestCase);
+        workItem.setAverageCaseEstimate(bestCase);
         workItem.setWorstCaseEstimate(worstCase);
         workItem.setMustHave(mustHave);
 

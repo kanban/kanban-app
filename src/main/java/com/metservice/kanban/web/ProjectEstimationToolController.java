@@ -71,7 +71,7 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("pet-save-feature")
-    public RedirectView saveFeature(int id, int bestCaseEstimate, int worstCaseEstimate,
+    public RedirectView saveFeature(int id, int averageCaseEstimate, int worstCaseEstimate,
                                     @ModelAttribute(PET_PROJECT_ATTR) Project project)
         throws IOException {
 
@@ -80,7 +80,7 @@ public class ProjectEstimationToolController {
         // get WI for feature
         WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(id);
         // update WI from feature
-        workItem.setBestCaseEstimate(bestCaseEstimate);
+        workItem.setAverageCaseEstimate(averageCaseEstimate);
         workItem.setWorstCaseEstimate(worstCaseEstimate);
 
         petDao.storeUpdatedFeatures(project);

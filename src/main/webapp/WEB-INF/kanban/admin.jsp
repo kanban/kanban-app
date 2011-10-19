@@ -20,8 +20,6 @@ String currentProjectName = (String) request.getAttribute("projectName");
 WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
 request.setAttribute("workItemTypes", workItemTypes);
 %>
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/header.css" />
 </head>
 <body>
 	<jsp:include page="include/header.jsp" />

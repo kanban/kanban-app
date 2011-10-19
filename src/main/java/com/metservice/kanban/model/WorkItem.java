@@ -29,7 +29,7 @@ public class WorkItem {
     private String currentPhase;
     
     private boolean mustHave;
-    private int bestCaseEstimate;
+    private int averageCaseEstimate;
     private int worstCaseEstimate;
 
     public static final int ROOT_WORK_ITEM_ID = 0;
@@ -73,7 +73,7 @@ public class WorkItem {
         this.excluded = false;
         this.stopped = false;
         this.colour = new HtmlColour("FFFFFF");
-        this.bestCaseEstimate = 0;
+        this.averageCaseEstimate = 0;
         this.worstCaseEstimate = 0;
         this.mustHave = false;
     }
@@ -293,10 +293,10 @@ public class WorkItem {
 	}
 	
     public int getAverageCaseEstimate() {
-        return bestCaseEstimate;
+        return averageCaseEstimate;
     }
-    public void setBestCaseEstimate(int bestCaseEstimate) {
-        this.bestCaseEstimate = bestCaseEstimate;
+    public void setAverageCaseEstimate(int averageCaseEstimate) {
+        this.averageCaseEstimate = averageCaseEstimate;
     }
     public int getWorstCaseEstimate() {
         return worstCaseEstimate;
