@@ -17,6 +17,7 @@ public class DefaultKanbanProject implements KanbanProject {
     private final KanbanBoardConfiguration columnsByBoard;
     private final WorkItemTree tree;
     private final KanbanPersistence persistence;
+    private final String name;
 
 	/**
 	 * Default constructor for DefaultKanbanProject.
@@ -26,11 +27,12 @@ public class DefaultKanbanProject implements KanbanProject {
 	 * @param persistence - the raw file containing the data in the project
 	 */
     public DefaultKanbanProject(WorkItemTypeCollection workItemTypes, KanbanBoardConfiguration phaseSequences,
-            WorkItemTree tree, KanbanPersistence persistence) {
+                                WorkItemTree tree, KanbanPersistence persistence, String name) {
         this.workItemTypes = workItemTypes;        
         this.columnsByBoard = phaseSequences;
         this.tree = tree;
         this.persistence = persistence;
+        this.name = name;
     }
 
     /**
@@ -216,6 +218,10 @@ public class DefaultKanbanProject implements KanbanProject {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+    }
+
+    public String getName() {
+        return name;
     }
     
     

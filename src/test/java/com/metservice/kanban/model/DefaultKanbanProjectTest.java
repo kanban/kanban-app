@@ -12,7 +12,7 @@ public class DefaultKanbanProjectTest {
     public void canDeleteWorkItems() {
         WorkItemTree tree = mock(WorkItemTree.class);
 
-        DefaultKanbanProject project = new DefaultKanbanProject(null, null, tree, null);
+        DefaultKanbanProject project = new DefaultKanbanProject(null, null, tree, null, null);
         project.deleteWorkItem(7);
 
         verify(tree).delete(7);
@@ -22,7 +22,7 @@ public class DefaultKanbanProjectTest {
     public void canReparentWorkItems() {
         WorkItemTree tree = mock(WorkItemTree.class);
 
-        DefaultKanbanProject project = new DefaultKanbanProject(null, null, tree, null);
+        DefaultKanbanProject project = new DefaultKanbanProject(null, null, tree, null, null);
         project.reparentWorkItem(11, 2);
 
         verify(tree).reparent(11, 2);
@@ -39,7 +39,7 @@ public class DefaultKanbanProjectTest {
         when(tree.getWorkItem(2)).thenReturn(workItem2);
         when(tree.getWorkItem(3)).thenReturn(workItem3);
         
-        DefaultKanbanProject project = new DefaultKanbanProject(null, null, tree, null);
+        DefaultKanbanProject project = new DefaultKanbanProject(null, null, tree, null, null);
         
         project.reorder(1, new Integer[] {2,1,3});
         verify(tree).reorder(workItem1, asList(workItem2, workItem1, workItem3));

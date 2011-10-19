@@ -86,6 +86,11 @@ background-color: #DDDDDD;
 
 .textOnButton {
     font: normal 15px verdana;
+	color: white;
+}
+
+a.textOnButton {
+	text-decoration: none;
 }
 
 .user-home {

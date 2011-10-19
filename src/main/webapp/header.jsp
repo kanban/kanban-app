@@ -104,6 +104,7 @@ return false;" >
 			<!-- End of graph buttons -->
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
         <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
+        <div id="admin" class="button"><a href="${pageContext.request.contextPath}/pet/${project.name}/project" class="textOnButton">P.E.T.</a></div>
 
 		
     </div>

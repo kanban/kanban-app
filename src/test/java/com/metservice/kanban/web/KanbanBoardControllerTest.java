@@ -2,14 +2,11 @@ package com.metservice.kanban.web;
 
 import static com.metservice.kanban.utils.DateUtils.parseConventionalNewZealandDate;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.hamcrest.core.IsCollectionContaining.*;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -84,7 +81,7 @@ public class KanbanBoardControllerTest {
         tree.addWorkItems(feature, story1, story2);
         
         // Phases by board, persistence and service aren't used
-        KanbanProject project = new DefaultKanbanProject(null, null, tree, null);
+        KanbanProject project = new DefaultKanbanProject(null, null, tree, null, null);
         KanbanBoardController kanbanController = new KanbanBoardController(null);
 
         ModelAndView modelAndView = kanbanController.editItem(project, "project name", "backlog",
@@ -249,7 +246,7 @@ public class KanbanBoardControllerTest {
         
         WorkItemTypeCollection workItems = new WorkItemTypeCollection(TreeNode.create(WorkItemType.class,
             featureType));
-        DefaultKanbanProject project = new DefaultKanbanProject(workItems, null, tree, null);
+        DefaultKanbanProject project = new DefaultKanbanProject(workItems, null, tree, null, null);
         BurnUpChartGenerator chartGenerator = mock(BurnUpChartGenerator.class);
         OutputStream outputStream = mock(OutputStream.class);
 

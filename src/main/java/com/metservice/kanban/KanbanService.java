@@ -139,7 +139,7 @@ public class KanbanService {
         WorkItemTree tree = persistence.read();
 
         WorkItemTypeCollection workItemTypes = createWorkItemTypeCollection(rootWorkItemType);
-        return new DefaultKanbanProject(workItemTypes, phaseSequences, tree, persistence);
+        return new DefaultKanbanProject(workItemTypes, phaseSequences, tree, persistence, projectName);
     }
 
     /**
