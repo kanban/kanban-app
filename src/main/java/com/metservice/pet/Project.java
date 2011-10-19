@@ -124,6 +124,9 @@ public class Project {
     }
 
     public int getCostPerPointSoFar() {
+        if (getCompletedPoints() == 0) {
+            return 0;
+        }
         return round((float) getCostSoFar() / (float) getCompletedPoints());
     }
 

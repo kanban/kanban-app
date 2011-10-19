@@ -87,8 +87,15 @@
 		</tr>
 		<c:forEach items="${petproject.budgetEntries}" var="entry" varStatus="status">
 		
-			<c:set var="tagClass" value="${entry.feature.mustHave ? (entry.overBudgetInWorstCase ? 'mustHaveOver' : 'mustHaveOk') : (entry.overBudgetInAverageCase ? 'niceHaveOver' : 'niceHaveOk') }" scope="page" />
-		
+			
+			<c:choose>
+				<c:when test="${entry.feature.mustHave}">
+					<c:set var="tagClass" value="${entry.overBudgetInAverageCase ? 'mustHaveOverAverage' : (entry.overBudgetInWorstCase ? 'mustHaveOverWorst' : 'mustHaveOk')}" scope="page" />
+				</c:when>
+				<c:otherwise>
+					<c:set var="tagClass" value="${entry.overBudgetInAverageCase ? 'niceHaveOver' : 'niceHaveOk' }" scope="page" />
+				</c:otherwise>
+			</c:choose>
 			<tr class="${tagClass}">
 				<td>
 					<table class="nolines">

@@ -196,7 +196,10 @@ table.nolines td {
 .mustHaveOk {
 	background-color: khaki;
 }
-.mustHaveOver {
+.mustHaveOverWorst {
+	background-color: #ff2222;
+}
+.mustHaveOverAverage {
 	background-color: #ff2222;
 }
 .niceHaveOk {
@@ -206,6 +209,9 @@ table.nolines td {
 	background-color: lightgrey;
 }
 td.niceHaveOver {
+	text-decoration: line-through;
+}
+td.mustHaveOverAverage {
 	text-decoration: line-through;
 }
 
