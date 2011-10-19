@@ -80,8 +80,8 @@
 			<th colspan="2">Running estimate</th>
 		</tr>
 		<tr>
-			<th>Average Case</th>
-			<th>Worst Case</th>
+			<th>Average Case <img src="${pageContext.request.contextPath}/images/question.png" title="50 % chances that cost will be lower than that value" /></th>
+			<th>Worst Case <img src="${pageContext.request.contextPath}/images/question.png" title="90 % chances that cost will be lower than that value" /></th>
 			<th>Average Case</th>
 			<th>Worst Case <img src="${pageContext.request.contextPath}/images/question.png" title="Yes, this is not a simple sum of worst cases for features" /></th>
 		</tr>
