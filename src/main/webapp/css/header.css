@@ -218,3 +218,16 @@ body.welcome {
 	 border: #cccccc solid thin;
 	 padding: 10px 10px 10px 10px;
 }
+
+.main h1 {
+	font-size: 20px;
+	font-weight: bold;
+}
+.main h2 {
+	font-size: 17px;
+	font-weight: bold;
+}
+.main h3 {
+	font-size: 15px;
+	font-weight: bold;
+}

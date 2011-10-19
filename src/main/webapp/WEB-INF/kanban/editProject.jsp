@@ -9,9 +9,7 @@
 <html>
 
 <head>
-<script type="text/javascript" src="${pageContext.request.contextPath}/header.js" ></script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-
+<jsp:include page="include/header-head.jsp"/>
 
 <title></title>
 
@@ -70,11 +68,11 @@ text-align: right;
 	<form action="edit-project-action">
 	 <fieldset>
 	    <legend>
-		  Edit ${currentProjectName} properties
+		  Edit ${project.name} properties
 	    </legend>
 	
 		<label class="labelClass"  style="display:none;" for="newProjectName">Name:</label> 
-		<input size=10 type="text" name="newProjectName" style="display:none;" value="${currentProjectName}" />
+		<input size=10 type="text" name="newProjectName" style="display:none;" value="${project.name}" />
 	
 	    <label class="labelClass" for="name">Settings:</label> 
 	    <textarea name="content" rows="25" cols="100">${settings}</textarea>

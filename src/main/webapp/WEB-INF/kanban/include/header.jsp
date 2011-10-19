@@ -26,10 +26,7 @@ if (topLevel.hasChildren()) {
  
 String currentProjectName = (String) request.getAttribute("projectName");
 KanbanService service = new KanbanService();
-Collection<String> listOfProjects = service.getProjects();
 request.setAttribute("service", service);
-request.setAttribute("listOfProjects", listOfProjects);
-request.setAttribute("currentProjectName", currentProjectName);
 request.setAttribute("secondLevel", secondLevel);
 request.setAttribute("workItemTypes", workItemTypes);
 %>
@@ -49,18 +46,19 @@ request.setAttribute("workItemTypes", workItemTypes);
         <div id="projectDropdown">
     		<label class="projectPicker" for="projectPicker">Project:</label>
 			<select id="projectPicker" onchange="changeProject('projectPicker')">
-					<c:forEach var="projectName" items="${listOfProjects}">
-				        <option <c:if test="${projectName == currentProjectName}">selected</c:if>>${projectName}</option>
+					<c:forEach var="projectName" items="${service.projects}">
+				        <option <c:if test="${projectName == project.name}">selected</c:if>>${projectName}</option>
 					</c:forEach>
 			</select>        
         </div>
         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" >
         	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div>
         </div>
-        <div id="backlog-button" class="button" onclick="javascript:board('backlog');" ><div class ="textOnButton">Backlog</div></div>
-        <div id="wall" class="button fancy" onclick="javascript:board('wall');" ><div class ="textOnButton">Wall</div></div>
-        <div id="journal" class="button" onclick="javascript:board('journal');" ><div class ="textOnButton">Journal</div></div>
-        <div id="complete" class="button" onclick="javascript:board('completed');" ><div class ="textOnButton">Complete</div></div>
+        <div id="backlog-button" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/backlog" class="textOnButton">Backlog</a></div>
+        <div id="wall" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/wall" class="textOnButton">Wall</a></div>
+        <div id="journal" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/journal" class="textOnButton">Journal</a></div>
+        <div id="complete" class="button"><a href="completed" class="textOnButton">Complete</a></div>
+
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
 		</c:if>
@@ -72,9 +70,7 @@ request.setAttribute("workItemTypes", workItemTypes);
 					  </div>
           </div>	
           <div id="graph_dropdown">
-            <a id="cumulative-flow-chart-1-button"  onclick="javascript:
-chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');
-return false;" >
+            <a id="cumulative-flow-chart-1-button"  onclick="javascript:chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');return false;" >
               <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />
 	            ${project.workItemTypes.root.value.name}
 	          </a>
@@ -103,9 +99,7 @@ return false;" >
 			
 			<!-- End of graph buttons -->
         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
-        <div id="admin" class="button" onclick="javascript:admin();" ><div class ="textOnButton">Admin</div></div>
-        <div id="admin" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="textOnButton">P.E.T.</a></div>
-
-		
+        <div id="admin" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="textOnButton">Admin</a></div>
+        <div id="pet" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="textOnButton">P.E.T.</a></div>
     </div>
 </form>

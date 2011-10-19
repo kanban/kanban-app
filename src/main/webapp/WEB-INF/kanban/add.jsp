@@ -10,17 +10,17 @@
 <html>
 
 <head>
-<script type="text/javascript" src="${pageContext.request.contextPath}/header.js" ></script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/colorpicker.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/eye.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/utils.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/layout.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/header.js" ></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/header.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/colorpicker.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/eye.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/layout.js"></script>
   <script type="text/javascript"
-  	src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/colorpicker.css" type="text/css" />
-<link rel="stylesheet" media="screen" type="text/css" href="${pageContext.request.contextPath}/layout.css" />
+  	src="${pageContext.request.contextPath}/js/jquery-ui-1.8.16.custom.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/colorpicker.css" type="text/css" />
+<link rel="stylesheet" media="screen" type="text/css" href="${pageContext.request.contextPath}/css/layout.css" />
 
 <style type="text/css">
 legend {

@@ -3,7 +3,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-<title>Kanban App by metservice.com</title>
+<title>Kanban App by MetService</title>
 </head>
 
 <body class="main welcome">
@@ -28,7 +28,7 @@
 				<c:forEach var="projectName"  items="${listOfProjects}">        
     				<tr>
     					<td><a href="projects/${projectName}/wall">${projectName}</a></td>
-    					<td>Open <a href="projects/${projectName}/pet/project">P.E.T.</a></td>
+<%--     					<td>Open <a href="projects/${projectName}/pet-project">P.E.T.</a></td> --%>
     				</tr> 
 				</c:forEach>
     		</table>

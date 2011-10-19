@@ -41,12 +41,9 @@ padding: 10px;
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.css"/>
-<title>Kanban</title>
+	<jsp:include page="include/header-head.jsp"/>
+	
+	<title>Kanban</title>
 <%
     String scrollTopParam = (String) request.getAttribute("scrollTop");
     int scrollTo = 0;

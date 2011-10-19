@@ -342,10 +342,10 @@ public class KanbanBoardController {
                                                     @RequestParam("id") int id,
                                                     HttpServletRequest request) throws IOException, ParseException {
 
-        @SuppressWarnings("unchecked")
         // Get the item which is being edited
         WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
 
+        @SuppressWarnings("unchecked")
         Map<String, String[]> parameters = request.getParameterMap();
 
         String temp = request.getParameter("parentId");
@@ -580,7 +580,6 @@ public class KanbanBoardController {
                                                         @RequestParam("wipLimit") String wipLimit) throws IOException,
         ParseException {
 
-        @SuppressWarnings("unchecked")
         String content = kanbanService
             .getProjectConfiguration(projectName).getKanbanPropertiesFile()
             .getContentAsString();

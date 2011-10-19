@@ -8,11 +8,8 @@
 
 <head>
 	<title>Project Estimation Tool for Kanban</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-
-	<script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/jquery.tablednd_0_5.js"></script>
+	
+	<jsp:include page="../include/header-head.jsp"/>
 
 	<script type="text/javascript">
 		function changeProjectProperty(promptName, submitName, oldValue) {
@@ -39,11 +36,6 @@
  	<jsp:include page="../include/header.jsp"/> 
 	
 	<h1>Project Estimation Tool for Kanban</h1>
-
-	<p>
-		<a href='../../..'>Go back to main Kanban site</a> <br/>
-		<a href='../wall'>Goto project <b>${petproject.projectName}</b> wall</a>
-	</p>
 
 	<form action="pet-set-project-property">
 		<table class="pet">
@@ -175,7 +167,7 @@
 		</tr>
 	</table>
 	
-	<h4>Legend</h4>
+	<h3>Legend</h3>
 	<table class="pet">
 		<tr class="mustHaveOk"><td>'Must have' features</td></tr>
 		<tr class="mustHaveOver"><td>'Must have' features over the budget (Worst Case)</td></tr>
@@ -200,7 +192,7 @@
 		</c:forEach>
 	</table>
 
-	<p>Cost per point so far: $${project.costPerPointSoFar}</p>
+	<p>Cost per point so far: $${petproject.costPerPointSoFar}</p>
 </body>
 
 </html>

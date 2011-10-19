@@ -10,12 +10,9 @@
 <%@page import="java.util.Collection"%>
 <html>
 <head>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/header.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/jquery.tablednd_0_5.js"></script>
+
+	<jsp:include page="include/header-head.jsp"/>
+
 <%
 KanbanProject project = (KanbanProject) request.getAttribute("project");
 KanbanService service = new KanbanService();
@@ -24,7 +21,7 @@ WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
 request.setAttribute("workItemTypes", workItemTypes);
 %>
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/header.css" />
+	href="${pageContext.request.contextPath}/css/header.css" />
 </head>
 <body>
 	<jsp:include page="include/header.jsp" />
@@ -80,7 +77,7 @@ request.setAttribute("workItemTypes", workItemTypes);
     <h2>Export</h2>
     
     <c:forEach var="workItemType" items="${workItemTypes}">
-        <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${currentProjectName}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
+        <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${project.name}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
     </c:forEach>
 </body>
 </html>
