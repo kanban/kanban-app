@@ -4,3 +4,6 @@
 .project
 .classpath
 /.metadata/
+/.externalToolBuilders
+/sample/
+/.checkstyle

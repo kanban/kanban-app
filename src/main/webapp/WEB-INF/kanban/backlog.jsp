@@ -118,8 +118,6 @@
 <%
     KanbanProject project = (KanbanProject) request.getAttribute("project");
 %>
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/header.css" />
 
 <title>Kanban</title>
 <style type="text/css">

@@ -4,8 +4,6 @@ import static com.metservice.kanban.KanbanService.KANBAN_HOME_PROPERTY_NAME;
 import static com.metservice.kanban.jwebunit.BoardPage.openProject;
 import static com.metservice.kanban.tests.util.TestUtils.createTestProject;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.SystemUtils;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.jetty.server.Server;
@@ -15,8 +13,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 public class EndToEndTest {
 
@@ -53,6 +49,7 @@ public class EndToEndTest {
         BoardPage page = openProject("Test project");
         page.clickBacklogButton();
         page.clickAddFeatureButton().enterName("feature name").clickSaveButton();
+        //        page.clickBacklogButton();
         page.clickEditFeatureButton("feature name").clickDeleteButtonAndConfirm();
 
         page.assertFeatureNotPresent("feature name");

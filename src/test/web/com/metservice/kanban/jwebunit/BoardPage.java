@@ -18,7 +18,7 @@ public class BoardPage {
     }
 
     public BoardPage clickBacklogButton() {
-        tester.clickElementByXPath("//div[@id='backlog-button']");
+        tester.clickElementByXPath("//div[@id='backlog-button']/a");
         return this;
     }
 
@@ -35,7 +35,7 @@ public class BoardPage {
     }
     
     public WorkItemPage clickAddFeatureButton() {
-        tester.clickElementByXPath("//div[@id='add-top-level-item-button']");
+        tester.clickElementByXPath("//div[@id='add-top-level-item-button']/div/a");
         return new WorkItemPage(tester);
     }
 

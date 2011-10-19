@@ -51,13 +51,20 @@ request.setAttribute("workItemTypes", workItemTypes);
 					</c:forEach>
 			</select>        
         </div>
-        <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" >
-        	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div>
+<%--         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" > --%>
+<%--         	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div> --%>
+<!--         </div> -->
+        <div id="add-top-level-item-button" class="button">
+        	<div class ="textOnButton">
+        		<a href="${pageContext.request.contextPath}/projects/${project.name}/backlog/add-item?id=<%= WorkItem.ROOT_WORK_ITEM_ID%>" class="textOnButton">
+        			<span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}
+        		</a>
+        	</div>
         </div>
         <div id="backlog-button" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/backlog" class="textOnButton">Backlog</a></div>
         <div id="wall" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/wall" class="textOnButton">Wall</a></div>
         <div id="journal" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/journal" class="textOnButton">Journal</a></div>
-        <div id="complete" class="button"><a href="completed" class="textOnButton">Complete</a></div>
+        <div id="complete" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/completed" class="textOnButton">Complete</a></div>
 
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
