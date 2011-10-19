@@ -20,7 +20,7 @@ function getBoard() {
         board = board.substring(0,pos);
     }
     return board;
-}
+} 
 
 function addTopLevel(id){
     document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/add-item?id=" + id;

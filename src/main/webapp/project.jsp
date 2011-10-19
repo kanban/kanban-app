@@ -431,7 +431,7 @@ div[data-role="card"]{
                       
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
-                            id="work-item-<%=item.getId()%>" title="Story discription: <%=notes%>"
+                            id="work-item-<%=item.getId()%>" title="Notes: <%=notes%>"
                             class="<%=item.getType().getName()%><%= item.isStopped() ? " stopped" : "" %>" data-role="card">
                             
                             <div class="age-container" style="background-color:<%=item.getColour()%>">
