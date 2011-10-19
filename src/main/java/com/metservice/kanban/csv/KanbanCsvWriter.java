@@ -11,7 +11,7 @@ import com.metservice.kanban.model.WorkItemType;
 
 public class KanbanCsvWriter {
 
-    private static final int NUMBER_OF_METADATA_COLUMNS = 10;
+    private static final int NUMBER_OF_METADATA_COLUMNS = 12;
 
     private final CSVWriter csvWriter;
     private final List<String> phases;
@@ -37,9 +37,11 @@ public class KanbanCsvWriter {
         data[4] = IMPORTANCE_COLUMN_NAME;
         data[5] = NOTES_COLUMN_NAME;
         data[6] = EXCLUDED_COLUMN_NAME;
-        data[7] = BEST_CASE_ESIMATE;
-        data[8] = WORST_CASE_ESIMATE;
-        data[9] = MUST_HAVE;
+        data[7] = STOPPED_COLUMN_NAME;
+        data[8] = COLOR_COLUMN_NAME;
+        data[9] = BEST_CASE_ESIMATE;
+        data[10] = WORST_CASE_ESIMATE;
+        data[11] = MUST_HAVE;
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {
@@ -59,9 +61,11 @@ public class KanbanCsvWriter {
         data[4] = Integer.toString(workItem.getImportance());
         data[5] = workItem.getNotes();
         data[6] = "" + workItem.isExcluded();
-        data[7] = Integer.toString(workItem.getBestCaseEstimate());
-        data[8] = Integer.toString(workItem.getWorstCaseEstimate());
-        data[9] = Boolean.toString(workItem.isMustHave());
+        data[7] = "" + workItem.isStopped();
+        data[8] = workItem.getColour().toString().substring(1);
+        data[9] = Integer.toString(workItem.getBestCaseEstimate());
+        data[10] = Integer.toString(workItem.getWorstCaseEstimate());
+        data[11] = Boolean.toString(workItem.isMustHave());
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {

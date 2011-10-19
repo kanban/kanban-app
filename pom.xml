@@ -11,7 +11,7 @@
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty.version>7.5.3.v20111011</jetty.version>
+		<jetty.version>7.4.0.v20110414</jetty.version>
 		<jetty.kanban.home>${basedir}/sample</jetty.kanban.home>
 	</properties>
 

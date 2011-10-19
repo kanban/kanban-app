@@ -24,6 +24,8 @@ public class DefaultWorkItemParser implements WorkItemParser {
         int importance = dataRow.getInt(IMPORTANCE_COLUMN_NAME);
         String notes = dataRow.getString(NOTES_COLUMN_NAME);
         boolean excluded = dataRow.getBoolean(EXCLUDED_COLUMN_NAME);
+        boolean stopped = dataRow.getBoolean(STOPPED_COLUMN_NAME);
+        String color = dataRow.getString(COLOR_COLUMN_NAME);
         int bestCase = dataRow.getInt(BEST_CASE_ESIMATE);
         int worstCase = dataRow.getInt(WORST_CASE_ESIMATE);
         boolean mustHave = dataRow.getBoolean(MUST_HAVE);
@@ -34,6 +36,10 @@ public class DefaultWorkItemParser implements WorkItemParser {
         workItem.setImportance(importance);
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
+        color = ( (color == null || color == "") ? "ffffff" : color);
+        
+        workItem.setColour(color);
+        workItem.setStopped(stopped);
         workItem.setBestCaseEstimate(bestCase);
         workItem.setWorstCaseEstimate(worstCase);
         workItem.setMustHave(mustHave);

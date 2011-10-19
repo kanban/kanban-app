@@ -12,6 +12,7 @@ import org.joda.time.LocalDate;
 import com.metservice.kanban.charts.ChartUtils;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemType;
+import com.metservice.kanban.utils.DateUtils;
 
 public class BurnUpDataModel {
 
@@ -19,12 +20,36 @@ public class BurnUpDataModel {
 
     private final WorkItemType workItemType;
     private final List<WorkItem> workItems;
-    private final LocalDate currentDate;
+    private final LocalDate endDate;
+    private final LocalDate startDate;
 
-    public BurnUpDataModel(WorkItemType workItemType, List<WorkItem> workItems, LocalDate currentDate) {
+    public BurnUpDataModel(WorkItemType workItemType, List<WorkItem> workItems, LocalDate endDate) {
         this.workItemType = workItemType;
         this.workItems = removeExcludedWorkItems(workItems);
-        this.currentDate = currentDate;
+		if (endDate == null){
+			endDate = DateUtils.currentLocalDate();
+		}
+    	this.startDate = ChartUtils.getFirstDate(workItems);
+		this.endDate = endDate;
+    }
+
+    
+    public BurnUpDataModel(WorkItemType workItemType, List<WorkItem> workItems, LocalDate startDate, LocalDate endDate) {
+        this.workItemType = workItemType;
+        this.workItems = removeExcludedWorkItems(workItems);
+        if (startDate == null){
+        	startDate = ChartUtils.getFirstDate(workItems);
+        	
+			if (endDate == null){
+				endDate = DateUtils.currentLocalDate();
+			}
+
+            if (startDate == null) {
+                startDate = endDate;
+            }
+        }
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     private static List<WorkItem> removeExcludedWorkItems(List<WorkItem> workItemList) {
@@ -38,11 +63,11 @@ public class BurnUpDataModel {
     }
     
     public LocalDate getCurrentDate() {
-        return currentDate;
+        return endDate;
     }
 
     public List<LocalDate> getWorkingDays() {
-        return ChartUtils.getWorkingDaysForWorkItems(workItems, currentDate);
+        return ChartUtils.getWorkingDaysForWorkItems(workItems, startDate, endDate);
     }
 
     public int getBacklogSizeOnDate(LocalDate date) {

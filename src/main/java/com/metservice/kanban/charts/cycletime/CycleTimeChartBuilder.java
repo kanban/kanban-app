@@ -19,6 +19,8 @@ import org.jfree.chart.renderer.category.GradientBarPainter;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.joda.time.LocalDate;
+
 import com.metservice.kanban.charts.KanbanDrawingSupplier;
 import com.metservice.kanban.model.WorkItem;
 
@@ -40,6 +42,7 @@ public class CycleTimeChartBuilder {
     public Collection<WorkItem> getCompletedWorkItemsInOrderOfCompletion(Collection<WorkItem> workItemList) {
         List<WorkItem> selectedWorkItems = new ArrayList<WorkItem>();
         for (WorkItem workItem : workItemList) {
+        	
             if (!workItem.isExcluded() && workItem.isCompleted()) {
                 selectedWorkItems.add(workItem);
             }

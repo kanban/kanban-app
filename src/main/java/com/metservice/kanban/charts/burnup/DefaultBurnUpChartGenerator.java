@@ -26,13 +26,12 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
     }
 
     @Override
-    public void generateBurnUpChart(WorkItemType type, List<WorkItem> workItems, LocalDate currentDate,
+    public void generateBurnUpChart(WorkItemType type, List<WorkItem> workItems, LocalDate startDate, LocalDate currentDate,
             OutputStream outputStream) throws IOException {
-        BurnUpDataModel model = new BurnUpDataModel(type, workItems, currentDate);
-        
-        CategoryDataset dataset = new BurnUpDatasetGenerator().createDataset(model);        
-        JFreeChart chart = createChart(dataset);
+        BurnUpDataModel model = new BurnUpDataModel(type, workItems, startDate, currentDate);
 
+        CategoryDataset dataset = new BurnUpDatasetGenerator().createDataset(model);  
+        JFreeChart chart = createChart(dataset);
         chartWriter.writeChart(outputStream, chart, 800, 600);        
     }
 

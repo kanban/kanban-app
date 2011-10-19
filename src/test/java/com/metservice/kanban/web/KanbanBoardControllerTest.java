@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -106,10 +107,16 @@ public class KanbanBoardControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-backlog", "10/02/2011");
         request.addParameter("date-completed", "11/02/2011");
-
+        request.addParameter("name", "new feature name");
+        request.addParameter("parentId", feature.getParentId()+"");
+        request.addParameter("notes", "some notes");
+        request.addParameter("size", "5");
+        request.addParameter("importance", "8");
+        request.addParameter("excluded", "on");
+        request.addParameter("color", "FFFFFF");
+        
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(),
-            "new feature name", 5, 8, "some notes", true, request);
+        kanbanController.editItemAction(project, "wall", feature.getId(), request);
 
         assertThat(feature.getName(), is("new feature name"));
         assertThat(feature.getSize(), is(5));
@@ -130,11 +137,18 @@ public class KanbanBoardControllerTest {
 
         KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
-
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        
+        request.addParameter("parentId", feature.getParentId()+"");
+        request.addParameter("name", "new feature name");
+        request.addParameter("size", "");
+        request.addParameter("importance", "");
+        request.addParameter("notes", "some notes");
+        request.addParameter("excluded", "on");
+        request.addParameter("color", "FFFFFF");
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(),
-            "new feature name", null, null, "some notes", true, new MockHttpServletRequest());
-
+        kanbanController.editItemAction(project, "wall", feature.getId(), request);
+        
         assertThat(feature.getSize(), is(0));
         assertThat(feature.getImportance(), is(0));
 
@@ -160,10 +174,17 @@ public class KanbanBoardControllerTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
+        
+        request.addParameter("parentId", feature2.getId()+"");
+        request.addParameter("name", "new name");
+        request.addParameter("size", "4");
+        request.addParameter("importance", "1");
+        request.addParameter("notes", "new notes");
+        request.addParameter("excluded", "false");
+        request.addParameter("color", "FFFFFF");
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(),
-            "new name", 4, 1, "new notes", false, request);
+        kanbanController.editItemAction(project, "wall", story.getId(), request);
 
         WorkItem reparentedStory = tree.getWorkItem(story.getId());
 
@@ -184,10 +205,17 @@ public class KanbanBoardControllerTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
+        
+        request.addParameter("parentId", middleFeature.getParentId()+"");
+        request.addParameter("name", "new name");
+        request.addParameter("size", "3");
+        request.addParameter("importance", "11");
+        request.addParameter("notes", "new notes");
+        request.addParameter("excluded", "false");
+        request.addParameter("color", "FFFFFF");
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.editItemAction(project, "wall", middleFeature.getId(), middleFeature.getParentId(),
-            "new name", 3, 11, "new notes", false, request);
+        kanbanController.editItemAction(project, "wall", middleFeature.getId(), request);
 
         List<WorkItem> workItems = tree.getChildren(middleFeature.getParentId());
 
@@ -197,7 +225,8 @@ public class KanbanBoardControllerTest {
     @Test
     public void presentsChartPage() {
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        ModelAndView modelAndView = kanbanController.chart("cool-chart", "feature", "projectName");
+        KanbanProject project = mock(KanbanProject.class);
+        ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature", "projectName", "", "");
 
         assertThat(modelAndView.getViewName(), is("/chart.jsp"));
         assertThat((String) modelAndView.getModelMap().get("workItemTypeName"), is("feature"));
@@ -225,13 +254,12 @@ public class KanbanBoardControllerTest {
         OutputStream outputStream = mock(OutputStream.class);
 
         KanbanBoardController kanbanController = new KanbanBoardController(null);
-        kanbanController.burnUpChartPng(project, chartGenerator, outputStream);
-
+        
+        kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), outputStream);
         ArgumentCaptor<List> workItemsCaptor = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<OutputStream> outputStreamCaptor = ArgumentCaptor.forClass(OutputStream.class);
         verify(chartGenerator).generateBurnUpChart(
-            eq(featureType), workItemsCaptor.capture(), eq(new LocalDate()), outputStreamCaptor.capture());
-
+            eq(featureType), workItemsCaptor.capture(), (LocalDate) eq(null), (LocalDate) eq(null), outputStreamCaptor.capture());
         assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), hasItems(feature1, feature2));
         assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), not(hasItem(story)));
         assertThat(outputStreamCaptor.getValue(), is(outputStream));

@@ -3,6 +3,11 @@ package com.metservice.kanban.model;
 import java.io.IOException;
 import org.joda.time.LocalDate;
 
+
+/**
+ * The interface for a KanbanProject representation.
+ * @author Janella Espinas, Chris Cooper
+ */
 public interface KanbanProject {
 
     void deleteWorkItem(int i);
@@ -10,9 +15,11 @@ public interface KanbanProject {
     void save() throws IOException;
 
     void advance(int id, LocalDate date);
+    
+    void stop(int id);
 
     void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,
-            LocalDate backlogDate);
+            String string, LocalDate backlogDate);
 
     void move(int id, int targetId, boolean after);
 
@@ -29,4 +36,8 @@ public interface KanbanProject {
     KanbanBoard getBoard(BoardIdentifier boardType);
 
     WorkItemTypeCollection getWorkItemTypes();
+    
+    String getJournalText();
+    
+    void writeJournalText(String journalText);
 }

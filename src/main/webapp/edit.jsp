@@ -11,11 +11,19 @@
 <%@ page import="com.metservice.kanban.model.KanbanProject"%>
 <%@ page import="com.metservice.kanban.utils.DateUtils"%>
 <%@ page import="java.util.*" %>
- 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/colorpicker.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/eye.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/utils.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/layout.js?ver=1.0.2"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/colorpicker.css" type="text/css" />
+<link rel="stylesheet" media="screen" type="text/css" href="${pageContext.request.contextPath}/layout.css" />
 <title>Kanban: edit a work item</title>
 <style type="text/css">
 legend {
@@ -57,16 +65,35 @@ fieldset.submit {
 	padding-top: 0.2em;
 	text-align: right;
 	font-weight: bold;
+	clear:left;
+}
+
+.presetColor{
+  width:25px;
+  height:25px;
+  border:1px solid #000000;
+  float:left;
+  margin:3px;
+}
+
+.wrapper div{
+  float:left;
 }
 </style>
 <script type="text/javascript">
+	$(document).ready(function() {
+		$(".presetColor").click(function () {
+		  var col = rgbToHex($(this).css("background-color"));
+      $('#colorSelector').ColorPickerSetColor(col);
+      $('#colorSelector div').css("background-color", "#" + col);
+		});
+	});
 	function deleteThisWorkItem() {
 		var response = confirm("Permanently delete this work item?");
 		if (response == true) {
 			document.forms["delete"].submit();
 		}
 	}
-	
 </script>
 </head>
 <body>
@@ -133,8 +160,29 @@ fieldset.submit {
 			    </c:otherwise>
 			</c:choose>
             <br />
+            <label class="labelClass" for="color">Color</label>
+            <input size="10" type="text" id="colorid"
+	                name="color" value="${workItem.colour}" style="display:none" />
+			<div class="wrapper">
+			  <div id="colorSelector">
+  			  <div style="background-color: ${workItem.colour}">
+  			  &nbsp;
+  			  </div>
+  			</div>
+  			<div>
+  		    <div class="presetColor" style="background:#D96666;"></div>
+  		    <div class="presetColor" style="background:#F2A640;"></div>
+  		    <div class="presetColor" style="background:#fbff00;"></div>
+  		    <div class="presetColor" style="background:#7EC225;"></div>
+  		    <div class="presetColor" style="background:#59BFB3;"></div>
+  		    <div class="presetColor" style="background:#668CD9;"></div>
+  		    <div class="presetColor" style="background:#B373B3;"></div>
+  		  </div>
+		  </div>
 
-        </fieldset>
+    </fieldset>
+        
+        
         
         <c:if test="${!empty children}">
         	<fieldset>

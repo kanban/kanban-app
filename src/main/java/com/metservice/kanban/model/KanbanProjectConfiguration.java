@@ -31,6 +31,12 @@ public class KanbanProjectConfiguration {
     public File getDataFile(WorkItemType workItemType) {
         return new File(projectHome, workItemType.getName() + ".csv");
     }
+    
+    public File getJournalFile() throws IOException {
+    	File journalFile = new File(projectHome, "journal.txt");
+    	journalFile.createNewFile();
+    	return journalFile;
+    }
 
     public KanbanBoardConfiguration getPhaseSequences() {
         return phaseSequences;

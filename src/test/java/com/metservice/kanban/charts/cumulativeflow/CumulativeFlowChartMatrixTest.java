@@ -28,7 +28,7 @@ public class CumulativeFlowChartMatrixTest {
         WorkItemType type = new WorkItemType("phase1", "phase2", "phase3", "phase4");
         List<String> phases = type.getPhases();
 
-        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, new LocalDate(2011, 2, 24));
+        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, null, new LocalDate(2011, 2, 24));
         List<WorkItem> workItems = buildListFirstCase(type);
         for (WorkItem workItem : workItems) {
             matrix.registerWorkItem(workItem);
@@ -82,7 +82,7 @@ public class CumulativeFlowChartMatrixTest {
     public void testMatrixExcludeItemFromReport() throws ParseException {
         WorkItemType type = new WorkItemType("phase1", "phase2", "phase3", "phase4");
         List<String> phases = type.getPhases();
-        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, new LocalDate(2011, 2, 24));
+        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, null, new LocalDate(2011, 2, 24));
         List<WorkItem> workItems = buildListFirstCase(type);
         for (WorkItem workItem : workItems) {
             if (workItem.getId() == 2) {
@@ -139,7 +139,7 @@ public class CumulativeFlowChartMatrixTest {
         WorkItemType type = new WorkItemType("phase1", "phase2", "phase3", "phase4", "phase5");
         List<String> phases = type.getPhases();
 
-        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, new LocalDate(2011, 1, 17));
+        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, null, new LocalDate(2011, 1, 17));
         List<WorkItem> workItems = buildListSecondCase(type);
         for (WorkItem workItem : workItems) {
             matrix.registerWorkItem(workItem);
@@ -185,7 +185,7 @@ public class CumulativeFlowChartMatrixTest {
         WorkItemType type = new WorkItemType("phase1", "phase2", "phase3", "phase4", "phase5");
         List<String> phases = type.getPhases();
 
-        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, new LocalDate(2011, 4, 9));
+        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, null, new LocalDate(2011, 4, 9));
         List<WorkItem> workItems = buildListThirdCase(type);
         for (WorkItem workItem : workItems) {
             matrix.registerWorkItem(workItem);
@@ -344,6 +344,7 @@ public class CumulativeFlowChartMatrixTest {
             }
             index++;
         }
+    	System.out.println("\n\n\nCan't parse " + dateAsString);
         fail();
         return -1;
     }

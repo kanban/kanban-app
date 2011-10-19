@@ -26,6 +26,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
 

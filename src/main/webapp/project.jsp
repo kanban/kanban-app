@@ -19,8 +19,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/header.css"/>
-
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery-ui-1.8.16.custom.css"/>
 <title>Kanban</title>
 <%
     String scrollTopParam = (String) request.getAttribute("scrollTop");
@@ -28,18 +30,70 @@
     if (scrollTopParam != null)
         scrollTo = Integer.parseInt(scrollTopParam);
 %>
+<script type="text/javascript">
+	$(function() {
+		$("button.dropdown").button({
+            icons: {
+                primary: "ui-icon-gear",
+                secondary: "ui-icon-triangle-1-s"
+            },
+            text: false
+        }).click(function(){
+          $("div.dropdown-menu-wrapper").fadeOut(200);
+          $(this).siblings("div.dropdown-menu-wrapper:hidden").fadeIn(200);
+          return false;
+        })
+        $(":not(button.dropdown)").click(function(){
+            $("div.dropdown-menu-wrapper").fadeOut(200);
+        });
 
+        
+	    //Table header stuff
+	    var header = $("#kanbantable thead");
+	    $("body").append('<table class="kanban" id="headercopy"><thead></thead></table>');
+      $("#headercopy thead").append($("#kanbantable thead th").clone());
+	     
+	    var header_pos = header.offset().top+header.height();
+	    $(window).scroll(function () { 
+	      if($(window).scrollTop() >= header_pos){
+	        $("#headercopy").fadeIn();
+	      }else{
+	        $("#headercopy").fadeOut();
+	      }
+	    });
+	});
+	</script>
+	
 <script type="text/javascript">
 //<![CDATA[
+  
 			function setPosition() {
 			  window.scrollTo(0,<%=scrollTo%>);
 			}
-
-			function markUnmarkToPrint(id, type){
-			   var item = document.getElementById(id)
-			   if (item.className == 'markedToPrint') {
-			   	 item.className = type;
-			   } else {
+			
+			//Changes the card color to FIREBRICK!
+            function stopStory(id,type) {
+            	//document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
+   			 	//document.forms["form"].submit();
+            	//var item = document.getElementById(id);
+            	//if (item.className=='stopped') {
+            		//item.className = type;
+            	//}
+            	//else { item.className = "stopped"; }
+            	document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id;
+   			 	document.forms["form"].submit();
+            }
+            
+			function markUnmarkToPrint(divId, type, isStopped){
+			   var item = document.getElementById(divId);
+			  if (item.className == 'markedToPrint') {
+			  	if (isStopped) {
+			  		item.className = "stopped";
+			  	}
+			  	else {
+			  		item.className = type;
+			  	}
+			  } else {
 			     item.className = "markedToPrint";
 			   }
 			}
@@ -72,14 +126,30 @@
 %>
 
 <style type="text/css">
-.kanban {
+table {
+  width: 100%;
+  color: #f00;
 	margin: 10px 0px 0px 0px;
-	background: whitesmoke;
 	border-collapse: collapse;
+}
+
+table#headercopy{
+  position: fixed;
+  top: -10px;
+  z-index: 1000;
+  opacity: 0.7;
+  display: none;
+  width:99%;
+}
+
+table#headercopy .feature-header{
+  background-color: #fff;
 }
 
 .age-container {
     float: left;
+    width: 100%;
+    height: 4px;
 }
 
 .age-item {
@@ -92,7 +162,7 @@
 }
 
 .itemName {
-	width: 135px;
+	width: 80%;
 	height: 20px;
 	position: absolute;
 	top: 6px;
@@ -103,40 +173,77 @@
 	text-align: left;
 }
 
-.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover
+.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover,.stopIcon:hover
 	{
 	-moz-opacity: 0.5;
 	opacity: 0.5;
 }
 
-.upIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 5px;
+.icons{
+  width: 10%;
+  position:absolute;
+  right: 0px;
+  top: 10px;
 }
 
-.advanceIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 140px;
-	top: 26px;
+.upIcon, .downIcon, .advanceItem{
+  width: 16px;
+  height: 16px;
 }
 
-.downIcon {
+.upIcon, .downIcon {
+	position: relative;
+	right: 10px;
+}
+
+
+.dropdown {
 	-moz-opacity: 1;
 	opacity: 1;
 	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 130px;
-	top: 47px;
+	width: 35px;
+	height: 15px;
+	bottom: 2px;
+	left: 2px;
+}
+
+.dropdown-menu-wrapper{
+  position: relative;
+  top: 62px;
+  left: -2px;
+}
+
+.dropdown-menu{
+  position:absolute;
+  z-index:7;
+  background:#FFF;
+  border:1px solid #AAA;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+}
+
+.dropdown-menu a{
+  clear:both;
+  display:block;
+  padding:5px;
+  border-bottom:1px solid #AAA;
+  text-decoration: none;
+  font-family: Arial;
+  font-size:12px;
+}
+
+.dropdown-menu a.last{
+  border-bottom: none;
+}
+
+.dropdown-menu a img{
+  padding-right:2px;
+  vertical-align: bottom;
+}
+
+.dropdown-menu a:hover{
+  background-color:#EEE;
 }
 
 .editIcon {
@@ -146,6 +253,16 @@
 	width: 16px;
 	height: 16px;
 	left: 0px;
+	top: 50px;
+}
+
+.stopIcon {
+	-moz-opacity: 1;
+	opacity: 1;
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	left: 110px;
 	top: 50px;
 }
 
@@ -188,13 +305,11 @@
 }
 
 .markedToPrint {
-	border: 1px silver solid;
 	background: #EEEEEE;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-    position: relative;
+}
+
+.stopped {
+	background: #FF0033 !important;
 }
 
 .horizontalLine {
@@ -213,31 +328,32 @@
                 String name =
                     workItemType.getName();
                 HtmlColour cardColour = workItemType.getCardColour();
-                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> .<%=name%> {
-	background: <%=cardColour.toString()%>;
-	height: 60px;
-	width: <%=cardWidth%>px;
-	margin: 1px 1px 1px 1px;
-	padding: 3px 3px 3px 3px;
-    position: relative;
+                HtmlColour backgroundColour = workItemType.getBackgroundColour();%> 
+div[data-role="card"]{
+  height: 60px;
+	width: 95%;
+	margin: 1px;
+	padding: 3px;
+  position: relative;
+  -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+         border-radius: 5px;
 }
 
-.<%=name%>:hover {
-	border: 1px black solid;
+.card:hover{
+  border: 1px black solid;
+	padding: 2px;
+
+}
+                
+.<%=name%> {
 	background: <%=cardColour.toString()%>;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
+	
 }
 
 .markedToPrint:hover {
 	border: 1px black solid;
 	background: #CCCCCC;
-	height: 60px;
-	width: 155px;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
 }
 
 .<%=name%>-header {
@@ -263,20 +379,39 @@
 <body onload="javscript:setPosition();">
     <jsp:include page="header.jsp"/>
     <form id="form" method="post" action="">
-        <table class="kanban">
+        <table class="kanban" id="kanbantable">
+          <thead>
             <tr>
                 <%
                     KanbanBoardColumnList columns = project.getColumns(board);
-
+					int column_index = 0;
                                     for (KanbanBoardColumn column : columns) {
-
+										column_index++;
+										int wipLimit = column.getWIPLimit();
                                         String type = column.getWorkItemType().getName();
+                                        //WIP Limit stuff by Nick Malcolm and Chris Cooper
                 %>
-                <th class="<%=type%>-header"><%=column.getPhase()%></th>
+                <th title="WIP Limit: <%=wipLimit%>" class="<%=type%>-header" id="phase_<%= column_index %>"><%=column.getPhase()%></th>
+                <script>
+                	$(document).ready(function(){
+                		var i = 0; 
+                		$('.horizontalLine td:nth-child(<%= column_index %>) .size').each(function(){
+                			var temp = parseInt($(this).html());
+                			if(!isNaN(temp)){
+                				i+=temp;
+                			}
+                		});
+                		if(i > <%= wipLimit %> && <%= wipLimit %> > -1) {
+                			$("#phase_<%=column_index %>").css('background-color', '#f00');
+                		}
+                	});
+                </script>
                 <%
                     }
                 %>
             </tr>
+          </thead>
+          <tbody>
             <%
                 KanbanBoard kanbanBoard = project.getBoard(board);
 
@@ -288,16 +423,18 @@
                     for (KanbanCell cell : row) {
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
+                            String notes = item.getNotes();
                     %>
-
-
+                  
+                    
                     <td class="<%=item.getType().getName()%>-background">
+                      
                         <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>')"
-                            id="work-item-<%=item.getId()%>"
-                            class="<%=item.getType().getName()%>">
+                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
+                            id="work-item-<%=item.getId()%>" title="Story discription: <%=notes%>"
+                            class="<%=item.getType().getName()%><%= item.isStopped() ? " stopped" : "" %>" data-role="card">
                             
-                            <div class="age-container">
+                            <div class="age-container" style="background-color:<%=item.getColour()%>">
                                 <% 
                                 LocalDate phaseStartDate = item.getDate(item.getCurrentPhase());
                                 int days = WorkingDayUtils.getWorkingDaysBetween(phaseStartDate, new LocalDate());
@@ -328,64 +465,75 @@
 								%>                    
                                 <%=formattedId %>: <span class="work-item-name"><%= item.getName() %></span>
                             </div>
-                            <div class="upIcon">
-                                <%
-                                    WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
-                                                if (adjacentWorkItemUp != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
-                                    src="<%=request.getContextPath()%>/images/go-up.png" />
-                                <%
-                                    } 
-                                %>
-                            </div>
-                            <div class="advanceIcon">
-                                <%
-                                    if (!item.isCompleted()) {
-                                %>
-                                <img 
-                                    onclick="javascript:advance(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/go-next.png" />
-                                <%
-                                    }
-                                %>
-                            </div>
-                            <div class="downIcon">
+                            <div class="icons">
+                              <div class="upIcon">
+                                  <%
+                                      WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
+                                                  if (adjacentWorkItemUp != null) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
+                                      src="<%=request.getContextPath()%>/images/go-up.png" />
+                                  <%
+                                      } 
+                                  %>
+                              </div>
+                              <div class="advanceIcon">
+                            
+                              	<% 
+                              		if (!item.isCompleted() && !item.isStopped()) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:advance(<%=item.getId()%>);"
+                                      src="<%=request.getContextPath()%>/images/go-next.png" />
+                                  <%
+                                      }
+                                  %>
+                              </div>
+                              <div class="downIcon">
 
-                                <%
-                                    WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
-                                                if (adjacentWorkItemDown != null) {
-                                %>
-                                <img 
-                                    onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
-                                    src="<%=request.getContextPath()%>/images/go-down.png" />
-                                <%
-                                    }
-                                %>
+                                  <%
+                                      WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
+                                                  if (adjacentWorkItemDown != null) {
+                                  %>
+                                  <img 
+                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
+                                      src="<%=request.getContextPath()%>/images/go-down.png" />
+                                  <%
+                                      }
+                                  %>
+                              </div>
+                            </div>
+                            <button class="dropdown"></button>
+                            <div class="dropdown-menu-wrapper" style="display:none;">
+                              <div class="dropdown-menu">
+                                <a class="edit" href="javascript:edit(<%=item.getId()%>);">
+                                  <img
+                                  	class="edit"
+                                    id="edit-work-item-<%=item.getId()%>-button"
+                                    src="<%=request.getContextPath()%>/images/edit.png" /> 
+                                    Edit</a>
+                                    <%
+                                    if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
+                                    %>
+                                    <a class="add" href="javascript:addChild(<%=item.getId()%>);">
+                                    <img
+                                        class="add"
+                                        alt="Advance"
+                                        src="<%=request.getContextPath()%>/images/list-add.png" />
+                                         Add</a>
+                                    <%
+                                        }
+                                    %>
+                                <a href="javascript:stopStory(<%=item.getId()%>,'<%=item.getType().getName()%>');" class="last">
+                                  <img
+                                  	    class="stop"
+                                        id="stop-work-item-<%=item.getId()%>-button"
+                                        src="<%=request.getContextPath()%>/images/stop.png" /> 
+                                        Stop</a>
+                              </div>
                             </div>
                             
-                            <div class="editIcon">
-                                <img
-                                    class="edit"
-                                    alt="Edit"
-                                    id="edit-work-item-<%=item.getId()%>-button"
-                                    onclick="javascript:edit(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/edit.png" />
-                            </div>
-                            <div class="addIcon">
-                                <%
-                                if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
-                                %>
-                                <img
-                                    class="add"
-                                    alt="Advance"
-                                    onclick="javascript:addChild(<%=item.getId()%>);"
-                                    src="<%=request.getContextPath()%>/images/list-add.png" />
-                                <%
-                                    }
-                                %>
-                            </div>
                             <%
                                 if (item.getSize() > 0) {
                             %>
@@ -428,7 +576,7 @@
                 <%
                     }
                 %>
-            
+          </tbody>
         </table>
     </form>
 </body>

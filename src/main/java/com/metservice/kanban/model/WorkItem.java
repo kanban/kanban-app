@@ -1,11 +1,16 @@
 package com.metservice.kanban.model;
 
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
+import com.metservice.kanban.utils.WorkingDayUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.joda.time.LocalDate;
-import com.metservice.kanban.utils.WorkingDayUtils;
 
+/**
+ * A work item is a story. It can have a parent.
+ *
+ *
+ */
 public class WorkItem {
 
     private final int id;
@@ -16,14 +21,19 @@ public class WorkItem {
     private int importance;
     private String notes;
     private boolean excluded;
-    private boolean mustHave;
-
+    private boolean stopped; //Whether a story is allowed to progress regardless of stage
+    private HtmlColour colour;
+    
+    //Keep track of when this item started a phase
     private final Map<String, LocalDate> datesByPhase = new HashMap<String, LocalDate>();
     private String currentPhase;
+    
+    private boolean mustHave;
     private int bestCaseEstimate;
     private int worstCaseEstimate;
-    public static final int ROOT_WORK_ITEM_ID = 0;
 
+    public static final int ROOT_WORK_ITEM_ID = 0;
+    
     public WorkItem(int id, WorkItemType type, String advanceToPhase) {
         this(id, ROOT_WORK_ITEM_ID, type, advanceToPhase);
     }
@@ -45,6 +55,12 @@ public class WorkItem {
         this(id, ROOT_WORK_ITEM_ID, workItemType);
     }
 
+    /**
+     * Default constructor for WorkItem
+     * @param id - id of the item we are creating
+     * @param parentId - parent item's id
+     * @param type - type of WorkItem
+     */
     public WorkItem(int id, int parentId, WorkItemType type) {
         this.id = id;
         this.parentId = parentId;
@@ -55,6 +71,8 @@ public class WorkItem {
         this.importance = 0;
         this.notes = "";
         this.excluded = false;
+        this.stopped = false;
+        this.colour = new HtmlColour("FFFFFF");
         this.bestCaseEstimate = 0;
         this.worstCaseEstimate = 0;
         this.mustHave = false;
@@ -114,6 +132,10 @@ public class WorkItem {
 
     public void setExcluded(boolean excluded) {
         this.excluded = excluded;
+    }
+    
+    public void setStopped(boolean stopped){
+    	this.stopped = stopped;
     }
 
     public String getCurrentPhase() {
@@ -192,26 +214,47 @@ public class WorkItem {
     }
 
     public boolean isCompleted() {
-        return !type.hasPhaseAfter(currentPhase);
+    	return !type.hasPhaseAfter(currentPhase);
     }
-
+    
+    public boolean isStopped() {
+    	return stopped;
+    }
+    
+    public void stop() {
+    	if (stopped==true) { stopped = false; }
+    	else stopped = true;
+    }
+    
+    /**
+     * Advance the phase of this item to the next phase in the phase list
+     * @param date - the date the next phase has started (e.g. right now)
+     */
     public void advance(LocalDate date) {
         if (!type.hasPhaseAfter(currentPhase)) {
             throw new IllegalStateException(this + " cannot advance: it is already in its final phase");
         }
+        //Set the start date of the next phase to date
         setDate(type.getPhaseAfter(currentPhase), date);
     }
 
+    /**
+     * Returns a copy of this WorkItem, with a new parent.
+     * 
+     * @param newParentId
+     * @return
+     */
     public WorkItem withNewParent(int newParentId) {
         WorkItem workItem = new WorkItem(id, newParentId, type);
         workItem.name = name;
         workItem.size = size;
         workItem.importance = importance;
         workItem.notes = notes;
-
         workItem.datesByPhase.putAll(datesByPhase);
         workItem.currentPhase = currentPhase;
         workItem.excluded = excluded;
+        workItem.colour = colour;
+        workItem.stopped = stopped;
 
         return workItem;
     }
@@ -238,14 +281,23 @@ public class WorkItem {
         return name.substring(0, Math.min(name.length(), 40));        
     }
 
+	public void setColour(String colour) {
+		if(colour != null && colour.length() > 0){
+			this.colour = new HtmlColour(colour);
+		}
+		
+	}
+
+	public HtmlColour getColour() {
+		return colour;
+	}
+	
     public int getBestCaseEstimate() {
         return bestCaseEstimate;
     }
-
     public void setBestCaseEstimate(int bestCaseEstimate) {
         this.bestCaseEstimate = bestCaseEstimate;
     }
-
     public int getWorstCaseEstimate() {
         return worstCaseEstimate;
     }

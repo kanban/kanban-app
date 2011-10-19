@@ -14,15 +14,33 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 import org.joda.time.LocalDate;
+
+import com.metservice.kanban.charts.ChartUtils;
 import com.metservice.kanban.charts.KanbanDrawingSupplier;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.utils.Day;
 
 public class CumulativeFlowChartBuilder {
+	private LocalDate startDate;
+	private LocalDate endDate;
 
+	public CumulativeFlowChartBuilder (LocalDate startDate, LocalDate endDate){
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
     public CategoryDataset createDataset(List<String> phases, List<WorkItem> workItemList) throws IOException {
+        // add start date and end date instead of local date here
+        if (endDate == null){
+        	endDate = currentLocalDate();
+        }
+    	if (startDate == null){
+        	startDate = ChartUtils.getFirstDate(workItemList);
 
-        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, currentLocalDate());
+            if (startDate == null) {
+                startDate = endDate;
+            }
+        }
+        CumulativeFlowChartMatrix matrix = new CumulativeFlowChartMatrix(phases, startDate, endDate);
         for (WorkItem workItem : workItemList) {
             matrix.registerWorkItem(workItem);
         }

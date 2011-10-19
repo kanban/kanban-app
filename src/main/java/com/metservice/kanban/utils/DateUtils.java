@@ -8,6 +8,12 @@ import org.joda.time.format.ISODateTimeFormat;
 
 //TODO This class needs unit tests.
 
+
+/**
+ * @author Janella Espinas, Liam O'Connor
+ * 
+ * Helper class for dates, specifically configured for New Zealand timezone.
+ */
 public class DateUtils {
 
     public static final DateTimeZone NEW_ZEALAND_TIME = DateTimeZone.forID("Pacific/Auckland");
@@ -26,22 +32,45 @@ public class DateUtils {
                 .toFormatter();
     }
 
+    /**Returns a LocalDate parsed in conventional New Zealand (dd/mm/yy) format.
+     * @param dateString
+     * @return
+     */
     public static LocalDate parseConventionalNewZealandDate(String dateString) {
         return conventionalNewZealandDateFormat.parseDateTime(dateString).toLocalDate();
     }
-
+    
+    /**
+     * Returns a LocalDate parsed in the default ISO (yy/mm/dd) format.
+     * @param dateString
+     * @return
+     */
     public static LocalDate parseIsoDate(String dateString) {
         return isoFormat.parseDateTime(dateString).toLocalDate();
     }
 
+    /**
+     * Converts from LocalDate format to New Zealand (dd/mm/yy) format.
+     * @param date
+     * @return
+     */
     public static String formatConventionalNewZealandDate(LocalDate date) {
         return date.toString(conventionalNewZealandDateFormat);
     }
 
+    /**
+     * Converts from LocalDate format to ISO (yy/mm/dd) format.
+     * @param date
+     * @return
+     */
     public static String formatIsoDate(LocalDate date) {
         return date.toString(isoFormat);
     }
     
+    /**
+     * Returns the LocalDate specifically in the New Zealand timezone.
+     * @return
+     */
     public static LocalDate currentLocalDate() {
         return new LocalDate(NEW_ZEALAND_TIME);
     }

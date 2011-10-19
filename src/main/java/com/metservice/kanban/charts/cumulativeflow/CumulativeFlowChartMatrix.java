@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.joda.time.LocalDate;
+
+import com.metservice.kanban.charts.ChartUtils;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.utils.WorkingDayUtils;
 
@@ -13,13 +15,15 @@ public class CumulativeFlowChartMatrix {
 
     private Map<LocalDate, Map<String, Integer>> map;
     private List<String> phases;
-    private LocalDate referenceDate;
+	private LocalDate startDate;
+	private LocalDate endDate;
 
-    public CumulativeFlowChartMatrix(List<String> phases, LocalDate referenceDate) {
+    // add start date and end date instead of "reference date" here
+    public CumulativeFlowChartMatrix(List<String> phases, LocalDate startDate, LocalDate endDate) {
         this.phases = phases;
-        this.referenceDate = referenceDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
         map = new HashMap<LocalDate, Map<String, Integer>>();
-
     }
 
     public void registerWorkItem(WorkItem workItem) {
@@ -29,7 +33,7 @@ public class CumulativeFlowChartMatrix {
         
         String phase = phases.get(0);
         LocalDate localDate = workItem.getDate(phase);
-        while (!localDate.isAfter(referenceDate)) {
+        while (!localDate.isAfter(endDate)) {
             if (phases.contains(phase) && WorkingDayUtils.isWorkingDay(localDate)) {
                 register(localDate, phase);
             }
@@ -84,10 +88,18 @@ public class CumulativeFlowChartMatrix {
         map.put(date, phaseIntegerMap);
     }
 
+    // limit dates to between start and end dates only
     @SuppressWarnings("unchecked")
     public List<LocalDate> getOrderedListOfDates() {
         List<LocalDate> dates = new ArrayList<LocalDate>(map.keySet());
         Collections.sort(dates);
+        // make sure there are index values for the sublist
+        int startIndex = dates.indexOf(startDate) == -1 ? 0 : dates.indexOf(startDate);
+        int endIndex = dates.indexOf(endDate) == -1 ? dates.size() : dates.indexOf(endDate) + 1;
+        if (endIndex > dates.size()){
+        	endIndex = dates.size();
+        }
+        dates = dates.subList(startIndex, endIndex);
 
         return dates;
     }

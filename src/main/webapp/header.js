@@ -39,8 +39,13 @@ function board(type) {
     document.forms["header"].submit();
 }
 
+function admin() {
+	document.forms["header"].action = getProjectUrl() + "/admin/";
+	document.forms["header"].submit();
+}
+
 function chart(chartName, workItemTypeName) {
-    document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/chart?chartName=" + chartName + "&workItemTypeName=" + workItemTypeName;
+    document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/chart?chartName=" + chartName + "&workItemTypeName=" + workItemTypeName + "&startDate=&endDate=";
     document.forms["header"].submit();
 }
 
@@ -100,4 +105,24 @@ function printCards(){
 
 function setFocus(id) {
 	document.getElementById(id).focus();
+}
+
+
+function addColumn(){
+  var name =  prompt("Column Name:");
+  document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/add-column-action?name=" + name;
+  document.forms["header"].submit();
+}
+
+function addWaitingColumn(){
+	  var name =  prompt("Column Name:");
+	  document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/add-waitingcolumn-action?name=" + name;
+	  document.forms["header"].submit();
+	}
+
+function deleteColumn(){
+	var name = prompt("Column Name:")
+	document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/delete-column-action?name=" + name;
+	document.forms["header"].submit();
+	alert("Done");
 }

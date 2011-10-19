@@ -28,7 +28,7 @@ public class BoardPage {
     }
     
     public BoardPage clickAdvance(String name) {
-        String xPath ="//td[.='" + name + "']/../td[7]/img"; 
+        String xPath ="//td[.='" + name + "']/../td[8]/img"; 
         tester.assertElementPresentByXPath(xPath);            
         tester.clickElementByXPath(xPath);
         return this;
@@ -61,12 +61,12 @@ public class BoardPage {
     }
 
     private WorkItemPage clickEditButton(String workItemTypeName, String workItemName) {
-        tester.clickElementByXPath("//td[.='" + workItemName + "']/../td[2]/img");
+        tester.clickElementByXPath("//td[.='" + workItemName + "']/../td[2]/a");
         return new WorkItemPage(tester);
     }
 
     public ChartPage clickFeatureCycleTimeChartButton() {
-        tester.clickElementByXPath("//div[@id='cycle-time-chart-1-button']");
+        tester.clickElementByXPath("//a[@id='cycle-time-chart-1-button']");
         return new ChartPage(tester);
     }
     

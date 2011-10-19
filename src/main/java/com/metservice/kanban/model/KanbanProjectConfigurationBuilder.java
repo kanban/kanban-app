@@ -12,6 +12,10 @@ import com.metservice.kanban.KanbanPropertiesFile;
 //TODO This class needs unit tests.
 //TODO perhaps rename to factory and replace build methods with create methods
 
+/**
+ * 
+ * WIP Limit by Nicholas Malcolm and Chris Cooper
+ */
 public class KanbanProjectConfigurationBuilder {
 
     private final File projectHome;
@@ -29,13 +33,24 @@ public class KanbanProjectConfigurationBuilder {
 
         return new KanbanProjectConfiguration(projectHome, boardDefinitions, rootWorkItemType, workItemTypes);
     }
-
+// TODO ROB&SEAN WORK!
     private KanbanBoardConfiguration getBoardDefinitions(WorkItemTypeCollection workItemTypes) throws IOException {
         Map<String, WorkItemType> workItemTypesByPhase = new HashMap<String, WorkItemType>();
+        Map<String, Integer> wipLimitsByPhase = new HashMap<String, Integer>();
         for (WorkItemType type : workItemTypes) {
+        	
             String[] phases = properties.getPhases(type.getName());
-            for (String phase : phases) {
-                workItemTypesByPhase.put(phase, type);
+            String[] columnLimits = properties.getPhaseWIPLimit(type.getName());
+            int wipLimit =-1;
+            for (int i=0; i<phases.length; i++) {
+            	try{
+            		wipLimit=Integer.parseInt(columnLimits[i]);
+            	}catch (Exception e) {
+            		// No limit was specified, or it was ""
+            		wipLimit = -1;
+				}
+            	wipLimitsByPhase.put(phases[i],wipLimit);
+                workItemTypesByPhase.put(phases[i], type);
             }
         }
         
@@ -43,9 +58,12 @@ public class KanbanProjectConfigurationBuilder {
         for (BoardIdentifier board : BoardIdentifier.values()) {
             List<KanbanBoardColumn> columns = new ArrayList<KanbanBoardColumn>();
             String[] boardPhases = properties.getPhaseSequence(board);
-            for (String phase : boardPhases) {
-                columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase));
+            String phase = "";
+            for(int i = 0; i < boardPhases.length;i++){
+            	phase = boardPhases[i];
+            	columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase, wipLimitsByPhase.get(phase)));
             }
+
             phaseSequences.add(board, new KanbanBoardColumnList(columns));
         }
         return phaseSequences;
@@ -68,6 +86,7 @@ public class KanbanProjectConfigurationBuilder {
     private List<TreeNode<WorkItemType>> getChildWorkItemTypeTreeNodes(String name) throws IOException {
         List<TreeNode<WorkItemType>> children = new ArrayList<TreeNode<WorkItemType>>();
 
+        	//get all the work item types i.e feature,story
         for (String possibleChildName : properties.getWorkItemTypes()) {
             if (properties.isChildWorkItemType(name, possibleChildName)) {
                 children.add(createWorkItemTypeTreeNode(possibleChildName));

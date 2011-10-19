@@ -12,6 +12,12 @@ import com.metservice.kanban.model.HtmlColour;
 
 //TODO This class needs unit tests.
 
+/**
+ * Reads and parses a project's .properties file and builds the project
+ * configuration and layout.
+ * 
+ * @author Janella Espinas, Chris Cooper
+ */
 public class KanbanPropertiesFile {
 
     private File file;
@@ -49,14 +55,44 @@ public class KanbanPropertiesFile {
         return getParentWorkItemType(possibleChildName).equals(name);
     }
 
+    /**
+     * Returns the phases of the project for the wall.
+     * 
+     * @param boardType
+     * @return
+     * @throws IOException
+     */
     public String[] getPhaseSequence(BoardIdentifier boardType) throws IOException {
         String propertyKey = format("boards.%s", boardType.getName());
         return getCommaSeparatedStrings(propertyKey);
     }
 
+    /**
+     * Returns the phases for a particular workItemType (eg, feature, story).
+     * 
+     * @param workItemType
+     * @return
+     * @throws IOException
+     */
     public String[] getPhases(String workItemType) throws IOException {
         String propertyKey = format("workItemTypes.%s.phases", workItemType);
         return getCommaSeparatedStrings(propertyKey);
+    }
+
+    /**
+     * Returns the WIP limits for phases
+     * 
+     * @param boardType
+     * @return
+     * @throws IOException
+     */
+    public String[] getPhaseWIPLimit(String workItemType) throws IOException {
+        String propertyKey = format("workItemTypes.%s.wipLimit", workItemType);
+        try {
+            return getCommaSeparatedStrings(propertyKey);
+        } catch (Exception e) {
+            return new String[0];
+        }
     }
 
     public HtmlColour getWorkItemTypeCardColour(String workItemType) throws IOException {
@@ -74,14 +110,22 @@ public class KanbanPropertiesFile {
         return commaSeparatedString.split(",");
     }
 
+    /**
+     * Gets the value of a given propertyKey from the values in the property
+     * map.
+     * 
+     * @param propertyKey
+     * @return
+     * @throws IOException
+     */
     private String getString(String propertyKey) throws IOException {
         String propertyValue = properties.getProperty(propertyKey);
         if (propertyValue == null) {
             throw new IOException("property \"" + propertyKey + "\" missing from " + file);
         }
         return propertyValue;
-    }    
-    
+    }
+
     public String getContentAsString() throws IOException {
         BufferedReader in = new BufferedReader(new FileReader(file));
         StringBuffer sb = new StringBuffer();
