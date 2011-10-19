@@ -27,7 +27,7 @@ request.setAttribute("workItemTypes", workItemTypes);
 	href="${pageContext.request.contextPath}/header.css" />
 </head>
 <body>
-	<jsp:include page="header.jsp" />
+	<jsp:include page="include/header.jsp" />
     <h1>ADMIN PAGE</h1>
     <!--Use the admin.css file for styling this.  -->
     <ul>

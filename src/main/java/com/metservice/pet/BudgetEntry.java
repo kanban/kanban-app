@@ -5,10 +5,10 @@ import com.metservice.kanban.model.WorkItem;
 public class BudgetEntry {
 
     private WorkItem feature;
-    private int bestCaseCumulativeCost;
+    private int averageCaseCumulativeCost;
     private int worstCaseCumulativeCost;
     private boolean overBudgetInWorstCase;
-    private boolean overBudgetInBestCase;
+    private boolean overBudgetInAverageCase;
     private WorkItem nextFeature;
     private WorkItem prevFeature;
 
@@ -24,12 +24,12 @@ public class BudgetEntry {
         return feature;
     }
 
-    public void setBestCaseCumulativeCost(int bestCaseCumulativeCost) {
-        this.bestCaseCumulativeCost = bestCaseCumulativeCost;
+    public void setAverageCaseCumulativeCost(int averageCaseCumulativeCost) {
+        this.averageCaseCumulativeCost = averageCaseCumulativeCost;
     }
 
-    public int getBestCaseCumulativeCost() {
-        return bestCaseCumulativeCost;
+    public int getAverageCaseCumulativeCost() {
+        return averageCaseCumulativeCost;
     }
 
     public void setWorstCaseCumulativeCost(int worstCaseCumulativeCost) {
@@ -40,12 +40,12 @@ public class BudgetEntry {
         return worstCaseCumulativeCost;
     }
 
-    public void setOverBudgetInBestCase(boolean overBudgetInBestCase) {
-        this.overBudgetInBestCase = overBudgetInBestCase;
+    public void setOverBudgetInAverageCase(boolean overBudgetInAverageCase) {
+        this.overBudgetInAverageCase = overBudgetInAverageCase;
     }
 
-    public boolean isOverBudgetInBestCase() {
-        return overBudgetInBestCase;
+    public boolean isOverBudgetInAverageCase() {
+        return overBudgetInAverageCase;
     }
 
     public void setOverBudgetInWorstCase(boolean overBudgetInWorstCase) {

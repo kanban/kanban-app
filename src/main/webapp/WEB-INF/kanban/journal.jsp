@@ -155,7 +155,7 @@ padding: 10px;
 	
 </head>
 <body onload="javscript:setPosition();">
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="include/header.jsp"/>
     <script>
     
     </script>

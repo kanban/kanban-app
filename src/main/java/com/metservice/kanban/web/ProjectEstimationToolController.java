@@ -10,34 +10,42 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.pet.PetDao;
 import com.metservice.pet.Project;
 
 @Controller
-@RequestMapping("/{projectName}/pet")
+@RequestMapping("/{projectName}")
 public class ProjectEstimationToolController {
 
+    private static final String PET_PROJECT_ATTR = "petproject";
+    private static final String KANBAN_PROJECT_ATTR = "project";
     private static final String PET_PROJECT_JSP = "pet/project.jsp";
     private static final String PET_FEATURE_JSP = "pet/feature.jsp";
 
     @Autowired
     private PetDao petDao;
 
-    @ModelAttribute("project")
+    @ModelAttribute(PET_PROJECT_ATTR)
     public synchronized Project populateProject(@PathVariable("projectName") String projectName) throws IOException {
         Project project = petDao.loadProject(projectName);
 
         return project;
     }
 
-    @RequestMapping("project")
-    public ModelAndView showProject(@ModelAttribute("project") Project project) {
-        return new ModelAndView(PET_PROJECT_JSP, "project", project);
+    @ModelAttribute(KANBAN_PROJECT_ATTR)
+    public synchronized KanbanProject populateProject(@ModelAttribute(PET_PROJECT_ATTR) Project project) throws IOException {
+        return project.getKanbanProject();
     }
 
-    @RequestMapping("set-project-property")
-    public RedirectView setBudget(String name, int value, @ModelAttribute("project") Project project)
+    @RequestMapping("pet-project")
+    public ModelAndView showProject(@ModelAttribute(PET_PROJECT_ATTR) Project project) {
+        return new ModelAndView(PET_PROJECT_JSP, PET_PROJECT_ATTR, project);
+    }
+
+    @RequestMapping("pet-set-project-property")
+    public RedirectView setBudget(String name, int value, @ModelAttribute(PET_PROJECT_ATTR) Project project)
         throws IOException {
 
         if (name.equals("budget")) {
@@ -50,11 +58,11 @@ public class ProjectEstimationToolController {
             throw new IllegalArgumentException("name = " + name);
         }
         petDao.storeProjectEstimates(project);
-        return new RedirectView("project");
+        return new RedirectView("pet-project");
     }
 
-    @RequestMapping("edit-feature")
-    public ModelAndView editFeature(int id, @ModelAttribute("project") Project project) {
+    @RequestMapping("pet-edit-feature")
+    public ModelAndView editFeature(int id, @ModelAttribute(PET_PROJECT_ATTR) Project project) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("pageTitle", "Edit feature");
         model.put("feature", project.getFeature(id));
@@ -62,9 +70,9 @@ public class ProjectEstimationToolController {
         return new ModelAndView(PET_FEATURE_JSP, model);
     }
 
-    @RequestMapping("save-feature")
+    @RequestMapping("pet-save-feature")
     public RedirectView saveFeature(int id, int bestCaseEstimate, int worstCaseEstimate,
-                                    @ModelAttribute("project") Project project)
+                                    @ModelAttribute(PET_PROJECT_ATTR) Project project)
         throws IOException {
 
         assert id != 0;
@@ -77,11 +85,11 @@ public class ProjectEstimationToolController {
 
         petDao.storeUpdatedFeatures(project);
 
-        return new RedirectView("project");
+        return new RedirectView("pet-project");
     }
 
-    @RequestMapping("set-feature-included-in-estimates")
-    public RedirectView excludeFeature(int id, boolean value, @ModelAttribute("project") Project project)
+    @RequestMapping("pet-set-feature-included-in-estimates")
+    public RedirectView excludeFeature(int id, boolean value, @ModelAttribute(PET_PROJECT_ATTR) Project project)
         throws IOException {
         boolean includedInEstimates = value;
 
@@ -90,11 +98,11 @@ public class ProjectEstimationToolController {
 
         petDao.storeUpdatedFeatures(project);
 
-        return new RedirectView("project");
+        return new RedirectView("pet-project");
     }
 
-    @RequestMapping("move-feature")
-    public RedirectView moveFeature(int id, int targetId, String direction, @ModelAttribute("project") Project project)
+    @RequestMapping("pet-move-feature")
+    public RedirectView moveFeature(int id, int targetId, String direction, @ModelAttribute(PET_PROJECT_ATTR) Project project)
         throws IOException {
 
         boolean after = "down".equals(direction);
@@ -102,11 +110,11 @@ public class ProjectEstimationToolController {
         project.getKanbanProject().move(id, targetId, after);
         project.getKanbanProject().save();
 
-        return new RedirectView("project");
+        return new RedirectView("pet-project");
     }
 
     @RequestMapping("/")
     public RedirectView root() {
-        return new RedirectView("project");
+        return new RedirectView("pet-project");
     }
 }

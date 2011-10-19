@@ -17,7 +17,7 @@
 <body>
     <h1>${pageTitle}</h1>
 
-    <form action="save-feature">
+    <form action="pet-save-feature">
         <fieldset>
             <legend>Feature</legend>
             <p>
@@ -29,7 +29,7 @@
         <fieldset>
             <legend>Point estimate</legend>
             <p>
-                Best case<br />
+                Average case<br />
                 <input name="bestCaseEstimate" value="${feature.bestCaseEstimate}" />
             </p>
             <p>

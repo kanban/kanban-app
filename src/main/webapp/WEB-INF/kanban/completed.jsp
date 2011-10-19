@@ -161,7 +161,7 @@ td.padded {
 </style>
 </head>
 <body onload="javscript:setPosition();">
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="include/header.jsp"/>
     <form id="form" method="post" action="">
         <table id="completed-table" class="kanban">
 			<thead>

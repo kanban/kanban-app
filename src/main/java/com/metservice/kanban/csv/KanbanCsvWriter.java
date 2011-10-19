@@ -63,7 +63,7 @@ public class KanbanCsvWriter {
         data[6] = "" + workItem.isExcluded();
         data[7] = "" + workItem.isStopped();
         data[8] = workItem.getColour().toString().substring(1);
-        data[9] = Integer.toString(workItem.getBestCaseEstimate());
+        data[9] = Integer.toString(workItem.getAverageCaseEstimate());
         data[10] = Integer.toString(workItem.getWorstCaseEstimate());
         data[11] = Boolean.toString(workItem.isMustHave());
 

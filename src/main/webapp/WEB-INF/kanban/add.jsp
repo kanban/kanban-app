@@ -85,7 +85,7 @@ $(document).ready(function() {
 </script>
 </head>
 <body onload="setFocus('name-field');">
-	<jsp:include page="header.jsp" />
+	<jsp:include page="include/header.jsp" />
 	<form action="add-item-action">
 		<fieldset>
 			<legend>${legend}</legend>

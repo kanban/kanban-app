@@ -18,12 +18,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/header.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/jquery.tablednd_0_5.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/header.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery.tablednd_0_5.js"></script>
 <script>
      $(document).ready(function(){
     		$("#backlog-table").tableDnD({
@@ -195,7 +192,7 @@ td.small{
 </style>
 </head>
 <body>
-	<jsp:include page="header.jsp" />
+	<jsp:include page="include/header.jsp" />
 
 		<table id="backlog-table" class="kanban">
 			<thead>

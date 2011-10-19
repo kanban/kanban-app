@@ -292,7 +292,7 @@ public class WorkItem {
 		return colour;
 	}
 	
-    public int getBestCaseEstimate() {
+    public int getAverageCaseEstimate() {
         return bestCaseEstimate;
     }
     public void setBestCaseEstimate(int bestCaseEstimate) {
@@ -315,7 +315,7 @@ public class WorkItem {
     }
 
     public int getVariance() {
-        int deviation = getWorstCaseEstimate() - getBestCaseEstimate();
+        int deviation = getWorstCaseEstimate() - getAverageCaseEstimate();
         return deviation * deviation;
     }
 }

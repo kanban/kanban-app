@@ -48,7 +48,7 @@ margin: 5px 0 40px 10px;
     </head>
     <!-- ${pageContext.request.contextPath}/projects/<%= request.getAttribute("projectName") %>/wall/ -->
     <body>
-        <jsp:include page="header.jsp"/>
+        <jsp:include page="include/header.jsp"/>
         <form action="chart" id="dateForm">
         	<fieldset>
 	            <p>StartDate: <input name="startDate"  id="startDate" type="text"/></p>

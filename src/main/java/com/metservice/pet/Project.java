@@ -1,6 +1,7 @@
 package com.metservice.pet;
 
-import static java.lang.Math.*;
+import static java.lang.Math.round;
+import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,7 +26,6 @@ public class Project {
     public WorkItem getFeature(int id) {
         return plannedFeatures.get(getIndexOfFeature(id));
     }
-
 
     public void setFeature(int id, WorkItem feature) {
         plannedFeatures.set(getIndexOfFeature(id), feature);
@@ -60,20 +60,20 @@ public class Project {
         }
 
 
-        calculateCumulativeCostBestGuess(entries);
+        calculateCumulativeCostAverageGuess(entries);
         calculateCumulativeCostWorstCase(entries);
         identifyBudgetOverruns(entries);
 
         return entries;
     }
 
-    private void calculateCumulativeCostBestGuess(List<BudgetEntry> entries) {
+    private void calculateCumulativeCostAverageGuess(List<BudgetEntry> entries) {
         int cumulativePoints = 0;
 
         for (BudgetEntry entry : entries) {
-            cumulativePoints += entry.getFeature().getBestCaseEstimate();
+            cumulativePoints += entry.getFeature().getAverageCaseEstimate();
 
-            entry.setBestCaseCumulativeCost(costSoFar + cumulativePoints * estimatedCostPerPoint);
+            entry.setAverageCaseCumulativeCost(costSoFar + cumulativePoints * estimatedCostPerPoint);
         }
     }
 
@@ -84,14 +84,14 @@ public class Project {
             cumulativePointVariance += entry.getFeature().getVariance();
 
             int buffer = (int) round(sqrt(cumulativePointVariance) * estimatedCostPerPoint);
-            entry.setWorstCaseCumulativeCost(entry.getBestCaseCumulativeCost() + buffer);
+            entry.setWorstCaseCumulativeCost(entry.getAverageCaseCumulativeCost() + buffer);
         }
     }
 
     private void identifyBudgetOverruns(List<BudgetEntry> entries) {
         for (BudgetEntry entry : entries) {
-            if (entry.getBestCaseCumulativeCost() > budget) {
-                entry.setOverBudgetInBestCase(true);
+            if (entry.getAverageCaseCumulativeCost() > budget) {
+                entry.setOverBudgetInAverageCase(true);
             }
             if (entry.getWorstCaseCumulativeCost() > budget) {
                 entry.setOverBudgetInWorstCase(true);
@@ -130,7 +130,7 @@ public class Project {
     private int getCompletedPoints() {
         int sum = 0;
         for (WorkItem feature : completedFeatures) {
-            sum += feature.getBestCaseEstimate();
+            sum += feature.getAverageCaseEstimate();
         }
         return sum;
     }

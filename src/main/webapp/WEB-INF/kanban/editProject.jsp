@@ -64,7 +64,7 @@ text-align: right;
 </style>
 </head>
 <body>
-<jsp:include page="header.jsp" />
+<jsp:include page="include/header.jsp" />
 
 
 	<form action="edit-project-action">

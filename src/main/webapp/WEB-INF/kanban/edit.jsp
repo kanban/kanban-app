@@ -97,7 +97,7 @@ fieldset.submit {
 </script>
 </head>
 <body>
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="include/header.jsp"/>
 
     <form id="delete" action="delete-item-action" method="post">
         <div>
