@@ -65,9 +65,7 @@ public class KanbanBoardControllerLegacyTest {
             "1",
             "2"});
         assertThat(modelAndView.getViewName(), is("/printCards.jsp"));
-        assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
-        assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
-        assertThat(modelAndView.getModel().get("ids"), notNullValue());
+        assertThat(modelAndView.getModel().get("items"), notNullValue());
     }
 
     @Test

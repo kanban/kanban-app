@@ -294,17 +294,13 @@ public class KanbanBoardController {
                                                 @PathVariable("board") String boardType,
                                                 @RequestParam("printSelection") String[] ids) throws IOException {
 
-        Map<String, Object> model = buildModel(projectName, boardType);
-        //        model.put("ids", ids);
-        
         List<WorkItem> items = new ArrayList<WorkItem>();
         
         for (String id : ids) {
             items.add(project.getWorkItemTree().getWorkItem(parseInteger(id, 0)));
         }
-        model.put("items", items);
 
-        return new ModelAndView("/printCards.jsp", model);
+        return new ModelAndView("/printCards.jsp", "items", items);
     }
 
     @RequestMapping("move-item-action")
