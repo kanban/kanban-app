@@ -98,8 +98,9 @@ function printCards(){
         }
     }
     if (query != "") {
-        document.forms["header"].action = getBoard() + "/print-items?" + query;
-        document.forms["header"].submit();
+    	window.location = getBoard() + "/print-items?" + query;
+//        document.forms["header"].action = getBoard() + "/print-items?" + query; 
+//        document.forms["header"].submit();
     }
 }
 

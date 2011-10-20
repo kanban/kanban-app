@@ -2,6 +2,7 @@ package com.metservice.kanban.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface WorkItemTree {
 
@@ -16,6 +17,8 @@ public interface WorkItemTree {
     List<WorkItem> getChildren(int parentId);
 
     List<WorkItem> getWorkItemList();
+
+    Map<Integer, WorkItem> getWorkItemsById();
 
     List<WorkItem> getWorkItemsOfType(WorkItemType type);
 

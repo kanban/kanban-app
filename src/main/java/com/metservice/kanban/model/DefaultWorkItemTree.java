@@ -184,5 +184,10 @@ public final class DefaultWorkItemTree implements WorkItemTree {
         int pos = siblings.indexOf(target) + (after ? 1 : 0);
         siblings.add(pos < 0? siblings.size(): pos, workItem);
     }
+
+    @Override
+    public Map<Integer, WorkItem> getWorkItemsById() {
+        return workItemsById;
+    }
     
 }

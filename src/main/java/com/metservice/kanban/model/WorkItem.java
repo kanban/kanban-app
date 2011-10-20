@@ -158,6 +158,10 @@ public class WorkItem {
         return datesByPhase.get(phase);
     }
 
+    public Map<String, LocalDate> getDatesByPhase() {
+        return datesByPhase;
+    }
+
     public void setDate(String phase, LocalDate date) {
         if (date == null) {
             datesByPhase.remove(phase);

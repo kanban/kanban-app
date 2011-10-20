@@ -177,7 +177,7 @@
 	<h3>Legend</h3>
 	<table class="pet">
 		<tr class="mustHaveOk"><td>'Must have' features</td></tr>
-		<tr class="mustHaveOver"><td>'Must have' features over the budget (Worst Case)</td></tr>
+		<tr class="mustHaveOverWorst"><td>'Must have' features over the budget (Worst Case)</td></tr>
 		<tr class="niceHaveOk"><td>'Nice to have' features</td></tr>
 		<tr class="niceHaveOver"><td>'Nice to have' features over the budget (Average Case)</td></tr>
 	</table>

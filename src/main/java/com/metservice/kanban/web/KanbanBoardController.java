@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -259,8 +259,7 @@ public class KanbanBoardController {
      * (Comes from add.jsp)
      **/
     @RequestMapping("add-item-action")
-    public synchronized RedirectView addItemAction(
-                                                   @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView addItemAction(@ModelAttribute("project") KanbanProject project,
                                                    @PathVariable("board") String boardType,
                                                    @RequestParam("parentId") Integer parentId,
                                                    @RequestParam("type") String type,
@@ -289,14 +288,21 @@ public class KanbanBoardController {
         return new RedirectView("../" + boardType);
     }
 
-    @RequestMapping(value = "print-items", method = RequestMethod.POST)
+    @RequestMapping(value = "print-items")
     public synchronized ModelAndView printItems(@ModelAttribute("project") KanbanProject project,
                                                 @PathVariable("projectName") String projectName,
                                                 @PathVariable("board") String boardType,
                                                 @RequestParam("printSelection") String[] ids) throws IOException {
 
         Map<String, Object> model = buildModel(projectName, boardType);
-        model.put("ids", ids);
+        //        model.put("ids", ids);
+        
+        List<WorkItem> items = new ArrayList<WorkItem>();
+        
+        for (String id : ids) {
+            items.add(project.getWorkItemTree().getWorkItem(parseInteger(id, 0)));
+        }
+        model.put("items", items);
 
         return new ModelAndView("/printCards.jsp", model);
     }
@@ -316,8 +322,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("reorder")
-    public synchronized RedirectView reorder(
-                                             @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView reorder(@ModelAttribute("project") KanbanProject project,
                                              @PathVariable("board") String boardType,
                                              @RequestParam("id") Integer id, @RequestParam("ids") Integer[] ids,
                                              @RequestParam("scrollTop") String scrollTop) throws IOException {
@@ -339,8 +344,7 @@ public class KanbanBoardController {
      * @throws ParseException
      */
     @RequestMapping("edit-item-action")
-    public synchronized RedirectView editItemAction(
-                                                    @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView editItemAction(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
                                                     @RequestParam("id") int id,
                                                     @RequestParam("parentId") Integer parentId,
@@ -398,8 +402,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("edit-journal-action")
-    public synchronized RedirectView editJournalAction(
-                                                       @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView editJournalAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("board") String boardType,
                                                        @RequestParam("journalText") String journalText,
                                                        HttpServletRequest request) throws IOException, ParseException {
@@ -421,8 +424,7 @@ public class KanbanBoardController {
      * @throws IOException
      */
     @RequestMapping("delete-item-action")
-    public synchronized View deleteWorkItem(
-                                            @ModelAttribute("project") KanbanProject project,
+    public synchronized View deleteWorkItem(@ModelAttribute("project") KanbanProject project,
                                             @RequestParam("id") int id,
                                             @ModelAttribute("redirectView") View nextView) throws IOException {
 
@@ -433,8 +435,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("chart")
-    public synchronized ModelAndView chart(
-                                           @ModelAttribute("project") KanbanProject project,
+    public synchronized ModelAndView chart(@ModelAttribute("project") KanbanProject project,
                                            @RequestParam("chartName") String chartName,
                                            @RequestParam("workItemTypeName") String workItemTypeName,
                                            @PathVariable("projectName") String projectName,
@@ -454,8 +455,7 @@ public class KanbanBoardController {
     // TODO check in this class for redundent model.put("kanban...
 
     @RequestMapping("cumulative-flow-chart.png")
-    public synchronized void cumulativeFlowChartPng(
-                                                    @ModelAttribute("project") KanbanProject project,
+    public synchronized void cumulativeFlowChartPng(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
                                                     @RequestParam("startDate") String startDate,
                                                     @RequestParam("endDate") String endDate,
@@ -526,8 +526,7 @@ public class KanbanBoardController {
      * @throws IOException
      */
     @RequestMapping("edit-project")
-    public synchronized ModelAndView editProject(
-                                                 @ModelAttribute("project") KanbanProject project,
+    public synchronized ModelAndView editProject(@ModelAttribute("project") KanbanProject project,
                                                  @PathVariable("projectName") String projectName,
                                                  @PathVariable("board") String boardType,
                                                  @RequestParam("createNewProject") boolean createNewProject)
@@ -550,8 +549,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("edit-project-action")
-    public synchronized RedirectView editProjectAction(
-                                                       @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView editProjectAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("projectName") String projectName,
                                                        @PathVariable("board") String boardType,
                                                        @RequestParam("newProjectName") String editProjectName,
@@ -562,8 +560,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("edit-wiplimit-action")
-    public synchronized ModelAndView editWIPLimitAction(
-                                                        @ModelAttribute("project") KanbanProject project,
+    public synchronized ModelAndView editWIPLimitAction(@ModelAttribute("project") KanbanProject project,
                                                         @PathVariable("projectName") String projectName,
                                                         @RequestParam("columnName") String columnName,
                                                         @RequestParam("columnType") String columnType,
@@ -634,8 +631,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("create-project-action")
-    public synchronized RedirectView createProjectAction(
-                                                         @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView createProjectAction(@ModelAttribute("project") KanbanProject project,
                                                          @PathVariable("projectName") String projectName,
                                                          @PathVariable("board") String boardType,
                                                          @RequestParam("newProjectName") String newProjectName,
@@ -655,8 +651,7 @@ public class KanbanBoardController {
      * @throws IOException
      */
     @RequestMapping("open-project")
-    public synchronized RedirectView openProject(
-                                                 @PathVariable("projectName") String projectName,
+    public synchronized RedirectView openProject(@PathVariable("projectName") String projectName,
                                                  @PathVariable("board") String boardType,
                                                  @RequestParam("newProjectName") String newProjectName)
         throws IOException {
@@ -680,8 +675,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("burn-up-chart.png")
-    public void burnUpChartPng(
-                               @ModelAttribute("project") KanbanProject project,
+    public void burnUpChartPng(@ModelAttribute("project") KanbanProject project,
                                @ModelAttribute("chartGenerator") BurnUpChartGenerator chartGenerator,
                                @RequestParam("startDate") String startDate,
                                @RequestParam("endDate") String endDate,
@@ -710,8 +704,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("add-column-action")
-    public synchronized RedirectView addColumn(
-                                               @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView addColumn(@ModelAttribute("project") KanbanProject project,
                                                @PathVariable("projectName") String projectName,
                                                @PathVariable("board") String boardType,
                                                @RequestParam("name") String name) throws IOException {
@@ -770,8 +763,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("add-waitingcolumn-action")
-    public synchronized RedirectView addWaitingColumn(
-                                                      @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView addWaitingColumn(@ModelAttribute("project") KanbanProject project,
                                                       @PathVariable("projectName") String projectName,
                                                       @PathVariable("board") String boardType,
                                                       @RequestParam("name") String name) throws IOException {
@@ -894,10 +886,7 @@ public class KanbanBoardController {
                                       @PathVariable("projectName") String projectName,
                                       @PathVariable("board") String boardType,
                                       @RequestParam("workStream") String selectedWorkStream,
-                                      @ModelAttribute("workStreams") Map<String, String> workStreams,
-                                      Model model) {
-
-        System.out.println("work streams = " + workStreams + " selected = " + selectedWorkStream);
+                                      @ModelAttribute("workStreams") Map<String, String> workStreams) {
 
         workStreams.put(projectName, selectedWorkStream);
 
@@ -908,7 +897,6 @@ public class KanbanBoardController {
         this.kanbanService = kanbanService;
     }
 
-
     private boolean parseBoolean(String excludedStr) {
         if (excludedStr == null) {
             return false;
@@ -918,7 +906,6 @@ public class KanbanBoardController {
         }
         return Boolean.parseBoolean(excludedStr);
     }
-
 
     private int parseInteger(String sizeStr, int defaultValue) {
         try {
