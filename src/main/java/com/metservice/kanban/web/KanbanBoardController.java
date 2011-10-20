@@ -72,13 +72,11 @@ public class KanbanBoardController {
 
     @ModelAttribute("projectName")
     public String populateProjectName(@PathVariable("projectName") String board) {
-        System.out.println("boardName");
         return board;
     }
 
     @ModelAttribute("workStreams")
     public synchronized Map<String, String> populateWorkStreams() {
-        System.out.println("populate work streams");
         return new HashMap<String, String>();
     }
 
@@ -228,7 +226,8 @@ public class KanbanBoardController {
                                               @RequestParam("id") Integer id) throws IOException {
 
         // Get a model ready to take some attributes
-        Map<String, Object> model = buildModel(projectName, boardType);
+        Map<String, Object> model = new HashMap<String, Object>();
+        //buildModel(projectName, boardType);
 
         // Fetch the item we want to edit
         WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
@@ -236,8 +235,7 @@ public class KanbanBoardController {
         // Add some variables to the model hashmap
         model.put("workItem", workItem);
         model.put("children", project.getWorkItemTree().getChildren(id));
-        model.put("parentAlternativesList", project.getWorkItemTree()
-            .getParentAlternatives(workItem));
+        model.put("parentAlternativesList", project.getWorkItemTree().getParentAlternatives(workItem));
 
         // TODO: Figure out what this does
         Map<String, String> map = new LinkedHashMap<String, String>();

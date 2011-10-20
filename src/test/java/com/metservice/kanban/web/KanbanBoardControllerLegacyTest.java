@@ -44,18 +44,19 @@ public class KanbanBoardControllerLegacyTest {
         
         ModelAndView modelAndView = kanbanController.addItem(kanban, "test-project", "wall", 1);
         assertThat(modelAndView.getViewName(), is("/add.jsp"));
-        assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
-        assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
-        assertThat(modelAndView.getModel().get("workItem"), notNullValue());
+        assertThat(modelAndView.getModel().get("legend"), notNullValue());
+        assertThat(modelAndView.getModel().get("parentId"), notNullValue());
+        assertThat(modelAndView.getModel().get("type"), notNullValue());
     }
 
     @Test
     public void testEditItem() throws IOException {
         ModelAndView modelAndView = kanbanController.editItem(kanban, "test-project", "wall", 1);
         assertThat(modelAndView.getViewName(), is("/edit.jsp"));
-        assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
-        assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
         assertThat(modelAndView.getModel().get("workItem"), notNullValue());
+        assertThat(modelAndView.getModel().get("children"), notNullValue());
+        assertThat(modelAndView.getModel().get("parentAlternativesList"), notNullValue());
+        assertThat(modelAndView.getModel().get("phasesMap"), notNullValue());
     }
 
     @Test

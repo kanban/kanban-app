@@ -10,7 +10,7 @@
 
 	<title>Kanban: add a work item</title>
 </head>
-<body onload="setFocus('name-field');">
+<body onload="setFocus('name');">
 	<jsp:include page="include/header.jsp" />
 	
 	<form action="add-item-action">
