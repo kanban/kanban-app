@@ -18,12 +18,12 @@ public class BoardPage {
     }
 
     public BoardPage clickBacklogButton() {
-        tester.clickElementByXPath("//div[@id='backlog-button']/a");
+        tester.clickElementByXPath("//a[@id='backlog-button']");
         return this;
     }
 
     public WallPage clickWallButton() {
-        tester.clickElementByXPath("//div[@id='wall']");
+        tester.clickElementByXPath("//a[@id='wall']");
         return new WallPage(tester);
     }
     
@@ -35,7 +35,7 @@ public class BoardPage {
     }
     
     public WorkItemPage clickAddFeatureButton() {
-        tester.clickElementByXPath("//div[@id='add-top-level-item-button']/div/a");
+        tester.clickElementByXPath("//a[@id='add-top-level-item-button']");
         return new WorkItemPage(tester);
     }
 
@@ -71,7 +71,7 @@ public class BoardPage {
     }
     
     public ChartPage clickBurnUpChartButton() {
-        tester.clickElementByXPath("//div[@id='burn-up-chart-button']");
+        tester.clickElementByXPath("//a[@id='burn-up-chart-button']");
         return new ChartPage(tester);
     }
     

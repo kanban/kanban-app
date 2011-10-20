@@ -24,29 +24,29 @@
 					<c:forEach var="projectName" items="${service.projects}">
 				        <option <c:if test="${projectName == project.name}">selected</c:if>>${projectName}</option>
 					</c:forEach>
-			</select>      
-			
+			</select>
+
 			<label for="workStreamPicker">Work stream:</label>
-			<select id="workStreamPicker">
-				<c:forEach var="workStream" items="${project.workStreams}">
-					<option>${workStream}</option>
-				</c:forEach>
-			</select>  
+<!-- 			<form action="abc"> -->
+				<select id="workStreamPicker" onchange="form.submit()">
+					<option>[all streams]</option>
+					<c:forEach var="workStream" items="${project.workStreams}">
+						<option>${workStream}</option>
+					</c:forEach>
+				</select>
+<!-- 			</form> -->
         </div>
 <%--         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" > --%>
 <%--         	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div> --%>
 <!--         </div> -->
-        <div id="add-top-level-item-button" class="button">
-        	<div class ="textOnButton">
-        		<a href="${pageContext.request.contextPath}/projects/${project.name}/backlog/add-item?id=<%= WorkItem.ROOT_WORK_ITEM_ID%>" class="textOnButton">
-        			<span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}
-        		</a>
-        	</div>
-        </div>
-        <div id="backlog-button" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/backlog" class="textOnButton">Backlog</a></div>
-        <div id="wall" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/wall" class="textOnButton">Wall</a></div>
-        <div id="journal" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/journal" class="textOnButton">Journal</a></div>
-        <div id="complete" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/completed" class="textOnButton">Complete</a></div>
+   		<a id="add-top-level-item-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog/add-item?id=<%= WorkItem.ROOT_WORK_ITEM_ID%>" class="button">
+      			<span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}
+   		</a>
+       	
+       	<a id="backlog-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog" class="button">Backlog</a>
+        <a id="wall" href="${pageContext.request.contextPath}/projects/${project.name}/wall" class="button">Wall</a>
+        <a id="journal" href="${pageContext.request.contextPath}/projects/${project.name}/journal" class="button">Journal</a>
+        <a id="complete" href="${pageContext.request.contextPath}/projects/${project.name}/completed" class="button">Complete</a>
 
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
         <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
@@ -87,8 +87,9 @@
           </div>			
 			
 			<!-- End of graph buttons -->
-        <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div>
-        <div id="admin" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="textOnButton">Admin</a></div>
-        <div id="pet" class="button"><a href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="textOnButton">P.E.T.</a></div>
+<%--         <div id="burn-up-chart-button" class="button" onclick="javascript:chart('burn-up-chart','${project.workItemTypes.root.value.name}');" ><div class ="textOnButton">Burn-Up Chart</div></div> --%>
+        <a id="burn-up-chart-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog/chart?chartName=burn-up-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">Burn-Up Chart</a>
+        <a id="admin" href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="button">Admin</a>
+        <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">P.E.T.</a>
     </div>
 </form>

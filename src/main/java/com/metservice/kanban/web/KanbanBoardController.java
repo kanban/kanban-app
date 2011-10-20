@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
@@ -47,6 +48,7 @@ import com.metservice.kanban.utils.DateUtils;
  */
 @Controller
 @RequestMapping("{projectName}/{board}")
+@SessionAttributes("workStreams")
 public class KanbanBoardController {
 
     @Autowired
@@ -61,6 +63,11 @@ public class KanbanBoardController {
 
         return kanbanService.getKanbanProject(projectName);
     }
+
+    //    @ModelAttribute("workStreams")
+    //    public synchronized Map<String, String> populateWorkStreams() {
+    //        return new HashMap<String, String>();
+    //    }
 
     @ModelAttribute("redirectView")
     public synchronized RedirectView populateRedirectView(
@@ -829,8 +836,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("delete-column-action")
-    public synchronized RedirectView deleteColumn(
-                                                  @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView deleteColumn(@ModelAttribute("project") KanbanProject project,
                                                   @PathVariable("projectName") String projectName,
                                                   @PathVariable("board") String boardType,
                                                   @RequestParam("name") String name) throws IOException {
@@ -886,6 +892,17 @@ public class KanbanBoardController {
         return new RedirectView("/projects/" + projectName + "/" + boardType, true);
     }
 
+    @RequestMapping("set-work-stream")
+    public RedirectView setWorkStream(@ModelAttribute("project") KanbanProject project,
+                              @PathVariable("projectName") String projectName,
+                              @PathVariable("board") String boardType,
+                                      @RequestParam("workStream") String workStream,
+                                      @ModelAttribute("workStreams") Map<String, String> workStreams) {
+
+        System.out.println("work streams = " + workStreams);
+
+        return new RedirectView("/projects/" + projectName + "/" + boardType, true);
+    }
 
     public void setKanbanService(KanbanService kanbanService) {
         this.kanbanService = kanbanService;
