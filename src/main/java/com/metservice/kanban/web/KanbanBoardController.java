@@ -55,11 +55,10 @@ public class KanbanBoardController {
     public KanbanBoardController() {
     }
 
-
     @ModelAttribute("project")
-    public synchronized KanbanProject populateProject(
-                                                      @PathVariable("projectName") String projectName)
+    public synchronized KanbanProject populateProject(@PathVariable("projectName") String projectName)
         throws IOException {
+
         return kanbanService.getKanbanProject(projectName);
     }
 

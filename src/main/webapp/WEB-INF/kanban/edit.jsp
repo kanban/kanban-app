@@ -38,7 +38,7 @@
         </div>
     </form>
     
-    <form id="edit" action="edit-item-action" method="get">
+    <form id="edit" action="edit-item-action" method="post">
         <fieldset>
             <legend>Edit ${workItem.type.name}</legend>
 
@@ -139,7 +139,6 @@
                 </tr>
             </table>
         </fieldset>
-
     </form>
 </body>
 </html>

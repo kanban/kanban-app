@@ -1,35 +1,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
-<%@page import="com.metservice.kanban.model.WorkItem"%>
-<%@page import="java.util.List"%>
-<%@page import="com.metservice.kanban.model.TreeNode"%>
-<%@page import="com.metservice.kanban.model.KanbanProject"%>
 <%@page import="com.metservice.kanban.KanbanService"%>
-<%@page import="java.util.Collection"%>
-<%@page import="com.metservice.kanban.model.WorkItemTree"%>
-<%@page import="com.metservice.kanban.model.KanbanProjectConfiguration"%>
-<%@page import="com.metservice.kanban.model.KanbanProjectConfigurationBuilder"%>
-<%@page import="com.metservice.kanban.model.WorkItemType"%>
-<%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
-
+<%@page import="com.metservice.kanban.model.WorkItem"%>
 
 <%
-KanbanProject project = (KanbanProject) request.getAttribute("project");
-String boardType = (String) request.getAttribute("board");
-WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
-TreeNode<WorkItemType> topLevel = workItemTypes.getRoot();
-WorkItemType secondLevel = null;
-if (topLevel.hasChildren()) {
-	secondLevel = topLevel.getChild(0).getValue();
-}
- 
-String currentProjectName = (String) request.getAttribute("projectName");
-KanbanService service = new KanbanService();
-request.setAttribute("service", service);
-request.setAttribute("secondLevel", secondLevel);
-request.setAttribute("workItemTypes", workItemTypes);
+// KanbanService service = new KanbanService();
+// request.setAttribute("service", service);
 %>
+
+<c:set var="secondLevel" value="${project.workItemTypes.root.children[0].value}" /> 
+
 <script type="text/javascript">
     $(document).ready(function(){
         $("#graphs").click(function(){
@@ -49,7 +30,14 @@ request.setAttribute("workItemTypes", workItemTypes);
 					<c:forEach var="projectName" items="${service.projects}">
 				        <option <c:if test="${projectName == project.name}">selected</c:if>>${projectName}</option>
 					</c:forEach>
-			</select>        
+			</select>      
+			
+			<label for="workStreamPicker">Work stream:</label>
+			<select id="workStreamPicker">
+				<c:forEach var="workStream" items="${project.workStreams}">
+					<option>${workStream}</option>
+				</c:forEach>
+			</select>  
         </div>
 <%--         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" > --%>
 <%--         	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div> --%>
