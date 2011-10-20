@@ -20,6 +20,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,10 +65,22 @@ public class KanbanBoardController {
         return kanbanService.getKanbanProject(projectName);
     }
 
-    //    @ModelAttribute("workStreams")
-    //    public synchronized Map<String, String> populateWorkStreams() {
-    //        return new HashMap<String, String>();
-    //    }
+    @ModelAttribute("boardName")
+    public String populateBoardName(@PathVariable("board") String board) {
+        return board;
+    }
+
+    @ModelAttribute("projectName")
+    public String populateProjectName(@PathVariable("projectName") String board) {
+        System.out.println("boardName");
+        return board;
+    }
+
+    @ModelAttribute("workStreams")
+    public synchronized Map<String, String> populateWorkStreams() {
+        System.out.println("populate work streams");
+        return new HashMap<String, String>();
+    }
 
     @ModelAttribute("redirectView")
     public synchronized RedirectView populateRedirectView(
@@ -167,40 +180,32 @@ public class KanbanBoardController {
 
     /** Creates empty item model to display in add form with preset parent id. **/
     @RequestMapping("add-item")
-    public synchronized ModelAndView addItem(
-                                             @ModelAttribute("project") KanbanProject project,
+    public synchronized ModelAndView addItem(@ModelAttribute("project") KanbanProject project,
                                              @PathVariable("projectName") String projectName,
-                                             @PathVariable("board") String boardType, @RequestParam("id") int id)
-        throws IOException {
+                                             @PathVariable("board") String boardType,
+                                             @RequestParam("id") int id) throws IOException {
 
         // Search for parent id
         WorkItem parent = project.getWorkItemTree().getWorkItem(id);
-        Map<String, Object> model = buildModel(projectName, boardType);
-
-        // Get name of project
-        String type = project.getWorkItemTypes().getRoot().getValue().getName();
-
-        // Set defaults for new item
+        
+        WorkItemType type = project.getWorkItemTypes().getRoot().getValue();
         String parentName = "";
         int parentId = ROOT_WORK_ITEM_ID;
         String legend = "Add " + type;
 
-        // Change defaults if we have a parent item
         if (parent != null) {
             parentName = parent.getName();
             parentId = parent.getId();
-            type = project.getWorkItemTypes().getTreeNode(parent.getType())
-                .getChild(0).getValue().getName();
+            type = project.getWorkItemTypes().getTreeNode(parent.getType()).getChild(0).getValue();
             legend = "Add a " + type + " to " + parentName;
         }
 
-        // Pass defaults to the model hash
-        model.put("workItem", parent);
-        model.put("type", type);
+        Map<String,Object> model = new HashMap<String, Object>();
+
         model.put("legend", legend);
         model.put("parentId", parentId);
-
-        // Render the add form, passing the model with its hash values.
+        model.put("type", type);
+        
         return new ModelAndView("/add.jsp", model);
     }
 
@@ -258,34 +263,28 @@ public class KanbanBoardController {
     @RequestMapping("add-item-action")
     public synchronized RedirectView addItemAction(
                                                    @ModelAttribute("project") KanbanProject project,
-                                                   @PathVariable("projectName") String projectName,
                                                    @PathVariable("board") String boardType,
+                                                   @RequestParam("parentId") Integer parentId,
+                                                   @RequestParam("type") String type,
                                                    @RequestParam("name") String name,
+                                                   @RequestParam("size") String sizeStr,
+                                                   @RequestParam("importance") String importanceStr,
+                                                   @RequestParam("notes") String notes,
+                                                   @RequestParam("color") String color,
+                                                   @RequestParam(value = "excluded", required = false) String excludedStr,
+                                                   @RequestParam("workStreams") String workStreams,
                                                    HttpServletRequest request) throws IOException {
 
-        //Default parentID to 0
-        String temp = request.getParameter("parentId");
-        int parentId = temp == null ? 0 : Integer.parseInt(temp);
 
-        temp = request.getParameter("size");
-        //size defaults to 0
-        int size = (temp == null ? 0 : (temp.equals("") ? 0 : Integer.parseInt(temp)));
+        WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
 
-        temp = request.getParameter("importance");
-        int importance = (temp == null ? 0 : (temp.equals("") ? 0 : Integer.parseInt(temp)));
-
-        String notes = request.getParameter("notes");
-
-        String color = request.getParameter("color");
-
-        String workItemType = request.getParameter("type");
-
-        WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(
-            workItemType);
+        int size = parseInteger(sizeStr, 0);
+        int importance = parseInteger(importanceStr, 0);
+        boolean excluded = parseBoolean(excludedStr);
 
         // Add it and save it
         project.addWorkItem(parentId, typeAsWorkItemType, name, size,
-            importance, notes, color, currentLocalDate());
+            importance, notes, color, excluded, workStreams, currentLocalDate());
         project.save();
 
         // Redirect
@@ -894,12 +893,15 @@ public class KanbanBoardController {
 
     @RequestMapping("set-work-stream")
     public RedirectView setWorkStream(@ModelAttribute("project") KanbanProject project,
-                              @PathVariable("projectName") String projectName,
-                              @PathVariable("board") String boardType,
-                                      @RequestParam("workStream") String workStream,
-                                      @ModelAttribute("workStreams") Map<String, String> workStreams) {
+                                      @PathVariable("projectName") String projectName,
+                                      @PathVariable("board") String boardType,
+                                      @RequestParam("workStream") String selectedWorkStream,
+                                      @ModelAttribute("workStreams") Map<String, String> workStreams,
+                                      Model model) {
 
-        System.out.println("work streams = " + workStreams);
+        System.out.println("work streams = " + workStreams + " selected = " + selectedWorkStream);
+
+        workStreams.put(projectName, selectedWorkStream);
 
         return new RedirectView("/projects/" + projectName + "/" + boardType, true);
     }

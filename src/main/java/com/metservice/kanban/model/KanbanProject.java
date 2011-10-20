@@ -20,7 +20,7 @@ public interface KanbanProject {
     void stop(int id);
 
     void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,
-            String string, LocalDate backlogDate);
+                     String color, boolean excluded, String workStreams, LocalDate backlogDate);
 
     void move(int id, int targetId, boolean after);
 

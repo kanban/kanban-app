@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
 <%@page import="com.metservice.kanban.model.WorkItem"%>
 
 <c:set var="secondLevel" value="${project.workItemTypes.root.children[0].value}" /> 
@@ -23,21 +22,19 @@
 
 				<select id="projectPicker" onchange="changeProject('projectPicker')">
 						<c:forEach var="projectName" items="${service.projects}">
-					        <option <c:if test="${projectName == project.name}">selected</c:if>>${projectName}</option>
+					        <option <c:if test="${projectName == project.name}">selected="selected"</c:if>>${projectName}</option>
 						</c:forEach>
 				</select>
 			</form>
-			
- 			<form action="abc" style="display: inline;">
+ 			<form action="${boardName}/set-work-stream" style="display: inline;">
 			<label for="workStreamPicker">Work stream:</label>
-<!-- 				<select id="workStreamPicker" name="workStreams" onchange="form.submit()"> -->
-				<select id="workStreamPicker" name="workStreams">
+ 				<select id="workStreamPicker" name="workStream" onchange="form.submit()"> 
 					<option value="">[all streams]</option>
 					<c:forEach var="workStream" items="${project.workStreams}">
-						<option>${workStream}</option>
+						<option <c:if test="${workStreams[projectName] == workStream}">selected="selected"</c:if>>${workStream}</option>
 					</c:forEach>
 				</select>
- 			</form> 
+ 			</form>
         </div>
 <%--         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" > --%>
 <%--         	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div> --%>

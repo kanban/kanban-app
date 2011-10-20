@@ -99,13 +99,14 @@ public class KanbanBoardControllerLegacyTest {
     @Test
     public void testAddItemAction() throws IOException {
     	MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addParameter("parentId", "0");
         request.addParameter("type", "feature");
         request.addParameter("size", "5");
         request.addParameter("importance", "10");
         request.addParameter("notes", "");
         request.addParameter("color", "000FFF");
-        RedirectView view = kanbanController.addItemAction(kanban, "test-project", "wall", "test", request);
+        RedirectView view = kanbanController.addItemAction(kanban, "wall", 0, "feature", "test", "5",
+            "10", "", "000FFF", null, "", request);
+
         assertThat(view.getUrl(), is("../wall"));
     }
 

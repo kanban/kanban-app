@@ -68,15 +68,21 @@ public class DefaultKanbanProject implements KanbanProject {
 	 * @param backlogDate - the date that the new WorkItem was added to the project and backlog
      */
     @Override
-    public void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,String colour,
-            LocalDate backlogDate) {
+    public void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,
+                            String color,
+                            boolean excluded, String workStreams, LocalDate backlogDate) {
         int newId = tree.getNewId();
+
         WorkItem workItem = new WorkItem(newId, parentId, type);
+
         workItem.setName(name);
         workItem.setSize(size);
         workItem.setImportance(importance);
         workItem.setNotes(notes);
-        workItem.setColour(colour);
+        workItem.setColour(color);
+        workItem.setExcluded(excluded);
+        workItem.setWorkStreamsAsString(workStreams);
+
         tree.addWorkItem(workItem);
 
 		// add the WorkItem onto the board and log the date
