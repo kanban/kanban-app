@@ -16,6 +16,8 @@ public abstract class CsvConstants {
     public static final String WORST_CASE_ESIMATE = "worstcase";
     public static final String MUST_HAVE = "musthave";
     
+    public static final String WORK_STREAMS = "workstreams";
+
     private CsvConstants() {
         // static class: not intended to be instantiated
     }

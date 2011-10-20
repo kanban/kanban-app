@@ -12,3 +12,4 @@ Please endeavour to keep to these standards when maintaining and extending this 
   * Don't defer rework if it is in the path of changes that you need to make. Leave all the code that you touch clean.
   * If you see something that needs fixing or think of a better way of doing something and it's not in the path of
     the work you're doing: add it to to-do.txt.
+  * Please do not commit any eclipse/netbeans/etc. metadata. To create an eclipse project use: mvn eclipse:eclipse

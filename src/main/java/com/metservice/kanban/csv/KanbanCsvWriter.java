@@ -1,6 +1,18 @@
 package com.metservice.kanban.csv;
 
-import static com.metservice.kanban.csv.CsvConstants.*;
+import static com.metservice.kanban.csv.CsvConstants.BEST_CASE_ESIMATE;
+import static com.metservice.kanban.csv.CsvConstants.COLOR_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.EXCLUDED_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.ID_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.IMPORTANCE_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.MUST_HAVE;
+import static com.metservice.kanban.csv.CsvConstants.NAME_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.NOTES_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.PARENT_ID_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.SIZE_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.STOPPED_COLUMN_NAME;
+import static com.metservice.kanban.csv.CsvConstants.WORK_STREAMS;
+import static com.metservice.kanban.csv.CsvConstants.WORST_CASE_ESIMATE;
 import static com.metservice.kanban.utils.DateUtils.formatIsoDate;
 import java.io.IOException;
 import java.io.Writer;
@@ -11,7 +23,7 @@ import com.metservice.kanban.model.WorkItemType;
 
 public class KanbanCsvWriter {
 
-    private static final int NUMBER_OF_METADATA_COLUMNS = 12;
+    private static final int NUMBER_OF_METADATA_COLUMNS = 13;
 
     private final CSVWriter csvWriter;
     private final List<String> phases;
@@ -42,6 +54,7 @@ public class KanbanCsvWriter {
         data[9] = BEST_CASE_ESIMATE;
         data[10] = WORST_CASE_ESIMATE;
         data[11] = MUST_HAVE;
+        data[12] = WORK_STREAMS;
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {
@@ -60,12 +73,13 @@ public class KanbanCsvWriter {
         data[3] = Integer.toString(workItem.getSize());
         data[4] = Integer.toString(workItem.getImportance());
         data[5] = workItem.getNotes();
-        data[6] = "" + workItem.isExcluded();
-        data[7] = "" + workItem.isStopped();
+        data[6] = Boolean.toString(workItem.isExcluded());
+        data[7] = Boolean.toString(workItem.isStopped());
         data[8] = workItem.getColour().toString().substring(1);
         data[9] = Integer.toString(workItem.getAverageCaseEstimate());
         data[10] = Integer.toString(workItem.getWorstCaseEstimate());
         data[11] = Boolean.toString(workItem.isMustHave());
+        data[12] = workItem.getWorkStreamsAsString();
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {

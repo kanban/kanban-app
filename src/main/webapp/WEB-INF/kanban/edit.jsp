@@ -5,73 +5,14 @@
 <%@page import="java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%@ page import="com.metservice.kanban.model.WorkItem"%>
-<%@ page import="com.metservice.kanban.model.WorkItemType"%>
-<%@ page import="com.metservice.kanban.model.KanbanProjectConfiguration"%>
-<%@ page import="com.metservice.kanban.model.KanbanProject"%>
-<%@ page import="com.metservice.kanban.utils.DateUtils"%>
-<%@ page import="java.util.*" %>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
 	<jsp:include page="include/header-head.jsp"/>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/edit.css" />
 
-<title>Kanban: edit a work item</title>
-<style type="text/css">
-legend {
-	margin-left: 1em;
-	padding: 0;
-	color: #000;
-	font-weight: bold;
-}
+	<title>Kanban: edit a work item</title>
 
-fieldset {
-	float: left;
-	clear: both;
-	width: 500px;
-	margin: 0 0 0 0;
-	padding-top: 1.5em;
-	padding-bottom: 1.5em;
-	border: 1px solid #BFBAB0;
-	background-color: #F2EFE9;
-	font-family: Verdana;
-	font-size: 12px;
-}
-
-input[readonly] {
-	background: #F2EFE9;
-	border: 1px solid #BFBAB0;
-}
-
-fieldset.submit {
-	margin-top: 0.5em;
-	padding-top: 0.3em;
-	padding-bottom: 0.3em;
-	background-color: #DDDDDD;
-}
-
-.labelClass {
-	float: left;
-	width: 25%;
-	margin-right: 0.5em;
-	padding-top: 0.2em;
-	text-align: right;
-	font-weight: bold;
-	clear:left;
-}
-
-.presetColor{
-  width:25px;
-  height:25px;
-  border:1px solid #000000;
-  float:left;
-  margin:3px;
-}
-
-.wrapper div{
-  float:left;
-}
-</style>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".presetColor").click(function () {
@@ -96,33 +37,33 @@ fieldset.submit {
             <input type="hidden" name="id" value="${workItem.id}" />
         </div>
     </form>
-    <form id="edit" action="edit-item-action">
+    
+    <form id="edit" action="edit-item-action" method="get">
         <fieldset>
-            <legend>
-                Edit ${workItem.type.name}
-            </legend>
+            <legend>Edit ${workItem.type.name}</legend>
 
             <label class="labelClass" for="id">Id:</label>
-            <input id="id" size="10" type="text" name="id" readonly="readonly" value="${workItem.id}" /> <br />
+            <input id="id" size="10" type="text" name="id" readonly="readonly" value="${workItem.id}" /> 
+            <br />
             
             <label class="labelClass" for="name">Name:</label>
             <textarea id="name" name="name" rows="2" cols="40">${workItem.name}</textarea>
-            
             <br />
             
             <label class="labelClass" for="size">Size:</label>
             <input id="size" size="10" type="text" name="size" value="${workItem.size}" />
-            
             <br />
             
             <label class="labelClass" for="importance">Importance:</label>
             <input id="importance" size="10" type="text" name="importance" value="${workItem.importance}" />
-            
             <br />
+            
+            <label class="labelClass" for="workStreams">Work streams:</label>
+            <input size="40" type="text" id="workStreams" name="workStreams" value="${workItem.workStreamsAsString}" />
+            <br/>
             
             <label class="labelClass" for="notes">Notes:</label>
             <textarea id="notes" name="notes" rows="5" cols="40">${workItem.notes}</textarea>
-            
             <br />
             
             <label class="labelClass" for="parentId">Parent:</label>
@@ -143,11 +84,13 @@ fieldset.submit {
 	                name="date-${phaseEntry.key}" value="${phaseEntry.value}" />
 	            <br />
             </c:forEach>
+            
             <label class="labelClass" for="excluded">Excluded from reports:</label>
 			<c:choose>
 				<c:when test="${workItem.excluded}">
 	                <input type="checkbox" name="excluded" checked="checked" />
-			    </c:when><c:otherwise>
+			    </c:when>
+			    <c:otherwise>
 	                <input type="checkbox" name="excluded" />
 			    </c:otherwise>
 			</c:choose>
@@ -171,10 +114,7 @@ fieldset.submit {
   		    <div class="presetColor" style="background:#B373B3;"></div>
   		  </div>
 		  </div>
-
     </fieldset>
-        
-        
         
         <c:if test="${!empty children}">
         	<fieldset>
