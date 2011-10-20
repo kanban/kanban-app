@@ -1,0 +1,53 @@
+legend {
+	margin-left: 1em;
+	padding: 0;
+	color: #000;
+	font-weight: bold;
+}
+
+fieldset {
+	float: left;
+	clear: both;
+	width: 500px;
+	margin: 0 0 0 0;
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+	border: 1px solid #BFBAB0;
+	background-color: #F2EFE9;
+	font-family: Verdana;
+	font-size: 12px;
+}
+
+input[readonly] {
+	background: #F2EFE9;
+	border: 1px solid #BFBAB0;
+}
+
+fieldset.submit {
+	margin-top: 0.5em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+	background-color: #DDDDDD;
+}
+
+.labelClass {
+	float: left;
+	width: 25%;
+	margin-right: 0.5em;
+	padding-top: 0.2em;
+	text-align: right;
+	font-weight: bold;
+	clear:left;
+}
+
+.presetColor{
+  width:25px;
+  height:25px;
+  border:1px solid #000000;
+  float:left;
+  margin:3px;
+}
+
+.wrapper div{
+  float:left;
+}

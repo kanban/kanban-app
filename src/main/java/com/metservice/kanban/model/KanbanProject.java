@@ -1,6 +1,7 @@
 package com.metservice.kanban.model;
 
 import java.io.IOException;
+import java.util.Set;
 import org.joda.time.LocalDate;
 
 
@@ -40,4 +41,6 @@ public interface KanbanProject {
     String getJournalText();
     
     void writeJournalText(String journalText);
+
+    Set<String> getWorkStreams();
 }

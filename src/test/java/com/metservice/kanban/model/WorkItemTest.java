@@ -2,17 +2,18 @@ package com.metservice.kanban.model;
 
 import static com.metservice.kanban.model.WorkItem.ROOT_WORK_ITEM_ID;
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
-import com.metservice.kanban.utils.WorkingDayUtils;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import com.metservice.kanban.utils.WorkingDayUtils;
 
 public class WorkItemTest {
 
@@ -240,5 +241,32 @@ public class WorkItemTest {
         int days = WorkingDayUtils.
                 getWorkingDaysBetween(formatter.parse("25/07/2011"), today);
         assertThat(phaseDurations.get("phase3"), is(days));
+    }
+
+    @Test
+    public void setWorkStreamAsStringTrims() {
+        WorkItem workItem = new WorkItem(1, type);
+
+        workItem.setWorkStreamsAsString("a  ,  b,  c   ");
+
+        assertThat(workItem.getWorkStreamsAsString(), is("a,b,c"));
+        assertThat(workItem.getWorkStreams().size(), is(3));
+
+        assertThat(workItem.getWorkStreams().get(0), is("a"));
+        assertThat(workItem.getWorkStreams().get(1), is("b"));
+        assertThat(workItem.getWorkStreams().get(2), is("c"));
+    }
+
+    @Test
+    public void setWorkStreamAsStringEmptyOrNull() {
+        WorkItem workItem = new WorkItem(1, type);
+
+        workItem.setWorkStreamsAsString("");
+        assertThat(workItem.getWorkStreamsAsString(), is(""));
+        assertThat(workItem.getWorkStreams().size(), is(0));
+
+        workItem.setWorkStreamsAsString(null);
+        assertThat(workItem.getWorkStreamsAsString(), is(""));
+        assertThat(workItem.getWorkStreams().size(), is(0));
     }
 }

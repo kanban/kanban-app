@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
@@ -47,6 +48,7 @@ import com.metservice.kanban.utils.DateUtils;
  */
 @Controller
 @RequestMapping("{projectName}/{board}")
+@SessionAttributes("workStreams")
 public class KanbanBoardController {
 
     @Autowired
@@ -55,13 +57,17 @@ public class KanbanBoardController {
     public KanbanBoardController() {
     }
 
-
     @ModelAttribute("project")
-    public synchronized KanbanProject populateProject(
-                                                      @PathVariable("projectName") String projectName)
+    public synchronized KanbanProject populateProject(@PathVariable("projectName") String projectName)
         throws IOException {
+
         return kanbanService.getKanbanProject(projectName);
     }
+
+    //    @ModelAttribute("workStreams")
+    //    public synchronized Map<String, String> populateWorkStreams() {
+    //        return new HashMap<String, String>();
+    //    }
 
     @ModelAttribute("redirectView")
     public synchronized RedirectView populateRedirectView(
@@ -340,6 +346,14 @@ public class KanbanBoardController {
                                                     @ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
                                                     @RequestParam("id") int id,
+                                                    @RequestParam("parentId") Integer parentId,
+                                                    @RequestParam("name") String name,
+                                                    @RequestParam("size") String sizeStr,
+                                                    @RequestParam("importance") String importanceStr,
+                                                    @RequestParam("notes") String notes,
+                                                    @RequestParam("color") String color,
+                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
+                                                    @RequestParam("workStreams") String workStreams,
                                                     HttpServletRequest request) throws IOException, ParseException {
 
         // Get the item which is being edited
@@ -348,29 +362,9 @@ public class KanbanBoardController {
         @SuppressWarnings("unchecked")
         Map<String, String[]> parameters = request.getParameterMap();
 
-        String temp = request.getParameter("parentId");
-        int parentId = temp == null ? workItem.getParentId() : Integer.parseInt(temp);
-
-        temp = request.getParameter("name");
-        String name = temp == null ? workItem.getName() : request.getParameter("name");
-
-        temp = request.getParameter("size");
-        temp = (temp == null ? workItem.getSize() + "" : (temp.equals("") ? "0" : temp));
-        int size = Integer.parseInt(temp);
-
-        temp = request.getParameter("importance");
-        temp = (temp == null ? workItem.getImportance() + "" : (temp.equals("") ? "0" : temp));
-        int importance = Integer.parseInt(temp);
-
-        temp = request.getParameter("notes");
-        String notes = temp == null ? workItem.getNotes() : request.getParameter("notes");
-
-        temp = request.getParameter("color");
-        String color = temp == null ? workItem.getColour().toString() : request.getParameter("color");
-
-        temp = request.getParameter("excluded");
-        //		boolean excluded = temp == null ? workItem.isExcluded() : temp.equals("on");
-        boolean excluded = temp == null ? false : temp.equals("on");
+        int size = parseInteger(sizeStr, 0);
+        int importance = parseInteger(importanceStr, 0);
+        boolean excluded = parseBoolean(excludedStr);
 
         // Save all the updates
         workItem.setName(name);
@@ -379,6 +373,7 @@ public class KanbanBoardController {
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
         workItem.setColour(color);
+        workItem.setWorkStreamsAsString(workStreams);
 
         // TODO Figure this out
         for (String phase : workItem.getType().getPhases()) {
@@ -388,11 +383,9 @@ public class KanbanBoardController {
                 if (valueArray[0].trim().isEmpty()) {
                     workItem.setDate(phase, null);
                 } else {
-                    workItem.setDate(phase,
-                        parseConventionalNewZealandDate(valueArray[0]));
+                    workItem.setDate(phase, parseConventionalNewZealandDate(valueArray[0]));
                 }
             }
-
         }
 
         // If it's changed parent, reset the parent.
@@ -843,8 +836,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping("delete-column-action")
-    public synchronized RedirectView deleteColumn(
-                                                  @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView deleteColumn(@ModelAttribute("project") KanbanProject project,
                                                   @PathVariable("projectName") String projectName,
                                                   @PathVariable("board") String boardType,
                                                   @RequestParam("name") String name) throws IOException {
@@ -900,8 +892,39 @@ public class KanbanBoardController {
         return new RedirectView("/projects/" + projectName + "/" + boardType, true);
     }
 
+    @RequestMapping("set-work-stream")
+    public RedirectView setWorkStream(@ModelAttribute("project") KanbanProject project,
+                              @PathVariable("projectName") String projectName,
+                              @PathVariable("board") String boardType,
+                                      @RequestParam("workStream") String workStream,
+                                      @ModelAttribute("workStreams") Map<String, String> workStreams) {
+
+        System.out.println("work streams = " + workStreams);
+
+        return new RedirectView("/projects/" + projectName + "/" + boardType, true);
+    }
 
     public void setKanbanService(KanbanService kanbanService) {
         this.kanbanService = kanbanService;
+    }
+
+
+    private boolean parseBoolean(String excludedStr) {
+        if (excludedStr == null) {
+            return false;
+        }
+        if ("on".equals(excludedStr)) {
+            return true;
+        }
+        return Boolean.parseBoolean(excludedStr);
+    }
+
+
+    private int parseInteger(String sizeStr, int defaultValue) {
+        try {
+            return Integer.parseInt(sizeStr);
+        } catch (NumberFormatException nfe) {
+        }
+        return defaultValue;
     }
 }

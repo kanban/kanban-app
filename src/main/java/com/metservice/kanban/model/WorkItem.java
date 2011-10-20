@@ -1,10 +1,13 @@
 package com.metservice.kanban.model;
 
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
-import com.metservice.kanban.utils.WorkingDayUtils;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
+import com.metservice.kanban.utils.WorkingDayUtils;
 
 /**
  * A work item is a story. It can have a parent.
@@ -31,6 +34,8 @@ public class WorkItem {
     private boolean mustHave;
     private int averageCaseEstimate;
     private int worstCaseEstimate;
+
+    private List<String> workStreams;
 
     public static final int ROOT_WORK_ITEM_ID = 0;
     
@@ -317,5 +322,30 @@ public class WorkItem {
     public int getVariance() {
         int deviation = getWorstCaseEstimate() - getAverageCaseEstimate();
         return deviation * deviation;
+    }
+
+    public List<String> getWorkStreams() {
+        return workStreams;
+    }
+
+    public void setWorkStreams(List<String> workStreams) {
+        this.workStreams = workStreams;
+    }
+
+    public String getWorkStreamsAsString() {
+
+        return StringUtils.join(workStreams, ',');
+    }
+
+    public void setWorkStreamsAsString(String workStream) {
+        if (workStream == null) {
+            this.workStreams = new ArrayList<String>();
+        }
+        else {
+            this.workStreams = new ArrayList<String>();
+            for (String ws : StringUtils.split(workStream, ',')) {
+                this.workStreams.add(StringUtils.trim(ws));
+            }
+        }
     }
 }

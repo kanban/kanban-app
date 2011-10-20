@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
@@ -115,7 +117,12 @@ public class KanbanService {
     public Collection<String> getProjects() {
 
         if (home.exists()) {
-            return asList(home.list(NO_DOT_FILES));
+
+            List<String> result = asList(home.list(NO_DOT_FILES));
+
+            Collections.sort(result);
+
+            return result;
         }
         else {
             return new ArrayList<String>();

@@ -3,6 +3,8 @@ package com.metservice.kanban.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.web.KanbanPersistence;
 
@@ -222,6 +224,20 @@ public class DefaultKanbanProject implements KanbanProject {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Set<String> getWorkStreams() {
+        // TODO: for large projects this can be inefficient - consider caching this set
+        Set<String> workStreams = new TreeSet<String>();
+
+        for (WorkItem workItems : tree.getWorkItemList()) {
+            for (String ws : workItems.getWorkStreams()) {
+                workStreams.add(ws);
+            }
+        }
+
+        return workStreams;
     }
     
     

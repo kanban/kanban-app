@@ -15,10 +15,6 @@
 
 <%
 KanbanProject project = (KanbanProject) request.getAttribute("project");
-KanbanService service = new KanbanService();
-String currentProjectName = (String) request.getAttribute("projectName");
-WorkItemTypeCollection workItemTypes = project.getWorkItemTypes();
-request.setAttribute("workItemTypes", workItemTypes);
 %>
 </head>
 <body>
@@ -26,16 +22,10 @@ request.setAttribute("workItemTypes", workItemTypes);
     <h1>ADMIN PAGE</h1>
     <!--Use the admin.css file for styling this.  -->
     <ul>
-      <li>
-   	    <a href="javascript:changeSettings(true);" >
-       	  New Project
-       	</a>
-      </li>
-      <li>
-        <a href="javascript:changeSettings(false);" >
-          Edit Project
-        </a>      
-      </li>
+    
+      <li><a href="admin/edit-project?createNewProject=true">New Project</a></li>
+      <li><a href="admin/edit-project?createNewProject=false" >Edit Project</a></li>
+      
       <li>
         <a href="javascript:addColumn();" >
           Add Column
@@ -74,7 +64,7 @@ request.setAttribute("workItemTypes", workItemTypes);
  -->    
     <h2>Export</h2>
     
-    <c:forEach var="workItemType" items="${workItemTypes}">
+    <c:forEach var="workItemType" items="${project.workItemTypes}">
         <div id="${workItemType.name}-download-button" class="button csvdownload"  onclick="javascript:download('${project.name}', '${workItemType.name}');"><div class="textOnButton">${workItemType.name}</div></div>
     </c:forEach>
 </body>
