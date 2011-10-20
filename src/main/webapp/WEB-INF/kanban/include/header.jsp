@@ -1,13 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
-<%@page import="com.metservice.kanban.KanbanService"%>
 <%@page import="com.metservice.kanban.model.WorkItem"%>
-
-<%
-// KanbanService service = new KanbanService();
-// request.setAttribute("service", service);
-%>
 
 <c:set var="secondLevel" value="${project.workItemTypes.root.children[0].value}" /> 
 
@@ -63,7 +57,7 @@
 					  <div class ="textOnButton">
 					    Graphs
 					  </div>
-          </div>	
+          </div>
           <div id="graph_dropdown">
             <a id="cumulative-flow-chart-1-button"  onclick="javascript:chart('cumulative-flow-chart','${project.workItemTypes.root.value.name}');return false;" >
               <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" />

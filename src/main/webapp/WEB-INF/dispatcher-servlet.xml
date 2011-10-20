@@ -18,21 +18,16 @@
     
 	<bean class="com.metservice.pet.PetDao" />
 	<bean class="com.metservice.kanban.KanbanService" />
+	
 	<bean class="com.metservice.kanban.web.KanbanRequestInterceptor" id="kanbanInterceptor" />
 
-<!--     <bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"> -->
-<!--         <property name="interceptors"> -->
-<!--             <list> -->
-<!--                 <ref bean="kanbanInterceptor"/> -->
-<!--             </list> -->
-<!--         </property> -->
-<!--         <property name="mappings"> -->
-<!--             <value> -->
-<!--                 /*.form=editAccountFormController -->
-<!--                 /*.view=editAccountFormController -->
-<!--             </value> -->
-<!--         </property> -->
-<!--     </bean> -->
+    <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="kanbanInterceptor"/>
+            </list>
+        </property>
+    </bean>
     
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
