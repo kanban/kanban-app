@@ -12,9 +12,11 @@
 <input id="importance" size="10" type="text" name="importance" value="${workItem.importance}" />
 <br />
 
-<label class="labelClass" for="workStreams">Work streams:</label>
-<input size="40" type="text" id="workStreams" name="workStreams" value="${workItem.workStreamsAsString}" />
-<br />
+<c:if test="${workItem.topLevel || topLevel}">
+    <label class="labelClass" for="workStreams">Work streams:</label>
+    <input size="40" type="text" id="workStreams" name="workStreams" value="${workItem.workStreamsAsString}" />
+    <br />
+</c:if>
 
 <label class="labelClass" for="notes">Notes:</label>
 <textarea id="notes" name="notes" rows="5" cols="40">${workItem.notes}</textarea>

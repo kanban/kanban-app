@@ -162,8 +162,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping(value = "advance-item-action", method = RequestMethod.POST)
-    public synchronized RedirectView advanceItemAction(
-                                                       @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView advanceItemAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("board") String boardType,
                                                        @RequestParam("id") String id) throws IOException {
 
@@ -174,8 +173,7 @@ public class KanbanBoardController {
     }
 
     @RequestMapping(value = "stop-item-action", method = RequestMethod.POST)
-    public synchronized RedirectView stopItemAction(
-                                                    @ModelAttribute("project") KanbanProject project,
+    public synchronized RedirectView stopItemAction(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
                                                     @RequestParam("id") String id) throws IOException {
 
@@ -219,6 +217,7 @@ public class KanbanBoardController {
         model.put("legend", legend);
         model.put("parentId", parentId);
         model.put("type", type);
+        model.put("topLevel", true);
         
         return new ModelAndView("/add.jsp", model);
     }
@@ -285,7 +284,7 @@ public class KanbanBoardController {
                                                    @RequestParam("notes") String notes,
                                                    @RequestParam("color") String color,
                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
-                                                   @RequestParam("workStreams") String workStreams,
+                                                   @RequestParam(value = "workStreams", required = false) String workStreams,
                                                    HttpServletRequest request) throws IOException {
 
 
@@ -370,7 +369,7 @@ public class KanbanBoardController {
                                                     @RequestParam("notes") String notes,
                                                     @RequestParam("color") String color,
                                                     @RequestParam(value = "excluded", required = false) String excludedStr,
-                                                    @RequestParam("workStreams") String workStreams,
+                                                    @RequestParam(value = "workStreams", required = false) String workStreams,
                                                     HttpServletRequest request) throws IOException, ParseException {
 
         // Get the item which is being edited
