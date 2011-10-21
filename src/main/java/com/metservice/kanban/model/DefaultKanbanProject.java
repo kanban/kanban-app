@@ -154,10 +154,10 @@ public class DefaultKanbanProject implements KanbanProject {
      * @return the Kanban board corresponding to the given boardType
      */
     @Override
-    public KanbanBoard getBoard(BoardIdentifier boardType) {
+    public KanbanBoard getBoard(BoardIdentifier boardType, String workStream) {
         KanbanBoardBuilder kanbanBoardBuilder = new KanbanBoardBuilder(columnsByBoard.get(boardType), workItemTypes,
             tree);
-        return kanbanBoardBuilder.build();
+        return kanbanBoardBuilder.build(workStream);
     }
 
     /**
@@ -165,13 +165,14 @@ public class DefaultKanbanProject implements KanbanProject {
      * @return the Kanban backlog corresponding to the collection of WorkItems
      */
     @Override
-    public KanbanBacklog getBacklog() {
+    public KanbanBacklog getBacklog(String workStream) {
         // TODO Why a board builder to build the backlog screen?
         KanbanBoardBuilder kanbanBoardBuilder = new KanbanBoardBuilder(
             new KanbanBoardColumnList(
                 new KanbanBoardColumn(getRootWorkItemType(), getRootWorkItemType().getPhases().get(0))),
-                workItemTypes, tree);
-        KanbanBacklog backlog = kanbanBoardBuilder.buildKanbanBacklog();
+            workItemTypes,
+            tree);
+        KanbanBacklog backlog = kanbanBoardBuilder.buildKanbanBacklog(workStream);
         return backlog;
     }
 	

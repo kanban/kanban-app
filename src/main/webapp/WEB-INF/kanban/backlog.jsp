@@ -103,7 +103,7 @@
       $.ajax({
          type: "GET",
          url: window.location.pathname + "/add-item-action",
-         data: "type="+type+"&name="+name+"&size="+size+"&importance="+importance,
+         data: "type="+type+"&name="+name+"&size="+size+"&importance="+importance + "&color=FFFFFF&notes=&excluded=&workStreams=${workStreams[project.name]}",
          success: function(){
              window.location.reload();
          },
@@ -257,7 +257,7 @@ td.small{
           <td></td>
           <td>
             <input name="name"  style="width:75%" />
-            <span style="color:#aaa">Press <b>Enter</b> to create new story</span>
+            <span style="color:#aaa">Press <b>Enter</b> to create new top item</span>
           </td>
           <td class="small color">
 					  <!-- <div style="background-color:${cell.workItem.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">

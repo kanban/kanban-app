@@ -36,6 +36,8 @@ import com.metservice.kanban.charts.burnup.DefaultBurnUpChartGenerator;
 import com.metservice.kanban.charts.burnup.DefaultChartWriter;
 import com.metservice.kanban.charts.cumulativeflow.CumulativeFlowChartBuilder;
 import com.metservice.kanban.charts.cycletime.CycleTimeChartBuilder;
+import com.metservice.kanban.model.BoardIdentifier;
+import com.metservice.kanban.model.KanbanBoard;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemTree;
@@ -97,7 +99,9 @@ public class KanbanBoardController {
     public synchronized ModelAndView board(
                                            @ModelAttribute("project") KanbanProject project,
                                            @PathVariable("projectName") String projectName,
-                                           @PathVariable("board") String boardType) throws IOException {
+                                           @PathVariable("board") String boardType,
+                                           @ModelAttribute("workStreams") Map<String, String> workStreams)
+        throws IOException {
 
         String scrollTop = extractScrollPositionInfoFromBoardType(boardType);
         boardType = cleanBoardType(boardType);
@@ -110,7 +114,7 @@ public class KanbanBoardController {
         model.put("scrollTop", scrollTop == null ? "0" : scrollTop);
 
         if (boardType.equals("backlog")) {
-            model.put("kanbanBacklog", project.getBacklog());
+            model.put("kanbanBacklog", project.getBacklog(workStreams.get(projectName)));
             model.put("type", project.getWorkItemTypes().getRoot().getValue());
             model.put("phase", project.getWorkItemTypes().getRoot().getValue()
                 .getPhases().get(0));
@@ -120,12 +124,24 @@ public class KanbanBoardController {
             List<String> phases = project.getWorkItemTypes().getRoot()
                 .getValue().getPhases();
             model.put("phase", phases.get(phases.size() - 1));
+
+            KanbanBoard board = project.getBoard(BoardIdentifier.valueOf(boardType.toUpperCase()),
+                workStreams.get(projectName));
+
+            model.put("board", board);
+
             return new ModelAndView("/completed.jsp", model);
         }
         else if (boardType.equals("journal")) {
             model.put("kanbanJournal", project.getJournalText());
             return new ModelAndView("/journal.jsp", model);
         }
+
+        KanbanBoard board = project.getBoard(BoardIdentifier.valueOf(boardType.toUpperCase()),
+            workStreams.get(projectName));
+
+        model.put("board", board);
+
         return new ModelAndView("/project.jsp", model);
     }
 
@@ -261,7 +277,7 @@ public class KanbanBoardController {
     @RequestMapping("add-item-action")
     public synchronized RedirectView addItemAction(@ModelAttribute("project") KanbanProject project,
                                                    @PathVariable("board") String boardType,
-                                                   @RequestParam("parentId") Integer parentId,
+                                                   @RequestParam(value = "parentId", required = false) Integer parentId,
                                                    @RequestParam("type") String type,
                                                    @RequestParam("name") String name,
                                                    @RequestParam("size") String sizeStr,
@@ -274,6 +290,10 @@ public class KanbanBoardController {
 
 
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
+
+        if (parentId == null) {
+            parentId = WorkItem.ROOT_WORK_ITEM_ID;
+        }
 
         int size = parseInteger(sizeStr, 0);
         int importance = parseInteger(importanceStr, 0);

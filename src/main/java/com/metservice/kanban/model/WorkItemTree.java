@@ -30,7 +30,7 @@ public interface WorkItemTree {
 
     void move(WorkItem workItem, WorkItem target, boolean after); 
 
-    List<WorkItem> getChildrenWithType(int parentId, WorkItemType childType);
+    List<WorkItem> getChildrenWithType(int parentId, WorkItemType childType, String workStream);
 
     void delete(int id);
 

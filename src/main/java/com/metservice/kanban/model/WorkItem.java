@@ -352,4 +352,15 @@ public class WorkItem {
             }
         }
     }
+
+    public boolean isInWorkStream(String workStream) {
+        // TODO this should rather ask the parent for work stream
+        if (!isTopLevel()) {
+            return true;
+        }
+        if (workStream == null || "".equals(workStream)) {
+            return true;
+        }
+        return workStreams.contains(workStream);
+    }
 }

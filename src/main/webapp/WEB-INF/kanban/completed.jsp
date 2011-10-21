@@ -52,9 +52,7 @@
 
 <%
     KanbanProject project = (KanbanProject) request.getAttribute("project");
-    String boardType = (String) request.getAttribute("boardType");
     WorkItemType type = (WorkItemType) request.getAttribute("type");
-    BoardIdentifier board = BoardIdentifier.valueOf(boardType.toUpperCase());
     
     //There doesn't appear to be a straightforward way of always getting
     //the wall columns so this is hardcoded.  We need the wallBoard columns
@@ -178,7 +176,8 @@ td.padded {
                     </th>
 				</tr>
             <%
-                KanbanBoard kanbanBoard = project.getBoard(board);
+                KanbanBoard kanbanBoard = (KanbanBoard)request.getAttribute("board"); 
+                
                 for (KanbanBoardRow row : kanbanBoard) {
             %>
                     <tr class="row">

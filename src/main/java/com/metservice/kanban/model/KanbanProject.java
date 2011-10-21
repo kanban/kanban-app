@@ -32,9 +32,9 @@ public interface KanbanProject {
     
     void reparentWorkItem(int id, int newParentId);
 
-    KanbanBacklog getBacklog();
+    KanbanBacklog getBacklog(String workStream);
 
-    KanbanBoard getBoard(BoardIdentifier boardType);
+    KanbanBoard getBoard(BoardIdentifier boardType, String workStream);
 
     WorkItemTypeCollection getWorkItemTypes();
     

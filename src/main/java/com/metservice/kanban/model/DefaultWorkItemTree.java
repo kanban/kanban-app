@@ -97,10 +97,10 @@ public final class DefaultWorkItemTree implements WorkItemTree {
     }
 
     @Override
-    public List<WorkItem> getChildrenWithType(int parentId, WorkItemType childType) {
+    public List<WorkItem> getChildrenWithType(int parentId, WorkItemType childType, String workStream) {
         List<WorkItem> workItems = new ArrayList<WorkItem>();
         for (WorkItem workItem : getChildren(parentId)) {
-            if (workItem.getType().equals(childType)) {
+            if (workItem.getType().equals(childType) && workItem.isInWorkStream(workStream)) {
                 workItems.add(workItem);
             }
         }

@@ -410,8 +410,7 @@ div[data-role="card"]{
           </thead>
           <tbody>
             <%
-                KanbanBoard kanbanBoard = project.getBoard(board);
-
+                KanbanBoard kanbanBoard = (KanbanBoard)request.getAttribute("board"); 
             
                 for (KanbanBoardRow row : kanbanBoard) {
                     

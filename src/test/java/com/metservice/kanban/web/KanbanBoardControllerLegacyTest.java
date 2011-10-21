@@ -5,6 +5,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -33,7 +34,8 @@ public class KanbanBoardControllerLegacyTest {
   @Test
   public void testBoard() throws IOException {
 
-        ModelAndView modelAndView = kanbanController.board(null, "test-project", "wall");
+        ModelAndView modelAndView = kanbanController.board(kanban, "test-project", "wall",
+            new HashMap<String, String>());
         assertThat(modelAndView.getViewName(), is("/project.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
