@@ -68,10 +68,10 @@ public final class DefaultWorkItemTree implements WorkItemTree {
     }
 
     @Override
-    public List<WorkItem> getWorkItemsOfType(WorkItemType type) {
+    public List<WorkItem> getWorkItemsOfType(WorkItemType type, String workStream) {
         Collection<WorkItem> workItems = new ArrayList<WorkItem>();
         for (WorkItem workItem : getWorkItemList()) {
-            if (workItem.getType().equals(type)) {
+            if (workItem.getType().equals(type) && workItem.isInWorkStream(workStream)) {
                 workItems.add(workItem);
             }
         }

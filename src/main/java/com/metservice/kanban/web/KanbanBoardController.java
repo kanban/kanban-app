@@ -460,7 +460,6 @@ public class KanbanBoardController {
         ModelAndView modelAndView = new ModelAndView("/chart.jsp");
         modelAndView.addObject("workItemTypeName", workItemTypeName);
         modelAndView.addObject("imageName", chartName + ".png");
-        modelAndView.addObject("projectName", projectName);
         modelAndView.addObject("startDate", startDate);
         modelAndView.addObject("endDate", endDate);
         modelAndView.addObject("kanbanJournal", project.getJournalText());
@@ -475,12 +474,15 @@ public class KanbanBoardController {
                                                     @RequestParam("startDate") String startDate,
                                                     @RequestParam("endDate") String endDate,
                                                     @RequestParam("level") String level,
-                                                    OutputStream outputStream)
-        throws IOException {
+                                                    @RequestParam(value = "workStream", required = false) String workStream,
+                                                    OutputStream outputStream) throws IOException {
 
         WorkItemType type = project.getWorkItemTypes().getByName(level);
-        List<WorkItem> workItemList = project.getWorkItemTree()
-            .getWorkItemsOfType(type);
+
+        // TODO to add workStreams change the following line:
+
+        //        List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, workStream);
+        List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, null);
 
         LocalDate start = null;
         LocalDate end = null;
@@ -499,8 +501,7 @@ public class KanbanBoardController {
         // add start and end date params here
         CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder(start, end);
 
-        CategoryDataset dataset = builder.createDataset(type.getPhases(),
-            workItemList);
+        CategoryDataset dataset = builder.createDataset(type.getPhases(), workItemList);
         JFreeChart chart = builder.createChart(dataset);
         int width = dataset.getColumnCount() * 15;
         ChartUtilities.writeChartAsPNG(outputStream, chart, width < 800 ? 800 : width, 600);
@@ -517,7 +518,7 @@ public class KanbanBoardController {
         WorkItemType type = project.getWorkItemTypes().getByName(level);
         CycleTimeChartBuilder builder = new CycleTimeChartBuilder();
         List<WorkItem> workItemList = project.getWorkItemTree()
-            .getWorkItemsOfType(type);
+            .getWorkItemsOfType(type, null);
 
         CategoryDataset dataset = builder.createDataset(builder
             .getCompletedWorkItemsInOrderOfCompletion(workItemList));
@@ -698,7 +699,7 @@ public class KanbanBoardController {
 
         WorkItemTree tree = project.getWorkItemTree();
         WorkItemType type = project.getWorkItemTypes().getRoot().getValue();
-        List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type);
+        List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type, null);
 
         LocalDate start = null;
         LocalDate end = null;

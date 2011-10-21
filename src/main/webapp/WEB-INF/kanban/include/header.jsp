@@ -26,7 +26,7 @@
 						</c:forEach>
 				</select>
 			</form>
- 			<form action="${boardName}/set-work-stream" style="display: inline;">
+ 			<form action="${pageContext.request.contextPath}/projects/${project.name}/${boardName}/set-work-stream" style="display: inline;">
 			<label for="workStreamPicker">Work stream:</label>
  				<select id="workStreamPicker" name="workStream" onchange="form.submit()"> 
 					<option value="">[all streams]</option>

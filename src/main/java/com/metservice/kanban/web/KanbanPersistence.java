@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
-
 import com.metservice.kanban.csv.KanbanCsvFile;
 import com.metservice.kanban.model.DefaultWorkItemTree;
 import com.metservice.kanban.model.KanbanProjectConfiguration;
@@ -77,7 +76,7 @@ public class KanbanPersistence {
      */
     public void write(WorkItemTree workItems) throws IOException {
         for (KanbanCsvFile file : files) {
-            List<WorkItem> workItemsForItem = workItems.getWorkItemsOfType(file.getWorkItemType());
+            List<WorkItem> workItemsForItem = workItems.getWorkItemsOfType(file.getWorkItemType(), null);
             file.write(workItemsForItem);
         }
     }

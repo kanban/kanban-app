@@ -41,7 +41,7 @@ margin: 5px 0 40px 10px;
 
         <title>Kanban</title>
     </head>
-    <!-- ${pageContext.request.contextPath}/projects/<%= request.getAttribute("projectName") %>/wall/ -->
+    <!-- ${pageContext.request.contextPath}/projects/${project.name}/wall/ -->
     <body>
         <jsp:include page="include/header.jsp"/>
         <form action="chart" id="dateForm">
@@ -56,7 +56,7 @@ margin: 5px 0 40px 10px;
 			</fieldset>
         </form>
 
-        <div><img src="${imageName}?level=${workItemTypeName}&startDate=${startDate}&endDate=${endDate}" alt="[chart]" /></div>
+        <div><img src="${imageName}?level=${workItemTypeName}&startDate=${startDate}&endDate=${endDate}&workStream=${workStreams[project.name]}" alt="[chart]" /></div>
    		<div class=journalArea><h1>Journal</h1>${kanbanJournal}</div>
     </body>
 </html>

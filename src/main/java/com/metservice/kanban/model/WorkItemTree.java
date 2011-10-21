@@ -20,7 +20,7 @@ public interface WorkItemTree {
 
     Map<Integer, WorkItem> getWorkItemsById();
 
-    List<WorkItem> getWorkItemsOfType(WorkItemType type);
+    List<WorkItem> getWorkItemsOfType(WorkItemType type, String workStream);
 
     WorkItem getTopLevelAncestor(WorkItem workItem);
 
