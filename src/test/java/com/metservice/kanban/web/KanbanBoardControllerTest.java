@@ -215,7 +215,6 @@ public class KanbanBoardControllerTest {
         assertThat(modelAndView.getViewName(), is("/chart.jsp"));
         assertThat((String) modelAndView.getModelMap().get("workItemTypeName"), is("feature"));
         assertThat((String) modelAndView.getModelMap().get("imageName"), is("cool-chart.png"));
-        assertThat((String) modelAndView.getModelMap().get("projectName"), is("projectName"));
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

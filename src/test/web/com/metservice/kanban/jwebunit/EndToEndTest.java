@@ -106,7 +106,7 @@ public class EndToEndTest {
     public void userCanViewABurnUpChart() {
         BoardPage wallPage = openProject("Test project");
         ChartPage chartPage = wallPage.clickBurnUpChartButton();
-        chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=");
+        chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=&workStream=");
     }
     
 //    @Test
