@@ -3,7 +3,7 @@
 
 	<groupId>com.metservice</groupId>
 	<artifactId>kanban-app</artifactId>
-	<version>0.36-SNAPSHOT</version>
+	<version>0.36</version>
 	<name>Kanban Application</name>
 	<packaging>war</packaging>
 
