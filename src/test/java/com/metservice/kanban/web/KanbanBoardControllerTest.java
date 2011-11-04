@@ -1,6 +1,7 @@
 package com.metservice.kanban.web;
 
 import static com.metservice.kanban.utils.DateUtils.parseConventionalNewZealandDate;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
@@ -18,6 +19,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -35,7 +37,7 @@ import com.metservice.kanban.model.WorkItemTypeCollection;
 
 public class KanbanBoardControllerTest {
 
-    
+
     // TODO Rewrite KanbanController legacy test in this form
 
     @Test
@@ -85,7 +87,7 @@ public class KanbanBoardControllerTest {
         WorkItem story2 = new WorkItem(3, 1, type);
 
         tree.addWorkItems(feature, story1, story2);
-        
+
         // Phases by board, persistence and service aren't used
         KanbanProject project = new DefaultKanbanProject(null, null, tree, null, null);
         KanbanBoardController kanbanController = new KanbanBoardController();
@@ -111,7 +113,7 @@ public class KanbanBoardControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-backlog", "10/02/2011");
         request.addParameter("date-completed", "11/02/2011");
-        
+
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
@@ -128,7 +130,7 @@ public class KanbanBoardControllerTest {
         assertThat(feature.getDate("backlog"), is(parseConventionalNewZealandDate("10/02/2011")));
         assertThat(feature.getDate("completed"), is(parseConventionalNewZealandDate("11/02/2011")));
     }
-    
+
     @Test
     public void canSaveEditedWorkItemsWithNoImportanceNoSizeNoWorkStreams() throws IOException, ParseException {
         WorkItemType type = new WorkItemType("backlog");
@@ -139,12 +141,12 @@ public class KanbanBoardControllerTest {
         KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
         MockHttpServletRequest request = new MockHttpServletRequest();
-        
+
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
             "", "", "some notes", "FFFFFF", "on", "", request);
-        
+
         assertThat(feature.getSize(), is(0));
         assertThat(feature.getImportance(), is(0));
         assertThat(feature.getWorkStreams().size(), is(0));
@@ -169,7 +171,7 @@ public class KanbanBoardControllerTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
-        
+
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(), "new name", "4", "1",
@@ -188,13 +190,13 @@ public class KanbanBoardControllerTest {
         tree.addWorkItem(new WorkItem(1, type));
         tree.addWorkItem(middleFeature);
         tree.addWorkItem(new WorkItem(2, type));
-        
+
         KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
-        
+
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", middleFeature.getId(), middleFeature.getParentId(),
@@ -222,14 +224,14 @@ public class KanbanBoardControllerTest {
     public void generatesBurnUpChart() throws IOException {
         WorkItemType featureType = new WorkItemType("feature-phase");
         WorkItemType storyType = new WorkItemType("story-phase");
-        
+
         WorkItem feature1 = new WorkItem(1, featureType);
         WorkItem story = new WorkItem(2, 1, storyType);
         WorkItem feature2 = new WorkItem(3, featureType);
-        
+
         WorkItemTree tree = new DefaultWorkItemTree();
         tree.addWorkItems(feature1, story, feature2);
-        
+
         WorkItemTypeCollection workItems = new WorkItemTypeCollection(TreeNode.create(WorkItemType.class,
             featureType));
         DefaultKanbanProject project = new DefaultKanbanProject(workItems, null, tree, null, null);
@@ -238,14 +240,30 @@ public class KanbanBoardControllerTest {
 
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
-        
+
         kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), outputStream);
         ArgumentCaptor<List> workItemsCaptor = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<OutputStream> outputStreamCaptor = ArgumentCaptor.forClass(OutputStream.class);
         verify(chartGenerator).generateBurnUpChart(
             eq(featureType), workItemsCaptor.capture(), (LocalDate) eq(null), (LocalDate) eq(null), outputStreamCaptor.capture());
-        assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), hasItems(feature1, feature2));
-        assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), not(hasItem(story)));
+        assertThat(workItemsCaptor.getValue(), hasItems(feature1, feature2));
+        assertThat(workItemsCaptor.getValue(), not(hasItem(story)));
         assertThat(outputStreamCaptor.getValue(), is(outputStream));
+    }
+
+    @Test
+    public void addComment() throws IOException {
+        WorkItemType featureType = new WorkItemType("feature-phase");
+        WorkItem feature = new WorkItem(99, featureType);
+
+        KanbanProject mockProject = mock(KanbanProject.class);
+        when(mockProject.getWorkItemById(99))
+                .thenReturn(feature);
+
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        ResponseEntity<String> responseEntity = kanbanController.addComment(mockProject, 99, "user name", "this is a cool new feature!");
+
+        assertThat(responseEntity, is(notNullValue()));
+        verify(mockProject).save();
     }
 }

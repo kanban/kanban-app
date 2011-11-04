@@ -2,6 +2,8 @@ package com.metservice.kanban.model;
 
 import java.io.File;
 import java.io.IOException;
+
+import com.metservice.kanban.KanbanCommentsFile;
 import com.metservice.kanban.KanbanPropertiesFile;
 
 //TODO This class needs unit tests.
@@ -31,7 +33,7 @@ public class KanbanProjectConfiguration {
     public File getDataFile(WorkItemType workItemType) {
         return new File(projectHome, workItemType.getName() + ".csv");
     }
-    
+
     public File getJournalFile() throws IOException {
     	File journalFile = new File(projectHome, "journal.txt");
     	journalFile.createNewFile();
@@ -44,5 +46,9 @@ public class KanbanProjectConfiguration {
 
     public KanbanPropertiesFile getKanbanPropertiesFile() throws IOException {
         return new KanbanPropertiesFile(new File(projectHome, "kanban.properties"));
+    }
+
+    public KanbanCommentsFile getKanbanCommentsFile() throws IOException {
+        return new KanbanCommentsFile(new File(projectHome, "comments.store"));
     }
 }

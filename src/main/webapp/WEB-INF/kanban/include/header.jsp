@@ -13,7 +13,48 @@
     });
 </script>
 
+<style>
+#userContainer input {
+}
+
+#userContainer input[readonly] {
+    cursor: pointer; 
+    background-color: #ebebe4;
+}
+/*
+#userContainer {
+    margin: 35px 10px 0 0; 
+    border: solid 1px grey; 
+    border-radius: 4px; 
+    padding-left: 10px; 
+    padding-right: 10px; 
+}
+.focus #userContainer {
+    border: none; 
+}
+
+#currentUser {
+    font-weight: bold;
+}
+.focus #currentUser {
+    display: none;
+}
+
+#userField {
+    border: solid 1px grey; 
+    font-family: Arial,Helvetica,sans-serif; 
+    font-size: 11px; 
+    font-weight: bold;
+    display: none;
+}
+.focus #userField {
+    display: inline;
+}
+*/
+</style>
+
     <div class="header">
+        
         <div class="user-home">${service.home.absolutePath}</div>
         <div class="version">VERSION: ${service.version}</div>
         <div id="projectDropdown">
@@ -35,6 +76,11 @@
 					</c:forEach>
 				</select>
  			</form>
+            
+            <span id="userContainer">
+                Current User
+                <input id="userField" type="text" value="Unknown user" readonly="readonly" />
+            </span>
         </div>
 <%--         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" > --%>
 <%--         	<div class ="textOnButton"><span style="font-weight:bold;font-size:120%;line-height:100%">+</span> Add ${project.workItemTypes.root.value}</div> --%>
@@ -86,3 +132,26 @@
         <a id="admin" href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="button">Admin</a>
         <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">P.E.T.</a>
     </div>
+    
+<script type="text/javascript">
+(function() {
+    var currentUser = $.cookie('kanban.current.user');
+    if (currentUser == null) {
+        currentUser = "Unknown user";
+    }
+    $('#userField').val(currentUser);
+    
+    $('#userField').click(function() {
+    	$('#userField').removeAttr('readonly');
+        $('#userField').focus();
+        return false;
+    });
+    $('#userField').keypress(function(event) {
+        if (event.which == 13) {
+            $.cookie('kanban.current.user', $(this).val(), { expires: 100, path: "/" });
+            $("#userField").attr('readonly', 'readonly');
+        }
+    });
+})();
+</script>
+    

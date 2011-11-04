@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
+
+import com.metservice.kanban.KanbanCommentsFile;
 import com.metservice.kanban.csv.KanbanCsvFile;
 import com.metservice.kanban.model.DefaultWorkItemTree;
 import com.metservice.kanban.model.KanbanProjectConfiguration;
@@ -25,6 +27,7 @@ import com.metservice.kanban.model.WorkItemType;
 public class KanbanPersistence {
     private final Collection<KanbanCsvFile> files = new ArrayList<KanbanCsvFile>();
     private File journalFile;
+    private KanbanCommentsFile commentsFile;
 
     /**
      * Default constructor for KanbanPersistence. Reads filenames from a given KanbanProjectConfiguration
@@ -37,8 +40,12 @@ public class KanbanPersistence {
             KanbanCsvFile file = new KanbanCsvFile(configuration.getDataFile(workItemType),
                 workItemType);
             files.add(file);
+
+            // should this be done for every Work Item Type?!?
             journalFile = configuration.getJournalFile();
         }
+
+        commentsFile = configuration.getKanbanCommentsFile();
     }
 
     /**
@@ -47,17 +54,21 @@ public class KanbanPersistence {
      * @throws IOException
      */
     public WorkItemTree read() throws IOException {
+        commentsFile.readAllComments();
+
         WorkItemTree index = new DefaultWorkItemTree();
 
         for (KanbanCsvFile file : files) {
             List<WorkItem> workItems = file.read();
             for (WorkItem workItem : workItems) {
                 index.addWorkItem(workItem);
+
+                workItem.resetCommentsAndReplaceWith(commentsFile.getCommentsFor(workItem.getId()));
             }
         }
         return index;
     }
-    
+
     public String journalRead() throws IOException {
     	String textFile = "";
     	Scanner sc = new Scanner(journalFile);
@@ -68,7 +79,7 @@ public class KanbanPersistence {
     	sc.close();
     	return textFile;
     }
-    
+
     /**
      * Writes changes made on a given WorkItemTree into its corresponding CSV file.
      * @param workItems
@@ -79,8 +90,10 @@ public class KanbanPersistence {
             List<WorkItem> workItemsForItem = workItems.getWorkItemsOfType(file.getWorkItemType(), null);
             file.write(workItemsForItem);
         }
+
+        commentsFile.writeAllComments(workItems);
     }
-    
+
     public void journalWrite(String textForFile) throws IOException {
     	FileOutputStream flusher = new FileOutputStream(journalFile);
     	flusher.write((new String()).getBytes());
@@ -89,7 +102,7 @@ public class KanbanPersistence {
     	writer.write(textForFile);
     	writer.close();
     }
-    
+
     /**
      * Returns the collection of CSV files stored in the KanbanPersistence.
      * @return the collection of CSV files

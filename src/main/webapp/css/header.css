@@ -7,7 +7,7 @@
 
 a.button {
 	text-decoration: none;
-    font: normal 15px verdana;
+    font: normal 15px verdana, Sans-serif;
 	color: white;
 }
 
@@ -91,33 +91,35 @@ background-color: #DDDDDD;
 }
 
 .textOnButton {
-    font: normal 15px verdana;
+    font: normal 15px verdana, Sans-serif;
 	color: white;
 }
 
 .user-home {
     position: absolute;	
-	font: normal 11px verdana;
+	font: normal 10px verdana, Sans-serif;
     right: 10px;
-	top: 15px;	
+	top: 12px;	
 }
 
 .version {
     position: absolute;	
-	font: normal 11px verdana;
+	font: normal 10px verdana, Sans-serif;
     right: 10px;
-    top: 30px;
+    top: 25px;
 }	
 
 div#chart {
     background-color: #DDDDDD;
 }
 
-.projectPicker {
-  font-family: Verdana;
+#projectDropdown {
+  font-family: verdana, Sans-serif;
   font-size: 12px;
+}
+
+.projectPicker {
   margin: 5px 5px 5px 5px;    
-  
  }
 
 td.dragHandle {
@@ -192,7 +194,7 @@ table.nolines td {
 }
 
 .main {
-	font: normal 11px verdana;
+	font: normal 11px verdana, Sans-serif;
 }
 
 .mustHaveOk {

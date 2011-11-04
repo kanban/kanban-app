@@ -2,11 +2,14 @@ package com.metservice.kanban.model;
 
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
+
+import com.google.common.base.Preconditions;
 import com.metservice.kanban.utils.WorkingDayUtils;
 
 /**
@@ -15,6 +18,7 @@ import com.metservice.kanban.utils.WorkingDayUtils;
  *
  */
 public class WorkItem {
+    public static final int ROOT_WORK_ITEM_ID = 0;
 
     private final int id;
     private final int parentId;
@@ -26,19 +30,19 @@ public class WorkItem {
     private boolean excluded;
     private boolean stopped; //Whether a story is allowed to progress regardless of stage
     private HtmlColour colour;
-    
+
     //Keep track of when this item started a phase
     private final Map<String, LocalDate> datesByPhase = new HashMap<String, LocalDate>();
     private String currentPhase;
-    
+
     private boolean mustHave;
     private int averageCaseEstimate;
     private int worstCaseEstimate;
 
     private List<String> workStreams;
 
-    public static final int ROOT_WORK_ITEM_ID = 0;
-    
+    private List<WorkItemComment> comments = new ArrayList<WorkItemComment>();
+
     public WorkItem(int id, WorkItemType type, String advanceToPhase) {
         this(id, ROOT_WORK_ITEM_ID, type, advanceToPhase);
     }
@@ -55,7 +59,7 @@ public class WorkItem {
             advance(parseIsoDate("1970-01-01"));
         }
     }
-    
+
     public WorkItem(int id, WorkItemType workItemType) {
         this(id, ROOT_WORK_ITEM_ID, workItemType);
     }
@@ -138,7 +142,7 @@ public class WorkItem {
     public void setExcluded(boolean excluded) {
         this.excluded = excluded;
     }
-    
+
     public void setStopped(boolean stopped){
     	this.stopped = stopped;
     }
@@ -184,10 +188,10 @@ public class WorkItem {
         }
         return phaseOnDate;
     }
-    
+
     public Map<String, Integer> getPhaseDurations() {
         Map<String, Integer> phaseDurations = new HashMap<String, Integer>();
-        
+
         LocalDate previousDate = null;
         String previousPhase = null;
         LocalDate today = new LocalDate();
@@ -208,7 +212,7 @@ public class WorkItem {
             int diffInDays = WorkingDayUtils.getWorkingDaysBetween(previousDate, today);
             phaseDurations.put(previousPhase, diffInDays);
         }
-        
+
         return phaseDurations;
     }
 
@@ -225,16 +229,17 @@ public class WorkItem {
     public boolean isCompleted() {
     	return !type.hasPhaseAfter(currentPhase);
     }
-    
+
     public boolean isStopped() {
     	return stopped;
     }
-    
+
     public void stop() {
-    	if (stopped==true) { stopped = false; }
-    	else stopped = true;
+    	if (stopped==true) { stopped = false; } else {
+            stopped = true;
+        }
     }
-    
+
     /**
      * Advance the phase of this item to the next phase in the phase list
      * @param date - the date the next phase has started (e.g. right now)
@@ -249,7 +254,7 @@ public class WorkItem {
 
     /**
      * Returns a copy of this WorkItem, with a new parent.
-     * 
+     *
      * @param newParentId
      * @return
      */
@@ -264,8 +269,50 @@ public class WorkItem {
         workItem.excluded = excluded;
         workItem.colour = colour;
         workItem.stopped = stopped;
+        workItem.comments.addAll(comments);
 
         return workItem;
+    }
+
+    /**
+     * Adds a new comment to the work item.
+     *
+     * @param comment
+     *          The comment to add; mandatory.
+     *
+     * @throws NullPointerException
+     *          If any of the mandatory parameters are {@code null}.
+     */
+    public void addComment(WorkItemComment comment) {
+        Preconditions.checkNotNull(comment);
+        comment.setParentId(id);
+        this.comments.add(comment);
+    }
+
+    public List<WorkItemComment> getComments() {
+        return Collections.unmodifiableList(this.comments);
+    }
+
+    public List<WorkItemComment> getCommentsInReverseOrder() {
+        List<WorkItemComment> newList = new ArrayList<WorkItemComment>(comments);
+        Collections.reverse(newList);
+        return Collections.unmodifiableList(newList);
+    }
+
+    /**
+     * Replaces the work items current list of comments with the specified list.
+     * <p>
+     * Not intended for general use.
+     * </p>
+     *
+     * @param newComments
+     *          the new comments.
+     */
+    public void resetCommentsAndReplaceWith(List<WorkItemComment> newComments) {
+        this.comments.clear();
+        if (newComments != null) {
+            this.comments.addAll(newComments);
+        }
     }
 
     @Override
@@ -287,20 +334,20 @@ public class WorkItem {
         if (name == null) {
             return null;
         }
-        return name.substring(0, Math.min(name.length(), 40));        
+        return name.substring(0, Math.min(name.length(), 40));
     }
 
 	public void setColour(String colour) {
 		if(colour != null && colour.length() > 0){
 			this.colour = new HtmlColour(colour);
 		}
-		
+
 	}
 
 	public HtmlColour getColour() {
 		return colour;
 	}
-	
+
     public int getAverageCaseEstimate() {
         return averageCaseEstimate;
     }

@@ -30,7 +30,7 @@ public class DefaultKanbanProject implements KanbanProject {
 	 */
     public DefaultKanbanProject(WorkItemTypeCollection workItemTypes, KanbanBoardConfiguration phaseSequences,
                                 WorkItemTree tree, KanbanPersistence persistence, String name) {
-        this.workItemTypes = workItemTypes;        
+        this.workItemTypes = workItemTypes;
         this.columnsByBoard = phaseSequences;
         this.tree = tree;
         this.persistence = persistence;
@@ -46,7 +46,7 @@ public class DefaultKanbanProject implements KanbanProject {
     public void advance(int id, LocalDate date) {
         tree.getWorkItem(id).advance(date);
     }
-    
+
     /**
      * Testing to see if this works
      */
@@ -55,9 +55,9 @@ public class DefaultKanbanProject implements KanbanProject {
     	tree.getWorkItem(id).stop();
     }
 
-    
+
     /**
-     * Adds a new WorkItem to the project. After being added to the project, it is advanced to 
+     * Adds a new WorkItem to the project. After being added to the project, it is advanced to
      * the first phase on the Kanban board and the date is logged.
 	 * @param parentId - the id of the parent WorkItem
 	 * @param type - the type of the WorkItem
@@ -120,6 +120,15 @@ public class DefaultKanbanProject implements KanbanProject {
         return this.tree;
     }
 
+    /**
+     * Returns the {@link WorkItem} identified by the {@code id} from this projects WorkItems.
+     * @param id - the id of the {@link WorkItem} to return
+     * @return the {@link WorkItem} identified by the id.
+     */
+    public WorkItem getWorkItemById(int id) {
+        return getWorkItemTree().getWorkItem(id);
+    }
+
 	/**
 	 * Removes a WorkItem from the project tree.
 	 * @param id - the id of the WorkItem to be deleted
@@ -175,7 +184,7 @@ public class DefaultKanbanProject implements KanbanProject {
         KanbanBacklog backlog = kanbanBoardBuilder.buildKanbanBacklog(workStream);
         return backlog;
     }
-	
+
 	/**
 	 * Returns the type of the topmost level (root) WorkItem within the project.
 	 * @return the type of the root WorkItem
@@ -192,7 +201,7 @@ public class DefaultKanbanProject implements KanbanProject {
     public WorkItemTypeCollection getWorkItemTypes() {
         return workItemTypes;
     }
-    
+
 
     /**
      * Reorders a single WorkItem in the tree and rebuilds the tree.
@@ -205,10 +214,10 @@ public class DefaultKanbanProject implements KanbanProject {
         for(Integer i: newIdList) {
             list.add(tree.getWorkItem(i));
         }
-        
+
         tree.reorder(tree.getWorkItem(id), list);
     }
-    
+
     @Override
     public String getJournalText() {
     	String catchString = "";
@@ -219,7 +228,7 @@ public class DefaultKanbanProject implements KanbanProject {
     	 }
     	return catchString;
     }
-    
+
     @Override
     public void writeJournalText(String journalText) {
     	try {
@@ -246,6 +255,6 @@ public class DefaultKanbanProject implements KanbanProject {
 
         return workStreams;
     }
-    
-    
+
+
 }

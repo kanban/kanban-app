@@ -14,7 +14,7 @@ fieldset {
 	padding-bottom: 1.5em;
 	border: 1px solid #BFBAB0;
 	background-color: #F2EFE9;
-	font-family: Verdana;
+	font-family: verdana, Sans-serif;
 	font-size: 12px;
 }
 
@@ -50,4 +50,48 @@ fieldset.submit {
 
 .wrapper div{
   float:left;
+}
+
+#commentSectionContainer {
+	font-family: verdana, Sans-serif;
+	font-size: 11px;
+}
+
+.column {
+    float: left;
+    margin-right: 20px;
+}
+
+#commentsText {
+    height: 18px;
+    width: 95%;
+}
+
+.focus #commentsText {
+    height: 60px;
+}
+
+.focus .add-controls {
+    display: block;
+}
+
+.commentSection {
+    border: solid 1px #BFBAB0; 
+    border-radius: 4px; 
+    background-color: #ddd; 
+    padding: 5px 10px; 
+    margin-bottom: 5px;
+}
+
+.commentSectionDate {
+	float: right;
+}
+
+.commentText {
+    display: block; 
+    margin-top: 5px; 
+    white-space: pre-wrap; 
+    background-color: #fff; 
+    padding: 5px 5px; 
+    border-radius: 4px"
 }

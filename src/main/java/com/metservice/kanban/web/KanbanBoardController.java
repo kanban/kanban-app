@@ -4,6 +4,7 @@ import static com.metservice.kanban.model.WorkItem.ROOT_WORK_ITEM_ID;
 import static com.metservice.kanban.utils.DateUtils.currentLocalDate;
 import static com.metservice.kanban.utils.DateUtils.parseConventionalNewZealandDate;
 import static java.lang.Integer.parseInt;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
@@ -14,12 +15,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +36,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.charts.burnup.BurnUpChartGenerator;
 import com.metservice.kanban.charts.burnup.DefaultBurnUpChartGenerator;
@@ -40,9 +49,11 @@ import com.metservice.kanban.model.BoardIdentifier;
 import com.metservice.kanban.model.KanbanBoard;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
+import com.metservice.kanban.model.WorkItemComment;
 import com.metservice.kanban.model.WorkItemTree;
 import com.metservice.kanban.model.WorkItemType;
 import com.metservice.kanban.utils.DateUtils;
+import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 
 //TODO This class needs unit tests.
 
@@ -56,8 +67,12 @@ public class KanbanBoardController {
 
     @Autowired
     private KanbanService kanbanService;
+    private Gson gson;
 
     public KanbanBoardController() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new JsonLocalDateTimeConvertor());
+        this.gson = gsonBuilder.create();
     }
 
     @ModelAttribute("project")
@@ -199,7 +214,7 @@ public class KanbanBoardController {
 
         // Search for parent id
         WorkItem parent = project.getWorkItemTree().getWorkItem(id);
-        
+
         WorkItemType type = project.getWorkItemTypes().getRoot().getValue();
         String parentName = "";
         int parentId = ROOT_WORK_ITEM_ID;
@@ -218,14 +233,14 @@ public class KanbanBoardController {
         model.put("parentId", parentId);
         model.put("type", type);
         model.put("topLevel", true);
-        
+
         return new ModelAndView("/add.jsp", model);
     }
 
     /**
      * Responds to edit-item request, passes the item in its current state to
      * the edit form
-     * 
+     *
      * @param project
      * @param projectName
      * @param boardType
@@ -314,7 +329,7 @@ public class KanbanBoardController {
                                                 @RequestParam("printSelection") String[] ids) throws IOException {
 
         List<WorkItem> items = new ArrayList<WorkItem>();
-        
+
         for (String id : ids) {
             items.add(project.getWorkItemTree().getWorkItem(parseInteger(id, 0)));
         }
@@ -351,7 +366,7 @@ public class KanbanBoardController {
 
     /**
      * Responds to a form submission which passes an edited item
-     * 
+     *
      * @param project
      * @param boardType
      * @return
@@ -429,7 +444,7 @@ public class KanbanBoardController {
 
     /**
      * Responds to a request to delete an item
-     * 
+     *
      * @param project
      * @param id
      *            - the id of the item you want to delete
@@ -532,7 +547,7 @@ public class KanbanBoardController {
      * form,
      * or to the edit project page, depending on createNewProject's boolean
      * value.
-     * 
+     *
      * @param project
      * @param projectName
      * @param boardType
@@ -593,7 +608,7 @@ public class KanbanBoardController {
 
         //Keep track of how many columns there are
         int totalColumns = 0;
-        //This is set once, 
+        //This is set once,
         int insertAfterComma = -1;
 
         String wipLine = "workItemTypes." + columnType + ".wipLimit=";
@@ -659,7 +674,7 @@ public class KanbanBoardController {
 
     /**
      * Opens a project and goes to boardType (e.g. wall, backlog etc)
-     * 
+     *
      * @param projectName
      * @param boardType
      * @param newProjectName
@@ -678,7 +693,7 @@ public class KanbanBoardController {
 
     /**
      * Models are a hashmap used to pass attributes to a view.
-     * 
+     *
      * @param projectName
      * @param boardType
      * @return the model hashmap
@@ -863,7 +878,7 @@ public class KanbanBoardController {
                 for (int i = 0; i <= phases.length - 1; i++) {
 
                     if (phases[i].equals(name)) {
-                        //DO NOTHING 
+                        //DO NOTHING
                     }
                     else {
                         if (i == 0) {
@@ -930,4 +945,22 @@ public class KanbanBoardController {
         }
         return defaultValue;
     }
+
+    @RequestMapping(value = "comment", method = RequestMethod.POST)
+    public ResponseEntity<String> addComment(@ModelAttribute("project") KanbanProject project,
+            @RequestParam int id,
+            @RequestParam String userName,
+            @RequestParam String comment) throws IOException {
+
+        WorkItemComment workItemComment = new WorkItemComment(userName, comment);
+        WorkItem workItem = project.getWorkItemById(id);
+        workItem.addComment(workItemComment);
+
+        project.save();
+
+        String body = gson.toJson(workItemComment);
+        ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+        return response;
+    }
+
 }

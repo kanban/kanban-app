@@ -16,7 +16,7 @@ public interface KanbanProject {
     void save() throws IOException;
 
     void advance(int id, LocalDate date);
-    
+
     void stop(int id);
 
     void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,
@@ -28,8 +28,10 @@ public interface KanbanProject {
 
     WorkItemTree getWorkItemTree();
 
+    WorkItem getWorkItemById(int id);
+
     KanbanBoardColumnList getColumns(BoardIdentifier boardType);
-    
+
     void reparentWorkItem(int id, int newParentId);
 
     KanbanBacklog getBacklog(String workStream);
@@ -37,9 +39,9 @@ public interface KanbanProject {
     KanbanBoard getBoard(BoardIdentifier boardType, String workStream);
 
     WorkItemTypeCollection getWorkItemTypes();
-    
+
     String getJournalText();
-    
+
     void writeJournalText(String journalText);
 
     Set<String> getWorkStreams();
