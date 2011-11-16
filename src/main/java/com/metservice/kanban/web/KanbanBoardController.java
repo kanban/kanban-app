@@ -4,7 +4,6 @@ import static com.metservice.kanban.model.WorkItem.ROOT_WORK_ITEM_ID;
 import static com.metservice.kanban.utils.DateUtils.currentLocalDate;
 import static com.metservice.kanban.utils.DateUtils.parseConventionalNewZealandDate;
 import static java.lang.Integer.parseInt;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
@@ -15,9 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
@@ -36,7 +33,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.metservice.kanban.KanbanService;
@@ -294,7 +290,8 @@ public class KanbanBoardController {
                                                    @RequestParam(value = "parentId", required = false) Integer parentId,
                                                    @RequestParam("type") String type,
                                                    @RequestParam("name") String name,
-                                                   @RequestParam("size") String sizeStr,
+                                                   @RequestParam("averageCaseEstimate") String averageCaseEstimateStr,
+                                                   @RequestParam("worstCaseEstimate") String worstCaseEstimateStr,
                                                    @RequestParam("importance") String importanceStr,
                                                    @RequestParam("notes") String notes,
                                                    @RequestParam("color") String color,
@@ -302,19 +299,19 @@ public class KanbanBoardController {
                                                    @RequestParam(value = "workStreams", required = false) String workStreams,
                                                    HttpServletRequest request) throws IOException {
 
-
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
 
         if (parentId == null) {
             parentId = WorkItem.ROOT_WORK_ITEM_ID;
         }
 
-        int size = parseInteger(sizeStr, 0);
+        int averageCaseEstimate = parseInteger(averageCaseEstimateStr, 0);
         int importance = parseInteger(importanceStr, 0);
         boolean excluded = parseBoolean(excludedStr);
+        int worstCaseEstimate = parseInteger(worstCaseEstimateStr, 0);
 
         // Add it and save it
-        project.addWorkItem(parentId, typeAsWorkItemType, name, size,
+        project.addWorkItem(parentId, typeAsWorkItemType, name, averageCaseEstimate, worstCaseEstimate,
             importance, notes, color, excluded, workStreams, currentLocalDate());
         project.save();
 
@@ -379,7 +376,8 @@ public class KanbanBoardController {
                                                     @RequestParam("id") int id,
                                                     @RequestParam("parentId") Integer parentId,
                                                     @RequestParam("name") String name,
-                                                    @RequestParam("size") String sizeStr,
+                                                    @RequestParam("averageCaseEstimate") String averageCaseEstimateStr,
+                                                    @RequestParam("worstCaseEstimate") String worstCaseEstimateStr,
                                                     @RequestParam("importance") String importanceStr,
                                                     @RequestParam("notes") String notes,
                                                     @RequestParam("color") String color,
@@ -393,13 +391,15 @@ public class KanbanBoardController {
         @SuppressWarnings("unchecked")
         Map<String, String[]> parameters = request.getParameterMap();
 
-        int size = parseInteger(sizeStr, 0);
+        int averageCaseEstimate = parseInteger(averageCaseEstimateStr, 0);
+        int worstCaseEstimate = parseInteger(worstCaseEstimateStr, 0);
         int importance = parseInteger(importanceStr, 0);
         boolean excluded = parseBoolean(excludedStr);
 
         // Save all the updates
         workItem.setName(name);
-        workItem.setSize(size);
+        workItem.setAverageCaseEstimate(averageCaseEstimate);
+        workItem.setWorstCaseEstimate(worstCaseEstimate);
         workItem.setImportance(importance);
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);

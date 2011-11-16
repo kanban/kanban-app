@@ -36,12 +36,12 @@ public class ProjectedDatasetPopulatorTest {
     @Test
     public void projectsData() {
         WorkItem workItem1 = new WorkItem(1, WORK_ITEM_TYPE);
-        workItem1.setSize(1);
+        workItem1.setAverageCaseEstimate(1);
         workItem1.advance(MONDAY);
         workItem1.advance(TUESDAY);
 
         WorkItem workItem2 = new WorkItem(2, WORK_ITEM_TYPE);
-        workItem2.setSize(1);
+        workItem2.setAverageCaseEstimate(1);
         workItem2.advance(MONDAY);
 
         BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(workItem1, workItem2), TUESDAY);
@@ -58,12 +58,12 @@ public class ProjectedDatasetPopulatorTest {
     @Test
     public void projectsDataOfNonUnitSize() {
         WorkItem workItem1 = new WorkItem(1, WORK_ITEM_TYPE);
-        workItem1.setSize(2);
+        workItem1.setAverageCaseEstimate(2);
         workItem1.advance(MONDAY);
         workItem1.advance(TUESDAY);
 
         WorkItem workItem2 = new WorkItem(2, WORK_ITEM_TYPE);
-        workItem2.setSize(2);
+        workItem2.setAverageCaseEstimate(2);
         workItem2.advance(MONDAY);
         
         BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(workItem1, workItem2), TUESDAY);
@@ -80,12 +80,12 @@ public class ProjectedDatasetPopulatorTest {
     @Test
     public void projectsDataMoreThanOneDay() {
         WorkItem workItem1 = new WorkItem(1, WORK_ITEM_TYPE);
-        workItem1.setSize(1);
+        workItem1.setAverageCaseEstimate(1);
         workItem1.advance(MONDAY);
         workItem1.advance(TUESDAY);
 
         WorkItem workItem2 = new WorkItem(2, WORK_ITEM_TYPE);
-        workItem2.setSize(2);
+        workItem2.setAverageCaseEstimate(2);
         workItem2.advance(MONDAY);
 
         BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(workItem1, workItem2), TUESDAY);
@@ -105,12 +105,12 @@ public class ProjectedDatasetPopulatorTest {
     @Test
     public void skipsWeekendsInProjection() {
         WorkItem workItem1 = new WorkItem(1, WORK_ITEM_TYPE);
-        workItem1.setSize(1);
+        workItem1.setAverageCaseEstimate(1);
         workItem1.advance(THURSDAY);
         workItem1.advance(FRIDAY);
 
         WorkItem workItem2 = new WorkItem(2, WORK_ITEM_TYPE);
-        workItem2.setSize(1);
+        workItem2.setAverageCaseEstimate(1);
         workItem2.advance(THURSDAY);
         
         BurnUpDataModel model = new BurnUpDataModel(WORK_ITEM_TYPE, asList(workItem1, workItem2), FRIDAY);

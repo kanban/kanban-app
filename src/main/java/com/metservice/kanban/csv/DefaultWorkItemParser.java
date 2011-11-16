@@ -1,6 +1,6 @@
 package com.metservice.kanban.csv;
 
-import static com.metservice.kanban.csv.CsvConstants.BEST_CASE_ESIMATE;
+import static com.metservice.kanban.csv.CsvConstants.AVERAGE_CASE_ESIMATE;
 import static com.metservice.kanban.csv.CsvConstants.COLOR_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.EXCLUDED_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.ID_COLUMN_NAME;
@@ -32,20 +32,26 @@ public class DefaultWorkItemParser implements WorkItemParser {
         int id = dataRow.getInt(ID_COLUMN_NAME);
         int parentId = dataRow.getInt(PARENT_ID_COLUMN_NAME);
         String name = dataRow.getString(NAME_COLUMN_NAME);
-        int size = dataRow.getInt(SIZE_COLUMN_NAME);
+
+        int averageCaseEstimate = dataRow.getInt(AVERAGE_CASE_ESIMATE);
+        int oldSize = dataRow.getInt(SIZE_COLUMN_NAME);
+        // for backwards compatibility
+        if (averageCaseEstimate == CsvRow.INTEGER_DEFAULT && oldSize != CsvRow.INTEGER_DEFAULT) {
+            averageCaseEstimate = oldSize;
+        }
+
         int importance = dataRow.getInt(IMPORTANCE_COLUMN_NAME);
         String notes = dataRow.getString(NOTES_COLUMN_NAME);
         boolean excluded = dataRow.getBoolean(EXCLUDED_COLUMN_NAME);
         boolean stopped = dataRow.getBoolean(STOPPED_COLUMN_NAME);
         String color = dataRow.getString(COLOR_COLUMN_NAME);
-        int bestCase = dataRow.getInt(BEST_CASE_ESIMATE);
-        int worstCase = dataRow.getInt(WORST_CASE_ESIMATE);
+        int worstCaseEstimate = dataRow.getInt(WORST_CASE_ESIMATE);
         boolean mustHave = dataRow.getBoolean(MUST_HAVE);
         String workStreams = dataRow.getString(WORK_STREAMS);
 
         WorkItem workItem = new WorkItem(id, parentId, type);
         workItem.setName(name);
-        workItem.setSize(size);
+        workItem.setAverageCaseEstimate(averageCaseEstimate);
         workItem.setImportance(importance);
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
@@ -53,8 +59,7 @@ public class DefaultWorkItemParser implements WorkItemParser {
         
         workItem.setColour(color);
         workItem.setStopped(stopped);
-        workItem.setAverageCaseEstimate(bestCase);
-        workItem.setWorstCaseEstimate(worstCase);
+        workItem.setWorstCaseEstimate(worstCaseEstimate);
         workItem.setMustHave(mustHave);
         workItem.setWorkStreamsAsString(workStreams);
 

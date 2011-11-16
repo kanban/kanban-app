@@ -62,7 +62,7 @@ public class BurnUpDatasetGeneratorTest {
     
     private final WorkItem newBacklogItemWithSize(int size) {
         WorkItem workItem = new WorkItem(1, WORK_ITEM_TYPE);
-        workItem.setSize(size);
+        workItem.setAverageCaseEstimate(size);
         workItem.advance(DATE);
         return workItem;
     }

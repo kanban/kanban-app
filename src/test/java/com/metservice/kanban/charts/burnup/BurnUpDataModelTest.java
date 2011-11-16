@@ -28,16 +28,16 @@ public class BurnUpDataModelTest {
         WorkItemType type = new WorkItemType("backlog", "in progress 1", "in progress 2", "completed");
         
         size1 = new WorkItem(1, type);        
-        size1.setSize(1);
+        size1.setAverageCaseEstimate(1);
 
         size2 = new WorkItem(2, type);
-        size2.setSize(2);
+        size2.setAverageCaseEstimate(2);
 
         size4 = new WorkItem(3, type);
-        size4.setSize(4);
+        size4.setAverageCaseEstimate(4);
         
         size8 = new WorkItem(4, type);
-        size8.setSize(8);
+        size8.setAverageCaseEstimate(8);
         
         model = new BurnUpDataModel(type, asList(size1, size2, size4, size8), PRESENT);        
     }

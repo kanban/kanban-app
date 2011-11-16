@@ -97,13 +97,13 @@
     if (event.which == 13){
       var row = $(this).parents("tr#new_story");
       var name = row.find("input[name=name]").val();
-      var size = row.find("input[name=size]").val();
+      var averageCaseEstimate = row.find("input[name=averageCaseEstimate]").val();
       var importance = row.find("input[name=importance]").val();
       var type = row.find("input[name=type]").val();
       $.ajax({
          type: "GET",
          url: window.location.pathname + "/add-item-action",
-         data: "type="+type+"&name="+name+"&size="+size+"&importance="+importance + "&color=FFFFFF&notes=&excluded=&workStreams=${workStreams[project.name]}",
+         data: "type="+type+"&name="+name+"&averageCaseEstimate="+averageCaseEstimate+"&importance="+importance + "&color=FFFFFF&notes=&excluded=&workStreams=${workStreams[project.name]}",
          success: function(){
              window.location.reload();
          },
@@ -233,8 +233,8 @@ td.small{
 					  </div>
 					</td>
 					<td class="small formify" data-role="size" >
-						<c:if test="${cell.workItem.size > 0 }">
-	                       ${cell.workItem.size}
+						<c:if test="${cell.workItem.averageCaseEstimate > 0 }">
+	                       ${cell.workItem.averageCaseEstimate}
 						</c:if>
 					</td>
 					<td class="small formify" data-role="importance">

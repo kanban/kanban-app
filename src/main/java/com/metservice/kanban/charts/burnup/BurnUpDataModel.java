@@ -95,7 +95,7 @@ public class BurnUpDataModel {
         int sum = 0;
         for (WorkItem workItem : workItems) {
             if (phaseMatcher.matches(workItem.getPhaseOnDate(onDate))) {
-                sum += workItem.getSize();
+                sum += workItem.getAverageCaseEstimate();
             }
         }
         return sum;

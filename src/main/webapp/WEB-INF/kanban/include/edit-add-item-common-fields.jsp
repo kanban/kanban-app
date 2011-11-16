@@ -4,8 +4,12 @@
 <textarea id="name" name="name" rows="2" cols="40">${workItem.name}</textarea>
 <br />
 
-<label class="labelClass" for="size">Size:</label>
-<input id="size" size="10" type="text" name="size" value="${workItem.size}" />
+<label class="labelClass" for="averageCaseEstimate">Average Case:</label>
+<input id="averageCaseEstimate" size="10" type="text" name="averageCaseEstimate" value="${workItem.averageCaseEstimate}" /> (Size)
+<br />
+
+<label class="labelClass" for="worstCaseEstimate">Worst Case:</label>
+<input id="worstCaseEstimate" size="10" type="text" name="worstCaseEstimate" value="${workItem.worstCaseEstimate}" />
 <br />
 
 <label class="labelClass" for="importance">Importance:</label>

@@ -1,6 +1,6 @@
 package com.metservice.kanban.csv;
 
-import static com.metservice.kanban.csv.CsvConstants.BEST_CASE_ESIMATE;
+import static com.metservice.kanban.csv.CsvConstants.AVERAGE_CASE_ESIMATE;
 import static com.metservice.kanban.csv.CsvConstants.COLOR_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.EXCLUDED_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.ID_COLUMN_NAME;
@@ -9,7 +9,6 @@ import static com.metservice.kanban.csv.CsvConstants.MUST_HAVE;
 import static com.metservice.kanban.csv.CsvConstants.NAME_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.NOTES_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.PARENT_ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.SIZE_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.STOPPED_COLUMN_NAME;
 import static com.metservice.kanban.csv.CsvConstants.WORK_STREAMS;
 import static com.metservice.kanban.csv.CsvConstants.WORST_CASE_ESIMATE;
@@ -23,7 +22,7 @@ import com.metservice.kanban.model.WorkItemType;
 
 public class KanbanCsvWriter {
 
-    private static final int NUMBER_OF_METADATA_COLUMNS = 13;
+    private static final int NUMBER_OF_METADATA_COLUMNS = 12;
 
     private final CSVWriter csvWriter;
     private final List<String> phases;
@@ -45,16 +44,15 @@ public class KanbanCsvWriter {
         data[0] = ID_COLUMN_NAME;
         data[1] = PARENT_ID_COLUMN_NAME;
         data[2] = NAME_COLUMN_NAME;
-        data[3] = SIZE_COLUMN_NAME;
+        data[3] = AVERAGE_CASE_ESIMATE;
         data[4] = IMPORTANCE_COLUMN_NAME;
         data[5] = NOTES_COLUMN_NAME;
         data[6] = EXCLUDED_COLUMN_NAME;
         data[7] = STOPPED_COLUMN_NAME;
         data[8] = COLOR_COLUMN_NAME;
-        data[9] = BEST_CASE_ESIMATE;
-        data[10] = WORST_CASE_ESIMATE;
-        data[11] = MUST_HAVE;
-        data[12] = WORK_STREAMS;
+        data[9] = WORST_CASE_ESIMATE;
+        data[10] = MUST_HAVE;
+        data[11] = WORK_STREAMS;
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {
@@ -70,16 +68,15 @@ public class KanbanCsvWriter {
         data[0] = Integer.toString(workItem.getId());
         data[1] = Integer.toString(workItem.getParentId());
         data[2] = workItem.getName();
-        data[3] = Integer.toString(workItem.getSize());
+        data[3] = Integer.toString(workItem.getAverageCaseEstimate());
         data[4] = Integer.toString(workItem.getImportance());
         data[5] = workItem.getNotes();
         data[6] = Boolean.toString(workItem.isExcluded());
         data[7] = Boolean.toString(workItem.isStopped());
         data[8] = workItem.getColour().toString().substring(1);
-        data[9] = Integer.toString(workItem.getAverageCaseEstimate());
-        data[10] = Integer.toString(workItem.getWorstCaseEstimate());
-        data[11] = Boolean.toString(workItem.isMustHave());
-        data[12] = workItem.getWorkStreamsAsString();
+        data[9] = Integer.toString(workItem.getWorstCaseEstimate());
+        data[10] = Boolean.toString(workItem.isMustHave());
+        data[11] = workItem.getWorkStreamsAsString();
 
         int arrayIndex = NUMBER_OF_METADATA_COLUMNS;
         for (String phase : phases) {

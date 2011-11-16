@@ -64,15 +64,15 @@ public class HistoricDatasetPopulatorTest {
         LocalDate today = parseIsoDate("2011-06-02");
 
         WorkItem backlog1 = new WorkItem(1, type);
-        backlog1.setSize(1);
+        backlog1.setAverageCaseEstimate(1);
         backlog1.advance(yesterday);
 
         WorkItem backlog2 = new WorkItem(2, type);
-        backlog2.setSize(2);
+        backlog2.setAverageCaseEstimate(2);
         backlog2.advance(yesterday);
 
         WorkItem inProgress4 = new WorkItem(3, type);
-        inProgress4.setSize(4);
+        inProgress4.setAverageCaseEstimate(4);
         inProgress4.advance(yesterday);
         inProgress4.advance(today);
 

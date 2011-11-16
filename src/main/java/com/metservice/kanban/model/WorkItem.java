@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
-
 import com.google.common.base.Preconditions;
 import com.metservice.kanban.utils.WorkingDayUtils;
 
@@ -24,7 +23,8 @@ public class WorkItem {
     private final int parentId;
     private final WorkItemType type;
     private String name;
-    private int size;
+    private int averageCaseEstimate;
+    private int worstCaseEstimate;
     private int importance;
     private String notes;
     private boolean excluded;
@@ -36,8 +36,6 @@ public class WorkItem {
     private String currentPhase;
 
     private boolean mustHave;
-    private int averageCaseEstimate;
-    private int worstCaseEstimate;
 
     private List<String> workStreams;
 
@@ -76,13 +74,12 @@ public class WorkItem {
         this.type = type;
         this.currentPhase = null;
         this.name = "";
-        this.size = 0;
+        this.averageCaseEstimate = 0;
         this.importance = 0;
         this.notes = "";
         this.excluded = false;
         this.stopped = false;
         this.colour = new HtmlColour("FFFFFF");
-        this.averageCaseEstimate = 0;
         this.worstCaseEstimate = 0;
         this.mustHave = false;
     }
@@ -111,12 +108,12 @@ public class WorkItem {
         this.name = name;
     }
 
-    public int getSize() {
-        return size;
+    public int getAverageCaseEstimate() {
+        return averageCaseEstimate;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setAverageCaseEstimate(int averageCaseEstimate) {
+        this.averageCaseEstimate = averageCaseEstimate;
     }
 
     public int getImportance() {
@@ -261,7 +258,7 @@ public class WorkItem {
     public WorkItem withNewParent(int newParentId) {
         WorkItem workItem = new WorkItem(id, newParentId, type);
         workItem.name = name;
-        workItem.size = size;
+        workItem.averageCaseEstimate = averageCaseEstimate;
         workItem.importance = importance;
         workItem.notes = notes;
         workItem.datesByPhase.putAll(datesByPhase);
@@ -348,12 +345,6 @@ public class WorkItem {
 		return colour;
 	}
 
-    public int getAverageCaseEstimate() {
-        return averageCaseEstimate;
-    }
-    public void setAverageCaseEstimate(int averageCaseEstimate) {
-        this.averageCaseEstimate = averageCaseEstimate;
-    }
     public int getWorstCaseEstimate() {
         return worstCaseEstimate;
     }

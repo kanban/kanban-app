@@ -211,8 +211,7 @@ public class Project {
             List<WorkItem> workItemList = kanbanProject.getWorkItemTree().getWorkItemList();
 
             for (WorkItem wi : workItemList) {
-                if (wi.getType().getName().equalsIgnoreCase("feature")) {
-
+                if (wi.isTopLevel()) {
                     if (wi.isCompleted()) {
                         completedFeatures.add(wi);
                     }
@@ -222,7 +221,6 @@ public class Project {
                 }
             }
         }
-
     }
 
     public KanbanProject getKanbanProject() {

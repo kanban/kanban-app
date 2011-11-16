@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 
 public class CsvRow {
 
-    private static final int INTEGER_DEFAULT = 0;
+    public static final int INTEGER_DEFAULT = 0;
     private static final boolean BOOLEAN_DEFAULT = false;
     private static final String STRING_DEFAULT = "";
     private final CsvColumnNames columnNames;

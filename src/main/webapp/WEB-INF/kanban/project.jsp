@@ -531,10 +531,10 @@ div[data-role="card"]{
                             </div>
                             
                             <%
-                                if (item.getSize() > 0) {
+                                if (item.getAverageCaseEstimate() > 0) {
                             %>
                             <div class="size">
-                                <%=item.getSize()%>
+                                <%=item.getAverageCaseEstimate()%>
                             </div>
                             <%
                                 } else {

@@ -88,11 +88,11 @@ public class DefaultBurnUpChartGeneratorTest {
         WorkItem workItem1 = new WorkItem(1, type);
         workItem1.advance(TODAY);
         workItem1.advance(TODAY.plusDays(1));
-        workItem1.setSize(1);
+        workItem1.setAverageCaseEstimate(1);
         
         WorkItem workItem2 = new WorkItem(1, type);
         workItem2.advance(TODAY);
-        workItem1.setSize(1);
+        workItem1.setAverageCaseEstimate(1);
 
         CategoryDataset dataset = captureGeneratedJFreeChart(type, asList(workItem1, workItem2),
             TODAY.plusDays(1)).getCategoryPlot().getDataset();

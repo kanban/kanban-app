@@ -152,7 +152,7 @@ public class WorkItemTest {
         assertThat(reparentedWorkItem.getParentId(), is(newParentId));
         assertThat(reparentedWorkItem.getType(), is(workItem.getType()));
         assertThat(reparentedWorkItem.getName(), is(workItem.getName()));
-        assertThat(reparentedWorkItem.getSize(), is(workItem.getSize()));
+        assertThat(reparentedWorkItem.getAverageCaseEstimate(), is(workItem.getAverageCaseEstimate()));
         assertThat(reparentedWorkItem.getImportance(), is(workItem.getImportance()));
         assertThat(reparentedWorkItem.getNotes(), is(workItem.getNotes()));
         assertThat(reparentedWorkItem.getDate("phase"), is(workItem.getDate("phase")));

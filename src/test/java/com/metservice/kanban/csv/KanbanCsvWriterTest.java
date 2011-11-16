@@ -23,7 +23,7 @@ public class KanbanCsvWriterTest {
 
         WorkItem workItem = new WorkItem(111, 11, type);
         workItem.setName("workItem 1");
-        workItem.setSize(6);
+        workItem.setAverageCaseEstimate(6);
         workItem.setImportance(3);
         workItem.setNotes("notes");
         workItem.setDateAsString("phase 1", "2011-06-02");
@@ -43,7 +43,7 @@ public class KanbanCsvWriterTest {
         assertThat(retrievedWorkItem.getParentId(), is(11));
         assertThat(retrievedWorkItem.getType(), is(type));
         assertThat(retrievedWorkItem.getName(), is("workItem 1"));
-        assertThat(retrievedWorkItem.getSize(), is(6));
+        assertThat(retrievedWorkItem.getAverageCaseEstimate(), is(6));
         assertThat(retrievedWorkItem.getImportance(), is(3));
         assertThat(retrievedWorkItem.getNotes(), is("notes"));
         assertThat(retrievedWorkItem.isExcluded(), is(true));

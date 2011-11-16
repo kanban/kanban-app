@@ -117,10 +117,11 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
-            "5", "8", "some notes", "FFFFFF", "on", "a, b,  c ", request);
+            "5", "7", "8", "some notes", "FFFFFF", "on", "a, b,  c ", request);
 
         assertThat(feature.getName(), is("new feature name"));
-        assertThat(feature.getSize(), is(5));
+        assertThat(feature.getAverageCaseEstimate(), is(5));
+        assertThat(feature.getWorstCaseEstimate(), is(7));
         assertThat(feature.getImportance(), is(8));
         assertThat(feature.getNotes(), is("some notes"));
         assertThat(feature.isExcluded(), is(true));
@@ -145,9 +146,9 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
-            "", "", "some notes", "FFFFFF", "on", "", request);
+            "", "", "", "some notes", "FFFFFF", "on", "", request);
 
-        assertThat(feature.getSize(), is(0));
+        assertThat(feature.getAverageCaseEstimate(), is(0));
         assertThat(feature.getImportance(), is(0));
         assertThat(feature.getWorkStreams().size(), is(0));
     }
@@ -174,7 +175,7 @@ public class KanbanBoardControllerTest {
 
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
-        kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(), "new name", "4", "1",
+        kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(), "new name", "4", "6", "1",
             "new notes", "FFFFFF", "false", "", request);
 
         WorkItem reparentedStory = tree.getWorkItem(story.getId());
@@ -200,7 +201,7 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", middleFeature.getId(), middleFeature.getParentId(),
-            "new name", "3", "11", "new notes", "FFFFFF", null, "", request);
+            "new name", "3", "8", "11", "new notes", "FFFFFF", null, "", request);
 
         List<WorkItem> workItems = tree.getChildren(middleFeature.getParentId());
 

@@ -168,7 +168,7 @@ td.padded {
 					<th></th>
 					<th>Id</th>
 					<th>Name</th>
-					<th>Size</th>
+					<th>Average Case Est.</th>
 					<th> 
                         <%
                             for (int i = 0; i < phases.size(); i++) {
@@ -209,7 +209,7 @@ td.padded {
                         <%= item.getName() %>
                     </td>
                     <td class="size, padded">
-                        <%=item.getSize()%>
+                        <%=item.getAverageCaseEstimate()%>
                     </td>
                     <td class="age, padded">
                         <div id="work-item-<%=item.getId()%>" class="<%=item.getType().getName()%>">

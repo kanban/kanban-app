@@ -105,7 +105,7 @@ public class KanbanBoardControllerLegacyTest {
         request.addParameter("importance", "10");
         request.addParameter("notes", "");
         request.addParameter("color", "000FFF");
-        RedirectView view = kanbanController.addItemAction(kanban, "wall", 0, "feature", "test", "5",
+        RedirectView view = kanbanController.addItemAction(kanban, "wall", 0, "feature", "test", "5", "8",
             "10", "", "000FFF", null, "", request);
 
         assertThat(view.getUrl(), is("../wall"));

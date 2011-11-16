@@ -55,28 +55,30 @@ public class DefaultKanbanProject implements KanbanProject {
     	tree.getWorkItem(id).stop();
     }
 
-
     /**
      * Adds a new WorkItem to the project. After being added to the project, it is advanced to
      * the first phase on the Kanban board and the date is logged.
 	 * @param parentId - the id of the parent WorkItem
 	 * @param type - the type of the WorkItem
 	 * @param name - the name of the WorkItem
-	 * @param size - the size of the WorkItem
+	 * @param averageCaseEstimate - the size of the WorkItem
+	 * @param worstCaseEstimate - the worstCaseEstimate of the WorkItem
 	 * @param importance - the importance of the WorkItem
 	 * @param notes - relevant notes regarding the WorkItem
 	 * @param backlogDate - the date that the new WorkItem was added to the project and backlog
      */
     @Override
-    public void addWorkItem(int parentId, WorkItemType type, String name, int size, int importance, String notes,
-                            String color,
-                            boolean excluded, String workStreams, LocalDate backlogDate) {
+    public void addWorkItem(int parentId, WorkItemType type, String name, int averageCaseEstimate, int worstCaseEstimate,
+                            int importance, String notes, String color, boolean excluded, String workStreams,
+                            LocalDate backlogDate) {
+
         int newId = tree.getNewId();
 
         WorkItem workItem = new WorkItem(newId, parentId, type);
 
         workItem.setName(name);
-        workItem.setSize(size);
+        workItem.setAverageCaseEstimate(averageCaseEstimate);
+        workItem.setWorstCaseEstimate(worstCaseEstimate);
         workItem.setImportance(importance);
         workItem.setNotes(notes);
         workItem.setColour(color);
