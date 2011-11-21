@@ -6,6 +6,11 @@ $(document).ready(function() {
 	});
 });
 
+
+$(function() {
+	$('#workStreams2').tagit({triggerKeys:['enter','comma']});
+});
+
 function deleteThisWorkItem() {
 	var response = confirm("Permanently delete this work item?");
 	if (response == true) {
