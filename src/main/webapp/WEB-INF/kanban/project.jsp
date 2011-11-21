@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.joda.time.LocalDate"%>
 <%@page import="com.metservice.kanban.utils.WorkingDayUtils"%>
 <%@page import="com.metservice.kanban.model.WorkItem"%>
@@ -420,6 +421,7 @@ div[data-role="card"]{
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                             String notes = item.getNotes();
+                            notes = StringEscapeUtils.escapeHtml(notes);
                     %>
                   
                     
