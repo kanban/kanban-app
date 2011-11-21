@@ -19,3 +19,4 @@
 <link href="${pageContext.request.contextPath}/js/tagit/css/tagit-simple-blue.css" rel="stylesheet" type="text/css"/>
 <script src="${pageContext.request.contextPath}/js/tagit/js/autocomplete.js"></script>
 <script src="${pageContext.request.contextPath}/js/tagit/js/tagit.js"></script>
+

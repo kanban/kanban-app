@@ -18,10 +18,7 @@
 
 <c:if test="${workItem.topLevel || topLevel}">
     <label class="labelClass" for="workStreams">Work streams:</label>
-    <input size="40" type="text" id="workStreams" name="workStreams" value="${workItem.workStreamsAsString}" />
-    <br />
-    <label class="labelClass" for="workStreams2">Work streams2:</label>
-    <ul id="workStreams2"></ul>
+    <ul id="workStreams"></ul>
     <br />
 
 </c:if>

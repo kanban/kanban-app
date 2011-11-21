@@ -95,3 +95,7 @@ fieldset.submit {
     padding: 5px 5px; 
     border-radius: 4px"
 }
+
+ul.tagit {
+	width: 300px;
+}
