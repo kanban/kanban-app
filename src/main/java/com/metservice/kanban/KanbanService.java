@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import org.apache.commons.io.filefilter.NotFileFilter;
@@ -121,12 +120,7 @@ public class KanbanService {
 
             List<String> result = asList(home.list(NO_DOT_FILES));
 
-            Collections.sort(result, new Comparator<String>() {
-                @Override
-                public int compare(String o1, String o2) {
-                    return o1.compareToIgnoreCase(o2);
-                }
-            });
+            Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 
             return result;
         }

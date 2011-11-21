@@ -247,7 +247,7 @@ public class DefaultKanbanProject implements KanbanProject {
     @Override
     public Set<String> getWorkStreams() {
         // TODO: for large projects this can be inefficient - consider caching this set
-        Set<String> workStreams = new TreeSet<String>();
+        Set<String> workStreams = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
         for (WorkItem workItems : tree.getWorkItemList()) {
             for (String ws : workItems.getWorkStreams()) {
