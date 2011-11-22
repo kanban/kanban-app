@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -551,7 +550,14 @@ public class KanbanBoardController {
                                                     @RequestParam(value = "workStream", required = false) String workStream,
                                                     OutputStream outputStream) throws IOException {
 
-        WorkItemType type = project.getWorkItemTypes().getByName(level);
+        WorkItemType type;
+
+        try {
+            type = project.getWorkItemTypes().getByName(level);
+        } catch (IllegalArgumentException e) {
+            // TODO produce image with text from exception 
+            return;
+        }
 
         List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, workStream);
 
@@ -640,7 +646,7 @@ public class KanbanBoardController {
                                                        @RequestParam("content") String content) throws IOException {
 
         kanbanService.editProject(editProjectName, content);
-        return openProject(projectName, "wall", editProjectName);
+        return openProject(projectName, "wall", editProjectName, null, null);
     }
 
     @RequestMapping("edit-wiplimit-action")
@@ -721,7 +727,7 @@ public class KanbanBoardController {
                                                          @RequestParam("content") String content) throws IOException {
 
         kanbanService.createProject(newProjectName, content);
-        return openProject(projectName, "wall", newProjectName);
+        return openProject(projectName, "wall", newProjectName, null, null);
     }
 
     /**
@@ -736,11 +742,18 @@ public class KanbanBoardController {
     @RequestMapping("{board}/open-project")
     public synchronized RedirectView openProject(@PathVariable("projectName") String projectName,
                                                  @PathVariable("board") String boardType,
-                                                 @RequestParam("newProjectName") String newProjectName)
+                                                 @RequestParam("newProjectName") String newProjectName,
+                                                 @RequestParam(value = "chartName", required = false) String chartName,
+                                                 @RequestParam(value = "workItemTypeName", required = false) String workItemTypeName)
         throws IOException {
 
+        String params = "";
+
+        if (!StringUtils.isEmpty(chartName) && !StringUtils.isEmpty(workItemTypeName)) {
+            params = "?chartName=" + chartName + "&workItemTypeName=" + workItemTypeName;
+        }
         return new RedirectView(
-            "/projects/" + newProjectName + "/" + boardType, true);
+            "/projects/" + newProjectName + "/" + boardType + params, true);
     }
 
     /**
@@ -972,8 +985,7 @@ public class KanbanBoardController {
                                       @RequestParam("workStream") String selectedWorkStream,
                                       @RequestParam(value = "chartName", required = false) String chartName,
                                       @RequestParam(value = "workItemTypeName", required = false) String workItemTypeName,
-                                      @ModelAttribute("workStreams") Map<String, String> workStreams,
-                                      Model model) {
+                                      @ModelAttribute("workStreams") Map<String, String> workStreams) {
 
         workStreams.put(projectName, selectedWorkStream);
 

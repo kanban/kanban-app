@@ -59,6 +59,9 @@
         <div class="version">VERSION: ${service.version}</div>
         <div id="projectDropdown">
 			<form id="header" method="post" action="" style="display: inline;">
+                <input type="hidden" name="chartName" value="${chartName}" />
+                <input type="hidden" name="workItemTypeName" value="${workItemTypeName}" />
+
     			<label class="projectPicker" for="projectPicker">Project:</label>
 
 				<select id="projectPicker" onchange="changeProject('projectPicker')">
