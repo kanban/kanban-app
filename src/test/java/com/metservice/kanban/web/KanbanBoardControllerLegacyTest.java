@@ -126,7 +126,7 @@ public class KanbanBoardControllerLegacyTest {
 
     @Test
     public void testOpenProject() throws IOException {
-        RedirectView view = kanbanController.openProject("test-project", "wall", "new-test-project");
+        RedirectView view = kanbanController.openProject("test-project", "wall", "new-test-project", null, null);
         assertThat(view.getUrl(), is("/projects/new-test-project/wall"));
     }
 }
