@@ -28,8 +28,7 @@
     		<table>
 				<c:forEach var="projectName"  items="${listOfProjects}">        
     				<tr>
-    					<td><a href="projects/${projectName}/wall">${projectName}</a></td>
-<%--     					<td>Open <a href="projects/${projectName}/pet-project">P.E.T.</a></td> --%>
+    					<td><a href="projects/${projectName}">${projectName}</a></td>
     				</tr> 
 				</c:forEach>
     		</table>

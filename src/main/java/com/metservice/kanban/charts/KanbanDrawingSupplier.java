@@ -1,10 +1,9 @@
 package com.metservice.kanban.charts;
 
-import com.metservice.kanban.model.HtmlColour;
 import java.awt.Color;
 import java.awt.Paint;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
-
+import com.metservice.kanban.model.HtmlColour;
 
 /**
  * A supplier of Paint, Stroke and Shape objects for use by Kanban charts. Given

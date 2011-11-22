@@ -9,14 +9,13 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
-
 import com.google.common.base.Preconditions;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemComment;
 import com.metservice.kanban.model.WorkItemTree;
 
+// TODO This class needs unit tests.
 public class KanbanCommentsFile {
     private File file;
 

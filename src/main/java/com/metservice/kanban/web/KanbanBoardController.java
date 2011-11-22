@@ -51,7 +51,7 @@ import com.metservice.kanban.model.WorkItemType;
 import com.metservice.kanban.utils.DateUtils;
 import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 
-//TODO This class needs unit tests.
+//TODO This class needs more unit tests.
 
 /**
  * @author Nicholas Malcolm - malcolnich - 300170288
@@ -1037,4 +1037,8 @@ public class KanbanBoardController {
         return response;
     }
 
+    @RequestMapping("")
+    public RedirectView redirectToWall(@PathVariable("projectName") String projectName) {
+        return new RedirectView("/projects/" + projectName + "/wall", true);
+    }
 }

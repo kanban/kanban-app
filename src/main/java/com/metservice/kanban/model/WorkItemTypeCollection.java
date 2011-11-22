@@ -3,6 +3,7 @@ package com.metservice.kanban.model;
 import java.util.AbstractCollection;
 import java.util.Iterator;
 
+//TODO This class needs unit tests.
 public class WorkItemTypeCollection extends AbstractCollection<WorkItemType> {
 
     private TreeNode<WorkItemType> root;
