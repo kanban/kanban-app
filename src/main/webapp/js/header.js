@@ -29,7 +29,7 @@ function addTopLevel(id){
 
 function changeProject(selectId){
 	var select = document.getElementById(selectId);
-    document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/open-project?newProjectName=" + select.options[select.selectedIndex].text;
+    document.forms["header"].action = "open-project?newProjectName=" + select.options[select.selectedIndex].text + "&board=" + getBoard();
     document.forms["header"].submit();
 }
 

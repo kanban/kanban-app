@@ -22,7 +22,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.charts.burnup.BurnUpChartGenerator;
@@ -52,29 +51,28 @@ public class KanbanBoardControllerTest {
         assertThat(kanbanController.populateProject("project"), is(kanban));
     }
 
-    @Test
-    public void modelContainsRedirectViewThatReturnsToTheBoard() {
-        KanbanBoardController kanbanController = new KanbanBoardController();
-        kanbanController.setKanbanService(null);
-
-        RedirectView redirectView = kanbanController.populateRedirectView("project", "board");
-
-        assertThat(redirectView.getUrl(), is("/projects/project/board"));
-        // Note: should also test that the RedirectView is context-relative, but this property is not exposed
-    }
+    //    @Test
+    //    public void modelContainsRedirectViewThatReturnsToTheBoard() {
+    //        KanbanBoardController kanbanController = new KanbanBoardController();
+    //        kanbanController.setKanbanService(null);
+    //
+    //        RedirectView redirectView = kanbanController.populateRedirectView("project", "board");
+    //
+    //        assertThat(redirectView.getUrl(), is("/projects/project/board"));
+    //        // Note: should also test that the RedirectView is context-relative, but this property is not exposed
+    //    }
 
     @Test
     public void canDeleteWorkItems() throws IOException {
         KanbanProject project = mock(KanbanProject.class);
-        View expectedView = mock(View.class);
 
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
-        View actualView = kanbanController.deleteWorkItem(project, 3, expectedView);
+        RedirectView actualView = kanbanController.deleteWorkItem(project, 3, "wall");
 
         verify(project).deleteWorkItem(3);
         verify(project).save();
-        assertThat(actualView, is(expectedView));
+        assertThat(actualView.getUrl(), is("../wall"));
     }
 
     @SuppressWarnings("unchecked")

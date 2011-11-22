@@ -16,14 +16,16 @@
 <body>
     <jsp:include page="include/header.jsp" />
 
-    <form id="delete" action="delete-item-action" method="post">
+    <form id="delete" action="delete-item-action" method="get">
         <div>
             <input type="hidden" name="id" value="${workItem.id}" />
+            <input type="hidden" name="board" value="${board}" />
         </div>
     </form>
 
     <form id="edit" action="edit-item-action" method="post">
         <div class="column">
+            <input type="hidden" name="board" value="${board}" />
             <fieldset>
                 <legend>Edit ${workItem.type.name}</legend>
     
@@ -111,7 +113,7 @@
         });
         
         $("#addComment").click(function() {
-            $.post("comment", { id: $('#id').val(), userName: $('#userField').val(), comment: commentsField.val() })
+            $.post("../comment", { id: $('#id').val(), userName: $('#userField').val(), comment: commentsField.val() })
                 .success(function(data) {
                     eval("var jsonData = " + data);
                     

@@ -130,7 +130,7 @@ padding: 10px;
 			var area = document.getElementsByTagName('TEXTAREA')[0];
 			$.ajax({
 				type: "POST",
-				url: window.location.pathname + "/edit-journal-action",
+				url: window.location.pathname + "/../edit-journal-action",
 				data: "journalText=" + $(area).val(),
 			});
 			var y = document.createElement('div');
