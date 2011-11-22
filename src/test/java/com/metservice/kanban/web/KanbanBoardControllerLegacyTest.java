@@ -63,7 +63,7 @@ public class KanbanBoardControllerLegacyTest {
 
     @Test
     public void testPrintItems() throws IOException {
-        ModelAndView modelAndView = kanbanController.printItems(kanban, "test-project", "wall", new String[] {
+        ModelAndView modelAndView = kanbanController.printItems(kanban, "test-project", new String[] {
             "1",
             "2"});
         assertThat(modelAndView.getViewName(), is("/printCards.jsp"));
