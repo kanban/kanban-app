@@ -24,9 +24,9 @@
                 <div class="label">Id</div>
                 <div class="field" style="background-color: ${item.colour};">${item.id}</div>
             </div>
-            <div class="size">
-                <div class="label">Size</div>
-                <div class="field">${item.size}</div>
+            <div class="averageCaseEstimate">
+                <div class="label">Avg. Case</div>
+                <div class="field">${item.averageCaseEstimate}</div>
             </div>
             <div class="importance">
                 <div class="label">Importance</div>

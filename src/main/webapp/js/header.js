@@ -29,7 +29,7 @@ function addTopLevel(id){
 
 function changeProject(selectId){
 	var select = document.getElementById(selectId);
-    document.forms["header"].action = "open-project?newProjectName=" + select.options[select.selectedIndex].text + "&board=" + getBoard();
+    document.forms["header"].action = getProjectUrl() + "/" + getBoard() + "/open-project?newProjectName=" + select.options[select.selectedIndex].text;
     document.forms["header"].submit();
 }
 
@@ -98,7 +98,7 @@ function printCards(){
         }
     }
     if (query != "") {
-    	window.location = getBoard() + "/print-items?" + query;
+    	window.location = "print-items?" + query;
 //        document.forms["header"].action = getBoard() + "/print-items?" + query; 
 //        document.forms["header"].submit();
     }

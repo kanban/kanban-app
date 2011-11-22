@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -379,7 +381,6 @@ public class KanbanBoardController {
     @RequestMapping(value = "print-items")
     public synchronized ModelAndView printItems(@ModelAttribute("project") KanbanProject project,
                                                 @PathVariable("projectName") String projectName,
-                                                @PathVariable("board") String boardType,
                                                 @RequestParam("printSelection") String[] ids) throws IOException {
 
         List<WorkItem> items = new ArrayList<WorkItem>();
@@ -528,13 +529,16 @@ public class KanbanBoardController {
                                            @RequestParam(value = "startDate", required = false) String startDate,
                                            @RequestParam(value = "endDate", required = false) String endDate) {
 
-        ModelAndView modelAndView = new ModelAndView("/chart.jsp");
-        modelAndView.addObject("workItemTypeName", workItemTypeName);
-        modelAndView.addObject("imageName", chartName + ".png");
-        modelAndView.addObject("startDate", startDate);
-        modelAndView.addObject("endDate", endDate);
-        modelAndView.addObject("kanbanJournal", project.getJournalText());
-        return modelAndView;
+        Map<String, Object> model = initBoard("chart", projectName, null);
+
+        model.put("workItemTypeName", workItemTypeName);
+        model.put("imageName", chartName + ".png");
+        model.put("startDate", startDate);
+        model.put("endDate", endDate);
+        model.put("kanbanJournal", project.getJournalText());
+        model.put("chartName", chartName);
+
+        return new ModelAndView("/chart.jsp", model);
     }
 
     // TODO check in this class for redundent model.put("kanban...
@@ -729,9 +733,9 @@ public class KanbanBoardController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("open-project")
+    @RequestMapping("{board}/open-project")
     public synchronized RedirectView openProject(@PathVariable("projectName") String projectName,
-                                                 @RequestParam("board") String boardType,
+                                                 @PathVariable("board") String boardType,
                                                  @RequestParam("newProjectName") String newProjectName)
         throws IOException {
 
@@ -966,11 +970,20 @@ public class KanbanBoardController {
                                       @PathVariable("projectName") String projectName,
                                       @PathVariable("board") String boardType,
                                       @RequestParam("workStream") String selectedWorkStream,
-                                      @ModelAttribute("workStreams") Map<String, String> workStreams) {
+                                      @RequestParam(value = "chartName", required = false) String chartName,
+                                      @RequestParam(value = "workItemTypeName", required = false) String workItemTypeName,
+                                      @ModelAttribute("workStreams") Map<String, String> workStreams,
+                                      Model model) {
 
         workStreams.put(projectName, selectedWorkStream);
 
-        return new RedirectView("/projects/" + projectName + "/" + boardType, true);
+        String params = "";
+
+        if (!StringUtils.isEmpty(chartName) && !StringUtils.isEmpty(workItemTypeName)) {
+            params = "?chartName=" + chartName + "&workItemTypeName=" + workItemTypeName;
+        }
+
+        return new RedirectView("/projects/" + projectName + "/" + boardType + params, true);
     }
 
     public void setKanbanService(KanbanService kanbanService) {
