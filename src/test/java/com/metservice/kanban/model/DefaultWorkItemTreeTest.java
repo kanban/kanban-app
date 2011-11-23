@@ -9,6 +9,7 @@ import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import java.util.Collection;
+import java.util.List;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Test;
 
@@ -145,5 +146,52 @@ public class DefaultWorkItemTreeTest {
         tree.addWorkItems(feature1, feature2, feature3, feature4);
         tree.reorder(feature1, asList(feature1, feature3, feature2));
     }
-    
+
+    @Test
+    public void getWorkItemsOfTypeWorksFineForNullOrEmptyWorkStreams() {
+        WorkItemType featureType = new WorkItemType("phase");
+        WorkItemType storyType = new WorkItemType("phase");
+        WorkItem feature1 = new WorkItem(1, featureType, "phase");
+        feature1.setWorkStreamsAsString("a,b");
+        WorkItem feature2 = new WorkItem(2, featureType, "phase");
+        feature2.setWorkStreamsAsString("b,c");
+        WorkItem story1 = new WorkItem(3, storyType, "phase");
+        story1.setWorkStreamsAsString("b,c");
+
+        DefaultWorkItemTree tree = new DefaultWorkItemTree();
+        tree.addWorkItems(feature1, feature2, story1);
+
+        List<WorkItem> workItemsOfType = tree.getWorkItemsOfType(featureType, null);
+        assertThat(workItemsOfType.size(), is(2));
+        assertThat(workItemsOfType.get(0), is(feature1));
+        assertThat(workItemsOfType.get(1), is(feature2));
+
+        workItemsOfType = tree.getWorkItemsOfType(storyType, "");
+        assertThat(workItemsOfType.size(), is(1));
+        assertThat(workItemsOfType.get(0), is(story1));
+    }
+
+    @Test
+    public void getWorkItemsOfTypeWorksFineForWorkStreams() {
+        WorkItemType featureType = new WorkItemType("phase");
+        WorkItemType storyType = new WorkItemType("phase");
+        WorkItem feature1 = new WorkItem(1, featureType, "phase");
+        feature1.setWorkStreamsAsString("a,b");
+        WorkItem feature2 = new WorkItem(2, featureType, "phase");
+        feature2.setWorkStreamsAsString("b,c");
+        WorkItem story1 = new WorkItem(3, storyType, "phase");
+        story1.setWorkStreamsAsString("b,c");
+
+        DefaultWorkItemTree tree = new DefaultWorkItemTree();
+        tree.addWorkItems(feature1, feature2, story1);
+
+        List<WorkItem> workItemsOfType = tree.getWorkItemsOfType(featureType, "b");
+        assertThat(workItemsOfType.size(), is(2));
+        assertThat(workItemsOfType.get(0), is(feature1));
+        assertThat(workItemsOfType.get(1), is(feature2));
+
+        workItemsOfType = tree.getWorkItemsOfType(featureType, "a");
+        assertThat(workItemsOfType.size(), is(1));
+        assertThat(workItemsOfType.get(0), is(feature1));
+    }
 }

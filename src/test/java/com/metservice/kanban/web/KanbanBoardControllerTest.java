@@ -242,7 +242,8 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
 
-        kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), outputStream);
+        kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), null,
+            outputStream);
         ArgumentCaptor<List> workItemsCaptor = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<OutputStream> outputStreamCaptor = ArgumentCaptor.forClass(OutputStream.class);
         verify(chartGenerator).generateBurnUpChart(

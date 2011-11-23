@@ -494,10 +494,7 @@ public class KanbanBoardController {
 
         WorkItemType type = project.getWorkItemTypes().getByName(level);
 
-        // TODO to add workStreams change the following line:
-
-        //        List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, workStream);
-        List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, null);
+        List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, workStream);
 
         LocalDate start = null;
         LocalDate end = null;
@@ -527,13 +524,13 @@ public class KanbanBoardController {
                                                @PathVariable("board") String boardType,
                                                @RequestParam("startDate") String startDate,
                                                @RequestParam("endDate") String endDate,
+                                               @RequestParam(value = "workStream", required = false) String workStream,
                                                @RequestParam("level") String level, OutputStream outputStream)
         throws IOException {
 
         WorkItemType type = project.getWorkItemTypes().getByName(level);
         CycleTimeChartBuilder builder = new CycleTimeChartBuilder();
-        List<WorkItem> workItemList = project.getWorkItemTree()
-            .getWorkItemsOfType(type, null);
+        List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, workStream);
 
         CategoryDataset dataset = builder.createDataset(builder
             .getCompletedWorkItemsInOrderOfCompletion(workItemList));
@@ -710,11 +707,12 @@ public class KanbanBoardController {
                                @ModelAttribute("chartGenerator") BurnUpChartGenerator chartGenerator,
                                @RequestParam("startDate") String startDate,
                                @RequestParam("endDate") String endDate,
+                               @RequestParam(value = "workStream", required = false) String workStream,
                                OutputStream outputStream) throws IOException {
 
         WorkItemTree tree = project.getWorkItemTree();
         WorkItemType type = project.getWorkItemTypes().getRoot().getValue();
-        List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type, null);
+        List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type, workStream);
 
         LocalDate start = null;
         LocalDate end = null;
