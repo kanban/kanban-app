@@ -14,6 +14,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.metservice.kanban.tests.util.TestUtils;
+
 public class EndToEndTest {
 
     private static Server server;
@@ -35,18 +37,9 @@ public class EndToEndTest {
         kanbanHome.delete();
     }
 
-    @Before
-    public void cleanProject() throws IOException {
-        File root = kanbanHome.getRoot();
-
-        deleteDirectory(root);
-        root.mkdir();
-        createTestProject(root, "Test project");
-    }
-
     @Test
-    public void userCanDeleteAWorkItem() {
-        BoardPage page = openProject("Test project");
+    public void userCanDeleteAWorkItem() throws IOException {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         page.clickBacklogButton();
         page.clickAddFeatureButton().enterName("feature name").clickSaveButton();
         //        page.clickBacklogButton();
@@ -54,10 +47,46 @@ public class EndToEndTest {
 
         page.assertFeatureNotPresent("feature name");
     }
+    
+    @Test
+    public void petPageShowsPlannedFeatures() throws IOException{
+    	BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+    	page.clickAddFeatureButton().enterName("feature name").clickSaveButton();
+    	page.clickPETButton().checkFeatureDescription("feature name");
+    }
+    
+    @Test
+    public void petPageShowsPlannedStoriesForProjectsWithOnlyStories() throws IOException{
+    	BoardPage page = openProject(kanbanHome, "Test project 2", "/Test Project 2/");
+    	page.clickAddStoryButton().enterName("feature name").clickSaveButton();
+    	page.clickPETButton().checkFeatureDescription("feature name");
+    }
+    
+    @Test
+    public void testProjectListAppearsSorted() throws IOException{
+    	File root = kanbanHome.getRoot();
+    	BoardPage.cleanProject(kanbanHome);
+    	TestUtils.createTestProject(root, "123", "/Test Project 2/");
+    	TestUtils.createTestProject(root, "ABC", "/Test Project 2/");
+    	TestUtils.createTestProject(root, "XYZ", "/Test Project 2/");
+    	TestUtils.createTestProject(root, "acb", "/Test Project 2/");
+    	TestUtils.createTestProject(root, "xzy", "/Test Project 2/");
+    	TestUtils.createTestProject(root, "A1z", "/Test Project 2/");
+    	BoardPage.createBoardPage("123").assertProjectListIsSorted();
+    }
 
     @Test
-    public void userCanRenameAWorkItem() {
-        BoardPage page = openProject("Test project");
+    public void userCanAddSizeToAWorkItem() throws IOException{
+    	BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+        page.clickBacklogButton();
+        page.clickAddFeatureButton().enterName("feature name").enterAverageCase("5").enterWorstCase("10").clickSaveButton();
+        //Check that the size on the feature or story matches the Average Case value in P.E.T
+        page.clickPETButton().checkPetAverageCaseValue("5").checkPetWorstCaseValue("10");
+    }
+    
+    @Test
+    public void userCanRenameAWorkItem() throws IOException {
+    	BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         page.clickBacklogButton();
         page.clickAddFeatureButton().enterName("feature name").clickSaveButton();
         page.clickEditFeatureButton("feature name").enterName("new feature name").clickSaveButton();
@@ -67,8 +96,8 @@ public class EndToEndTest {
     }
 
     @Test
-    public void userCanExcludeAWorkItemFromReports() {
-        BoardPage page = openProject("Test project");
+    public void userCanExcludeAWorkItemFromReports() throws IOException {
+    	BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         page.clickBacklogButton();
         page.clickAddFeatureButton().enterName("feature name").clickSaveButton();
         page.clickEditFeatureButton("feature name").assertExcludeBoxIs(false);
@@ -78,8 +107,8 @@ public class EndToEndTest {
     }
 
     @Test
-    public void userCanChangeTheParentOfAWorkItem() {
-        BoardPage page = openProject("Test project");
+    public void userCanChangeTheParentOfAWorkItem() throws IOException {
+    	BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         page.clickBacklogButton();
         page.clickAddFeatureButton().enterName("feature 1").clickSaveButton();
         page.clickAddFeatureButton().enterName("feature 2").clickSaveButton();
@@ -95,19 +124,20 @@ public class EndToEndTest {
     }
 
     @Test
-    public void userCanViewAChart() {
-        BoardPage wallPage = openProject("Test project");
+    public void userCanViewAChart() throws IOException {
+    	BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
 //        ChartPage chartPage = wallPage.clickFeatureCycleTimeChartButton();
 //        chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature");
 
     }
 
     @Test
-    public void userCanViewABurnUpChart() {
-        BoardPage wallPage = openProject("Test project");
+    public void userCanViewABurnUpChart() throws IOException {
+    	BoardPage wallPage = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         ChartPage chartPage = wallPage.clickBurnUpChartButton();
         chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=&workStream=");
     }
+    
     
 //    @Test
 //    public void userCanDownloadStories() throws IOException {

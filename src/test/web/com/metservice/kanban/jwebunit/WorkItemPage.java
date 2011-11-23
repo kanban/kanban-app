@@ -14,6 +14,16 @@ public class WorkItemPage {
         tester.setTextField("name", name);
         return this;
     }
+    
+    public WorkItemPage enterAverageCase(String size) {
+        tester.setTextField("averageCaseEstimate", size);
+        return this;
+    }
+    
+    public WorkItemPage enterWorstCase(String size) {
+        tester.setTextField("worstCaseEstimate", size);
+        return this;
+    }
 
     public WorkItemPage setParent(String name) {
         tester.selectOption("parentId", name);

@@ -15,19 +15,19 @@ import com.metservice.kanban.model.WorkItem;
 
 public class TestUtils {
 
-    public static void createTestProject(File home, String projectName) throws IOException {
+    public static void createTestProject(File home, String projectName, String sourceResourcePath) throws IOException {
         File projectDirectory = new File(home, projectName);
         
-        copyToTestProject(projectDirectory, "kanban.properties");
-        copyToTestProject(projectDirectory, "feature.csv");
-        copyToTestProject(projectDirectory, "story.csv");
+        copyToTestProject(projectDirectory, sourceResourcePath,"kanban.properties");
+        copyToTestProject(projectDirectory, sourceResourcePath,"feature.csv");
+        copyToTestProject(projectDirectory, sourceResourcePath,"story.csv");
     }
 
-    private static void copyToTestProject(File projectDirectory, String resourceName) throws IOException {
-        String sourceResourcePath = "/end-to-end-test/" + resourceName;
+    private static void copyToTestProject(File projectDirectory, String sourceResourcePath,String resourceName) throws IOException {
+    	String sourceFileResourcePath = sourceResourcePath + resourceName;
         File destinationFile = new File(projectDirectory, resourceName);
 
-        writeResourceToFile(EndToEndTest.class, sourceResourcePath, destinationFile);
+        writeResourceToFile(EndToEndTest.class, sourceFileResourcePath, destinationFile);
     }
 
     private static void writeResourceToFile(Class<?> context, String resourcePath, File file) throws IOException {

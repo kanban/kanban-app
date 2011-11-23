@@ -72,7 +72,7 @@ public class KanbanServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void refusesToCreateAProjectWithAnExistingName() throws IOException {
-        createTestProject(kanbanHome.getRoot(), "Test project");
+        createTestProject(kanbanHome.getRoot(), "Test project", "/end-to-end-test/");
 
         KanbanService kanbanService = new KanbanService(kanbanHome.getRoot());
         kanbanService.createProject("Test project", "some new settings");

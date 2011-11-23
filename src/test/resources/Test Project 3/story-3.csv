@@ -1,0 +1,47 @@
+id,parentId,name,size,importance,notes,excluded,stopped,colour,bestcase,worstcase,musthave,DevBacklog,Story Prep Doing,Story Prep Done,Dev Doing,Dev Done,Test Doing,Story Complete
+123,122,password policy,1,0,,FALSE,FALSE,ffffff,0,0,FALSE,4/10/2011,4/10/2011,4/10/2011,4/10/2011,5/10/2011,5/10/2011,5/10/2011
+126,122,Create a parent POM for projects,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,4/10/2011,4/10/2011,4/10/2011,4/10/2011,5/10/2011,5/10/2011,5/10/2011
+72,45,Basic Alarms on auth service components,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/08/2011,15/09/2011,15/09/2011,15/09/2011,22/09/2011,26/09/2011,3/10/2011
+73,45,Automated deployment to running web application.,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/08/2011,22/09/2011,26/09/2011,26/09/2011,29/09/2011,29/09/2011,29/09/2011
+74,45,Deploy To Rightscale,0,0,"Rightscale machine,
+Known IP,
+port 80",FALSE,FALSE,ffffff,0,0,FALSE,29/08/2011,15/09/2011,15/09/2011,19/09/2011,22/09/2011,22/09/2011,22/09/2011
+77,45,productionise auth service,0,0,#NAME?,FALSE,FALSE,ffffff,0,0,FALSE,29/08/2011,30/08/2011,30/08/2011,30/08/2011,8/09/2011,8/09/2011,14/09/2011
+75,46,Zuul Architecture - user details security,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/08/2011,6/09/2011,8/09/2011,8/09/2011,8/09/2011,19/09/2011,19/09/2011
+76,46,edit user details,0,0,#NAME?,FALSE,FALSE,ffffff,0,0,FALSE,29/08/2011,30/08/2011,30/08/2011,14/09/2011,15/09/2011,26/09/2011,29/09/2011
+105,46,List users using Vinz UI,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,6/09/2011,6/09/2011,6/09/2011,7/09/2011,7/09/2011,14/09/2011,19/09/2011
+106,46,Add User using Vinz UI,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,6/09/2011,6/09/2011,6/09/2011,7/09/2011,14/09/2011,15/09/2011,26/09/2011
+107,46,Deploy Vinz to rightscale,3,0,,FALSE,FALSE,ffffff,0,0,FALSE,8/09/2011,8/09/2011,8/09/2011,8/09/2011,16/09/2011,21/09/2011,22/09/2011
+112,36,Check that LDM is worthwhile (Timeboxed),2,0,"See how easy it is to install, work with.",FALSE,FALSE,ffffff,0,0,FALSE,28/09/2011,28/09/2011,28/09/2011,28/09/2011,6/10/2011,6/10/2011,6/10/2011
+113,36,Get LDM working on The Cloud using Rightscale scripts ,5,0,Reliability and alerting will be dealt with in other features.,FALSE,FALSE,ffffff,0,0,FALSE,28/09/2011,6/10/2011,6/10/2011,6/10/2011,11/10/2011,11/10/2011,11/10/2011
+134,36,password encryption (not part of UAT!),0,0,,FALSE,FALSE,ffffff,0,0,FALSE,10/10/2011,10/10/2011,10/10/2011,10/10/2011,10/10/2011,10/10/2011,10/10/2011
+115,37,Parse valid WDT files into object structure and write JSON,5,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/09/2011,29/09/2011,29/09/2011,29/09/2011,7/10/2011,7/10/2011,11/10/2011
+116,37,"Harden parser
+- invalid format
+- invalid data (+missing data?)",0,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/09/2011,4/10/2011,4/10/2011,4/10/2011,6/10/2011,7/10/2011,
+117,37,push to S3,2,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/09/2011,29/09/2011,29/09/2011,29/09/2011,3/10/2011,4/10/2011,10/10/2011
+118,37,Alerting,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/09/2011,3/10/2011,3/10/2011,4/10/2011,6/10/2011,6/10/2011,
+119,37,trigger from LDM,2,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/09/2011,7/10/2011,7/10/2011,7/10/2011,,,
+137,37,Create UAT/World environments for LDM,3,0,,FALSE,FALSE,ffffff,0,0,FALSE,11/10/2011,,,,,,
+4,3,WDT?,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,16/08/2011,16/08/2011,16/08/2011,23/08/2011,23/08/2011,23/08/2011
+5,3,Contact Rightscale,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,16/08/2011,16/08/2011,16/08/2011,18/08/2011,18/08/2011,18/08/2011
+6,3,Features Written up on Wiki,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,12/08/2011,12/08/2011,12/08/2011,15/08/2011,16/08/2011,16/08/2011
+7,3,Design Diagram,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,12/08/2011,12/08/2011,12/08/2011,16/08/2011,16/08/2011,16/08/2011
+22,20,Research and connect app to DB,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,18/08/2011,18/08/2011,18/08/2011,29/08/2011,29/08/2011,29/08/2011
+21,20,Create basic web with blank page on EC2 AMI,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,18/08/2011,18/08/2011,23/08/2011,23/08/2011,29/08/2011,29/08/2011
+23,20,User crud(?) as required,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,18/08/2011,18/08/2011,23/08/2011,29/08/2011,29/08/2011,29/08/2011
+14,12,"Pick up file sent by ICE, Publish to S3",0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,12/08/2011,12/08/2011,12/08/2011,18/08/2011,23/08/2011,23/08/2011
+19,12,Copy/write ICE scripts to get world cities data. Deliver via FTP,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,12/08/2011,12/08/2011,12/08/2011,23/08/2011,23/08/2011,23/08/2011
+28,12,Start an AMI to receive/pull world cities file,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,12/08/2011,12/08/2011,12/08/2011,12/08/2011,23/08/2011,23/08/2011
+9,8,Create Cloud front dist,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,16/08/2011,16/08/2011,18/08/2011,18/08/2011,18/08/2011,18/08/2011
+10,8,SDK Requests list of URLs Service replies,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,16/08/2011,16/08/2011,18/08/2011,18/08/2011,23/08/2011,23/08/2011
+26,24,Download most recent world cities file and display,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,22/08/2011,22/08/2011,22/08/2011,22/08/2011,26/08/2011,26/08/2011
+27,24,Javascript get signed URLs and generate next valid URL for world cities,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,12/08/2011,19/08/2011,19/08/2011,19/08/2011,22/08/2011,26/08/2011,
+32,31,investigation options,1,0,,FALSE,FALSE,ffffff,0,0,FALSE,18/08/2011,18/08/2011,18/08/2011,18/08/2011,22/08/2011,22/08/2011,22/08/2011
+35,31,do browser audit to determine what browsers support gzip transfer encoding,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,22/08/2011,22/08/2011,22/08/2011,22/08/2011,29/08/2011,29/08/2011,29/08/2011
+33,31,"Wx data on S3 is stored gzipped, and with correct transfer encoding properties",0,0,,FALSE,FALSE,ffffff,0,0,FALSE,22/08/2011,29/08/2011,29/08/2011,29/08/2011,29/08/2011,29/08/2011,29/08/2011
+34,31,Zuul to returns urls that point to gz files,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,22/08/2011,29/08/2011,29/08/2011,29/08/2011,29/08/2011,29/08/2011,29/08/2011
+70,111,Auth service scales according to load and is fault tolerant of server/datacentre failure.,0,0,,FALSE,FALSE,ffffff,0,0,FALSE,29/08/2011,,,,,,
+109,111,Setup dashboard alarms (Rightscale),0,0,,FALSE,FALSE,ffffff,0,0,FALSE,15/09/2011,,,,,,
+124,127,move SimpleDB domain to Asia,1,0,,FALSE,FALSE,ffffff,0,0,FALSE,4/10/2011,,,,,,
+125,127,Integration tests should be separate from normal tests,1,0,,FALSE,FALSE,ffffff,0,0,FALSE,4/10/2011,,,,,,
