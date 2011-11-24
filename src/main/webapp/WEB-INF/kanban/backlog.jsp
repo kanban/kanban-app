@@ -96,14 +96,23 @@
   $("tr#new_story input").keypress(function(event) {
     if (event.which == 13){
       var row = $(this).parents("tr#new_story");
-      var name = row.find("input[name=name]").val();
-      var averageCaseEstimate = row.find("input[name=averageCaseEstimate]").val();
-      var importance = row.find("input[name=importance]").val();
-      var type = row.find("input[name=type]").val();
+      
+      var postData = {
+          "type": row.find("input[name=type]").val(),
+          "name": row.find("input[name=name]").val(),
+          "averageCaseEstimate": "",
+          "worstCaseEstimate": "",
+          "importance": row.find("input[name=importance]").val(),
+          "color": "FFFFFF",
+          "notes": "",
+          "excluded": "",
+          "workStreams": "${workStreams[project.name]}"
+      };
+      
       $.ajax({
          type: "GET",
          url: window.location.pathname + "/add-item-action",
-         data: "type="+type+"&name="+name+"&averageCaseEstimate="+averageCaseEstimate+"&importance="+importance + "&color=FFFFFF&notes=&excluded=&workStreams=${workStreams[project.name]}",
+         data: postData,
          success: function(){
              window.location.reload();
          },
