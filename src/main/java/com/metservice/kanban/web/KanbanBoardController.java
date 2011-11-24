@@ -349,7 +349,7 @@ public class KanbanBoardController {
                                                    @RequestParam("type") String type,
                                                    @RequestParam("name") String name,
                                                    @RequestParam("averageCaseEstimate") String averageCaseEstimateStr,
-                                                   @RequestParam("worstCaseEstimate") String worstCaseEstimateStr,
+                                                   @RequestParam(value = "worstCaseEstimate", required = false) String worstCaseEstimateStr,
                                                    @RequestParam("importance") String importanceStr,
                                                    @RequestParam("notes") String notes,
                                                    @RequestParam("color") String color,
