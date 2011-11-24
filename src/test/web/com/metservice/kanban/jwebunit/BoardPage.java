@@ -1,18 +1,39 @@
 package com.metservice.kanban.jwebunit;
 
+import static com.metservice.kanban.tests.util.TestUtils.createTestProject;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.junit.rules.TemporaryFolder;
+
 import net.sourceforge.jwebunit.junit.WebTester;
 
 public class BoardPage {
 
     private final WebTester tester;
 
-    public static BoardPage openProject(String projectName) {
+    public static BoardPage openProject(TemporaryFolder kanbanHome, String projectName, String sourceResourcePath) throws IOException {
+    	File root = kanbanHome.getRoot();
+    	cleanProject(kanbanHome);
+        createTestProject(root, projectName, sourceResourcePath);
+    	return createBoardPage(projectName);
+    }
+    
+    public static BoardPage createBoardPage(String projectName){
         WebTester tester = new WebTester();
         tester.beginAt("http://localhost:8008/kanban");
-        tester.clickLinkWithExactText("Test project");
+        tester.clickLinkWithExactText(projectName);
         return new BoardPage(tester);
     }
 
+    public static void cleanProject(TemporaryFolder kanbanHome) throws IOException {
+        File root = kanbanHome.getRoot();
+        deleteDirectory(root);
+        root.mkdir();
+    }
+    
     public BoardPage(WebTester tester) {
         this.tester = tester;
     }
@@ -20,6 +41,11 @@ public class BoardPage {
     public BoardPage clickBacklogButton() {
         tester.clickElementByXPath("//a[@id='backlog-button']");
         return this;
+    }
+    
+    public PETPage clickPETButton() {
+        tester.clickElementByXPath("//a[@id='pet']");
+        return new PETPage(tester);
     }
 
     public WallPage clickWallButton() {
@@ -39,6 +65,10 @@ public class BoardPage {
         return new WorkItemPage(tester);
     }
 
+    public WorkItemPage clickAddStoryButton() {
+    	return clickAddFeatureButton();
+    }
+    
     public WorkItemPage clickAddStoryButton(String name) {
         // If this fails we couldn't find the <div>.
         tester.assertElementPresentByXPath(
@@ -85,6 +115,15 @@ public class BoardPage {
     }
 
     public void assertFeatureIsPresent(String name) {
-        tester.assertElementPresentByXPath("//td[.='" + name + "']");            
+        tester.assertElementPresentByXPath("//td[.='" + name + "']");
+    }
+    
+    public void assertProjectListIsSorted(){
+    	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[1][contains(text(), \"123\")]");
+    	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[2][contains(text(), \"A1z\")]");
+    	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[3][contains(text(), \"ABC\")]");
+    	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[4][contains(text(), \"acb\")]");
+    	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[5][contains(text(), \"XYZ\")]");
+    	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[6][contains(text(), \"xzy\")]");
     }
 }

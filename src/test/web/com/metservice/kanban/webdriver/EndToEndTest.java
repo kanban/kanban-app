@@ -43,7 +43,7 @@ public class EndToEndTest {
 
         deleteDirectory(root);
         root.mkdir();
-        createTestProject(root, "Test project");
+        createTestProject(root, "Test project", "/end-to-end-test/");
     }
 
     @Test

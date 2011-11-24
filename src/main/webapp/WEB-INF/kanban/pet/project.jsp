@@ -71,7 +71,7 @@
 
 	<h2>Planned features</h2>
 
-	<table class="pet">
+	<table id="plannedFeatures" class="pet">
 		<tr>
 			<th rowspan="2" colspan="2">Actions</th>
 			<th rowspan="2">Description</th>
