@@ -319,6 +319,7 @@ public class KanbanBoardController {
         return new RedirectView("../" + boardType);
     }
 
+
     @RequestMapping(value = "print-items")
     public synchronized ModelAndView printItems(@ModelAttribute("project") KanbanProject project,
                                                 @PathVariable("projectName") String projectName,
@@ -429,6 +430,57 @@ public class KanbanBoardController {
 
         // Go home.
         return new RedirectView("../" + boardType);
+    }
+
+    @RequestMapping(value = "edit-item/{id}/name", method = RequestMethod.POST)
+    public synchronized ResponseEntity<String> updateItemName(@ModelAttribute("project") KanbanProject project,
+            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                    throws IOException {
+        // why are these methods marked as synchronized?!?
+
+        // Get the item which is being edited
+        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+
+        workItem.setName(newValue);
+        project.save();
+
+        // Go home.
+        return new ResponseEntity<String>(
+                String.format("Name change successfully.  New name: %s", workItem.getName()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "edit-item/{id}/size", method = RequestMethod.POST)
+    public synchronized ResponseEntity<String> updateItemSize(@ModelAttribute("project") KanbanProject project,
+            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                    throws IOException {
+        // why are these methods marked as synchronized?!?
+
+        // Get the item which is being edited
+        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+
+        workItem.setAverageCaseEstimate(parseInteger(newValue, 0));
+        project.save();
+
+        // Go home.
+        return new ResponseEntity<String>(
+                String.format("Size change successfully.  New size: %s", workItem.getAverageCaseEstimate()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "edit-item/{id}/importance", method = RequestMethod.POST)
+    public synchronized ResponseEntity<String> updateItemImportance(@ModelAttribute("project") KanbanProject project,
+            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                    throws IOException {
+        // why are these methods marked as synchronized?!?
+
+        // Get the item which is being edited
+        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+
+        workItem.setImportance(parseInteger(newValue, 0));
+        project.save();
+
+        // Go home.
+        return new ResponseEntity<String>(
+                String.format("Importance change successfully.  New importance: %s", workItem.getImportance()),HttpStatus.OK);
     }
 
     @RequestMapping("edit-journal-action")

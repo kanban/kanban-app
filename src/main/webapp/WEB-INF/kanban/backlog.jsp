@@ -21,110 +21,131 @@
 	<jsp:include page="include/header-head.jsp"/>
 
 <script>
-     $(document).ready(function(){
-    		$("#backlog-table").tableDnD({
-    			onDragClass: "dragClass",    			
-    		    onDrop: function(table, row) {
-	    	            var rows = table.tBodies[0].rows;
-	    	            var ids = [];
-	    	            for (var i=0; i<rows.length-1; i++) {
-	    	                if (rows[i].id != "") {
-	        	            	ids.push(rows[i].id);
-	    	                }
-	    	            }
-	    	            reorder(row.id, ids);
-    		    },
-    		    dragHandle: "dragHandle"
-    		});
-    		
-   		   $("#backlog-table tr:not(tr.nodrag)").hover(function() {
-		          $(this.cells[0]).addClass('showDragHandle');
-		          $(this).addClass('showDragHandle');
-   		    }, function() {
-   		        $(this.cells[0]).removeClass('showDragHandle');
-   		    });
-   		    
-   		function saveItem(element){
-   		  $.ajax({
-           type: "POST",
-           url: window.location.pathname + "/edit-item-action",
-           data: "id=" + element.parents("tr").attr("id") + "&" + element.attr("data-role") + "=" + element.val(),
-           error: function(){
-               alert("Failed to update story.");
+$(document).ready(function(){
+    $("#backlog-table").tableDnD({
+        onDragClass: "dragClass",
+        onDrop: function(table, row) {
+            var rows = table.tBodies[0].rows;
+            var ids = [];
+            for (var i=0; i<rows.length-1; i++) {
+                if (rows[i].id != "") {
+                    ids.push(rows[i].id);
+                }
             }
-         });
-         
-         element.parent().html(element.val()).removeClass("formified").addClass("formify");
-   		}
+            reorder(row.id, ids);
+        },
+        dragHandle: "dragHandle"
+    });
+
+	$("#backlog-table tr:not(tr.nodrag)").hover(function() {
+	    $(this.cells[0]).addClass('showDragHandle');
+	    $(this).addClass('showDragHandle');
+	}, function() {
+	    $(this.cells[0]).removeClass('showDragHandle');
+	});
+
+	function saveItem(element){
+	    var workItemIdToChange = element.parents("tr").attr("id");
+	    var elementToChange = element.attr("data-role");
+	    var postData = {
+	        newValue: element.val()
+	    };
+	    $.ajax({
+	        type: "POST",
+	        url: window.location.pathname + "/edit-item/" + workItemIdToChange + "/" + elementToChange,
+	        data: postData,
+	        error: function(){
+	            alert("Failed to update story.");
+	        }
+	    });
+	    
+	    element.parent().html(element.val()).removeClass("formified").addClass("formify");
+	}
+	
+	function cancelEdit(element) {
+		var originalValue = $(element).attr("originalValue");
+		element.parent().html(originalValue).removeClass("formified").addClass("formify");
+	}
    		  
-   		$(".formify").click(function(){
-   		  
-   		  //Dont add an input to a td with an input in it already!
-   		  if ($(this).children("input").size() > 0){
-   		    return false;
-   		  }
-   		  
-   		  //Find all other inputs and save them
-   		  $.each($("tr:not(tr.nodrag) input"), function(index, value){
-   		    saveItem($(this));
-   		  });
-   		  
-   		  //Change the content to an input tag and autopopulate the value
-   		  $(this).html("<input value=\"" + $(this).html().trim() + "\" data-role=\"" + $(this).attr("data-role") + "\" style=\"width: 50%\" />");
-   		  
-   		  //Add the tooltip for name
-   		  if($(this).attr("data-role") == "name"){
-   		    $(this).append("<span style=\'color:#aaa\'>Press <b>Enter</b> to save</span>");
-   		  }
-   		  
-   		  //When the user presses enter, save it
-   		  $(this).find("input").keypress(function(event) {
-   		    
-   		    if (event.which == 13){
-   		      saveItem($(this));
-   		    }
-   		    
-   		  });
-   		});
-  $(".advance").click(function(){
-    var parent = $(this).parents("tr");
-    $.ajax({
-       type: "POST",
-       url: window.location.pathname + "/advance-item-action",
-       data: "id=" + parent.attr("id")
-     });
-     parent.hide();
-  }); 
+	$(".formify").click(function(){
   
-  $("tr#new_story input").keypress(function(event) {
-    if (event.which == 13){
-      var row = $(this).parents("tr#new_story");
+	    //Dont add an input to a td with an input in it already!
+    	if ($(this).children("input").size() > 0){
+    		return false;
+    	}
       
-      var postData = {
-          "type": row.find("input[name=type]").val(),
-          "name": row.find("input[name=name]").val(),
-          "averageCaseEstimate": "",
-          "worstCaseEstimate": "",
-          "importance": row.find("input[name=importance]").val(),
-          "color": "FFFFFF",
-          "notes": "",
-          "excluded": "",
-          "workStreams": "${workStreams[project.name]}"
-      };
+    	//Find all other inputs and save them
+    	$.each($("tr:not(tr.nodrag) input"), function(index, value){
+    		saveItem($(this));
+    	});
       
-      $.ajax({
-         type: "GET",
-         url: window.location.pathname + "/add-item-action",
-         data: postData,
-         success: function(){
-             window.location.reload();
-         },
-         error: function(){
-             alert("Failed to create story");
-          }
-       });
-    }	    
-	});  	
+    	//Change the content to an input tag and autopopulate the value
+    	var originalValue = $(this).html().trim();
+    	var newInput = $("<input />")
+    			.attr("data-role", $(this)
+    			.attr("data-role"))
+    			.attr("originalValue", originalValue)
+    			.css("width", "50%").val(originalValue);
+    	$(this).html("").append(newInput);
+    	newInput.focus();
+      
+    	//Add the tooltip for name
+    	if($(this).attr("data-role") == "name"){
+    		$(this).append("<span style=\'color:#aaa\'>Press <b>Enter</b> to save</span>");
+    	}
+      
+    	//When the user presses enter, save it
+    	$(this).find("input").keyup(function(event) {
+    		switch (event.which) {
+    			case 13:
+    				saveItem($(this));
+    				break;
+    			case 27:
+    				cancelEdit($(this));
+    				break;
+    		}
+    	});
+    });
+
+	$(".advance").click(function(){
+		var parent = $(this).parents("tr");
+    	$.ajax({
+    		type: "POST",
+    		url: window.location.pathname + "/advance-item-action",
+    		data: "id=" + parent.attr("id")
+    	});
+    	parent.hide();
+    }); 
+      
+    $("tr#new_story input").keypress(function(event) {
+    	if (event.which == 13){
+        	var row = $(this).parents("tr#new_story");
+              
+        	var postData = {
+        		"type": row.find("input[name=type]").val(),
+        		"name": row.find("input[name=name]").val(),
+        		"averageCaseEstimate": "",
+        		"worstCaseEstimate": "",
+        		"importance": row.find("input[name=importance]").val(),
+        		"color": "FFFFFF",
+        		"notes": "",
+        		"excluded": "",
+        		"workStreams": "${workStreams[project.name]}"
+        	};
+              
+        	$.ajax({
+        		type: "GET",
+        		url: window.location.pathname + "/add-item-action",
+        		data: postData,
+        		success: function(){
+        			window.location.reload();
+        		},
+        		error: function(){
+        			alert("Failed to create story");
+        		}
+        	});
+    	}	    
+    });  	
 });
 </script>
 <%
