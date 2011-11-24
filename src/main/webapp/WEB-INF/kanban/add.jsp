@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="kanban" uri="/WEB-INF/kanban.tld" %>
 
 <html>
 
@@ -9,7 +10,12 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/edit.js"></script>
 
 	<title>Kanban: add a work item</title>
+    
+    <script type="text/javascript">
+    	<kanban:workStreams name="workStreams" project="${project}" initialWorkStream="${workStreams[projectName]}"/>
+	</script>
 </head>
+
 <body onload="setFocus('name');">
 	<jsp:include page="include/header.jsp" />
 	

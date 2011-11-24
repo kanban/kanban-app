@@ -18,7 +18,7 @@
 
 <c:if test="${workItem.topLevel || topLevel}">
     <label class="labelClass" for="workStreams">Work streams:</label>
-    <input size="40" type="text" id="workStreams" name="workStreams" value="${workItem.workStreamsAsString}" />
+    <ul id="workStreams" name="workStreamsSelect"></ul>
     <br />
 </c:if>
 

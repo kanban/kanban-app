@@ -103,7 +103,7 @@
       $.ajax({
          type: "GET",
          url: window.location.pathname + "/add-item-action",
-         data: "type="+type+"&name="+name+"&averageCaseEstimate="+averageCaseEstimate+"&importance="+importance + "&color=FFFFFF&notes=&excluded=&workStreams=${workStreams[project.name]}",
+         data: "type="+type+"&name="+name+"&averageCaseEstimate="+averageCaseEstimate+"&importance="+importance + "&color=FFFFFF&notes=&excluded=&workStreamsSelect=${workStreams[project.name]}",
          success: function(){
              window.location.reload();
          },
