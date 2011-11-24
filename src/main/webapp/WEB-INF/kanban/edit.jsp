@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="kanban" uri="/WEB-INF/kanban.tld" %>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
     <jsp:include page="include/header-head.jsp" />
@@ -12,6 +10,9 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/edit.js"></script>
 
     <title>Kanban: edit a work item</title>
+    <script type="text/javascript">
+        <kanban:workStreams name="workStreams" project="${project}" workItem="${workItem}"/>
+    </script>
 </head>
 <body>
     <jsp:include page="include/header.jsp" />

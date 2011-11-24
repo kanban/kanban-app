@@ -296,7 +296,7 @@ public class KanbanBoardController {
                                                    @RequestParam("notes") String notes,
                                                    @RequestParam("color") String color,
                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
-                                                   @RequestParam(value = "workStreams", required = false) String workStreams,
+                                                   @RequestParam(value = "workStreamsSelect", required = false) String workStreams,
                                                    HttpServletRequest request) throws IOException {
 
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
@@ -382,7 +382,7 @@ public class KanbanBoardController {
                                                     @RequestParam("notes") String notes,
                                                     @RequestParam("color") String color,
                                                     @RequestParam(value = "excluded", required = false) String excludedStr,
-                                                    @RequestParam(value = "workStreams", required = false) String workStreams,
+                                                    @RequestParam(value = "workStreamsSelect", required = false) String workStreams,
                                                     HttpServletRequest request) throws IOException, ParseException {
 
         // Get the item which is being edited

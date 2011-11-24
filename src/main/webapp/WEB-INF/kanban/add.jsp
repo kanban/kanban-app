@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="kanban" uri="/WEB-INF/kanban.tld" %>
 
-
 <html>
 
 <head>
@@ -13,7 +12,7 @@
 	<title>Kanban: add a work item</title>
     
     <script type="text/javascript">
-    	<kanban:workStreams name="workStreams" project="${project}"/>
+    	<kanban:workStreams name="workStreams" project="${project}" initialWorkStream="${workStreams[projectName]}"/>
 	</script>
 </head>
 
