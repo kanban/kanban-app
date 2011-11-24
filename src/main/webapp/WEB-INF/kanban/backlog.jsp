@@ -49,6 +49,9 @@
            type: "POST",
            url: window.location.pathname + "/edit-item-action",
            data: "id=" + element.parents("tr").attr("id") + "&" + element.attr("data-role") + "=" + element.val(),
+           error: function(){
+               alert("Failed to update story.");
+            }
          });
          
          element.parent().html(element.val()).removeClass("formified").addClass("formify");
