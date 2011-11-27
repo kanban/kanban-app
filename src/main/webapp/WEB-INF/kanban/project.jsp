@@ -505,7 +505,7 @@ div[data-role="card"]{
                             <button class="dropdown"></button>
                             <div class="dropdown-menu-wrapper" style="display:none;">
                               <div class="dropdown-menu">
-                                <a class="edit" href="javascript:edit(<%=item.getId()%>);">
+                                <a class="edit" href="wall/edit-item?id=<%=item.getId()%>">
                                   <img
                                   	class="edit"
                                     id="edit-work-item-<%=item.getId()%>-button"

@@ -125,12 +125,10 @@ $(document).ready(function(){
         		"type": row.find("input[name=type]").val(),
         		"name": row.find("input[name=name]").val(),
         		"averageCaseEstimate": "",
-        		"worstCaseEstimate": "",
         		"importance": row.find("input[name=importance]").val(),
         		"color": "FFFFFF",
         		"notes": "",
-        		"excluded": "",
-        		"workStreams": "${workStreams[project.name]}"
+        		"workStreamsSelect": "${workStreams[project.name]}"
         	};
               
         	$.ajax({

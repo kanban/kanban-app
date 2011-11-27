@@ -15,6 +15,7 @@ import com.metservice.kanban.model.WorkItem;
 import com.metservice.pet.PetDao;
 import com.metservice.pet.Project;
 
+//TODO This class needs unit tests.
 @Controller
 @RequestMapping("/{projectName}")
 public class ProjectEstimationToolController {
@@ -113,8 +114,4 @@ public class ProjectEstimationToolController {
         return new RedirectView("pet-project");
     }
 
-    @RequestMapping("/")
-    public RedirectView root() {
-        return new RedirectView("pet-project");
-    }
 }

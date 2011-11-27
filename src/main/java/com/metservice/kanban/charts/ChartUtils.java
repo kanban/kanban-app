@@ -1,12 +1,10 @@
 package com.metservice.kanban.charts;
 
-import static com.metservice.kanban.utils.DateUtils.currentLocalDate;
 import static com.metservice.kanban.utils.WorkingDayUtils.isWorkingDay;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.model.WorkItem;
-import com.metservice.kanban.utils.DateUtils;
 
 /**
  * Helper class for creating Charts.

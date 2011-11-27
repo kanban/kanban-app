@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 
+//TODO This class needs unit tests.
 public class Project {
 
     private final List<WorkItem> plannedFeatures = new ArrayList<WorkItem>();

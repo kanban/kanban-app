@@ -2,6 +2,7 @@ package com.metservice.pet;
 
 import com.metservice.kanban.model.WorkItem;
 
+//TODO This class needs unit tests.
 public class BudgetEntry {
 
     private WorkItem feature;

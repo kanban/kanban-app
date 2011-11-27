@@ -6,6 +6,9 @@ $(document).ready(function() {
 	});
 });
 
+
+
+
 function deleteThisWorkItem() {
 	var response = confirm("Permanently delete this work item?");
 	if (response == true) {

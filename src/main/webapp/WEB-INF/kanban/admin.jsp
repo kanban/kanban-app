@@ -23,8 +23,8 @@ KanbanProject project = (KanbanProject) request.getAttribute("project");
     <!--Use the admin.css file for styling this.  -->
     <ul>
     
-      <li><a href="admin/edit-project?createNewProject=true">New Project</a></li>
-      <li><a href="admin/edit-project?createNewProject=false" >Edit Project</a></li>
+      <li><a href="edit-project?createNewProject=true">New Project</a></li>
+      <li><a href="edit-project?createNewProject=false" >Edit Project</a></li>
       
       <li>
         <a href="javascript:addColumn();" >

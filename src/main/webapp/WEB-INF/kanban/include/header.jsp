@@ -59,6 +59,9 @@
         <div class="version">VERSION: ${service.version}</div>
         <div id="projectDropdown">
 			<form id="header" method="post" action="" style="display: inline;">
+                <input type="hidden" name="chartName" value="${chartName}" />
+                <input type="hidden" name="workItemTypeName" value="${workItemTypeName}" />
+
     			<label class="projectPicker" for="projectPicker">Project:</label>
 
 				<select id="projectPicker" onchange="changeProject('projectPicker')">
@@ -67,7 +70,10 @@
 						</c:forEach>
 				</select>
 			</form>
- 			<form action="${pageContext.request.contextPath}/projects/${project.name}/${boardName}/set-work-stream" style="display: inline;">
+            
+ 			<form action="${pageContext.request.contextPath}/projects/${project.name}/${boardType}/set-work-stream" style="display: inline;">
+                <input type="hidden" name="chartName" value="${chartName}" />
+                <input type="hidden" name="workItemTypeName" value="${workItemTypeName}" />
 			<label for="workStreamPicker">Work stream:</label>
  				<select id="workStreamPicker" name="workStream" onchange="form.submit()"> 
 					<option value="">[all streams]</option>
@@ -106,31 +112,31 @@
           </div>
           <div id="graph_dropdown">
           
-          	<a id="cumulative-flow-chart-1-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog/chart?chartName=cumulative-flow-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">
+          	<a id="cumulative-flow-chart-1-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=cumulative-flow-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">
               <img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" /> ${project.workItemTypes.root.value.name}
 	        </a>
 			      
             <c:if test="${secondLevel != null}" >
-            	<a id="cumulative-flow-chart-2-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog/chart?chartName=cumulative-flow-chart&workItemTypeName=${secondLevel.name}" class="button">
+            	<a id="cumulative-flow-chart-2-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=cumulative-flow-chart&workItemTypeName=${secondLevel.name}" class="button">
                 	<img src="${pageContext.request.contextPath}/images/cumulative-flow-chart.png" /> ${secondLevel.name}
                 </a>
             </c:if>
            
-           <a id="cycle-time-chart-1-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog/chart?chartName=cycle-time-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">
+           <a id="cycle-time-chart-1-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=cycle-time-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">
                 <img src="${pageContext.request.contextPath}/images/cycle-time-chart.png" /> ${project.workItemTypes.root.value.name}
            </a>
             
             <c:if test="${secondLevel != null}" >
-            	<a id="cycle-time-chart-2-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog/chart?chartName=cycle-time-chart&workItemTypeName=${secondLevel.name}" class="button">
+            	<a id="cycle-time-chart-2-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=cycle-time-chart&workItemTypeName=${secondLevel.name}" class="button">
               		<img src="${pageContext.request.contextPath}/images/cycle-time-chart.png" /> ${secondLevel.name}
             	</a>
             </c:if>
           </div>			
 			
 			<!-- End of graph buttons -->
-        <a id="burn-up-chart-button" href="${pageContext.request.contextPath}/projects/${project.name}/backlog/chart?chartName=burn-up-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">Burn-Up Chart</a>
+        <a id="burn-up-chart-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=burn-up-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">Burn-Up Chart</a>
+        <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">Estimates</a>
         <a id="admin" href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="button">Admin</a>
-        <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">P.E.T.</a>
     </div>
     
 <script type="text/javascript">
