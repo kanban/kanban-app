@@ -135,8 +135,8 @@
 			
 			<!-- End of graph buttons -->
         <a id="burn-up-chart-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=burn-up-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">Burn-Up Chart</a>
+        <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">Estimates</a>
         <a id="admin" href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="button">Admin</a>
-        <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">P.E.T.</a>
     </div>
     
 <script type="text/javascript">
