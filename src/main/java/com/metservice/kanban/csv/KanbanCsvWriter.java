@@ -45,12 +45,12 @@ public class KanbanCsvWriter {
         data[1] = PARENT_ID_COLUMN_NAME;
         data[2] = NAME_COLUMN_NAME;
         data[3] = AVERAGE_CASE_ESIMATE;
-        data[4] = IMPORTANCE_COLUMN_NAME;
-        data[5] = NOTES_COLUMN_NAME;
-        data[6] = EXCLUDED_COLUMN_NAME;
-        data[7] = STOPPED_COLUMN_NAME;
-        data[8] = COLOR_COLUMN_NAME;
-        data[9] = WORST_CASE_ESIMATE;
+        data[4] = WORST_CASE_ESIMATE;
+        data[5] = IMPORTANCE_COLUMN_NAME;
+        data[6] = NOTES_COLUMN_NAME;
+        data[7] = EXCLUDED_COLUMN_NAME;
+        data[8] = STOPPED_COLUMN_NAME;
+        data[9] = COLOR_COLUMN_NAME;
         data[10] = MUST_HAVE;
         data[11] = WORK_STREAMS;
 
@@ -69,12 +69,12 @@ public class KanbanCsvWriter {
         data[1] = Integer.toString(workItem.getParentId());
         data[2] = workItem.getName();
         data[3] = Integer.toString(workItem.getAverageCaseEstimate());
-        data[4] = Integer.toString(workItem.getImportance());
-        data[5] = workItem.getNotes();
-        data[6] = Boolean.toString(workItem.isExcluded());
-        data[7] = Boolean.toString(workItem.isStopped());
-        data[8] = workItem.getColour().toString().substring(1);
-        data[9] = Integer.toString(workItem.getWorstCaseEstimate());
+        data[4] = Integer.toString(workItem.getWorstCaseEstimate());
+        data[5] = Integer.toString(workItem.getImportance());
+        data[6] = workItem.getNotes();
+        data[7] = Boolean.toString(workItem.isExcluded());
+        data[8] = Boolean.toString(workItem.isStopped());
+        data[9] = workItem.getColour().toString().substring(1);
         data[10] = Boolean.toString(workItem.isMustHave());
         data[11] = workItem.getWorkStreamsAsString();
 
