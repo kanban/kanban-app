@@ -354,8 +354,7 @@ public class KanbanBoardController {
                                                    @RequestParam("notes") String notes,
                                                    @RequestParam("color") String color,
                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
-                                                   @RequestParam(value = "workStreamsSelect", required = false) String workStreams,
-                                                   HttpServletRequest request) throws IOException {
+                                                   @RequestParam(value = "workStreamsSelect", required = false) String workStreams) throws IOException {
 
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
 
@@ -376,6 +375,7 @@ public class KanbanBoardController {
         // Redirect to backlog
         return new RedirectView("../" + board);
     }
+
 
     @RequestMapping(value = "print-items")
     public synchronized ModelAndView printItems(@ModelAttribute("project") KanbanProject project,
@@ -488,6 +488,57 @@ public class KanbanBoardController {
         return new RedirectView("../" + boardType);
     }
 
+    @RequestMapping(value = "{board}/edit-item/{id}/name", method = RequestMethod.POST)
+    public synchronized ResponseEntity<String> updateItemName(@ModelAttribute("project") KanbanProject project,
+            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                    throws IOException {
+        // why are these methods marked as synchronized?!?
+
+        // Get the item which is being edited
+        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+
+        workItem.setName(newValue);
+        project.save();
+
+        // Go home.
+        return new ResponseEntity<String>(
+                String.format("Name change successfully.  New name: %s", workItem.getName()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "{board}/edit-item/{id}/size", method = RequestMethod.POST)
+    public synchronized ResponseEntity<String> updateItemSize(@ModelAttribute("project") KanbanProject project,
+            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                    throws IOException {
+        // why are these methods marked as synchronized?!?
+
+        // Get the item which is being edited
+        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+
+        workItem.setAverageCaseEstimate(parseInteger(newValue, 0));
+        project.save();
+
+        // Go home.
+        return new ResponseEntity<String>(
+                String.format("Size change successfully.  New size: %s", workItem.getAverageCaseEstimate()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "{board}/edit-item/{id}/importance", method = RequestMethod.POST)
+    public synchronized ResponseEntity<String> updateItemImportance(@ModelAttribute("project") KanbanProject project,
+            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                    throws IOException {
+        // why are these methods marked as synchronized?!?
+
+        // Get the item which is being edited
+        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+
+        workItem.setImportance(parseInteger(newValue, 0));
+        project.save();
+
+        // Go home.
+        return new ResponseEntity<String>(
+                String.format("Importance change successfully.  New importance: %s", workItem.getImportance()),HttpStatus.OK);
+    }
+
     @RequestMapping("edit-journal-action")
     public synchronized RedirectView editJournalAction(@ModelAttribute("project") KanbanProject project,
                                                        @RequestParam("journalText") String journalText,
@@ -555,7 +606,7 @@ public class KanbanBoardController {
         try {
             type = project.getWorkItemTypes().getByName(level);
         } catch (IllegalArgumentException e) {
-            // TODO produce image with text from exception 
+            // TODO produce image with text from exception
             return;
         }
 
