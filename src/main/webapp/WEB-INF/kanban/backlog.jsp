@@ -4,21 +4,10 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%@page import="com.metservice.kanban.model.KanbanBacklog"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.WorkItem"%>
-<%@page import="com.metservice.kanban.model.WorkItemType"%>
-<%@page import="com.metservice.kanban.model.KanbanProject"%>
-<%@page import="com.metservice.kanban.model.KanbanProjectConfiguration"%>
-<%@page import="com.metservice.kanban.model.WorkItemTypeCollection"%>
-<%@page import="com.metservice.kanban.model.KanbanBoard"%>
-<%@page import="com.metservice.kanban.model.KanbanBoardRow"%>
-<%@page import="com.metservice.kanban.model.KanbanCell"%>
-<%@page import="com.metservice.kanban.model.BoardIdentifier"%>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<jsp:include page="include/header-head.jsp"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/backlog.css" />
 
 <script>
 $(document).ready(function(){
@@ -146,9 +135,6 @@ $(document).ready(function(){
     });  	
 });
 </script>
-<%
-    KanbanProject project = (KanbanProject) request.getAttribute("project");
-%>
 
 <title>Kanban</title>
 <style type="text/css">
@@ -225,14 +211,14 @@ td.small{
 		<table id="backlog-table" class="kanban">
 			<thead>
 				<tr class="customizedHeader">
-					<th ></th>
-					<th ></th>
-					<th ></th>
-					<th >${phase}</th>
-					<th ></th>
-					<th ></th>
-					<th ></th>
-					<th ></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th>${phase}</th>
+					<th></th>
+					<th>Avg</th>
+					<th>Imp</th>
+					<th></th>
 				</tr>
 			</thead>
       <tbody>
@@ -241,24 +227,30 @@ td.small{
 				<tr id="${cell.workItem.id}" class="horizontalLine">
 					<td class="dragHandle" style="width:35px" ></td>  				
 					<td class="editIcon">
-					<a href="<%= request.getContextPath() + "/projects/" + request.getAttribute("projectName") %>/backlog/edit-item?id=${cell.workItem.id}">
-							<img id="edit-work-item-${cell.workItem.id}-button"
-								src="<%=request.getContextPath()%>/images/edit.png" />
+					<a href="${pageContext.request.contextPath}/projects/${projectName}/backlog/edit-item?id=${cell.workItem.id}">
+							<img id="edit-work-item-${cell.workItem.id}-button" src="${pageContext.request.contextPath}/images/edit.png" />
 					</a>
 					</td>
 					<c:choose>
 						<c:when test="${cell.workItem.excluded}">
-							<td class="itemName"  style="font-family: arial;	font-size: 14px; color: #383838; text-align: center; width:25px; text-decoration: line-through">
+							<td class="itemName itemNumber itemExcluded">
 								${cell.workItem.id}
 						    </td>
 						</c:when>
 						<c:otherwise>
-							<td class="itemName"  style="font-family: arial;	font-size: 14px; color: #383838; text-align: center; width:25px">
+							<td class="itemName itemNumber itemIncluded">
 						        ${cell.workItem.id} 
 						    </td>
 						</c:otherwise>
 					</c:choose>
-					<td class="itemName formify" data-role="name">${cell.workItem.name}</td>
+                    <c:choose>
+                        <c:when test="${cell.workItem.mustHave}">
+					       <td class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
+                        </c:otherwise>
+                    </c:choose>
 					<td class="small color">
 					  <div style="background-color:${cell.workItem.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
 					  </div>
@@ -275,8 +267,7 @@ td.small{
 					</td>
 					<td class="small advanceIcon" align="center" >
 							<c:if test="${! item.inFinalPhase}">
-								<img class="advance"
-									src="<%=request.getContextPath()%>/images/go-next.png" />
+								<img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
 							</c:if>
 					</td>
 				</tr>

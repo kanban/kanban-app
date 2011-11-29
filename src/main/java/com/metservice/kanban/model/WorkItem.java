@@ -28,7 +28,7 @@ public class WorkItem {
     private int importance;
     private String notes;
     private boolean excluded;
-    private boolean stopped; //Whether a story is allowed to progress regardless of stage
+    private boolean blocked; //Whether a story is allowed to progress regardless of stage
     private HtmlColour colour;
 
     //Keep track of when this item started a phase
@@ -78,7 +78,7 @@ public class WorkItem {
         this.importance = 0;
         this.notes = "";
         this.excluded = false;
-        this.stopped = false;
+        this.blocked = false;
         this.colour = new HtmlColour("FFFFFF");
         this.worstCaseEstimate = 0;
         this.mustHave = false;
@@ -140,8 +140,8 @@ public class WorkItem {
         this.excluded = excluded;
     }
 
-    public void setStopped(boolean stopped){
-    	this.stopped = stopped;
+    public void setBlocked(boolean blocked){
+    	this.blocked = blocked;
     }
 
     public String getCurrentPhase() {
@@ -227,13 +227,13 @@ public class WorkItem {
     	return !type.hasPhaseAfter(currentPhase);
     }
 
-    public boolean isStopped() {
-    	return stopped;
+    public boolean isBlocked() {
+    	return blocked;
     }
 
     public void stop() {
-    	if (stopped==true) { stopped = false; } else {
-            stopped = true;
+    	if (blocked==true) { blocked = false; } else {
+            blocked = true;
         }
     }
 
@@ -265,7 +265,7 @@ public class WorkItem {
         workItem.currentPhase = currentPhase;
         workItem.excluded = excluded;
         workItem.colour = colour;
-        workItem.stopped = stopped;
+        workItem.blocked = blocked;
         workItem.comments.addAll(comments);
 
         return workItem;

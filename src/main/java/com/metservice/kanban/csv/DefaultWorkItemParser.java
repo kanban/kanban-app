@@ -58,7 +58,7 @@ public class DefaultWorkItemParser implements WorkItemParser {
         color = ( (color == null || color == "") ? "ffffff" : color);
         
         workItem.setColour(color);
-        workItem.setStopped(stopped);
+        workItem.setBlocked(stopped);
         workItem.setWorstCaseEstimate(worstCaseEstimate);
         workItem.setMustHave(mustHave);
         workItem.setWorkStreamsAsString(workStreams);

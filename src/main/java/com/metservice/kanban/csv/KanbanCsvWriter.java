@@ -73,7 +73,7 @@ public class KanbanCsvWriter {
         data[5] = Integer.toString(workItem.getImportance());
         data[6] = workItem.getNotes();
         data[7] = Boolean.toString(workItem.isExcluded());
-        data[8] = Boolean.toString(workItem.isStopped());
+        data[8] = Boolean.toString(workItem.isBlocked());
         data[9] = workItem.getColour().toString().substring(1);
         data[10] = Boolean.toString(workItem.isMustHave());
         data[11] = workItem.getWorkStreamsAsString();

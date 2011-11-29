@@ -2,6 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.joda.time.LocalDate"%>
 <%@page import="com.metservice.kanban.utils.WorkingDayUtils"%>
@@ -19,7 +22,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<jsp:include page="include/header-head.jsp"/>
+    <jsp:include page="include/header-head.jsp"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/project.css" />
 
 <title>Kanban</title>
 <%
@@ -86,7 +90,7 @@
 			   var item = document.getElementById(divId);
 			  if (item.className == 'markedToPrint') {
 			  	if (isStopped) {
-			  		item.className = "stopped";
+			  		item.className = "blocked";
 			  	}
 			  	else {
 			  		item.className = type;
@@ -306,9 +310,6 @@ table#headercopy .feature-header{
 	background: #EEEEEE;
 }
 
-.stopped {
-	background: #FF0033 !important;
-}
 
 .horizontalLine {
 	border-top: 2px black solid;
@@ -389,7 +390,7 @@ div[data-role="card"]{
                                         String type = column.getWorkItemType().getName();
                                         //WIP Limit stuff by Nick Malcolm and Chris Cooper
                 %>
-                <th title="WIP Limit: <%=wipLimit%>" class="<%=type%>-header" id="phase_<%= column_index %>"><%=column.getPhase()%></th>
+                <th title="WIP Limit: <%=wipLimit > 0 ? wipLimit : "None" %>" class="<%=type%>-header" id="phase_<%= column_index %>"><%=column.getPhase()%></th>
                 <script>
                 	$(document).ready(function(){
                 		var i = 0; 
@@ -411,28 +412,34 @@ div[data-role="card"]{
           </thead>
           <tbody>
             <%
-                KanbanBoard kanbanBoard = (KanbanBoard)request.getAttribute("board"); 
+                KanbanBoard kanbanBoard = (KanbanBoard)request.getAttribute("board");
+            
+
             
                 for (KanbanBoardRow row : kanbanBoard) {
+                    
                     
                     %><tr class="<%= row.hasItemOfType(rootType) ? "horizontalLine" : ""%>"><%
                     
                     for (KanbanCell cell : row) {
+                        pageContext.setAttribute("cell", cell);
+
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                             String notes = item.getNotes();
                             notes = StringEscapeUtils.escapeHtml(notes);
                     %>
+                    <c:set var="item" value="${cell.workItem}" />
                   
                     
-                    <td class="<%=item.getType().getName()%>-background">
+                    <td class="${item.type.name}-background">
                       
                         <div
-                            onclick="javascript:markUnmarkToPrint('work-item-<%=item.getId()%>','<%=item.getType().getName()%>', <%=item.isStopped()%>)"
-                            id="work-item-<%=item.getId()%>" title="Notes: <%=notes == null ? "none" : notes %>"
-                            class="<%=item.getType().getName()%><%= item.isStopped() ? " stopped" : "" %>" data-role="card">
+                            onclick="javascript:markUnmarkToPrint('work-item-${item.id}','${item.name}', ${item.blocked})"
+                            id="work-item-${item.id}" title="Notes: ${fn:escapeXml(item.notes)}"
+                            class="${item.type.name}${item.blocked ? " blocked" : ""}" data-role="card">
                             
-                            <div class="age-container" style="background-color:<%=item.getColour()%>">
+                            <div class="age-container" style="background-color:${item.colour}">
                                 <% 
                                 LocalDate phaseStartDate = item.getDate(item.getCurrentPhase());
                                 int days = WorkingDayUtils.getWorkingDaysBetween(phaseStartDate, new LocalDate());
@@ -465,107 +472,78 @@ div[data-role="card"]{
                             </div>
                             <div class="icons">
                               <div class="upIcon">
-                                  <%
-                                      WorkItem adjacentWorkItemUp = cell.getWorkItemAbove();
-                                                  if (adjacentWorkItemUp != null) {
-                                  %>
-                                  <img 
-                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemUp.getId()%>, false);"
-                                      src="<%=request.getContextPath()%>/images/go-up.png" />
-                                  <%
-                                      } 
-                                  %>
+                                <c:if test="${cell.workItemAbove != null}">
+                                  <img onclick="javascript:move(${item.id}, ${cell.workItemAbove.id}, false);" 
+                                       src="${pageContext.request.contextPath}/images/go-up.png" />
+                                  </c:if>
                               </div>
                               <div class="advanceIcon">
-                            
-                              	<% 
-                              		if (!item.isCompleted() && !item.isStopped()) {
-                                  %>
-                                  <img 
-                                      onclick="javascript:advance(<%=item.getId()%>);"
-                                      src="<%=request.getContextPath()%>/images/go-next.png" />
-                                  <%
-                                      }
-                                  %>
+                                <c:if test="${!item.completed && !item.blocked}">
+                                    <img onclick="javascript:advance(${item.id});" src="${pageContext.request.contextPath}/images/go-next.png" />
+                                </c:if>
                               </div>
                               <div class="downIcon">
-
-                                  <%
-                                      WorkItem adjacentWorkItemDown = cell.getWorkItemBelow();
-                                                  if (adjacentWorkItemDown != null) {
-                                  %>
-                                  <img 
-                                      onclick="javascript:move(<%=item.getId()%>, <%=adjacentWorkItemDown.getId()%>, true);"
-                                      src="<%=request.getContextPath()%>/images/go-down.png" />
-                                  <%
-                                      }
-                                  %>
+                                <c:if test="${cell.workItemBelow != null}">
+                                    <img  onclick="javascript:move(${item.id}, ${cell.workItemBelow.id}, true);"
+                                      src="${pageContext.request.contextPath}/images/go-down.png" />
+                                </c:if>
                               </div>
                             </div>
                             <button class="dropdown"></button>
                             <div class="dropdown-menu-wrapper" style="display:none;">
                               <div class="dropdown-menu">
-                                <a class="edit" href="wall/edit-item?id=<%=item.getId()%>">
-                                  <img
-                                  	class="edit"
-                                    id="edit-work-item-<%=item.getId()%>-button"
-                                    src="<%=request.getContextPath()%>/images/edit.png" /> 
-                                    Edit</a>
-                                    <%
+                                <a class="edit" href="wall/edit-item?id=${item.id}">
+                                  <img class="edit" id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" /> 
+                                  Edit
+                                </a>
+                                <%
                                     if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
-                                    %>
-                                    <a class="add" href="javascript:addChild(<%=item.getId()%>);">
-                                    <img
-                                        class="add"
-                                        alt="Advance"
-                                        src="<%=request.getContextPath()%>/images/list-add.png" />
-                                         Add</a>
-                                    <%
+                                %>
+                                    <a class="add" href="javascript:addChild(${item.id});">
+                                        <img class="add" alt="Advance" src="${pageContext.request.contextPath}/images/list-add.png" />
+                                        Add
+                                    </a>
+                                <%
                                         }
-                                    %>
-                                <a href="javascript:stopStory(<%=item.getId()%>,'<%=item.getType().getName()%>');" class="last">
-                                  <img
-                                  	    class="stop"
-                                        id="stop-work-item-<%=item.getId()%>-button"
-                                        src="<%=request.getContextPath()%>/images/stop.png" /> 
-                                        Stop</a>
+                                 %>
+                                <a href="javascript:stopStory(${item.id},'${item.type.name}');" class="last">
+                                  <img class="stop" id="stop-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/stop.png" />
+                                  <c:choose>
+                                    <c:when test="${item.blocked}">Unblock</c:when>
+                                    <c:otherwise>Blocked</c:otherwise>
+                                  </c:choose>
+                                </a>
                               </div>
                             </div>
                             
-                            <%
-                                if (item.getAverageCaseEstimate() > 0) {
-                            %>
-                            <div class="size">
-                                <%=item.getAverageCaseEstimate()%>
-                            </div>
-                            <%
-                                } else {
-                            %>
-                            <div class="size" style="border: 0px"></div>
-                            <%
-                                }
-                            %>
+                            <c:choose>
+                                <c:when test="${item.averageCaseEstimate > 0}">
+                                    <div class="size">
+                                        ${item.averageCaseEstimate}
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="size" style="border: 0px"></div>
+                                </c:otherwise>
+                            </c:choose>
 
-                            <%
-                                if (item.getImportance() > 0) {
-                            %>
-                            <div class="importance">
-                                <%=item.getImportance()%>
-                            </div>
-                            <%
-                                } else {
-                            %>
-                            <div class="importance" style="border: 0px"></div>
-                            <%
-                                }
-                            %>
+                            <c:choose>
+                                <c:when test="${item.importance > 0}">
+                                    <div class="importance">
+                                        ${item.importance}
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="importance" style="border: 0px"></div>
+                                </c:otherwise>
+                            </c:choose>
                             
 
                         </div></td>
                     <%
                         } else {
                     %><td
-                        class="<%=cell.getWorkItemType().getName()%>-background"></td>
+                        class="${cell.workItemType.name}-background"></td>
                     <%
                         }
                         }

@@ -1,0 +1,18 @@
+.itemNumber {
+	font-family: arial;	font-size: 14px; color: #383838; text-align: center; width:25px;
+}
+
+.itemExcluded {
+	 text-decoration: line-through;
+}
+
+.itemIncluded {
+}
+
+.itemMustHave {
+	font-weight: bold;
+}
+
+.itemNiceToHave {
+	font-weight: normal;
+}

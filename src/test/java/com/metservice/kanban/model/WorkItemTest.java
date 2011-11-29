@@ -112,9 +112,9 @@ public class WorkItemTest {
     public void testStop() throws ParseException {
     	WorkItem workItem = new WorkItem(1, type); 
         workItem.setDate("phase1", formatter.parse("10/02/2011"));
-        assertFalse(workItem.isStopped());
+        assertFalse(workItem.isBlocked());
         workItem.stop();
-        assertTrue(workItem.isStopped());        
+        assertTrue(workItem.isBlocked());        
     }
 
     @Test(expected = IllegalStateException.class)
