@@ -32,9 +32,9 @@ KanbanProject project = (KanbanProject) request.getAttribute("project");
         </a>
       </li>
       <li>
-    	  <a href="javascript:addWaitingColumn();">
-    	    Add Waiting Column
-    	  </a>
+<!--     	  <a href="javascript:addWaitingColumn();" > -->
+    	    Add Waiting Column [not implemented yet]
+<!--     	  </a> -->
       </li>
      <li>
       <a href="javascript:deleteColumn();" >
