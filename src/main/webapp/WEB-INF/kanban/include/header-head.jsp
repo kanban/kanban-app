@@ -14,6 +14,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/header.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/colorpicker.css"  />
 <link rel="stylesheet" media="screen" type="text/css" href="${pageContext.request.contextPath}/css/layout.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/boards.css" />
 
 
 <link href="${pageContext.request.contextPath}/js/tagit/css/tagit-simple-blue.css" rel="stylesheet" type="text/css"/>

@@ -1,12 +1,7 @@
 package com.metservice.kanban.model;
 
-/**
- * 
- * 
- * WIP Limit by Nicholas Malcolm and Chris Cooper
- *
- */
 public class KanbanBoardColumn {
+
     private final WorkItemType type;
     private final String phase;
     private int wipLimit;
@@ -16,7 +11,7 @@ public class KanbanBoardColumn {
         this.phase = phase;
         this.wipLimit = -1;
     }
-    
+
     public KanbanBoardColumn(WorkItemType type, String phase, int wipLimit) {
         this.type = type;
         this.phase = phase;
@@ -26,21 +21,21 @@ public class KanbanBoardColumn {
     public WorkItemType getWorkItemType() {
         return type;
     }
-    
+
     public String getPhase() {
         return phase;
     }
-    
+
     @Override
     public String toString() {
         return type + "/" + phase;
     }
-    
-    public int getWIPLimit(){
-    	return wipLimit;
+
+    public int getWIPLimit() {
+        return wipLimit;
     }
 
-	public void setWIPLimit(int columnLimit) {
-		this.wipLimit = columnLimit;
-	}
+    public void setWIPLimit(int columnLimit) {
+        this.wipLimit = columnLimit;
+    }
 }

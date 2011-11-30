@@ -384,13 +384,25 @@ div[data-role="card"]{
                 <%
                     KanbanBoardColumnList columns = project.getColumns(board);
 					int column_index = 0;
-                                    for (KanbanBoardColumn column : columns) {
-										column_index++;
-										int wipLimit = column.getWIPLimit();
-                                        String type = column.getWorkItemType().getName();
-                                        //WIP Limit stuff by Nick Malcolm and Chris Cooper
+                    for (KanbanBoardColumn column : columns) {
+                                    
+                        pageContext.setAttribute("column", column);
+                                        
+                        pageContext.setAttribute("column_index", column_index);
+						column_index++;
+						int wipLimit = column.getWIPLimit();
+                        String type = column.getWorkItemType().getName();
                 %>
-                <th title="WIP Limit: <%=wipLimit > 0 ? wipLimit : "None" %>" class="<%=type%>-header" id="phase_<%= column_index %>"><%=column.getPhase()%></th>
+                
+                <c:choose>
+                    <c:when test="${column.WIPLimit > -1 &&  board.itemsInColumn[column.phase] > column.WIPLimit}">
+                        <c:set var="columnHeaderClass" value="${column.workItemType.name}-header brokenWIPLimit"></c:set>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="columnHeaderClass" value="${column.workItemType.name}-header"></c:set>
+                    </c:otherwise>
+                </c:choose>
+                <th title="WIP Limit: ${column.WIPLimit > 0 ? column.WIPLimit : "None"}" class="${columnHeaderClass}" id="phase_<%= column_index %>">${column.phase}</th>
                 <script>
                 	$(document).ready(function(){
                 		var i = 0; 
@@ -400,9 +412,6 @@ div[data-role="card"]{
                 				i+=temp;
                 			}
                 		});
-                		if(i > <%= wipLimit %> && <%= wipLimit %> > -1) {
-                			$("#phase_<%=column_index %>").css('background-color', '#f00');
-                		}
                 	});
                 </script>
                 <%
@@ -414,30 +423,27 @@ div[data-role="card"]{
             <%
                 KanbanBoard kanbanBoard = (KanbanBoard)request.getAttribute("board");
             
-
-            
                 for (KanbanBoardRow row : kanbanBoard) {
                     
                     
                     %><tr class="<%= row.hasItemOfType(rootType) ? "horizontalLine" : ""%>"><%
                     
                     for (KanbanCell cell : row) {
+                        // remove after refactoring
                         pageContext.setAttribute("cell", cell);
 
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
-                            String notes = item.getNotes();
-                            notes = StringEscapeUtils.escapeHtml(notes);
                     %>
+                    <%--  remove after refactoring --%>
                     <c:set var="item" value="${cell.workItem}" />
-                  
                     
                     <td class="${item.type.name}-background">
                       
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-${item.id}','${item.name}', ${item.blocked})"
                             id="work-item-${item.id}" title="Notes: ${fn:escapeXml(item.notes)}"
-                            class="${item.type.name}${item.blocked ? " blocked" : ""}" data-role="card">
+                            class="${item.type.name} ${item.blocked ? "blocked" : ""}" data-role="card">
                             
                             <div class="age-container" style="background-color:${item.colour}">
                                 <% 
@@ -461,15 +467,10 @@ div[data-role="card"]{
                                 %>
                             </div>
                                 
-                                <div class="itemName">
-								<%
-									String formattedId = "" + item.getId();
-								    if (item.isExcluded()) {
-								        formattedId = "<span style='text-decoration:line-through';>" + formattedId + "</span>";
-								    }
-								%>                    
-                                <%=formattedId %>: <span class="work-item-name"><%= item.getName() %></span>
+                            <div class="itemName">
+                                <span class="${item.excluded ? "itemExcluded" : "" }">${item.id}</span>: <span class="work-item-name">${item.name}</span>
                             </div>
+                            
                             <div class="icons">
                               <div class="upIcon">
                                 <c:if test="${cell.workItemAbove != null}">
