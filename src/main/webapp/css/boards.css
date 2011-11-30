@@ -1,3 +1,14 @@
 .itemExcluded {
 	 text-decoration: line-through;
 }
+
+.itemIncluded {
+}
+
+.itemMustHave {
+	font-weight: bold;
+}
+
+.itemNiceToHave {
+	font-weight: normal;
+}

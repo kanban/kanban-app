@@ -8,6 +8,7 @@
 <head>
 	<jsp:include page="include/header-head.jsp"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/backlog.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/boards.css" />
 
 <script>
 $(document).ready(function(){
@@ -266,7 +267,7 @@ td.small{
 						</c:if>
 					</td>
 					<td class="small advanceIcon" align="center" >
-							<c:if test="${! item.inFinalPhase}">
+							<c:if test="${!item.inFinalPhase}">
 								<img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
 							</c:if>
 					</td>

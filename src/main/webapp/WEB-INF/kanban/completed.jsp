@@ -27,6 +27,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<jsp:include page="include/header-head.jsp"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/boards.css" />
 
 <title>Kanban</title>
 <%
@@ -161,14 +162,15 @@ td.padded {
         <table id="completed-table" class="kanban">
 			<thead>
 				<tr class="customizedHeader">
-					<th colspan="5">${phase}</th>
+					<th colspan="6">${phase}</th>
 				</tr>
 			</thead>
                 <tr class="subHeader">
 					<th></th>
 					<th>Id</th>
 					<th>Name</th>
-					<th>Average Case Est.</th>
+                    <th></th>
+					<th>Avg</th>
 					<th> 
                         <%
                             for (int i = 0; i < phases.size(); i++) {
@@ -183,16 +185,19 @@ td.padded {
                     <tr class="row">
                     <%
                     for (KanbanCell cell : row) {
+                        pageContext.setAttribute("cell", cell);
                         if (!cell.isEmpty()) {
                             WorkItem item = cell.getWorkItem();
                     %>
+                    <c:set var="item" value="${cell.workItem}" />
+                    
                     <td class="edit, padded">
                         <div class="editIcon">
                             <img
                                 class="edit"
                                 alt="Edit"
-                                id="edit-work-item-<%=item.getId()%>-button"
-                                onclick="javascript:edit(<%=item.getId()%>);"
+                                id="edit-work-item-${item.id}-button"
+                                onclick="javascript:edit(${item.id});"
                                 src="<%=request.getContextPath()%>/images/edit.png" />
                         </div>
                     </td>
@@ -205,14 +210,25 @@ td.padded {
 						%>                    
                         <%=formattedId %>
                     </td>
-                    <td class="name, padded">
-                        <%= item.getName() %>
+<%--                     <td class="name, padded">${item.name}</td> --%>
+                    
+                    <c:choose>
+                        <c:when test="${cell.workItem.mustHave}">
+                           <td class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
+                        </c:otherwise>
+                    </c:choose>
+                    
+                    <td class="small color">
+                      <div style="background-color:${item.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
+                      </div>
                     </td>
-                    <td class="size, padded">
-                        <%=item.getAverageCaseEstimate()%>
+                    <td class="size, padded">${item.averageCaseEstimate}
                     </td>
                     <td class="age, padded">
-                        <div id="work-item-<%=item.getId()%>" class="<%=item.getType().getName()%>">
+                        <div id="work-item-${item.id}" class="${item.type.name}">
                             
                                 <% 
                                 
