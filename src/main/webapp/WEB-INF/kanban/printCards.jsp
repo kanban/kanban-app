@@ -13,6 +13,7 @@
     <title>Kanban: printing items</title>
 </head>
 <body>
+<div class="printhide">Goto: <a href="backlog">Backlog</a> :: <a href="wall">Wall</a> :: <a href="completed">Complete</a></div>
     <c:forEach var="item" items="${items}">
         <div class="card">
             <div class="itemName">${item.name}</div>

@@ -181,3 +181,9 @@
 	font-family: verdana;
 	font-size: 11px;
 }
+
+@media print {
+	.printhide {
+		display: none !important;
+	}
+}

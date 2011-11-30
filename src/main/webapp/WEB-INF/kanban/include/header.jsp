@@ -52,7 +52,6 @@
 }
 */
 </style>
-
     <div class="header">
         
         <div class="user-home">${service.home.absolutePath}</div>

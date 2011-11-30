@@ -19,15 +19,15 @@
 <body onload="setFocus('name');">
 	<jsp:include page="include/header.jsp" />
 	
-	<form action="add-item-action">
+	<form id="edit" action="add-item-action">
 		<fieldset>
 			<legend>${legend}</legend>
 			
 			<jsp:include page="include/edit-add-item-common-fields.jsp"/>
 		</fieldset>
         
-		<fieldset class="submit">
-			<button id="save-button" type="submit">Save</button>
+		<fieldset class="submit" style="text-align: right;">
+			<button id="save-and-print-button" onclick="saveAndPrint()">Save and Print</button> <button id="save-button" type="submit">Save</button>
 		</fieldset>
         
 		<input type="hidden" name="parentId" value="${parentId}" />

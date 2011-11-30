@@ -3,8 +3,10 @@ package com.metservice.kanban.model;
 import static java.util.Collections.unmodifiableCollection;
 import static org.apache.commons.lang.SystemUtils.LINE_SEPARATOR;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 //TODO This class needs more unit tests.
 
@@ -42,7 +44,7 @@ public class KanbanBoard implements Iterable<KanbanBoardRow> {
             rows.add(row.clone());
         }
     }
-    
+
     public void insert(WorkItem workItem, WorkItem workItemAbove, WorkItem workItemBelow) {
         KanbanBoardRow targetRow = null;
         for (KanbanBoardRow row : this) {
@@ -77,4 +79,36 @@ public class KanbanBoard implements Iterable<KanbanBoardRow> {
         }
         return builder.toString();
     }
+
+    private Map<String, Integer> itemsInColumn;
+
+    public synchronized Map<String, Integer> getItemsInColumn() {
+
+        if (itemsInColumn == null) {
+            itemsInColumn = computeItemsInColumn();
+        }
+
+        return itemsInColumn;
+    }
+
+    private Map<String, Integer> computeItemsInColumn() {
+        Map<String, Integer> result = new HashMap<String, Integer>();
+
+        for (KanbanBoardRow row : rows) {
+            int column = 0;
+            for (KanbanCell cell : row) {
+                if (!cell.isEmpty()) {
+                    String columnName = row.getColumns().get(column).getPhase();
+                    int previous = 0;
+                    if (result.containsKey(columnName)) {
+                        previous = result.get(columnName);
+                    }
+                    result.put(columnName, previous + 1);
+                }
+                column++;
+            }
+        }
+        return result;
+    }
+
 }

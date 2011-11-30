@@ -3,18 +3,15 @@ package com.metservice.kanban.web;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-
 import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
 import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.model.KanbanProject;
 
@@ -102,7 +99,7 @@ public class KanbanBoardControllerLegacyTest {
     @Test
     public void testAddItemAction() throws IOException {
         RedirectView view = kanbanController.addItemAction(kanban, "wall", 0, "feature", "test", "5", "8",
-            "10", "", "000FFF", null, "");
+            "10", "", "000FFF", null, null, "");
 
         assertThat(view.getUrl(), is("../wall"));
     }

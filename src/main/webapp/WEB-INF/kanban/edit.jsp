@@ -71,8 +71,7 @@
                 <table width="100%">
                     <tr>
                         <td><button id="delete-button" type="button" onclick="deleteThisWorkItem()">Delete</button></td>
-                        <td style="text-align: right"><button id="save-button" type="submit">Save</button></td>
-<!--                         <td style="text-align: right"><button id="save-button" type="submit">Save and Print</button></td> -->
+                        <td style="text-align: right"><button id="save-and-print-button" onclick="saveAndPrint()">Save and Print</button> <button id="save-button" type="submit">Save</button></td>
                     </tr>
                 </table>
             </fieldset>

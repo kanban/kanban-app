@@ -68,7 +68,7 @@ public class DefaultKanbanProject implements KanbanProject {
 	 * @param backlogDate - the date that the new WorkItem was added to the project and backlog
      */
     @Override
-    public void addWorkItem(int parentId, WorkItemType type, String name, int averageCaseEstimate, int worstCaseEstimate,
+    public int addWorkItem(int parentId, WorkItemType type, String name, int averageCaseEstimate, int worstCaseEstimate,
                             int importance, String notes, String color, boolean excluded, String workStreams,
                             LocalDate backlogDate) {
 
@@ -89,6 +89,8 @@ public class DefaultKanbanProject implements KanbanProject {
 
 		// add the WorkItem onto the board and log the date
         advance(newId, backlogDate);
+        
+        return newId;
     }
 
 

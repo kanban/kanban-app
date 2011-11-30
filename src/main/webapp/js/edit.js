@@ -6,12 +6,14 @@ $(document).ready(function() {
 	});
 });
 
-
-
-
 function deleteThisWorkItem() {
 	var response = confirm("Permanently delete this work item?");
 	if (response == true) {
 		document.forms["delete"].submit();
 	}
+}
+
+function saveAndPrint() {
+	document.forms["edit"].elements["redirectTo"].value = "print";
+	document.forms["edit"].submit();
 }

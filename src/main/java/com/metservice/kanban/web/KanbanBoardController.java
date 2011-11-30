@@ -135,9 +135,9 @@ public class KanbanBoardController {
 
     @RequestMapping("wall")
     public synchronized ModelAndView wallBoard(@ModelAttribute("project") KanbanProject project,
-                                           @PathVariable("projectName") String projectName,
+                                               @PathVariable("projectName") String projectName,
                                                @RequestParam(value = "scrollTop", required = false) String scrollTop,
-                                           @ModelAttribute("workStreams") Map<String, String> workStreams)
+                                               @ModelAttribute("workStreams") Map<String, String> workStreams)
         throws IOException {
 
         String boardType = "wall";
@@ -354,6 +354,7 @@ public class KanbanBoardController {
                                                    @RequestParam("notes") String notes,
                                                    @RequestParam("color") String color,
                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
+                                                   @RequestParam(value = "redirectTo", required = false) String redirectTo,
                                                    @RequestParam(value = "workStreamsSelect", required = false) String workStreams) throws IOException {
 
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
@@ -368,14 +369,93 @@ public class KanbanBoardController {
         int worstCaseEstimate = parseInteger(worstCaseEstimateStr, 0);
 
         // Add it and save it
-        project.addWorkItem(parentId, typeAsWorkItemType, name, averageCaseEstimate, worstCaseEstimate,
+        int newId = project.addWorkItem(parentId, typeAsWorkItemType, name, averageCaseEstimate, worstCaseEstimate,
             importance, notes, color, excluded, workStreams, currentLocalDate());
         project.save();
 
-        // Redirect to backlog
-        return new RedirectView("../" + board);
+        if ("print".equals(redirectTo)) {
+            return new RedirectView("../print-items?printSelection=" + newId);
+        }
+        else {
+            return new RedirectView("../" + board);
+        }
     }
 
+
+    /**
+     * Responds to a form submission which passes an edited item
+     *
+     * @param project
+     * @param boardType
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    @RequestMapping("{board}/edit-item-action")
+    public synchronized RedirectView editItemAction(@ModelAttribute("project") KanbanProject project,
+                                                    @PathVariable("board") String boardType,
+                                                    @RequestParam("id") int id,
+                                                    @RequestParam("parentId") Integer parentId,
+                                                    @RequestParam("name") String name,
+                                                    @RequestParam("averageCaseEstimate") String averageCaseEstimateStr,
+                                                    @RequestParam("worstCaseEstimate") String worstCaseEstimateStr,
+                                                    @RequestParam("importance") String importanceStr,
+                                                    @RequestParam("notes") String notes,
+                                                    @RequestParam("color") String color,
+                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
+                                                    @RequestParam(value = "workStreamsSelect", required = false) String workStreams,
+                                                    @RequestParam(value = "redirectTo", required = false) String redirectTo,
+                                                    HttpServletRequest request) throws IOException, ParseException {
+    
+        // Get the item which is being edited
+        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
+    
+        @SuppressWarnings("unchecked")
+        Map<String, String[]> parameters = request.getParameterMap();
+    
+        int averageCaseEstimate = parseInteger(averageCaseEstimateStr, 0);
+        int worstCaseEstimate = parseInteger(worstCaseEstimateStr, 0);
+        int importance = parseInteger(importanceStr, 0);
+        boolean excluded = parseBoolean(excludedStr);
+    
+        // Save all the updates
+        workItem.setName(name);
+        workItem.setAverageCaseEstimate(averageCaseEstimate);
+        workItem.setWorstCaseEstimate(worstCaseEstimate);
+        workItem.setImportance(importance);
+        workItem.setNotes(notes);
+        workItem.setExcluded(excluded);
+        workItem.setColour(color);
+        workItem.setWorkStreamsAsString(workStreams);
+    
+        // TODO Figure this out
+        for (String phase : workItem.getType().getPhases()) {
+            String key = "date-" + phase;
+            String[] valueArray = parameters.get(key);
+            if (valueArray != null) {
+                if (valueArray[0].trim().isEmpty()) {
+                    workItem.setDate(phase, null);
+                } else {
+                    workItem.setDate(phase, parseConventionalNewZealandDate(valueArray[0]));
+                }
+            }
+        }
+    
+        // If it's changed parent, reset the parent.
+        if (workItem.getParentId() != parentId) {
+            project.getWorkItemTree().reparent(id, parentId);
+        }
+    
+        // Save the whole project
+        project.save();
+    
+        if ("print".equals(redirectTo)) {
+            return new RedirectView("../print-items?printSelection=" + id);
+        }
+        else {
+            return new RedirectView("../" + boardType);
+        }
+    }
 
     @RequestMapping(value = "print-items")
     public synchronized ModelAndView printItems(@ModelAttribute("project") KanbanProject project,
@@ -416,76 +496,6 @@ public class KanbanBoardController {
 
         return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
 
-    }
-
-    /**
-     * Responds to a form submission which passes an edited item
-     *
-     * @param project
-     * @param boardType
-     * @return
-     * @throws IOException
-     * @throws ParseException
-     */
-    @RequestMapping("{board}/edit-item-action")
-    public synchronized RedirectView editItemAction(@ModelAttribute("project") KanbanProject project,
-                                                    @PathVariable("board") String boardType,
-                                                    @RequestParam("id") int id,
-                                                    @RequestParam("parentId") Integer parentId,
-                                                    @RequestParam("name") String name,
-                                                    @RequestParam("averageCaseEstimate") String averageCaseEstimateStr,
-                                                    @RequestParam("worstCaseEstimate") String worstCaseEstimateStr,
-                                                    @RequestParam("importance") String importanceStr,
-                                                    @RequestParam("notes") String notes,
-                                                    @RequestParam("color") String color,
-                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
-                                                    @RequestParam(value = "workStreamsSelect", required = false) String workStreams,
-                                                    HttpServletRequest request) throws IOException, ParseException {
-
-        // Get the item which is being edited
-        WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
-
-        @SuppressWarnings("unchecked")
-        Map<String, String[]> parameters = request.getParameterMap();
-
-        int averageCaseEstimate = parseInteger(averageCaseEstimateStr, 0);
-        int worstCaseEstimate = parseInteger(worstCaseEstimateStr, 0);
-        int importance = parseInteger(importanceStr, 0);
-        boolean excluded = parseBoolean(excludedStr);
-
-        // Save all the updates
-        workItem.setName(name);
-        workItem.setAverageCaseEstimate(averageCaseEstimate);
-        workItem.setWorstCaseEstimate(worstCaseEstimate);
-        workItem.setImportance(importance);
-        workItem.setNotes(notes);
-        workItem.setExcluded(excluded);
-        workItem.setColour(color);
-        workItem.setWorkStreamsAsString(workStreams);
-
-        // TODO Figure this out
-        for (String phase : workItem.getType().getPhases()) {
-            String key = "date-" + phase;
-            String[] valueArray = parameters.get(key);
-            if (valueArray != null) {
-                if (valueArray[0].trim().isEmpty()) {
-                    workItem.setDate(phase, null);
-                } else {
-                    workItem.setDate(phase, parseConventionalNewZealandDate(valueArray[0]));
-                }
-            }
-        }
-
-        // If it's changed parent, reset the parent.
-        if (workItem.getParentId() != parentId) {
-            project.getWorkItemTree().reparent(id, parentId);
-        }
-
-        // Save the whole project
-        project.save();
-
-        // Go home.
-        return new RedirectView("../" + boardType);
     }
 
     @RequestMapping(value = "{board}/edit-item/{id}/name", method = RequestMethod.POST)

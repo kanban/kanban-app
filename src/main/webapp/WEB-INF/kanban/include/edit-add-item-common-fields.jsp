@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<input name="redirectTo" type="hidden" value="" />
 <label class="labelClass" for="name">Name:</label>
 <textarea id="name" name="name" rows="2" cols="40">${workItem.name}</textarea>
 <br />

@@ -115,7 +115,7 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
-            "5", "7", "8", "some notes", "FFFFFF", "on", "a, b,  c ", request);
+            "5", "7", "8", "some notes", "FFFFFF", "on", "a, b,  c ", null, request);
 
         assertThat(feature.getName(), is("new feature name"));
         assertThat(feature.getAverageCaseEstimate(), is(5));
@@ -144,7 +144,7 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
-            "", "", "", "some notes", "FFFFFF", "on", "", request);
+            "", "", "", "some notes", "FFFFFF", "on", "", null, request);
 
         assertThat(feature.getAverageCaseEstimate(), is(0));
         assertThat(feature.getImportance(), is(0));
@@ -174,7 +174,7 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(), "new name", "4", "6", "1",
-            "new notes", "FFFFFF", "false", "", request);
+            "new notes", "FFFFFF", "false", "", null, request);
 
         WorkItem reparentedStory = tree.getWorkItem(story.getId());
 
@@ -199,7 +199,7 @@ public class KanbanBoardControllerTest {
         KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", middleFeature.getId(), middleFeature.getParentId(),
-            "new name", "3", "8", "11", "new notes", "FFFFFF", null, "", request);
+            "new name", "3", "8", "11", "new notes", "FFFFFF", null, "", null, request);
 
         List<WorkItem> workItems = tree.getChildren(middleFeature.getParentId());
 
