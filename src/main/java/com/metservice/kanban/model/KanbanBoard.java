@@ -97,7 +97,7 @@ public class KanbanBoard implements Iterable<KanbanBoardRow> {
         for (KanbanBoardRow row : rows) {
             int column = 0;
             for (KanbanCell cell : row) {
-                if (!cell.isEmpty()) {
+                if (!cell.isEmptyCell()) {
                     String columnName = row.getColumns().get(column).getPhase();
                     int previous = 0;
                     if (result.containsKey(columnName)) {
@@ -111,4 +111,8 @@ public class KanbanBoard implements Iterable<KanbanBoardRow> {
         return result;
     }
 
+    // required by JSP as c:forEach cannot iterate using Iterable
+    public Iterator<KanbanBoardRow> getIterator() {
+        return iterator();
+    }
 }

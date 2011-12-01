@@ -427,14 +427,13 @@ div[data-role="card"]{
                     
                     
                     %><tr class="<%= row.hasItemOfType(rootType) ? "horizontalLine" : ""%>"><%
-                    
-                    for (KanbanCell cell : row) {
-                        // remove after refactoring
-                        pageContext.setAttribute("cell", cell);
+                for (KanbanCell cell : row) {
+                            // remove after refactoring
+                            pageContext.setAttribute("cell", cell);
 
-                        if (!cell.isEmpty()) {
-                            WorkItem item = cell.getWorkItem();
-                    %>
+                            if (!cell.isEmptyCell()) {
+                                WorkItem item = cell.getWorkItem();
+            %>
                     <%--  remove after refactoring --%>
                     <c:set var="item" value="${cell.workItem}" />
                     

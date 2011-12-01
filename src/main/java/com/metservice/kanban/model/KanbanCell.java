@@ -16,7 +16,7 @@ public class KanbanCell implements Cloneable {
         this.workItemType = workItemType;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmptyCell() {
         return workItem == null;
     }
     
@@ -45,7 +45,7 @@ public class KanbanCell implements Cloneable {
     }
 
     public void setWorkItem(WorkItem workItem) {
-        if (!isEmpty()) {
+        if (!isEmptyCell()) {
             throw new IllegalArgumentException("work item already exists in this position");
         }
         this.workItem = workItem;
@@ -64,10 +64,10 @@ public class KanbanCell implements Cloneable {
     
     @Override
     public String toString() {
-        return isEmpty() ? "empty cell" : workItem.toString();
+        return isEmptyCell() ? "empty cell" : workItem.toString();
     }
 
     public String toFixedWidthString() {
-        return isEmpty() ? "   " : format("%3d", workItem.getId());
+        return isEmptyCell() ? "   " : format("%3d", workItem.getId());
     }
 }
