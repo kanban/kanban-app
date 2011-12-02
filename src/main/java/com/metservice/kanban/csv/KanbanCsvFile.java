@@ -7,13 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemType;
 
 //TODO This class needs more unit tests.
 
 public class KanbanCsvFile {
+
+    private static final int MAX_TEMPORARY_FILES = 25;
 
     private final File file;
 
@@ -69,6 +74,35 @@ public class KanbanCsvFile {
 
         file.delete();
         copyFile(temporaryFile, file);
+
+        cleanUpTemproaryFiles();
+    }
+
+    public void cleanUpTemproaryFiles() {
+
+        File directory = file.getParentFile();
+        List<String> files = Arrays.asList(directory.list());
+        Collections.sort(files);
+        Collections.reverse(files);
+
+        Pattern tempFilePattern = Pattern.compile(file.getName() + "\\.\\d+\\.temp");
+
+        int tempFilesFound = 0;
+
+        File fileToClean;
+        for (String file : files) {
+
+            fileToClean = new File(directory.getAbsolutePath() + File.separatorChar + file);
+
+            if (tempFilePattern.matcher(file).matches()) {
+                tempFilesFound++;
+                if (tempFilesFound > MAX_TEMPORARY_FILES) {
+                    System.out.println("Cleaning " + fileToClean.getAbsolutePath());
+                    fileToClean.delete();
+                }
+            }
+        }
+
     }
 
     @Override
