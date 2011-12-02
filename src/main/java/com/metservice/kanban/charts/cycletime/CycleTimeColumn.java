@@ -47,22 +47,25 @@ public class CycleTimeColumn {
         String previousPhase = null;
         for (String phase : phasesAfterInitialPhase) {
             LocalDate date = dateWhenPhaseWasCompleted(workItem, phase);
-            if (previousDate != null && previousPhase != null) {
+            if (date != null && previousDate != null && previousPhase != null) {
                 int diffInDays = WorkingDayUtils.getWorkingDaysBetween(previousDate, date);
                 column.addFragment(previousPhase, diffInDays);
             }
-            previousDate = date;
-            previousPhase = phase;
+            if (date != null) {
+                previousDate = date;
+                previousPhase = phase;
+            }
         }
         return column;
     }
 
-    private static LocalDate dateWhenPhaseWasCompleted(WorkItem workItem, String phase) {
+    static LocalDate dateWhenPhaseWasCompleted(WorkItem workItem, String phase) {
         LocalDate date = workItem.getDate(phase);
         if (date == null) {
-            String message = String.format("Phase %s was not completed for item %d-%s ",
-                phase, workItem.getId(), workItem.getName());
-            throw new InconsistentWorkItemException(message);
+            return null;
+            //            String message = String.format("Phase %s was not completed for item %d-%s ",
+            //                phase, workItem.getId(), workItem.getName());
+            //            throw new InconsistentWorkItemException(message);
         }
         return date;
     }
