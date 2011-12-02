@@ -273,7 +273,7 @@ td.small{
           
           <td></td>
           <td>
-            <input name="name"  style="width:75%" />
+            <input id="quick-editor-name" name="name"  style="width:75%" />
             <span style="color:#aaa">Press <b>Enter</b> to create new top item</span>
           </td>
           <td class="small color">
@@ -281,10 +281,10 @@ td.small{
 					  </div> -->
 					</td>
 					<td class="small" data-role="size" >
-            <input name="size" style="width:50%" />
+            <input id="quick-editor-size" name="size" style="width:50%" />
 					</td>
 					<td class="small" data-role="importance">
-            <input name="importance" style="width:50%" />
+            <input id="quick-editor-importance" name="importance" style="width:50%" />
             
         		<input type="hidden" name="type" value="${type}" />
 					</td>

@@ -1,5 +1,7 @@
 package com.metservice.kanban.jwebunit;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwebunit.junit.WebTester;
 
 public class WallPage {
@@ -17,13 +19,13 @@ public class WallPage {
         this.tester = tester;
     }
 
-    public WallPage clickBacklogButton() {
-        tester.clickElementByXPath("//div[@id='backlog-button']");
-        return this;
+    public BoardPage clickBacklogButton() {
+        tester.clickElementByXPath("//a[@id='backlog-button']");
+        return new BoardPage(tester);
     }
 
     public WallPage clickWallButton() {
-        tester.clickElementByXPath("//div[@id='wall']");
+        tester.clickElementByXPath("//a[@id='wall']");
         return this;
     }
 
@@ -101,5 +103,16 @@ public class WallPage {
         return tester
             .getElementByXPath("//div[@id='work-item-" + i + "']")
             .getAttribute("title");
+    }
+
+    public void assertWipNotBroken(String columnName) {
+
+        String styleClass = tester.getElementByXPath("//th[text()='" + columnName + "']").getAttribute("class");
+        assertFalse(styleClass.contains("brokenWIPLimit"));
+    }
+
+    public void assertWipBroken(String columnName) {
+        String styleClass = tester.getElementByXPath("//th[text()='" + columnName + "']").getAttribute("class");
+        assertTrue(styleClass.contains("brokenWIPLimit"));
     }
 }

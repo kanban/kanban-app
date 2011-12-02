@@ -145,5 +145,11 @@ public class BoardPage {
         assertFalse("Item mustn't contain itemMustHave style", itemClass.contains("itemMustHave"));
     }
 
+    public BoardPage enterQuickName(String nameValue) {
+        tester.clickElementByXPath("//input[@id='quick-editor-name'");
+        tester.setTextField("name", nameValue);
+        return this;
+    }
+
 
 }
