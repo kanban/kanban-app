@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.pet.PetDao;
@@ -17,7 +18,7 @@ import com.metservice.pet.Project;
 
 //TODO This class needs unit tests.
 @Controller
-@RequestMapping("/{projectName}")
+@RequestMapping("{projectName}")
 public class ProjectEstimationToolController {
 
     private static final String PET_PROJECT_ATTR = "petproject";
@@ -27,22 +28,37 @@ public class ProjectEstimationToolController {
 
     @Autowired
     private PetDao petDao;
+    @Autowired
+    private KanbanService kanbanService;
 
     @ModelAttribute(PET_PROJECT_ATTR)
-    public synchronized Project populateProject(@PathVariable("projectName") String projectName) throws IOException {
+    public synchronized Project populatePetProject(@PathVariable("projectName") String projectName) throws IOException {
         Project project = petDao.loadProject(projectName);
 
         return project;
     }
 
     @ModelAttribute(KANBAN_PROJECT_ATTR)
-    public synchronized KanbanProject populateProject(@ModelAttribute(PET_PROJECT_ATTR) Project project) throws IOException {
-        return project.getKanbanProject();
+    public synchronized KanbanProject populateProject(@PathVariable("projectName") String projectName)
+        throws IOException {
+        return kanbanService.getKanbanProject(projectName);
+    }
+
+    @ModelAttribute("projectName")
+    public String populateProjectName(@PathVariable("projectName") String bprojectName) {
+        return bprojectName;
     }
 
     @RequestMapping("pet-project")
-    public ModelAndView showProject(@ModelAttribute(PET_PROJECT_ATTR) Project project) {
-        return new ModelAndView(PET_PROJECT_JSP, PET_PROJECT_ATTR, project);
+    public ModelAndView showProject(@ModelAttribute("petproject") Project petProject) {
+
+        Map<String, Object> model = new HashMap<String, Object>();
+
+
+        // model.put(PET_PROJECT_ATTR, project);
+        //        model.put("project", project.getKanbanProject());
+
+        return new ModelAndView(PET_PROJECT_JSP, model);
     }
 
     @RequestMapping("pet-set-project-property")

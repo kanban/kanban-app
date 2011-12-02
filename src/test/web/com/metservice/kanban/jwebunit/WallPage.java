@@ -4,7 +4,7 @@ import net.sourceforge.jwebunit.junit.WebTester;
 
 public class WallPage {
 
-    private final WebTester tester;
+    final WebTester tester;
 
     public static WallPage openProject(String projectName) {
         WebTester tester = new WebTester();
@@ -95,5 +95,11 @@ public class WallPage {
     public void assertFeatureIsPresent(String name) {
         tester.assertElementPresentByXPath(
             "//div[@class='feature' and .//span[@class='work-item-name' and .='" + name + "']]");
+    }
+
+    public String getNotesForItem(int i) {
+        return tester
+            .getElementByXPath("//div[@id='work-item-" + i + "']")
+            .getAttribute("title");
     }
 }

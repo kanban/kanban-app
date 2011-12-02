@@ -2,17 +2,16 @@ package com.metservice.kanban.jwebunit;
 
 import static com.metservice.kanban.tests.util.TestUtils.createTestProject;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
-
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
-
-import org.junit.rules.TemporaryFolder;
-
 import net.sourceforge.jwebunit.junit.WebTester;
+import org.junit.rules.TemporaryFolder;
 
 public class BoardPage {
 
-    private final WebTester tester;
+    protected final WebTester tester;
 
     public static BoardPage openProject(TemporaryFolder kanbanHome, String projectName, String sourceResourcePath) throws IOException {
     	File root = kanbanHome.getRoot();
@@ -40,21 +39,28 @@ public class BoardPage {
 
     public BoardPage clickBacklogButton() {
         tester.clickElementByXPath("//a[@id='backlog-button']");
-        return this;
+        return new BoardPage(tester);
     }
     
+    public BoardPage clickCompleteButton() {
+        tester.clickElementByXPath("//a[@id='complete']");
+        return this;
+    }
+
     public PETPage clickPETButton() {
         tester.clickElementByXPath("//a[@id='pet']");
         return new PETPage(tester);
     }
 
     public WallPage clickWallButton() {
-        tester.clickElementByXPath("//a[@id='wall']");
+        //        tester.clickElementByXPath("//a[@id='wall']");
+        tester.clickLink("wall");
+        tester.assertTitleEquals("Kanban: wall");
         return new WallPage(tester);
     }
     
     public BoardPage clickAdvance(String name) {
-        String xPath ="//td[.='" + name + "']/../td[8]/img"; 
+        String xPath = "//td[.='" + name + "']/../td[8]/a/img";
         tester.assertElementPresentByXPath(xPath);            
         tester.clickElementByXPath(xPath);
         return this;
@@ -126,4 +132,18 @@ public class BoardPage {
     	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[5][contains(text(), \"XYZ\")]");
     	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[6][contains(text(), \"xzy\")]");
     }
+
+    public void assertItemNameIsIndicatedMustHave(int i) {
+        String itemClass = tester.getElementAttributeByXPath("//td[@id='item-name-" + i + "']", "class");
+        assertTrue("Item should contain itemMustHave style", itemClass.contains("itemMustHave"));
+        assertFalse("Item mustn't contain itemNiceToHave style", itemClass.contains("itemNiceToHave"));
+    }
+
+    public void assertItemNameIsIndicatedNiceToHave(int i) {
+        String itemClass = tester.getElementAttributeByXPath("//td[@id='item-name-" + i + "']", "class");
+        assertTrue("Item should contain itemNiceToHave style", itemClass.contains("itemNiceToHave"));
+        assertFalse("Item mustn't contain itemMustHave style", itemClass.contains("itemMustHave"));
+    }
+
+
 }

@@ -97,15 +97,7 @@ $(document).ready(function(){
     	});
     });
 
-	$(".advance").click(function(){
-		var parent = $(this).parents("tr");
-    	$.ajax({
-    		type: "POST",
-    		url: window.location.pathname + "/advance-item-action",
-    		data: "id=" + parent.attr("id")
-    	});
-    	parent.hide();
-    }); 
+
       
     $("tr#new_story input").keypress(function(event) {
     	if (event.which == 13){
@@ -217,13 +209,13 @@ td.small{
 					<th></th>
 					<th>${phase}</th>
 					<th></th>
-					<th>Avg</th>
+					<th>Size</th>
 					<th>Imp</th>
 					<th></th>
 				</tr>
 			</thead>
       <tbody>
-			<c:forEach var="cell" items="${kanbanBacklog}">
+			<c:forEach var="cell" items="${kanbanBacklog}" varStatus="rowNumber">
       
 				<tr id="${cell.workItem.id}" class="horizontalLine">
 					<td class="dragHandle" style="width:35px" ></td>  				
@@ -246,10 +238,10 @@ td.small{
 					</c:choose>
                     <c:choose>
                         <c:when test="${cell.workItem.mustHave}">
-					       <td class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
+					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
                         </c:when>
                         <c:otherwise>
-                            <td class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
+                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
                         </c:otherwise>
                     </c:choose>
 					<td class="small color">
@@ -267,9 +259,11 @@ td.small{
 						</c:if>
 					</td>
 					<td class="small advanceIcon" align="center" >
-							<c:if test="${!item.inFinalPhase}">
-								<img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
-							</c:if>
+						<c:if test="${!item.inFinalPhase}">
+                            <a href="backlog/advance-item-action?id=${cell.workItem.id}">
+							     <img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
+                            </a>
+						</c:if>
 					</td>
 				</tr>
 			</c:forEach>

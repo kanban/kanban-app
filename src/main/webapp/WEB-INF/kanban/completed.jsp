@@ -170,7 +170,7 @@ td.padded {
 					<th>Id</th>
 					<th>Name</th>
                     <th></th>
-					<th>Avg</th>
+					<th>Size</th>
 					<th> 
                         <%
                             for (int i = 0; i < phases.size(); i++) {

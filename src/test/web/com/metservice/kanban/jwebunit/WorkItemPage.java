@@ -15,6 +15,11 @@ public class WorkItemPage {
         return this;
     }
     
+    public WorkItemPage enterNotes(String name) {
+        tester.setTextField("notes", name);
+        return this;
+    }
+
     public WorkItemPage enterAverageCase(String size) {
         tester.setTextField("averageCaseEstimate", size);
         return this;
@@ -45,6 +50,11 @@ public class WorkItemPage {
     public BoardPage clickSaveButton() {
         tester.clickButton("save-button");
         return new BoardPage(tester);
+    }
+
+    public PrintPage clickSaveAndPrintButton() {
+        tester.clickButton("save-and-print-button");
+        return new PrintPage(tester);
     }
 
     public BoardPage clickDeleteButtonAndConfirm() {

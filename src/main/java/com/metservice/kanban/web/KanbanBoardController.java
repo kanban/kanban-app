@@ -231,7 +231,7 @@ public class KanbanBoardController {
     //        return null;
     //    }
 
-    @RequestMapping(value = "{board}/advance-item-action", method = RequestMethod.POST)
+    @RequestMapping(value = "{board}/advance-item-action")
     public synchronized RedirectView advanceItemAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("board") String boardType,
                                                        @RequestParam("id") String id) throws IOException {

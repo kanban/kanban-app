@@ -2,18 +2,16 @@ package com.metservice.kanban.jwebunit;
 
 import static com.metservice.kanban.KanbanService.KANBAN_HOME_PROPERTY_NAME;
 import static com.metservice.kanban.jwebunit.BoardPage.openProject;
-import static com.metservice.kanban.tests.util.TestUtils.createTestProject;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
 import com.metservice.kanban.tests.util.TestUtils;
 
 public class EndToEndTest {
@@ -139,6 +137,78 @@ public class EndToEndTest {
     }
     
     
+    @Test
+    public void mustHaveItemShouldBeIndicatedInBacklog() throws IOException {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+        page.clickAddFeatureButton().enterName("feature name must have").clickSaveButton();
+        page.clickAddFeatureButton().enterName("feature name nice to have").clickSaveButton();
+        
+        BoardPage backlog = page.clickPETButton().clickMustHave(1).clickBacklogButton();
+        
+        backlog.assertItemNameIsIndicatedMustHave(1);
+        backlog.assertItemNameIsIndicatedNiceToHave(2);
+    }
+
+    @Test
+    @Ignore
+    public void mustHaveItemShouldBeIndicatedInComplete() throws IOException {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+        page.clickAddFeatureButton().enterName("feature name must have").clickSaveButton();
+        page.clickAddFeatureButton().enterName("feature name nice to have").clickSaveButton();
+
+        BoardPage complete = page.clickPETButton().clickMustHave(1).clickCompleteButton();
+
+        complete.assertItemNameIsIndicatedMustHave(1);
+        complete.assertItemNameIsIndicatedNiceToHave(2);
+    }
+
+    @Test
+    public void userCanGoFromEditPageToPrintPage() throws IOException {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+        PrintPage printPage = page.clickAddFeatureButton().enterName("feature name to print")
+            .clickSaveAndPrintButton();
+
+        printPage.assertIsPrintPage();
+        printPage.assertItemHasName(1, "feature name to print");
+    }
+
+    @Test
+    public void quotesAreEscapedOnWall() throws IOException {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+
+        page
+            .clickAddFeatureButton()
+            .enterName("feature name to print")
+            .enterNotes("This is \"note\" with.")
+            .clickSaveButton()
+            .clickAdvance("feature name to print");
+
+        WallPage wallPage = page.clickWallButton();
+
+        System.out.println(wallPage.tester.getPageSource());
+
+        String notes = wallPage.getNotesForItem(1);
+
+        assertEquals("Notes: This is \"note\" with.", notes);
+    }
+
+    @Test
+    public void htmlEntitiesAreEscapedOnWall() throws IOException {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+
+        WallPage wallPage = page.clickAddFeatureButton().enterName("feature name to print")
+            .enterNotes("This is note with <div>HTMLtags</div>.").clickSaveButton()
+            .clickAdvance("feature name to print")
+            .clickWallButton();
+
+        // if HTML entities are not escaped, this method throws an exception
+
+        //        System.out.println(wallPage.tester.getPageSource());
+
+        String notes = wallPage.getNotesForItem(1);
+
+        assertEquals("Notes: This is note with <div>HTMLtags</div>.", notes);
+    }
 //    @Test
 //    public void userCanDownloadStories() throws IOException {
 //        BoardPage wallPage = openProject("Test project");
