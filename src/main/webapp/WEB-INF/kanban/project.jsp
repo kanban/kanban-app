@@ -99,8 +99,8 @@
 			     item.className = "markedToPrint";
 			   }
 			}
-			function advance(id){
-			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
+			function advance(id, phase){
+			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&phase=" + phase + "&scrollTop=" + getYOffset();
 			 document.forms["form"].submit();
 			}
 
@@ -376,6 +376,9 @@ div[data-role="card"]{
 </style>
 </head>
 <body onload="javscript:setPosition();">
+<c:if test="${error != null}">
+    Error: ${error}
+</c:if>
     <jsp:include page="include/header.jsp"/>
     <form id="form" method="post" action="">
         <table class="kanban" id="kanbantable">
@@ -480,7 +483,7 @@ div[data-role="card"]{
                               </div>
                               <div class="advanceIcon">
                                 <c:if test="${!item.completed && !item.blocked}">
-                                    <img onclick="javascript:advance(${item.id});" src="${pageContext.request.contextPath}/images/go-next.png" />
+                                    <img onclick="javascript:advance(${item.id}, '${item.currentPhase}');" src="${pageContext.request.contextPath}/images/go-next.png" />
                                 </c:if>
                               </div>
                               <div class="downIcon">
