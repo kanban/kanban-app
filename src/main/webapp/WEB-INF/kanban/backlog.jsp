@@ -260,7 +260,7 @@ td.small{
 					</td>
 					<td class="small advanceIcon" align="center" >
 						<c:if test="${!item.inFinalPhase}">
-                            <a href="backlog/advance-item-action?id=${cell.workItem.id}">
+                            <a href="backlog/advance-item-action?id=${cell.workItem.id}&phase=${cell.workItem.currentPhase}">
 							     <img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
                             </a>
 						</c:if>

@@ -107,7 +107,7 @@ public class KanbanBoardController {
         return new DefaultBurnUpChartGenerator(new DefaultChartWriter());
     }
 
-    private Map<String, Object> initBoard(String boardType, String projectName, String scrollTop) {
+    private Map<String, Object> initBoard(String boardType, String projectName, String error, String scrollTop) {
         //        boardType = cleanBoardType(boardType);
 
         Map<String, Object> model = buildModel(projectName, boardType);
@@ -116,6 +116,7 @@ public class KanbanBoardController {
         // to fix view
 
         model.put("scrollTop", scrollTop == null ? "0" : scrollTop);
+        model.put("error", error);
 
         return model;
     }
@@ -137,12 +138,15 @@ public class KanbanBoardController {
     public synchronized ModelAndView wallBoard(@ModelAttribute("project") KanbanProject project,
                                                @PathVariable("projectName") String projectName,
                                                @RequestParam(value = "scrollTop", required = false) String scrollTop,
+                                               @RequestParam(value = "error", required = false) String error,
                                                @ModelAttribute("workStreams") Map<String, String> workStreams)
         throws IOException {
 
         String boardType = "wall";
 
-        Map<String, Object> model = initBoard("wall", projectName, scrollTop);
+        Map<String, Object> model = initBoard("wall", projectName, error, scrollTop);
+
+
 
         if (boardType.equals("backlog")) {
             model.put("kanbanBacklog", project.getBacklog(workStreams.get(projectName)));
@@ -175,10 +179,11 @@ public class KanbanBoardController {
     public synchronized ModelAndView backlogBoard(@ModelAttribute("project") KanbanProject project,
                                                   @PathVariable("projectName") String projectName,
                                                   @RequestParam(value = "scrollTop", required = false) String scrollTop,
+                                                  @RequestParam(value = "error", required = false) String error,
                                                   @ModelAttribute("workStreams") Map<String, String> workStreams)
         throws IOException {
 
-        Map<String, Object> model = initBoard("backlog", projectName, scrollTop);
+        Map<String, Object> model = initBoard("backlog", projectName, error, scrollTop);
 
         model.put("kanbanBacklog", project.getBacklog(workStreams.get(projectName)));
         model.put("type", project.getWorkItemTypes().getRoot().getValue());
@@ -190,10 +195,11 @@ public class KanbanBoardController {
     public synchronized ModelAndView journalBoard(@ModelAttribute("project") KanbanProject project,
                                                   @PathVariable("projectName") String projectName,
                                                   @RequestParam(value = "scrollTop", required = false) String scrollTop,
+                                                  @RequestParam(value = "error", required = false) String error,
                                                   @ModelAttribute("workStreams") Map<String, String> workStreams)
         throws IOException {
 
-        Map<String, Object> model = initBoard("journal", projectName, scrollTop);
+        Map<String, Object> model = initBoard("journal", projectName, error, scrollTop);
         model.put("kanbanJournal", project.getJournalText());
         return new ModelAndView("/journal.jsp", model);
     }
@@ -202,10 +208,11 @@ public class KanbanBoardController {
     public synchronized ModelAndView completedBoard(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("projectName") String projectName,
                                                     @RequestParam(value = "scrollTop", required = false) String scrollTop,
+                                                    @RequestParam(value = "error", required = false) String error,
                                                     @ModelAttribute("workStreams") Map<String, String> workStreams)
         throws IOException {
 
-        Map<String, Object> model = initBoard("completed", projectName, scrollTop);
+        Map<String, Object> model = initBoard("completed", projectName, error, scrollTop);
 
         model.put("type", project.getWorkItemTypes().getRoot().getValue());
         List<String> phases = project.getWorkItemTypes().getRoot()
@@ -234,7 +241,16 @@ public class KanbanBoardController {
     @RequestMapping(value = "{board}/advance-item-action")
     public synchronized RedirectView advanceItemAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("board") String boardType,
-                                                       @RequestParam("id") String id) throws IOException {
+                                                       @RequestParam("id") String id,
+                                                       @RequestParam("phase") String phase) throws IOException {
+
+        // check item hasn't already been advanced
+        WorkItem workItem = project.getWorkItemById(Integer.parseInt(id));
+        if (!workItem.getCurrentPhase().equals(phase)) {
+            //TODO display error to user
+            return new RedirectView("../" + boardType
+                + "?error=Could not advance item to the next phase. Probably current board view was not valid.");
+        }
 
         project.advance(parseInt(id), currentLocalDate());
         project.save();
@@ -381,7 +397,6 @@ public class KanbanBoardController {
         }
     }
 
-
     /**
      * Responds to a form submission which passes an edited item
      *
@@ -500,7 +515,9 @@ public class KanbanBoardController {
 
     @RequestMapping(value = "{board}/edit-item/{id}/name", method = RequestMethod.POST)
     public synchronized ResponseEntity<String> updateItemName(@ModelAttribute("project") KanbanProject project,
-            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                                                              @PathVariable("board") String boardType,
+                                                              @PathVariable("id") int id,
+                                                              @RequestParam("newValue") String newValue)
                     throws IOException {
         // why are these methods marked as synchronized?!?
 
@@ -517,7 +534,9 @@ public class KanbanBoardController {
 
     @RequestMapping(value = "{board}/edit-item/{id}/size", method = RequestMethod.POST)
     public synchronized ResponseEntity<String> updateItemSize(@ModelAttribute("project") KanbanProject project,
-            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                                                              @PathVariable("board") String boardType,
+                                                              @PathVariable("id") int id,
+                                                              @RequestParam("newValue") String newValue)
                     throws IOException {
         // why are these methods marked as synchronized?!?
 
@@ -534,7 +553,9 @@ public class KanbanBoardController {
 
     @RequestMapping(value = "{board}/edit-item/{id}/importance", method = RequestMethod.POST)
     public synchronized ResponseEntity<String> updateItemImportance(@ModelAttribute("project") KanbanProject project,
-            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
+                                                                    @PathVariable("board") String boardType,
+                                                                    @PathVariable("id") int id,
+                                                                    @RequestParam("newValue") String newValue)
                     throws IOException {
         // why are these methods marked as synchronized?!?
 
@@ -546,7 +567,8 @@ public class KanbanBoardController {
 
         // Go home.
         return new ResponseEntity<String>(
-                String.format("Importance change successfully.  New importance: %s", workItem.getImportance()),HttpStatus.OK);
+            String.format("Importance change successfully.  New importance: %s", workItem.getImportance()),
+            HttpStatus.OK);
     }
 
     @RequestMapping("edit-journal-action")
@@ -586,10 +608,11 @@ public class KanbanBoardController {
                                            @RequestParam("chartName") String chartName,
                                            @RequestParam("workItemTypeName") String workItemTypeName,
                                            @PathVariable("projectName") String projectName,
+                                           @RequestParam(value = "error", required = false) String error,
                                            @RequestParam(value = "startDate", required = false) String startDate,
                                            @RequestParam(value = "endDate", required = false) String endDate) {
 
-        Map<String, Object> model = initBoard("chart", projectName, null);
+        Map<String, Object> model = initBoard("chart", projectName, error, null);
 
         model.put("workItemTypeName", workItemTypeName);
         model.put("imageName", chartName + ".png");
@@ -700,14 +723,37 @@ public class KanbanBoardController {
         }
     }
 
+    /**
+     * Saves the <code>content</code> string and renames the project if
+     * <code>newProjectName</code> does
+     * not match <code>projectName</code>.
+     * 
+     * @param project
+     *            the project
+     * @param projectName
+     *            the project name
+     * @param newProjectName
+     *            the new project name
+     * @param content
+     *            the content
+     * @return the redirect view
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     @RequestMapping("edit-project-action")
     public synchronized RedirectView editProjectAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("projectName") String projectName,
-                                                       @RequestParam("newProjectName") String editProjectName,
+                                                       @RequestParam("newProjectName") String newProjectName,
                                                        @RequestParam("content") String content) throws IOException {
 
-        kanbanService.editProject(editProjectName, content);
-        return openProject(projectName, "wall", editProjectName, null, null);
+        if (newProjectName != null && !newProjectName.equals(projectName)) {
+            // edit project name
+            kanbanService.renameProject(projectName, newProjectName);
+        } else {
+            // edit project
+            kanbanService.editProject(newProjectName, content);
+        }
+        return openProject(projectName, "wall", newProjectName, null, null);
     }
 
     @RequestMapping("edit-wiplimit-action")
@@ -1103,3 +1149,4 @@ public class KanbanBoardController {
         return new RedirectView("/projects/" + projectName + "/wall", true);
     }
 }
+

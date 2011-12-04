@@ -99,8 +99,8 @@
 			     item.className = "markedToPrint";
 			   }
 			}
-			function advance(id){
-			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
+			function advance(id, phase){
+			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&phase=" + phase + "&scrollTop=" + getYOffset();
 			 document.forms["form"].submit();
 			}
 
@@ -479,7 +479,7 @@ div[data-role="card"]{
                               </div>
                               <div class="advanceIcon">
                                 <c:if test="${!item.completed && !item.blocked}">
-                                    <img onclick="javascript:advance(${item.id});" src="${pageContext.request.contextPath}/images/go-next.png" />
+                                    <img onclick="javascript:advance(${item.id}, '${item.currentPhase}');" src="${pageContext.request.contextPath}/images/go-next.png" />
                                 </c:if>
                               </div>
                               <div class="downIcon">
