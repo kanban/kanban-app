@@ -137,12 +137,14 @@ public class KanbanBoardController {
     public synchronized ModelAndView wallBoard(@ModelAttribute("project") KanbanProject project,
                                                @PathVariable("projectName") String projectName,
                                                @RequestParam(value = "scrollTop", required = false) String scrollTop,
+                                               @RequestParam(value = "error", required = false) String error,
                                                @ModelAttribute("workStreams") Map<String, String> workStreams)
         throws IOException {
 
         String boardType = "wall";
 
         Map<String, Object> model = initBoard("wall", projectName, scrollTop);
+        model.put("error", error);
 
         if (boardType.equals("backlog")) {
             model.put("kanbanBacklog", project.getBacklog(workStreams.get(projectName)));
@@ -234,7 +236,15 @@ public class KanbanBoardController {
     @RequestMapping(value = "{board}/advance-item-action", method = RequestMethod.POST)
     public synchronized RedirectView advanceItemAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("board") String boardType,
-                                                       @RequestParam("id") String id) throws IOException {
+                                                       @RequestParam("id") String id,
+                                                       @RequestParam("phase") String phase) throws IOException {
+
+        // check item hasn't already been advanced
+        WorkItem workItem = project.getWorkItemById(Integer.parseInt(id));
+        if (!workItem.getCurrentPhase().equals(phase)) {
+            //TODO display error to user
+            return new RedirectView("../" + boardType + "?error=Something happened");
+        }
 
         project.advance(parseInt(id), currentLocalDate());
         project.save();
