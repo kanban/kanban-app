@@ -432,7 +432,7 @@ div[data-role="card"]{
                         // remove after refactoring
                         pageContext.setAttribute("cell", cell);
 
-                        if (!cell.isEmpty()) {
+                            if (!cell.isEmptyCell()) {
                             WorkItem item = cell.getWorkItem();
                     %>
                     <%--  remove after refactoring --%>
