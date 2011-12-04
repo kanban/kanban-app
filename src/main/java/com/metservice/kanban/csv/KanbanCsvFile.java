@@ -78,6 +78,10 @@ public class KanbanCsvFile {
         cleanUpTemproaryFiles();
     }
 
+    /**
+     * Keep the newest {@link #MAX_TEMPORARY_FILES} (
+     * {@value #MAX_TEMPORARY_FILES}) temporary files and delete the rest.
+     */
     public void cleanUpTemproaryFiles() {
 
         File directory = file.getParentFile();
@@ -97,7 +101,6 @@ public class KanbanCsvFile {
             if (tempFilePattern.matcher(file).matches()) {
                 tempFilesFound++;
                 if (tempFilesFound > MAX_TEMPORARY_FILES) {
-                    System.out.println("Cleaning " + fileToClean.getAbsolutePath());
                     fileToClean.delete();
                 }
             }
