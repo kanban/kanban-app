@@ -234,4 +234,27 @@ public class KanbanService {
             throw new IllegalArgumentException("cannot edit a project that does not exist: " + projectName);
         }
     }
+
+
+    /**
+     * Rename a project.
+     * 
+     * @param projectName
+     *            the project name
+     * @param newProjectName
+     *            the new project name
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public void renameProject(String projectName, String newProjectName) throws IOException {
+
+        File projectHome = new File(home, projectName);
+        File newProjectHome = new File(home, newProjectName);
+
+        if (newProjectHome.exists()) {
+            throw new IllegalArgumentException("project name already exists: " + newProjectName);
+        }
+
+        projectHome.renameTo(newProjectHome);
+    }
 }

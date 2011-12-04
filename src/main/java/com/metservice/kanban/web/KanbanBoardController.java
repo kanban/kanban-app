@@ -121,7 +121,7 @@ public class KanbanBoardController {
     }
 
     private ModelAndView finishBoard(String boardType, String projectName, KanbanProject project,
-                             Map<String, String> workStreams,
+                                     Map<String, String> workStreams,
                                      Map<String, Object> model,
                                      String view) {
         KanbanBoard board = project.getBoard(BoardIdentifier.valueOf(boardType.toUpperCase()),
@@ -281,7 +281,7 @@ public class KanbanBoardController {
             legend = "Add a " + type + " to " + parentName;
         }
 
-        Map<String,Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<String, Object>();
 
         model.put("legend", legend);
         model.put("parentId", parentId);
@@ -294,7 +294,7 @@ public class KanbanBoardController {
     /**
      * Responds to edit-item request, passes the item in its current state to
      * the edit form
-     *
+     * 
      * @param project
      * @param projectName
      * @param boardType
@@ -355,7 +355,8 @@ public class KanbanBoardController {
                                                    @RequestParam("color") String color,
                                                    @RequestParam(value = "excluded", required = false) String excludedStr,
                                                    @RequestParam(value = "redirectTo", required = false) String redirectTo,
-                                                   @RequestParam(value = "workStreamsSelect", required = false) String workStreams) throws IOException {
+                                                   @RequestParam(value = "workStreamsSelect", required = false) String workStreams)
+        throws IOException {
 
         WorkItemType typeAsWorkItemType = project.getWorkItemTypes().getByName(type);
 
@@ -381,10 +382,9 @@ public class KanbanBoardController {
         }
     }
 
-
     /**
      * Responds to a form submission which passes an edited item
-     *
+     * 
      * @param project
      * @param boardType
      * @return
@@ -406,18 +406,18 @@ public class KanbanBoardController {
                                                     @RequestParam(value = "workStreamsSelect", required = false) String workStreams,
                                                     @RequestParam(value = "redirectTo", required = false) String redirectTo,
                                                     HttpServletRequest request) throws IOException, ParseException {
-    
+
         // Get the item which is being edited
         WorkItem workItem = project.getWorkItemTree().getWorkItem(id);
-    
+
         @SuppressWarnings("unchecked")
         Map<String, String[]> parameters = request.getParameterMap();
-    
+
         int averageCaseEstimate = parseInteger(averageCaseEstimateStr, 0);
         int worstCaseEstimate = parseInteger(worstCaseEstimateStr, 0);
         int importance = parseInteger(importanceStr, 0);
         boolean excluded = parseBoolean(excludedStr);
-    
+
         // Save all the updates
         workItem.setName(name);
         workItem.setAverageCaseEstimate(averageCaseEstimate);
@@ -427,7 +427,7 @@ public class KanbanBoardController {
         workItem.setExcluded(excluded);
         workItem.setColour(color);
         workItem.setWorkStreamsAsString(workStreams);
-    
+
         // TODO Figure this out
         for (String phase : workItem.getType().getPhases()) {
             String key = "date-" + phase;
@@ -440,15 +440,15 @@ public class KanbanBoardController {
                 }
             }
         }
-    
+
         // If it's changed parent, reset the parent.
         if (workItem.getParentId() != parentId) {
             project.getWorkItemTree().reparent(id, parentId);
         }
-    
+
         // Save the whole project
         project.save();
-    
+
         if ("print".equals(redirectTo)) {
             return new RedirectView("../print-items?printSelection=" + id);
         }
@@ -500,8 +500,10 @@ public class KanbanBoardController {
 
     @RequestMapping(value = "{board}/edit-item/{id}/name", method = RequestMethod.POST)
     public synchronized ResponseEntity<String> updateItemName(@ModelAttribute("project") KanbanProject project,
-            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
-                    throws IOException {
+                                                              @PathVariable("board") String boardType,
+                                                              @PathVariable("id") int id,
+                                                              @RequestParam("newValue") String newValue)
+        throws IOException {
         // why are these methods marked as synchronized?!?
 
         // Get the item which is being edited
@@ -512,13 +514,15 @@ public class KanbanBoardController {
 
         // Go home.
         return new ResponseEntity<String>(
-                String.format("Name change successfully.  New name: %s", workItem.getName()), HttpStatus.OK);
+            String.format("Name change successfully.  New name: %s", workItem.getName()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "{board}/edit-item/{id}/size", method = RequestMethod.POST)
     public synchronized ResponseEntity<String> updateItemSize(@ModelAttribute("project") KanbanProject project,
-            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
-                    throws IOException {
+                                                              @PathVariable("board") String boardType,
+                                                              @PathVariable("id") int id,
+                                                              @RequestParam("newValue") String newValue)
+        throws IOException {
         // why are these methods marked as synchronized?!?
 
         // Get the item which is being edited
@@ -529,13 +533,15 @@ public class KanbanBoardController {
 
         // Go home.
         return new ResponseEntity<String>(
-                String.format("Size change successfully.  New size: %s", workItem.getAverageCaseEstimate()), HttpStatus.OK);
+            String.format("Size change successfully.  New size: %s", workItem.getAverageCaseEstimate()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "{board}/edit-item/{id}/importance", method = RequestMethod.POST)
     public synchronized ResponseEntity<String> updateItemImportance(@ModelAttribute("project") KanbanProject project,
-            @PathVariable("board") String boardType, @PathVariable("id") int id, @RequestParam("newValue") String newValue)
-                    throws IOException {
+                                                                    @PathVariable("board") String boardType,
+                                                                    @PathVariable("id") int id,
+                                                                    @RequestParam("newValue") String newValue)
+        throws IOException {
         // why are these methods marked as synchronized?!?
 
         // Get the item which is being edited
@@ -546,7 +552,8 @@ public class KanbanBoardController {
 
         // Go home.
         return new ResponseEntity<String>(
-                String.format("Importance change successfully.  New importance: %s", workItem.getImportance()),HttpStatus.OK);
+            String.format("Importance change successfully.  New importance: %s", workItem.getImportance()),
+            HttpStatus.OK);
     }
 
     @RequestMapping("edit-journal-action")
@@ -561,7 +568,7 @@ public class KanbanBoardController {
 
     /**
      * Responds to a request to delete an item
-     *
+     * 
      * @param project
      * @param id
      *            - the id of the item you want to delete
@@ -572,8 +579,8 @@ public class KanbanBoardController {
      */
     @RequestMapping("{board}/delete-item-action")
     public synchronized RedirectView deleteWorkItem(@ModelAttribute("project") KanbanProject project,
-                                            @RequestParam("id") int id,
-                                            @PathVariable("board") String board) throws IOException {
+                                                    @RequestParam("id") int id,
+                                                    @PathVariable("board") String board) throws IOException {
 
         // Delete the workitem, save and redirect.
         project.deleteWorkItem(id);
@@ -669,7 +676,7 @@ public class KanbanBoardController {
      * form,
      * or to the edit project page, depending on createNewProject's boolean
      * value.
-     *
+     * 
      * @param project
      * @param projectName
      * @param boardType
@@ -700,14 +707,37 @@ public class KanbanBoardController {
         }
     }
 
+    /**
+     * Saves the <code>content</code> string and renames the project if
+     * <code>newProjectName</code> does
+     * not match <code>projectName</code>.
+     * 
+     * @param project
+     *            the project
+     * @param projectName
+     *            the project name
+     * @param newProjectName
+     *            the new project name
+     * @param content
+     *            the content
+     * @return the redirect view
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     @RequestMapping("edit-project-action")
     public synchronized RedirectView editProjectAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("projectName") String projectName,
-                                                       @RequestParam("newProjectName") String editProjectName,
+                                                       @RequestParam("newProjectName") String newProjectName,
                                                        @RequestParam("content") String content) throws IOException {
 
-        kanbanService.editProject(editProjectName, content);
-        return openProject(projectName, "wall", editProjectName, null, null);
+        if (newProjectName != null && !newProjectName.equals(projectName)) {
+            // edit project name
+            kanbanService.renameProject(projectName, newProjectName);
+        } else {
+            // edit project
+            kanbanService.editProject(newProjectName, content);
+        }
+        return openProject(projectName, "wall", newProjectName, null, null);
     }
 
     @RequestMapping("edit-wiplimit-action")
@@ -793,7 +823,7 @@ public class KanbanBoardController {
 
     /**
      * Opens a project and goes to boardType (e.g. wall, backlog etc)
-     *
+     * 
      * @param projectName
      * @param boardType
      * @param newProjectName
@@ -819,7 +849,7 @@ public class KanbanBoardController {
 
     /**
      * Models are a hashmap used to pass attributes to a view.
-     *
+     * 
      * @param projectName
      * @param boardType
      * @return the model hashmap
@@ -1083,9 +1113,9 @@ public class KanbanBoardController {
 
     @RequestMapping(value = "comment", method = RequestMethod.POST)
     public ResponseEntity<String> addComment(@ModelAttribute("project") KanbanProject project,
-            @RequestParam int id,
-            @RequestParam String userName,
-            @RequestParam String comment) throws IOException {
+                                             @RequestParam int id,
+                                             @RequestParam String userName,
+                                             @RequestParam String comment) throws IOException {
 
         WorkItemComment workItemComment = new WorkItemComment(userName, comment);
         WorkItem workItem = project.getWorkItemById(id);
