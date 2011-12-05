@@ -45,6 +45,8 @@
 %>
 
 <style type="text/css">
+
+
 .customizedHeader {
     background: ${type.cardColour};
     border-top:1px #989898 dotted;
