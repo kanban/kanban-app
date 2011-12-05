@@ -49,12 +49,14 @@ $(document).ready(function(){
 	        }
 	    });
 	    
-	    element.parent().html(element.val()).removeClass("formified").addClass("formify");
+	    var parent = element.parent();
+	    parent.empty();
+	    parent.text(element.val());
 	}
 	
 	function cancelEdit(element) {
 		var originalValue = $(element).attr("originalValue");
-		element.parent().html(originalValue).removeClass("formified").addClass("formify");
+		element.parent().html(originalValue);
 	}
    		  
 	$(".formify").click(function(){
@@ -237,10 +239,10 @@ td.small{
 					</c:choose>
                     <c:choose>
                         <c:when test="${cell.workItem.mustHave}">
-					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
+					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name"><c:out value="${cell.workItem.name}" /></td>
                         </c:when>
                         <c:otherwise>
-                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
+                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name"><c:out value="${cell.workItem.name}" /></td>
                         </c:otherwise>
                     </c:choose>
 					<td class="small color">
