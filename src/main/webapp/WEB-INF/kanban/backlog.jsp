@@ -8,6 +8,7 @@
 <head>
 	<jsp:include page="include/header-head.jsp"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/backlog.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/boards.css" />
 
 <script>
 $(document).ready(function(){
@@ -95,15 +96,7 @@ $(document).ready(function(){
     	});
     });
 
-	$(".advance").click(function(){
-		var parent = $(this).parents("tr");
-    	$.ajax({
-    		type: "POST",
-    		url: window.location.pathname + "/advance-item-action",
-    		data: "id=" + parent.attr("id")
-    	});
-    	parent.hide();
-    }); 
+
       
     $("tr#new_story input").keypress(function(event) {
     	if (event.which == 13){
@@ -215,13 +208,13 @@ td.small{
 					<th></th>
 					<th>${phase}</th>
 					<th></th>
-					<th>Avg</th>
+					<th>Size</th>
 					<th>Imp</th>
 					<th></th>
 				</tr>
 			</thead>
       <tbody>
-			<c:forEach var="cell" items="${kanbanBacklog}">
+			<c:forEach var="cell" items="${kanbanBacklog}" varStatus="rowNumber">
       
 				<tr id="${cell.workItem.id}" class="horizontalLine">
 					<td class="dragHandle" style="width:35px" ></td>  				
@@ -244,10 +237,10 @@ td.small{
 					</c:choose>
                     <c:choose>
                         <c:when test="${cell.workItem.mustHave}">
-					       <td class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
+					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
                         </c:when>
                         <c:otherwise>
-                            <td class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
+                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
                         </c:otherwise>
                     </c:choose>
 					<td class="small color">
@@ -265,9 +258,11 @@ td.small{
 						</c:if>
 					</td>
 					<td class="small advanceIcon" align="center" >
-							<c:if test="${! item.inFinalPhase}">
-								<img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
-							</c:if>
+						<c:if test="${!item.inFinalPhase}">
+                            <a href="backlog/advance-item-action?id=${cell.workItem.id}&phase=${cell.workItem.currentPhase}">
+							     <img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
+                            </a>
+						</c:if>
 					</td>
 				</tr>
 			</c:forEach>
@@ -277,7 +272,7 @@ td.small{
           
           <td></td>
           <td>
-            <input name="name"  style="width:75%" />
+            <input id="quick-editor-name" name="name"  style="width:75%" />
             <span style="color:#aaa">Press <b>Enter</b> to create new top item</span>
           </td>
           <td class="small color">
@@ -285,10 +280,10 @@ td.small{
 					  </div> -->
 					</td>
 					<td class="small" data-role="size" >
-            <input name="size" style="width:50%" />
+            <input id="quick-editor-size" name="size" style="width:50%" />
 					</td>
 					<td class="small" data-role="importance">
-            <input name="importance" style="width:50%" />
+            <input id="quick-editor-importance" name="importance" style="width:50%" />
             
         		<input type="hidden" name="type" value="${type}" />
 					</td>

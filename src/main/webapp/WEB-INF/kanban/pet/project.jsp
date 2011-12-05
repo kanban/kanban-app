@@ -107,7 +107,7 @@
 
 										<input type="hidden" name="value" value="${entry.feature.mustHave ? 'false' : 'true'}" /> 
 
-										<input type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
+										<input id="must-have-${status.count}" type="submit" value="${entry.feature.mustHave ? 'Nice to Have' : 'Must Have'}" />
 									</div>
 								</form>
 							</td>

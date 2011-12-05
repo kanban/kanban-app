@@ -33,7 +33,7 @@ public class KanbanBoardControllerLegacyTest {
   @Test
   public void testBoard() throws IOException {
 
-        ModelAndView modelAndView = kanbanController.wallBoard(kanban, "test-project", null,
+        ModelAndView modelAndView = kanbanController.wallBoard(kanban, "test-project", null, null,
             new HashMap<String, String>());
         assertThat(modelAndView.getViewName(), is("/project.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
@@ -88,7 +88,7 @@ public class KanbanBoardControllerLegacyTest {
     @Ignore
     @Test
     public void testAdvanceItemAction() throws IOException {
-        RedirectView view = kanbanController.advanceItemAction(kanban, "wall", "1");
+        RedirectView view = kanbanController.advanceItemAction(kanban, "wall", "1", "phase");
         assertThat(view.getUrl(), is("../wall"));
     }
 

@@ -14,9 +14,9 @@
 </head>
 <body>
 <div class="printhide">Goto: <a href="backlog">Backlog</a> :: <a href="wall">Wall</a> :: <a href="completed">Complete</a></div>
-    <c:forEach var="item" items="${items}">
-        <div class="card">
-            <div class="itemName">${item.name}</div>
+    <c:forEach var="item" items="${items}" varStatus="rowCount">
+        <div class="card" id="card-${rowCount.count}">
+            <div class="itemName" id="item-name-${rowCount.count}">${item.name}</div>
             <div class="notes">
                 <div class="label">Notes</div>
                 <div class="field">${item.notes}</div>

@@ -25,7 +25,7 @@
     <jsp:include page="include/header-head.jsp"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/project.css" />
 
-<title>Kanban</title>
+<title>Kanban: wall</title>
 <%
     String scrollTopParam = (String) request.getAttribute("scrollTop");
     int scrollTo = 0;
@@ -44,7 +44,7 @@
           $("div.dropdown-menu-wrapper").fadeOut(200);
           $(this).siblings("div.dropdown-menu-wrapper:hidden").fadeIn(200);
           return false;
-        })
+        });
         $(":not(button.dropdown)").click(function(){
             $("div.dropdown-menu-wrapper").fadeOut(200);
         });
@@ -99,8 +99,8 @@
 			     item.className = "markedToPrint";
 			   }
 			}
-			function advance(id){
-			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
+			function advance(id, phase){
+			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&phase=" + phase + "&scrollTop=" + getYOffset();
 			 document.forms["form"].submit();
 			}
 
@@ -441,7 +441,7 @@ div[data-role="card"]{
                     <td class="${item.type.name}-background">
                       
                         <div
-                            onclick="javascript:markUnmarkToPrint('work-item-${item.id}','${item.name}', ${item.blocked})"
+                            onclick="javascript:markUnmarkToPrint('work-item-${item.id}','${item.type.name}', ${item.blocked})"
                             id="work-item-${item.id}" title="Notes: ${fn:escapeXml(item.notes)}"
                             class="${item.type.name} ${item.blocked ? "blocked" : ""}" data-role="card">
                             
@@ -451,7 +451,6 @@ div[data-role="card"]{
                                 int days = WorkingDayUtils.getWorkingDaysBetween(phaseStartDate, new LocalDate());
                                 
                                 int itemsPerRow = (int) Math.floor(cardWidth/(double)ageItemWidth);
-                                
                                 
                                 for (int i=0; i<days && i < itemsPerRow; i++) {
                                     if (i == itemsPerRow - 1) {
@@ -480,7 +479,7 @@ div[data-role="card"]{
                               </div>
                               <div class="advanceIcon">
                                 <c:if test="${!item.completed && !item.blocked}">
-                                    <img onclick="javascript:advance(${item.id});" src="${pageContext.request.contextPath}/images/go-next.png" />
+                                    <img onclick="javascript:advance(${item.id}, '${item.currentPhase}');" src="${pageContext.request.contextPath}/images/go-next.png" />
                                 </c:if>
                               </div>
                               <div class="downIcon">

@@ -1,10 +1,12 @@
 package com.metservice.kanban.jwebunit;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwebunit.junit.WebTester;
 
 public class WallPage {
 
-    private final WebTester tester;
+    final WebTester tester;
 
     public static WallPage openProject(String projectName) {
         WebTester tester = new WebTester();
@@ -17,13 +19,13 @@ public class WallPage {
         this.tester = tester;
     }
 
-    public WallPage clickBacklogButton() {
-        tester.clickElementByXPath("//div[@id='backlog-button']");
-        return this;
+    public BoardPage clickBacklogButton() {
+        tester.clickElementByXPath("//a[@id='backlog-button']");
+        return new BoardPage(tester);
     }
 
     public WallPage clickWallButton() {
-        tester.clickElementByXPath("//div[@id='wall']");
+        tester.clickElementByXPath("//a[@id='wall']");
         return this;
     }
 
@@ -95,5 +97,22 @@ public class WallPage {
     public void assertFeatureIsPresent(String name) {
         tester.assertElementPresentByXPath(
             "//div[@class='feature' and .//span[@class='work-item-name' and .='" + name + "']]");
+    }
+
+    public String getNotesForItem(int i) {
+        return tester
+            .getElementByXPath("//div[@id='work-item-" + i + "']")
+            .getAttribute("title");
+    }
+
+    public void assertWipNotBroken(String columnName) {
+
+        String styleClass = tester.getElementByXPath("//th[text()='" + columnName + "']").getAttribute("class");
+        assertFalse(styleClass.contains("brokenWIPLimit"));
+    }
+
+    public void assertWipBroken(String columnName) {
+        String styleClass = tester.getElementByXPath("//th[text()='" + columnName + "']").getAttribute("class");
+        assertTrue(styleClass.contains("brokenWIPLimit"));
     }
 }

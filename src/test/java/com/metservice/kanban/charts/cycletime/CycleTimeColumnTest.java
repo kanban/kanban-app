@@ -1,6 +1,7 @@
 package com.metservice.kanban.charts.cycletime;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,16 +49,35 @@ public class CycleTimeColumnTest {
         assertThat(column.getFragmentWeight(0), is(2));
     }
 
-    @Test(expected = InconsistentWorkItemException.class)
-    public void throwsExceptionIfWorkItemIsNotComplete() throws ParseException {
+    @Test
+    public void skipItemIfWorkItemIsNotComplete() throws ParseException {
+        // TODO Use TestKanbanBoardBuilder to construct test data instead
+
+        WorkItemType type = new WorkItemType("phase 1", "phase 2", "phase 3", "phase 4");
+        
+        WorkItem workItem = new WorkItem(1, 0, type);
+        workItem.setDate("phase 1", formatter.parse("2011/02/7"));
+        workItem.setDate("phase 2", formatter.parse("2011/02/10"));
+        workItem.setDate("phase 4", formatter.parse("2011/02/12"));
+
+        CycleTimeColumn column = CycleTimeColumn.buildCycleTimeColumnFromWorkItem(workItem);
+
+        assertThat(column.getName(), is("1"));
+        assertThat(column.numberOfFragments(), is(1));
+        assertThat(column.getFragmentName(0), is("phase 2"));
+        assertThat(column.getFragmentWeight(0), is(2));
+    }
+
+    @Test
+    public void returnsNullIfWorkItemIsNotComplete() throws ParseException {
         // TODO Use TestKanbanBoardBuilder to construct test data instead
 
         WorkItemType type = new WorkItemType("phase1", "phase2", "phase3");
-        
+
         WorkItem workItem = new WorkItem(1, 0, type);
         workItem.setDate("phase1", formatter.parse("2011/02/7"));
         workItem.setDate("phase2", formatter.parse("2011/02/10"));
-        CycleTimeColumn.buildCycleTimeColumnFromWorkItem(workItem);
+        assertNull(CycleTimeColumn.dateWhenPhaseWasCompleted(workItem, "phase3"));
     }
 
 }

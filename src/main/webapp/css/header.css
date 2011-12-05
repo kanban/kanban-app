@@ -196,3 +196,13 @@ body.welcome {
 	font-size: 15px;
 	font-weight: bold;
 }
+
+
+.error {
+	font-size: 15px;
+	background-color: yellow;
+	padding: 5px;
+	border-color: red;
+	border-width: thick;
+	border-style: solid;
+}

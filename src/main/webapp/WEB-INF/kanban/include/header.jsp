@@ -52,6 +52,13 @@
 }
 */
 </style>
+
+    <c:if test="${error != null}">
+        <div class="error">
+            <b>Error</b>: ${error}
+        </div>
+    </c:if>
+
     <div class="header">
         
         <div class="user-home">${service.home.absolutePath}</div>
