@@ -69,12 +69,11 @@ $(document).ready(function(){
     	});
       
     	//Change the content to an input tag and autopopulate the value
-    	var originalValue = $(this).html().trim();
     	var newInput = $("<input />")
     			.attr("data-role", $(this)
     			.attr("data-role"))
-    			.attr("originalValue", originalValue)
-    			.css("width", "50%").val(originalValue);
+    			.attr("originalValue", $(this).html().trim())
+    			.css("width", "50%").val($(this).text().trim());
     	$(this).html("").append(newInput);
     	newInput.focus();
       
