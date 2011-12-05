@@ -157,23 +157,23 @@
                                     </div>
                                 </td>
             					<c:choose>
-            						<c:when test="${cell.workItem.excluded}">
+            						<c:when test="${item.excluded}">
             							<td class="itemName itemNumber itemExcluded">
-            								${cell.workItem.id}
+            								${item.id}
             						    </td>
             						</c:when>
             						<c:otherwise>
             							<td class="itemName itemNumber itemIncluded">
-            						        ${cell.workItem.id} 
+            						        ${item.id} 
             						    </td>
             						</c:otherwise>
             					</c:choose>
                                 <c:choose>
-                                    <c:when test="${cell.workItem.mustHave}">
-                                       <td class="itemName formify itemMustHave" data-role="name">${cell.workItem.name}</td>
+                                    <c:when test="${item.mustHave}">
+                                       <td class="itemName formify itemMustHave" data-role="name">${item.name}</td>
                                     </c:when>
                                     <c:otherwise>
-                                        <td class="itemName formify itemNiceToHave" data-role="name">${cell.workItem.name}</td>
+                                        <td class="itemName formify itemNiceToHave" data-role="name">${item.name}</td>
                                     </c:otherwise>
                                 </c:choose>
                                 

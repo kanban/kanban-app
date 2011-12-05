@@ -117,9 +117,7 @@ public class KanbanService {
     public Collection<String> getProjects() {
 
         if (home.exists()) {
-
             List<String> result = asList(home.list(NO_DOT_FILES));
-
             Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 
             return result;
@@ -127,6 +125,22 @@ public class KanbanService {
         else {
             return new ArrayList<String>();
         }
+    }
+
+    public Collection<String> getFilteredProjects() {
+        Collection<String> projects = getProjects();
+        Collection<String> filteredProjects = new ArrayList<String>();
+        for (String p : projects) {
+            if (!isFilteredProject(p)) {
+                filteredProjects.add(p);
+            }
+        }
+        return filteredProjects;
+    }
+
+    private boolean isFilteredProject(String p) {
+
+        return p.startsWith("_");
     }
 
     /**

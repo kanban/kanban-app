@@ -77,4 +77,20 @@ public class KanbanServiceTest {
         KanbanService kanbanService = new KanbanService(kanbanHome.getRoot());
         kanbanService.createProject("Test project", "some new settings");
     }
+
+    @Test
+    public void getFilteredProjectsSkipUnderscores() {
+        kanbanHome.newFolder("project1");
+        kanbanHome.newFolder("_project2");
+        kanbanHome.newFolder("project3");
+        kanbanHome.newFolder("_project4");
+
+        KanbanService service = new KanbanService();
+
+        assertThat(service.getProjects(), hasItems("project1", "_project2", "project3", "_project4"));
+        assertThat(service.getFilteredProjects(), hasItems("project1", "project3"));
+        assertThat(service.getFilteredProjects(), not(hasItem("_project2")));
+        assertThat(service.getFilteredProjects(), not(hasItem("_project4")));
+
+    }
 }
