@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.Set;
 import org.joda.time.LocalDate;
 
-
 /**
  * The interface for a KanbanProject representation.
+ * 
  * @author Janella Espinas, Chris Cooper
  */
 public interface KanbanProject {
@@ -20,8 +20,8 @@ public interface KanbanProject {
     void stop(int id);
 
     int addWorkItem(int parentId, WorkItemType type, String name, int averageCaseEstimate, int worstCaseEstimate,
-                     int importance, String notes, String color, boolean excluded, String workStreams,
-                     LocalDate backlogDate);
+                    int importance, String notes, String color, boolean excluded, String workStreams,
+                    LocalDate backlogDate);
 
     void move(int id, int targetId, boolean after);
 
@@ -36,6 +36,8 @@ public interface KanbanProject {
     void reparentWorkItem(int id, int newParentId);
 
     KanbanBacklog getBacklog(String workStream);
+
+    KanbanBoard getCompleted(String workStream);
 
     KanbanBoard getBoard(BoardIdentifier boardType, String workStream);
 
