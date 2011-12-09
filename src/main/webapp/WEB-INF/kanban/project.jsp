@@ -36,8 +36,8 @@
 	$(function() {
 		$("button.dropdown").button({
             icons: {
-                primary: "ui-icon-gear",
-                secondary: "ui-icon-triangle-1-s"
+                primary: "ui-icon-gear dropdown-gear",
+                secondary: "ui-icon-triangle-1-s dropdown-triangle"
             },
             text: false
         }).click(function(){
@@ -203,10 +203,18 @@ table#headercopy .feature-header{
 	-moz-opacity: 1;
 	opacity: 1;
 	position: absolute;
-	width: 35px;
-	height: 15px;
-	bottom: 2px;
-	left: 2px;
+	width: 35px !important;
+	height: 15px !important;
+	bottom: 2px !important;
+	left: 2px !important;
+}
+
+.dropdown-gear {
+    left: 2px !important;
+}
+
+.dropdown-triangle {
+    right: 0px !important;
 }
 
 .dropdown-menu-wrapper{

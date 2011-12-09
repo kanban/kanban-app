@@ -52,11 +52,22 @@
 }
 */
 </style>
-
     <c:if test="${error != null}">
-        <div class="error">
-            <b>Error</b>: ${error}
+        <div id="error-dialog" title="Error">
+            ${error}
         </div>
+        <script>
+        	$(function() {
+        		$("#error-dialog").dialog({
+        			modal: true,
+        			buttons: {
+        				Ok: function() {
+        					$(this).dialog("close");
+        				}
+        			}
+        		});        		
+        	});
+        </script>
     </c:if>
 
     <div class="header">

@@ -189,7 +189,7 @@ public class KanbanBoardController {
         if (!workItem.getCurrentPhase().equals(phase)) {
             //TODO display error to user
             return new RedirectView("../" + boardType
-                + "?error=Could not advance item to the next phase. Probably current board view was not valid.");
+                    + "?error=Your board view was out of date, your request has been canceled and the board has been updated. Please review the board now and apply your changes.");
         }
 
         project.advance(parseInt(id), currentLocalDate());
