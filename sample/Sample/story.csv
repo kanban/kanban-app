@@ -1,4 +1,0 @@
-"id","parentId","name","averagecase","worstcase","importance","notes","excluded","stopped","colour","musthave","workstreams","Story","Development","Completed Story"
-"9","5","Story 1","5","0","0",,"false","false","FFFFFF","false","","2011-10-20",,
-"10","5","Story 2","6","0","0",,"false","false","FFFFFF","false","","2011-10-20","2011-10-20",
-"7","6","Story of completed feature","5","0","0",,"false","false","ffffff","false","","2011-10-15","2011-10-17","2011-10-20"

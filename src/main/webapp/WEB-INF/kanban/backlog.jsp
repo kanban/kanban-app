@@ -82,7 +82,7 @@ $(document).ready(function(){
       
     	//Add the tooltip for name
     	if($(this).attr("data-role") == "name"){
-    		$(this).append("<span style=\'color:#aaa\'>Press <b>Enter</b> to save</span>");
+    		$(this).append("<span style=\'color:#aaa\'>Press <b>Enter</b> to save, <b>Esc</b> to cancel</span>");
     	}
       
     	//When the user presses enter, save it

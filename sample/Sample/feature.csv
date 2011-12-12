@@ -1,8 +1,0 @@
-"id","parentId","name","averagecase","worstcase","importance","notes","excluded","stopped","colour","musthave","workstreams","Feature","Analysis","Analysis Done","Implementation","Implementation Done","Integration","Integration Done","Acceptance","Completed Feature"
-"1","0","Must feature in backlog","0","2000","0",,"false","false","ffffff","true","","2011-10-20","2011-12-05","2011-12-05",,,,,,
-"2","0","Must feature 2 in backlog","0","2000","0",,"false","false","FFFFFF","true","","2011-10-20","2011-12-05",,,,,,,
-"4","0","Must feature 1 on the wall","0","2000","0",,"false","false","FFFFFF","true","","2011-10-20","2011-10-20","2011-12-05",,,,,,
-"5","0","Must feature 2 on the wall","0","2000","0",,"false","false","FFFFFF","true","","2011-10-20","2011-10-20","2011-10-20","2011-10-20",,,,,
-"6","0","Must feature completed","5","2000","0",,"false","false","ffffff","true","","2011-10-10","2011-10-12","2011-10-14","2011-10-17","2011-10-20","2011-10-20","2011-10-20","2011-10-20","2011-10-20"
-"3","0","Nice to have feature in backlog","0","2000","0",,"false","false","FFFFFF","false","","2011-10-20",,,,,,,,
-"8","0","Nice to have feature 2 in backlog","0","3000","0",,"false","false","FFFFFF","false","","2011-10-20",,,,,,,,

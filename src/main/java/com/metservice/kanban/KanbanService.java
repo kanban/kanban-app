@@ -9,7 +9,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
+import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.jasper.tagplugins.jstl.If;
 import com.metservice.kanban.model.DefaultKanbanProject;
@@ -29,7 +31,12 @@ public class KanbanService {
     public static final String KANBAN_HOME_PROPERTY_NAME = "kanban.home";
 
     //Filters the files that start with a . i.e '.home'
-    private static final NotFileFilter NO_DOT_FILES = new NotFileFilter(new PrefixFileFilter("."));
+    private static final NotFileFilter NO_DOT_DIRS_NO_FILES = new NotFileFilter(
+        new OrFileFilter(
+            new PrefixFileFilter("."),
+            FileFileFilter.FILE
+        ));
+
     //Sets the KANBAN_PROPERTIES_FILE name
     private static final String KANBAN_PROPERTIES_FILE_NAME = "kanban.properties";
 
@@ -117,8 +124,7 @@ public class KanbanService {
     public Collection<String> getProjects() {
 
         if (home.exists()) {
-
-            List<String> result = asList(home.list(NO_DOT_FILES));
+            List<String> result = asList(home.list(NO_DOT_DIRS_NO_FILES));
 
             Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 
@@ -127,6 +133,22 @@ public class KanbanService {
         else {
             return new ArrayList<String>();
         }
+    }
+
+    public Collection<String> getFilteredProjects() {
+        Collection<String> projects = getProjects();
+        Collection<String> filteredProjects = new ArrayList<String>();
+        for (String p : projects) {
+            if (!isFilteredProject(p)) {
+                filteredProjects.add(p);
+            }
+        }
+        return filteredProjects;
+    }
+
+    private boolean isFilteredProject(String p) {
+
+        return p.startsWith("_");
     }
 
     /**

@@ -1,0 +1,44 @@
+.kanban {
+	margin: 10px 0px 0px 0px;
+	background: whitesmoke;
+	border-collapse: collapse;
+}
+
+.age-legend {
+	height: 10px;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.age-item {
+	height: 13px;
+	float: left;
+	font-size: 11px;
+	text-align: center;
+}
+
+.age-item:hover {
+	font-weight: bold;
+}
+
+.editIcon {
+	-moz-opacity: 1;
+	opacity: 1;
+	width: 16px;
+	height: 16px;
+}
+
+.editIcon:hover {
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+}
+
+.horizontalLine {
+	border-top: 2px black solid;
+}
+
+
+td.padded {
+    padding-left: 4px;
+    padding-right: 2px;
+}

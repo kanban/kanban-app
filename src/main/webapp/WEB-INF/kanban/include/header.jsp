@@ -52,11 +52,22 @@
 }
 */
 </style>
-
     <c:if test="${error != null}">
-        <div class="error">
-            <b>Error</b>: ${error}
+        <div id="error-dialog" title="Error">
+            ${error}
         </div>
+        <script>
+        	$(function() {
+        		$("#error-dialog").dialog({
+        			modal: true,
+        			buttons: {
+        				Ok: function() {
+        					$(this).dialog("close");
+        				}
+        			}
+        		});        		
+        	});
+        </script>
     </c:if>
 
     <div class="header">
@@ -68,11 +79,14 @@
                 <input type="hidden" name="chartName" value="${chartName}" />
                 <input type="hidden" name="workItemTypeName" value="${workItemTypeName}" />
 
-    			<label class="projectPicker" for="projectPicker">Project:</label>
+    			<label class="projectPicker" for="projectPicker"><a href="${pageContext.request.contextPath}">Project</a>:</label>
 
 				<select id="projectPicker" onchange="changeProject('projectPicker')">
-						<c:forEach var="projectName" items="${service.projects}">
-					        <option <c:if test="${projectName == project.name}">selected="selected"</c:if>>${projectName}</option>
+                        <option selected="selected">${project.name}</option>
+						<c:forEach var="projectName" items="${service.filteredProjects}">
+                            <c:if test="${projectName != project.name}">
+					           <option >${projectName}</option>
+                            </c:if>
 						</c:forEach>
 				</select>
 			</form>

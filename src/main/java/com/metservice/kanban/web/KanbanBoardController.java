@@ -95,13 +95,6 @@ public class KanbanBoardController {
         return new HashMap<String, String>();
     }
 
-    //    @ModelAttribute("redirectView")
-    //    public synchronized RedirectView populateRedirectView(
-    //                                                          @PathVariable("projectName") String projectName,
-    //                                                          @PathVariable("board") String board) {
-    //        return new RedirectView("/projects/" + projectName + "/" + board, true);
-    //    }
-
     @ModelAttribute("chartGenerator")
     public synchronized BurnUpChartGenerator populateChartGenerator() {
         return new DefaultBurnUpChartGenerator(new DefaultChartWriter());
@@ -121,19 +114,6 @@ public class KanbanBoardController {
         return model;
     }
 
-    private ModelAndView finishBoard(String boardType, String projectName, KanbanProject project,
-                             Map<String, String> workStreams,
-                                     Map<String, Object> model,
-                                     String view) {
-        KanbanBoard board = project.getBoard(BoardIdentifier.valueOf(boardType.toUpperCase()),
-            workStreams.get(projectName));
-
-        model.put("board", board);
-
-        return new ModelAndView(view, model);
-
-    }
-
     @RequestMapping("wall")
     public synchronized ModelAndView wallBoard(@ModelAttribute("project") KanbanProject project,
                                                @PathVariable("projectName") String projectName,
@@ -142,37 +122,13 @@ public class KanbanBoardController {
                                                @ModelAttribute("workStreams") Map<String, String> workStreams)
         throws IOException {
 
-        String boardType = "wall";
-
         Map<String, Object> model = initBoard("wall", projectName, error, scrollTop);
+        
+        KanbanBoard board = project.getBoard(BoardIdentifier.WALL, workStreams.get(projectName));
 
+        model.put("board", board);
 
-
-        if (boardType.equals("backlog")) {
-            model.put("kanbanBacklog", project.getBacklog(workStreams.get(projectName)));
-            model.put("type", project.getWorkItemTypes().getRoot().getValue());
-            model.put("phase", project.getWorkItemTypes().getRoot().getValue()
-                .getPhases().get(0));
-            return new ModelAndView("/backlog.jsp", model);
-        } else if (boardType.equals("completed")) {
-            model.put("type", project.getWorkItemTypes().getRoot().getValue());
-            List<String> phases = project.getWorkItemTypes().getRoot()
-                .getValue().getPhases();
-            model.put("phase", phases.get(phases.size() - 1));
-
-            KanbanBoard board = project.getBoard(BoardIdentifier.valueOf(boardType.toUpperCase()),
-                workStreams.get(projectName));
-
-            model.put("board", board);
-
-            return new ModelAndView("/completed.jsp", model);
-        }
-        else if (boardType.equals("journal")) {
-            model.put("kanbanJournal", project.getJournalText());
-            return new ModelAndView("/journal.jsp", model);
-        }
-
-        return finishBoard("wall", projectName, project, workStreams, model, "/project.jsp");
+        return new ModelAndView("/project.jsp", model);
     }
 
     @RequestMapping("backlog")
@@ -187,7 +143,8 @@ public class KanbanBoardController {
 
         model.put("kanbanBacklog", project.getBacklog(workStreams.get(projectName)));
         model.put("type", project.getWorkItemTypes().getRoot().getValue());
-        model.put("phase", project.getWorkItemTypes().getRoot().getValue().getPhases().get(0));
+        model.put("phase", project.getWorkItemTypes().getRoot().getValue().getBacklogPhase());
+
         return new ModelAndView("/backlog.jsp", model);
     }
 
@@ -215,28 +172,11 @@ public class KanbanBoardController {
         Map<String, Object> model = initBoard("completed", projectName, error, scrollTop);
 
         model.put("type", project.getWorkItemTypes().getRoot().getValue());
-        List<String> phases = project.getWorkItemTypes().getRoot()
-            .getValue().getPhases();
-        model.put("phase", phases.get(phases.size() - 1));
+        model.put("phase", project.getWorkItemTypes().getRoot().getValue().getCompletedPhase());
+        model.put("board", project.getCompleted(workStreams.get(projectName)));
 
-        return finishBoard("completed", projectName, project, workStreams, model, "/completed.jsp");
+        return new ModelAndView("/completed.jsp", model);
     }
-
-    //    private String cleanBoardType(String boardType) {
-    //        int sep = boardType.indexOf(":");
-    //        if (sep > -1) {
-    //            return boardType.substring(0, sep);
-    //        }
-    //        return boardType;
-    //    }
-
-    //    private String extractScrollPositionInfoFromBoardType(String boardType) {
-    //        int sep = boardType.indexOf(":");
-    //        if (sep > -1) {
-    //            return boardType.substring(sep + 1);
-    //        }
-    //        return null;
-    //    }
 
     @RequestMapping(value = "{board}/advance-item-action")
     public synchronized RedirectView advanceItemAction(@ModelAttribute("project") KanbanProject project,
@@ -249,7 +189,7 @@ public class KanbanBoardController {
         if (!workItem.getCurrentPhase().equals(phase)) {
             //TODO display error to user
             return new RedirectView("../" + boardType
-                + "?error=Could not advance item to the next phase. Probably current board view was not valid.");
+                    + "?error=Your board view was out of date, your request has been canceled and the board has been updated. Please review the board now and apply your changes.");
         }
 
         project.advance(parseInt(id), currentLocalDate());
