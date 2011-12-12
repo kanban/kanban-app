@@ -9,22 +9,22 @@ import java.io.IOException;
 import net.sourceforge.jwebunit.junit.WebTester;
 import org.junit.rules.TemporaryFolder;
 
-public class BoardPage {
+public class AdminPage {
 
     protected final WebTester tester;
 
-    public static BoardPage openProject(TemporaryFolder kanbanHome, String projectName, String sourceResourcePath) throws IOException {
+    public static AdminPage openProject(TemporaryFolder kanbanHome, String projectName, String sourceResourcePath) throws IOException {
     	File root = kanbanHome.getRoot();
     	cleanProject(kanbanHome);
         createTestProject(root, projectName, sourceResourcePath);
     	return createBoardPage(projectName);
     }
     
-    public static BoardPage createBoardPage(String projectName){
+    public static AdminPage createBoardPage(String projectName){
         WebTester tester = new WebTester();
         tester.beginAt("http://localhost:8008/kanban");
         tester.clickLinkWithExactText(projectName);
-        return new BoardPage(tester);
+        return new AdminPage(tester);
     }
 
     public static void cleanProject(TemporaryFolder kanbanHome) throws IOException {
@@ -33,16 +33,22 @@ public class BoardPage {
         root.mkdir();
     }
     
-    public BoardPage(WebTester tester) {
+    public AdminPage(WebTester tester) {
         this.tester = tester;
     }
 
-    public BoardPage clickBacklogButton() {
-        tester.clickElementByXPath("//a[@id='backlog-button']");
-        return new BoardPage(tester);
+    public ProjectPropertiesPage clickEditProject() {
+        //tester.clickElementByXPath("//li/a[contains(text(),\"Edit Project\")]");
+        tester.clickLinkWithExactText("Edit Project");
+        return new ProjectPropertiesPage(tester);
     }
     
-    public BoardPage clickCompleteButton() {
+    public AdminPage clickBacklogButton() {
+        tester.clickElementByXPath("//a[@id='backlog-button']");
+        return new AdminPage(tester);
+    }
+    
+    public AdminPage clickCompleteButton() {
         tester.clickElementByXPath("//a[@id='complete']");
         return this;
     }
@@ -59,14 +65,7 @@ public class BoardPage {
         return new WallPage(tester);
     }
     
-    public AdminPage clickAdminButton() {
-        //        tester.clickElementByXPath("//a[@id='admin']");
-        tester.clickLink("admin");
-        //tester.assertTitleEquals("Kanban: admin");
-        return new AdminPage(tester);
-    }
-    
-    public BoardPage clickAdvance(String name) {
+    public AdminPage clickAdvance(String name) {
         String xPath = "//td[.='" + name + "']/../td[8]/a/img";
         tester.assertElementPresentByXPath(xPath);            
         tester.clickElementByXPath(xPath);
@@ -139,14 +138,6 @@ public class BoardPage {
     	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[5][contains(text(), \"XYZ\")]");
     	tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[6][contains(text(), \"xzy\")]");
     }
-    
-    public void assertProjectNotPresent(String name) {
-        tester.assertElementNotPresentByXPath("//select[@id=\"projectPicker\"]/option[1][contains(text(), \""+name+"\")]");
-    }
-
-    public void assertProjectIsPresent(String name) {
-        tester.assertElementPresentByXPath("//select[@id=\"projectPicker\"]/option[1][contains(text(), \""+name+"\")]");
-    }
 
     public void assertItemNameIsIndicatedMustHave(int i) {
         String itemClass = tester.getElementAttributeByXPath("//td[@id='item-name-" + i + "']", "class");
@@ -160,7 +151,7 @@ public class BoardPage {
         assertFalse("Item mustn't contain itemMustHave style", itemClass.contains("itemMustHave"));
     }
 
-    public BoardPage enterQuickName(String nameValue) {
+    public AdminPage enterQuickName(String nameValue) {
         tester.clickElementByXPath("//input[@id='quick-editor-name'");
         tester.setTextField("name", nameValue);
         return this;

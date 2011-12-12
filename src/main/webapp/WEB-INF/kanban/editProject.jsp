@@ -78,8 +78,8 @@ text-align: right;
 	    <textarea name="content" rows="25" cols="100">${settings}</textarea>
 	
 	  </fieldset>
-	  <fieldset class="submit">   
-	    <input type="submit"/>
+	  <fieldset class="submit">
+	    <button id="submit-query-button" type="submit">Submit Query</button>   
 	  </fieldset>    
 	</form>
 </body>

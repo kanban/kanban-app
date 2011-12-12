@@ -232,6 +232,17 @@ public class EndToEndTest {
         wall.assertWipBroken("feature wall");
 
     }
+    
+    @Test
+    public void userCanRenameAProject() throws IOException {
+        BoardPage wallPage = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+        AdminPage adminPage = wallPage.clickAdminButton();
+        adminPage.clickEditProject().enterName("Renamed Test Project").clickSubmitQueryButton();
+        
+        wallPage.assertProjectNotPresent("Test project");
+        wallPage.assertProjectIsPresent("Renamed Test Project");
+    }
+    
     //    @Test
     //    public void userCanDownloadStories() throws IOException {
     //        BoardPage wallPage = openProject("Test project");

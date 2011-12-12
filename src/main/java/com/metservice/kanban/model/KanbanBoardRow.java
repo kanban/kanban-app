@@ -34,7 +34,7 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
         String phase = workItem.getCurrentPhase();
         int index = columns.getIndexOfPhase(phase);
 
-        return cells[index].isEmpty();
+        return cells[index].isEmptyCell();
     }
 
     public void insert(WorkItem workItem, WorkItem workItemAbove, WorkItem workItemBelow) {
@@ -53,7 +53,7 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
 
         for (int i = 0; i < otherRow.cells.length; i++) {
             KanbanCell cell = otherRow.cells[i];
-            if (!cell.isEmpty()) {
+            if (!cell.isEmptyCell()) {
                 cells[i] = cell.clone();
             }
         }
@@ -61,7 +61,7 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
 
     public boolean hasItemOfType(WorkItemType type) {
         for (KanbanCell cell : cells) {
-            if (!cell.isEmpty() && cell.getWorkItemType().equals(type)) {
+            if (!cell.isEmptyCell() && cell.getWorkItemType().equals(type)) {
                 return true;
             }
         }
@@ -111,10 +111,15 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
         ArrayList<KanbanCell> list = new ArrayList<KanbanCell>();
         for(KanbanCell cell: cells)
         {
-            if (!cell.isEmpty() && cell.getWorkItemType().equals(type)) {
+            if (!cell.isEmptyCell() && cell.getWorkItemType().equals(type)) {
                 list.add(cell);
             }
         }
         return Collections.unmodifiableCollection(list);
+    }
+
+    // required by JSP as c:forEach cannot iterate using Iterable
+    public Iterator<KanbanCell> getIterator() {
+        return iterator();
     }
 }

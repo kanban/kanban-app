@@ -1,8 +1,8 @@
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery.tablednd_0_5.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery.cookie.js"></script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/jquery-ui-1.8.16.custom.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/custom-theme/jquery-ui-1.8.16.custom.css"/>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/header.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/colorpicker.js"></script>

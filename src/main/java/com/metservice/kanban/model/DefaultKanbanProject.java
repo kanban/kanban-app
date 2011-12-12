@@ -182,11 +182,22 @@ public class DefaultKanbanProject implements KanbanProject {
         // TODO Why a board builder to build the backlog screen?
         KanbanBoardBuilder kanbanBoardBuilder = new KanbanBoardBuilder(
             new KanbanBoardColumnList(
-                new KanbanBoardColumn(getRootWorkItemType(), getRootWorkItemType().getPhases().get(0))),
+                new KanbanBoardColumn(getRootWorkItemType(), getRootWorkItemType().getBacklogPhase())),
             workItemTypes,
             tree);
         KanbanBacklog backlog = kanbanBoardBuilder.buildKanbanBacklog(workStream);
         return backlog;
+    }
+
+    @Override
+    public KanbanBoard getCompleted(String workStream) {
+        // get last column
+        KanbanBoardBuilder kanbanBoardBuilder = new KanbanBoardBuilder(
+            new KanbanBoardColumnList(
+                new KanbanBoardColumn(getRootWorkItemType(), getRootWorkItemType().getCompletedPhase())),
+            workItemTypes,
+            tree);
+        return kanbanBoardBuilder.build(workStream);
     }
 
 	/**
