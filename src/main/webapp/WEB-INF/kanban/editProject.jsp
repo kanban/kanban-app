@@ -75,7 +75,7 @@ text-align: right;
 		<input size=10 type="text" name="newProjectName" value="${project.name}" />
 	
 	    <label class="labelClass" for="name">Settings:</label> 
-	    <textarea name="content" rows="25" cols="100">${settings}</textarea>
+	    <textarea id ="project-properties" name="content" rows="25" cols="100">${settings}</textarea>
 	
 	  </fieldset>
 	  <fieldset class="submit">

@@ -61,7 +61,7 @@ public class EndToEndTest {
     }
 
     @Test
-    public void testProjectListAppearsSorted() throws IOException {
+    public void projectListAppearsSorted() throws IOException {
         File root = kanbanHome.getRoot();
         BoardPage.cleanProject(kanbanHome);
         TestUtils.createTestProject(root, "123", "/Test Project 2/");
@@ -125,8 +125,8 @@ public class EndToEndTest {
     @Test
     public void userCanViewAChart() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
-        //        ChartPage chartPage = wallPage.clickFeatureCycleTimeChartButton();
-        //        chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature");
+                ChartPage chartPage = page.clickFeatureCycleTimeChartButton();
+                chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");
 
     }
 
@@ -242,6 +242,18 @@ public class EndToEndTest {
         wallPage.assertProjectNotPresent("Test project");
         wallPage.assertProjectIsPresent("Renamed Test Project");
     }
+    
+    @Test
+    public void cycleTimeChartsVisibleWhenNewPhaseIsAddedToAProject() throws IOException {
+        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
+        AdminPage adminPage = wallPage.clickAdminButton();
+        ProjectPropertiesPage projectPropertiesPage = adminPage.clickEditProject();
+        String currentProjectProperties = projectPropertiesPage.getProjectProperties();
+        currentProjectProperties.replace("workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done", "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
+        projectPropertiesPage.enterProjectProperties(currentProjectProperties).clickSubmitQueryButton();
+        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");        
+    }
+    
     
     //    @Test
     //    public void userCanDownloadStories() throws IOException {
