@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,6 +62,7 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 @SessionAttributes("workStreams")
 public class KanbanBoardController {
 
+    private static final int DEFAULT_MONTHS_DISPLAY = 4;
     @Autowired
     private KanbanService kanbanService;
     private Gson gson;
@@ -552,6 +554,13 @@ public class KanbanBoardController {
                                            @RequestParam(value = "startDate", required = false) String startDate,
                                            @RequestParam(value = "endDate", required = false) String endDate) {
 
+        if (StringUtils.isEmpty(startDate)) {
+            startDate = defaultStartDate(endDate);
+        }
+        if (StringUtils.isEmpty(endDate)) {
+            endDate = LocalDate.fromCalendarFields(Calendar.getInstance()).toString("dd/MM/yyyy");
+        }
+
         Map<String, Object> model = initBoard("chart", projectName, error, null);
 
         model.put("workItemTypeName", workItemTypeName);
@@ -562,6 +571,18 @@ public class KanbanBoardController {
         model.put("chartName", chartName);
 
         return new ModelAndView("/chart.jsp", model);
+    }
+
+    private String defaultStartDate(String endDate) {
+        LocalDate endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
+        if (null != endDate) {
+            try {
+                endDateParsed = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
+            } catch (ParseException e) {
+                // do nothing
+            }
+        }
+        return endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY).toString("dd/MM/yyyy");
     }
 
     // TODO check in this class for redundent model.put("kanban...

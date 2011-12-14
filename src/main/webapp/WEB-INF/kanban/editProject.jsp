@@ -73,8 +73,8 @@ text-align: right;
 	
 		<label class="labelClass" for="newProjectName">Name:</label> 
 		<input size=10 type="text" name="newProjectName" value="${project.name}" />
-	
-	    <label class="labelClass" for="name">Settings:</label> 
+	    <br/>
+	    <label class="labelClass" for="content">Settings:</label> 
 	    <textarea id ="project-properties" name="content" rows="25" cols="100">${settings}</textarea>
 	
 	  </fieldset>

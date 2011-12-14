@@ -46,8 +46,8 @@ margin: 5px 0 40px 10px;
         <jsp:include page="include/header.jsp"/>
         <form action="chart" id="dateForm">
         	<fieldset>
-	            <p>StartDate: <input name="startDate"  id="startDate" type="text"/></p>
-	   			<p>EndDate: <input name="endDate" id="endDate" type="text"/></p>
+	            <p>Start date: <input name="startDate"  id="startDate" type="text" value="${startDate}"/></p>
+	   			<p>End date: <input name="endDate" id="endDate" type="text"  value="${endDate}"/></p>
 	   			<p>
 	   			<input type="hidden" name="chartName" id="chartName" value="${imageName}"/>
 	   			<input type="text" name="workItemTypeName" id="workItemTypeName" value="${workItemTypeName}" style="display:none;"/>

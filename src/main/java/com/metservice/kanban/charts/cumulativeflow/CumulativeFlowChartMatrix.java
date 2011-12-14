@@ -94,8 +94,11 @@ public class CumulativeFlowChartMatrix {
         List<LocalDate> dates = new ArrayList<LocalDate>(map.keySet());
         Collections.sort(dates);
         // make sure there are index values for the sublist
-        int startIndex = dates.indexOf(startDate) == -1 ? 0 : dates.indexOf(startDate);
-        int endIndex = dates.indexOf(endDate) == -1 ? dates.size() : dates.indexOf(endDate) + 1;
+        LocalDate startDateCorrected = WorkingDayUtils.nextWorkingDay(startDate);
+        LocalDate endDateCorrected = WorkingDayUtils.nextWorkingDay(endDate);
+
+        int startIndex = dates.indexOf(startDateCorrected) == -1 ? 0 : dates.indexOf(startDateCorrected);
+        int endIndex = dates.indexOf(endDateCorrected) == -1 ? dates.size() : dates.indexOf(endDateCorrected) + 1;
         if (endIndex > dates.size()){
         	endIndex = dates.size();
         }

@@ -64,4 +64,18 @@ public class WorkingDayUtils {
         return true;
     }
     
+    /**
+     * If a day is working day, returns it, otherwise search for the next
+     * working day (e.g. Monday)
+     * 
+     * @param localDate
+     * @return
+     */
+    public static LocalDate nextWorkingDay(LocalDate localDate) {
+        LocalDate nextDay = localDate;
+        while (!isWorkingDay(nextDay)) {
+            nextDay = nextDay.plusDays(1);
+        }
+        return nextDay;
+    }
 }
