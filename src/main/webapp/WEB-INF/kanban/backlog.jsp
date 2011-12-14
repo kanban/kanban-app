@@ -199,7 +199,7 @@ td.small{
 }
 </style>
 </head>
-<body>
+<body onload="javscript:setPosition(${scrollTop});">
 	<jsp:include page="include/header.jsp" />
 
 		<table id="backlog-table" class="kanban">
@@ -218,50 +218,51 @@ td.small{
       <tbody>
 			<c:forEach var="cell" items="${kanbanBacklog}" varStatus="rowNumber">
       
-				<tr id="${cell.workItem.id}" class="horizontalLine">
+                <c:set var="item" value="${cell.workItem}" />
+				<tr id="${item.id}" class="horizontalLine">
 					<td class="dragHandle" style="width:35px" ></td>  				
 					<td class="editIcon">
-					<a href="${pageContext.request.contextPath}/projects/${projectName}/backlog/edit-item?id=${cell.workItem.id}">
-							<img id="edit-work-item-${cell.workItem.id}-button" src="${pageContext.request.contextPath}/images/edit.png" />
+					<a href="${pageContext.request.contextPath}/projects/${projectName}/backlog/edit-item?id=${item.id}">
+							<img id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" />
 					</a>
 					</td>
 					<c:choose>
-						<c:when test="${cell.workItem.excluded}">
+						<c:when test="${item.excluded}">
 							<td class="itemName itemNumber itemExcluded">
-								${cell.workItem.id}
+								${item.id}
 						    </td>
 						</c:when>
 						<c:otherwise>
 							<td class="itemName itemNumber itemIncluded">
-						        ${cell.workItem.id} 
+						        ${item.id} 
 						    </td>
 						</c:otherwise>
 					</c:choose>
                     <c:choose>
-                        <c:when test="${cell.workItem.mustHave}">
-					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name"><c:out value="${cell.workItem.name}" /></td>
+                        <c:when test="${item.mustHave}">
+					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name"><c:out value="${item.name}" /></td>
                         </c:when>
                         <c:otherwise>
-                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name"><c:out value="${cell.workItem.name}" /></td>
+                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name"><c:out value="${item.name}" /></td>
                         </c:otherwise>
                     </c:choose>
 					<td class="small color">
-					  <div style="background-color:${cell.workItem.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
+					  <div style="background-color:${item.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
 					  </div>
 					</td>
 					<td class="small formify" data-role="size" >
-						<c:if test="${cell.workItem.averageCaseEstimate > 0 }">
-	                       ${cell.workItem.averageCaseEstimate}
+						<c:if test="${item.averageCaseEstimate > 0 }">
+	                       ${item.averageCaseEstimate}
 						</c:if>
 					</td>
 					<td class="small formify" data-role="importance">
-						<c:if test="${cell.workItem.importance > 0 }">
-							${cell.workItem.importance}
+						<c:if test="${item.importance > 0 }">
+							${item.importance}
 						</c:if>
 					</td>
 					<td class="small advanceIcon" align="center" >
-						<c:if test="${!item.inFinalPhase}">
-                            <a href="backlog/advance-item-action?id=${cell.workItem.id}&phase=${cell.workItem.currentPhase}">
+						<c:if test="${!item.completed}">
+                            <a href="javascript:advance(${item.id}, '${item.currentPhase}');">
 							     <img class="advance" src="${pageContext.request.contextPath}/images/go-next.png" />
                             </a>
 						</c:if>
@@ -278,7 +279,7 @@ td.small{
             <span style="color:#aaa">Press <b>Enter</b> to create new top item</span>
           </td>
           <td class="small color">
-					  <!-- <div style="background-color:${cell.workItem.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
+					  <!-- <div style="background-color:${item.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
 					  </div> -->
 					</td>
 					<td class="small" data-role="size" >

@@ -63,6 +63,7 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 public class KanbanBoardController {
 
     private static final int DEFAULT_MONTHS_DISPLAY = 4;
+
     @Autowired
     private KanbanService kanbanService;
     private Gson gson;
@@ -184,7 +185,9 @@ public class KanbanBoardController {
     public synchronized RedirectView advanceItemAction(@ModelAttribute("project") KanbanProject project,
                                                        @PathVariable("board") String boardType,
                                                        @RequestParam("id") String id,
-                                                       @RequestParam("phase") String phase) throws IOException {
+                                                       @RequestParam("phase") String phase,
+                                                       @RequestParam(value = "scrollTop", required = false) Integer scrollTop)
+        throws IOException {
 
         // check item hasn't already been advanced
         WorkItem workItem = project.getWorkItemById(Integer.parseInt(id));
@@ -197,7 +200,7 @@ public class KanbanBoardController {
         project.advance(parseInt(id), currentLocalDate());
         project.save();
 
-        return new RedirectView("../" + boardType);
+        return new RedirectView("../" + boardType + "?scrollTop=" + scrollTop);
     }
 
     @RequestMapping(value = "{board}/stop-item-action", method = RequestMethod.POST)

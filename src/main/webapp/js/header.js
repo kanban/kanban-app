@@ -127,3 +127,11 @@ function deleteColumn(){
 	document.forms["header"].submit();
 	alert("Done");
 }
+
+function advance(id, phase){
+	window.location = getBoard() + "/advance-item-action?id=" + id + "&phase=" + phase + "&scrollTop=" + getYOffset();
+}
+
+function setPosition(position) {
+	window.scrollTo(0, position);
+}

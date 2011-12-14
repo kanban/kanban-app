@@ -69,10 +69,6 @@
 <script type="text/javascript">
 //<![CDATA[
   
-			function setPosition() {
-			  window.scrollTo(0,<%=scrollTo%>);
-			}
-			
 			//Changes the card color to FIREBRICK!
             function stopStory(id,type) {
             	//document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
@@ -98,10 +94,6 @@
 			  } else {
 			     item.className = "markedToPrint";
 			   }
-			}
-			function advance(id, phase){
-			 document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&phase=" + phase + "&scrollTop=" + getYOffset();
-			 document.forms["form"].submit();
 			}
 
 			function edit(id){
@@ -281,7 +273,7 @@ div[data-role="card"]{
 
 </style>
 </head>
-<body onload="javscript:setPosition();">
+<body onload="javscript:setPosition(${scrollTop});">
     <jsp:include page="include/header.jsp"/>
     <form id="form" method="post" action="">
         <table class="kanban" id="kanbantable">
@@ -385,7 +377,9 @@ div[data-role="card"]{
                               </div>
                               <div class="advanceIcon">
                                 <c:if test="${!item.completed && !item.blocked}">
-                                    <img onclick="javascript:advance(${item.id}, '${item.currentPhase}');" src="${pageContext.request.contextPath}/images/go-next.png" />
+                                    <a href="javascript:advance(${item.id}, '${item.currentPhase}');">
+                                        <img src="${pageContext.request.contextPath}/images/go-next.png" />
+                                    </a>
                                 </c:if>
                               </div>
                               <div class="downIcon">
