@@ -199,82 +199,6 @@ table#headercopy .feature-header{
 }
 
 
-.dropdown {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 35px !important;
-	height: 15px !important;
-	bottom: 2px !important;
-	left: 2px !important;
-}
-
-.dropdown-gear {
-    left: 2px !important;
-}
-
-.dropdown-triangle {
-    right: 0px !important;
-}
-
-.dropdown-menu-wrapper{
-  position: relative;
-  top: 62px;
-  left: -2px;
-}
-
-.dropdown-menu{
-  position:absolute;
-  z-index:7;
-  background:#FFF;
-  border:1px solid #AAA;
-  border-radius:5px;
-  -moz-border-radius:5px;
-  -webkit-border-radius:5px;
-}
-
-.dropdown-menu a{
-  clear:both;
-  display:block;
-  padding:5px;
-  border-bottom:1px solid #AAA;
-  text-decoration: none;
-  font-family: Arial;
-  font-size:12px;
-}
-
-.dropdown-menu a.last{
-  border-bottom: none;
-}
-
-.dropdown-menu a img{
-  padding-right:2px;
-  vertical-align: bottom;
-}
-
-.dropdown-menu a:hover{
-  background-color:#EEE;
-}
-
-.editIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 0px;
-	top: 50px;
-}
-
-.stopIcon {
-	-moz-opacity: 1;
-	opacity: 1;
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	left: 110px;
-	top: 50px;
-}
 
 .addIcon {
 	-moz-opacity: 1;
@@ -286,33 +210,7 @@ table#headercopy .feature-header{
 	top: 50px;
 }
 
-.size {
-	border: 1px #BBBBBB dotted;
-	position: absolute;
-	width: 16px;
-	height: 13px;
-	left: 40px;
-	top: 50px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 9px;
-	text-align: center;
-	color: #383838;
-}
 
-.importance {
-	border: 1px #BBBBBB dotted;
-	position: absolute;
-	width: 36px;
-	height: 13px;
-	left: 67px;
-	top: 50px;
-	font-family: arial;
-	font-style: italic;
-	font-size: 9px;
-	text-align: center;
-	color: #383838;
-}
 
 .markedToPrint {
 	background: #EEEEEE;
@@ -496,6 +394,11 @@ div[data-role="card"]{
                                       src="${pageContext.request.contextPath}/images/go-down.png" />
                                 </c:if>
                               </div>
+                            </div>
+                            <div class="edit-menu" title="Edit">
+                                <a class="editButton" href="wall/edit-item?id=${item.id}">
+                                    <img alt="Edit" class="edit" id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" /> 
+                                </a>
                             </div>
                             <button class="dropdown"></button>
                             <div class="dropdown-menu-wrapper" style="display:none;">
