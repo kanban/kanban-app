@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 public class WorkItemType {
 
@@ -79,5 +80,15 @@ public class WorkItemType {
 
     public String getCompletedPhase() {
         return phases.get(phases.size()-1);
+    }
+
+    public boolean isPhaseBefore(String phaseA, String phaseB) {
+        int indexA = getPhases().indexOf(phaseA);
+        int indexB = getPhases().indexOf(phaseB);
+        return indexA < indexB;
+    }
+
+    public boolean isPhaseAfter(String phaseA, String phaseB) {
+        return !StringUtils.equals(phaseA, phaseB) && !isPhaseBefore(phaseA, phaseB);
     }
 }

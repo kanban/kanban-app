@@ -244,6 +244,22 @@ public class WorkItemTest {
     }
 
     @Test
+    public void getPhaseDurationsHasCorrectDurationsComplete2() throws ParseException {
+        WorkItem workItem = new WorkItem(1, type);
+        workItem.setDate("feature", formatter.parse("10/10/2011"));
+        workItem.setDate("phase1", formatter.parse("12/10/2011"));
+        workItem.setDate("phase3", formatter.parse("15/10/2011"));
+
+        Map<String, Integer> phaseDurations = workItem.getPhaseDurations();
+
+        assertThat(phaseDurations.keySet().size(), is(4));
+        assertThat(phaseDurations.get("feature"), is(2));
+        assertThat(phaseDurations.get("phase1"), is(3));
+        assertThat(phaseDurations.get("phase2"), is(0));
+
+    }
+
+    @Test
     public void setWorkStreamAsStringTrims() {
         WorkItem workItem = new WorkItem(1, type);
 

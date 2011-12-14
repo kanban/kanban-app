@@ -1,7 +1,9 @@
 package com.metservice.kanban.model;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class WorkItemTypeTest {
@@ -62,4 +64,25 @@ public class WorkItemTypeTest {
         assertThat(type.getCompletedPhase(), is("phase 2"));
     }
     
+    @Test
+    public void testIsPhaseBefore() {
+        WorkItemType type = new WorkItemType("phase 1", "phase 2", "phase 3");
+        assertTrue(type.isPhaseBefore("phase 1", "phase 2"));
+        assertTrue(type.isPhaseBefore("phase 1", "phase 3"));
+        assertTrue(type.isPhaseBefore("phase 2", "phase 3"));
+
+        assertFalse(type.isPhaseBefore("phase 2", "phase 2"));
+        assertFalse(type.isPhaseBefore("phase 3", "phase 2"));
+    }
+
+    @Test
+    public void testIsPhaseAfter() {
+        WorkItemType type = new WorkItemType("phase 1", "phase 2", "phase 3");
+        assertTrue(type.isPhaseAfter("phase 3", "phase 1"));
+        assertTrue(type.isPhaseAfter("phase 3", "phase 2"));
+        assertTrue(type.isPhaseAfter("phase 2", "phase 1"));
+
+        assertFalse(type.isPhaseAfter("phase 2", "phase 2"));
+        assertFalse(type.isPhaseAfter("phase 2", "phase 3"));
+    }
 }

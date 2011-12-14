@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
@@ -192,6 +193,21 @@ public class WorkItem {
         LocalDate previousDate = null;
         String previousPhase = null;
         LocalDate today = new LocalDate();
+
+        // fill missing dates before current phase
+        String currentPhase = determineCurrentPhase();
+        for (ListIterator<String> i = getType().getPhases().listIterator(getType().getPhases().size()); i.hasPrevious();) {
+
+            String phase = i.previous();
+
+            if (getDate(phase) != null) {
+                previousDate = getDate(phase);
+            }
+            if (this.getType().isPhaseBefore(phase, currentPhase) && getDate(phase) == null) {
+                setDate(phase, previousDate);
+            }
+        }
+
         for (String phase : this.getType().getPhases()) {
             LocalDate date = this.getDate(phase);
             if (date == null) {
@@ -212,6 +228,8 @@ public class WorkItem {
 
         return phaseDurations;
     }
+
+
 
     private String determineCurrentPhase() {
         String currentPhase = null;
