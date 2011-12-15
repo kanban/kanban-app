@@ -400,10 +400,10 @@ div[data-role="card"]{
                             <button class="dropdown"></button>
                             <div class="dropdown-menu-wrapper" style="display:none;">
                               <div class="dropdown-menu">
-                                <a class="edit" href="wall/edit-item?id=${item.id}">
-                                  <img class="edit" id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" /> 
-                                  Edit
-                                </a>
+<%--                                 <a class="edit" href="wall/edit-item?id=${item.id}"> --%>
+<%--                                   <img class="edit" id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" />  --%>
+<!--                                   Edit -->
+<!--                                 </a> -->
                                 <%
                                     if (project.getWorkItemTypes().getTreeNode(item.getType()).hasChildren()) {
                                 %>
