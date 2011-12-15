@@ -206,3 +206,12 @@ body.welcome {
 	border-width: thick;
 	border-style: solid;
 }
+
+.item-work-streams {
+	font-size: 10px;
+	font-family: arial;
+	font-weight: bold;
+	background-color: #CCC;
+	color: black;
+	opacity: 0.6;
+}

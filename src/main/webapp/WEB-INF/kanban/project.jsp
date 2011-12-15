@@ -2,8 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="kanban" uri="/WEB-INF/kanban.tld" %>
+
 
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.joda.time.LocalDate"%>
@@ -366,6 +368,7 @@ div[data-role="card"]{
                                 
                             <div class="itemName">
                                 <span class="${item.excluded ? "itemExcluded" : "" }">${item.id}</span>: <span class="work-item-name">${item.name}</span>
+                                <kanban:workStreamsInfo workItem="${item}" cssClass="item-work-streams" />
                             </div>
                             
                             <div class="icons">

@@ -12,7 +12,6 @@
         <name>workStreams</name>
         <tag-class>com.metservice.kanban.jsptags.WorkStreamsTag</tag-class>
         <body-content>empty</body-content>
-
         <attribute>
             <name>name</name>
             <required>true</required>
@@ -31,6 +30,21 @@
             <name>initialWorkStream</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>workStreamsInfo</name>
+        <tag-class>com.metservice.kanban.jsptags.WorkStreamsInfoTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>workItem</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
     <tag>

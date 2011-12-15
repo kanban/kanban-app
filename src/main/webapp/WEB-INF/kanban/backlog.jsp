@@ -3,6 +3,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="kanban" uri="/WEB-INF/kanban.tld" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -240,10 +241,10 @@ td.small{
 					</c:choose>
                     <c:choose>
                         <c:when test="${item.mustHave}">
-					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name"><c:out value="${item.name}" /></td>
+					       <td id="item-name-${rowNumber.count}" class="itemName formify itemMustHave" data-role="name">${item.name} <kanban:workStreamsInfo workItem="${item}" cssClass="item-work-streams" /></td>
                         </c:when>
                         <c:otherwise>
-                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name"><c:out value="${item.name}" /></td>
+                            <td id="item-name-${rowNumber.count}" class="itemName formify itemNiceToHave" data-role="name">${item.name} <kanban:workStreamsInfo workItem="${item}" cssClass="item-work-streams" /></td>
                         </c:otherwise>
                     </c:choose>
 					<td class="small color">

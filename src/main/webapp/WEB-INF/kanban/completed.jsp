@@ -170,10 +170,10 @@
             					</c:choose>
                                 <c:choose>
                                     <c:when test="${item.mustHave}">
-                                       <td class="itemName formify itemMustHave" data-role="name">${item.name}</td>
+                                       <td class="itemName formify itemMustHave" data-role="name">${item.name} <kanban:workStreamsInfo workItem="${item}" cssClass="item-work-streams" /></td>
                                     </c:when>
                                     <c:otherwise>
-                                        <td class="itemName formify itemNiceToHave" data-role="name">${item.name}</td>
+                                        <td class="itemName formify itemNiceToHave" data-role="name">${item.name} <kanban:workStreamsInfo workItem="${item}" cssClass="item-work-streams" /></td>
                                     </c:otherwise>
                                 </c:choose>
                                 
