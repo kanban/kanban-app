@@ -88,7 +88,7 @@ public class KanbanBoardControllerLegacyTest {
     @Ignore
     @Test
     public void testAdvanceItemAction() throws IOException {
-        RedirectView view = kanbanController.advanceItemAction(kanban, "wall", "1", "phase");
+        RedirectView view = kanbanController.advanceItemAction(kanban, "wall", "1", "phase", null);
         assertThat(view.getUrl(), is("../wall"));
     }
 

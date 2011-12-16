@@ -67,7 +67,7 @@ public class BoardPage {
     }
     
     public BoardPage clickAdvance(String name) {
-        String xPath = "//td[.='" + name + "']/../td[8]/a/img";
+        String xPath = "//td[.='" + name + " ']/../td[8]/a/img";
         tester.assertElementPresentByXPath(xPath);            
         tester.clickElementByXPath(xPath);
         return this;
@@ -104,7 +104,7 @@ public class BoardPage {
     }
 
     private WorkItemPage clickEditButton(String workItemTypeName, String workItemName) {
-        tester.clickElementByXPath("//td[.='" + workItemName + "']/../td[2]/a");
+        tester.clickElementByXPath("//td[.='" + workItemName + " ']/../td[2]/a");
         return new WorkItemPage(tester);
     }
 
@@ -124,11 +124,11 @@ public class BoardPage {
     }
 
     public void assertFeatureNotPresent(String name) {
-        tester.assertElementNotPresentByXPath("//td[.='" + name + "']");
+        tester.assertElementNotPresentByXPath("//td[.='" + name + " ']");
     }
 
     public void assertFeatureIsPresent(String name) {
-        tester.assertElementPresentByXPath("//td[.='" + name + "']");
+        tester.assertElementPresentByXPath("//td[.='" + name + " ']");
     }
     
     public void assertProjectListIsSorted(){

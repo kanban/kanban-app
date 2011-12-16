@@ -5,8 +5,10 @@ import static com.metservice.kanban.jwebunit.BoardPage.openProject;
 import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -118,7 +120,8 @@ public class EndToEndTest {
         //        wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
         //        
         //        wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
-        //27/09/11 - feature 2 never gets to the wall. TODO: Ask Ben!
+        //27/09/11 - feature 2 never gets to the wall. 
+        // TODO: Ask Ben!
         //wall.clickEditStoryButton("story").assertParentIs("feature 2");
     }
 
@@ -126,15 +129,31 @@ public class EndToEndTest {
     public void userCanViewAChart() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
                 ChartPage chartPage = page.clickFeatureCycleTimeChartButton();
-                chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");
+        chartPage.assertImageIsValidPng(
+            String.format("cycle-time-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
+                getDefaultStartDate(),
+                getDefaultEndDate()
+                ));
+    }
 
+    String getDefaultEndDate() {
+        return LocalDate.fromCalendarFields(Calendar.getInstance()).toString("dd/MM/yyyy");
+    }
+
+    String getDefaultStartDate() {
+        return LocalDate.fromCalendarFields(Calendar.getInstance()).minusMonths(4).toString("dd/MM/yyyy");
     }
 
     @Test
     public void userCanViewABurnUpChart() throws IOException {
         BoardPage wallPage = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         ChartPage chartPage = wallPage.clickBurnUpChartButton();
-        chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=&workStream=");
+        chartPage.assertImageIsValidPng(
+            String.format(
+                "burn-up-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
+                getDefaultStartDate(),
+                getDefaultEndDate()
+                ));
     }
 
     @Test
@@ -249,12 +268,20 @@ public class EndToEndTest {
         AdminPage adminPage = wallPage.clickAdminButton();
         ProjectPropertiesPage projectPropertiesPage = adminPage.clickEditProject();
         String currentProjectProperties = projectPropertiesPage.getProjectProperties();
-        currentProjectProperties.replace("workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done", "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
+        currentProjectProperties
+            .replace(
+                "workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done",
+                "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
         projectPropertiesPage.enterProjectProperties(currentProjectProperties).clickSubmitQueryButton();
-        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");        
+        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng(
+            String.format(
+                "cycle-time-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
+                getDefaultStartDate(),
+                getDefaultEndDate()
+                ));
     }
     
-    
+
     //    @Test
     //    public void userCanDownloadStories() throws IOException {
     //        BoardPage wallPage = openProject("Test project");

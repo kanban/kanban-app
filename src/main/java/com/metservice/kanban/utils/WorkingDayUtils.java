@@ -72,6 +72,9 @@ public class WorkingDayUtils {
      * @return
      */
     public static LocalDate nextWorkingDay(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
         LocalDate nextDay = localDate;
         while (!isWorkingDay(nextDay)) {
             nextDay = nextDay.plusDays(1);
