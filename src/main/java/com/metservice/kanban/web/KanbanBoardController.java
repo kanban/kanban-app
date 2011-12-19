@@ -754,7 +754,7 @@ public class KanbanBoardController {
         return openProject(projectName, "wall", newProjectName, null, null);
     }
 
-    private String isProjectNameValid(String newProjectName) {
+    static String isProjectNameValid(String newProjectName) {
 
         if (StringUtils.containsAny(newProjectName, PROJECT_NAME_INVALID_CHARS)) {
             return String.format("Project name contains incorrect characters at least one of (%s)",
@@ -768,7 +768,7 @@ public class KanbanBoardController {
                 MAX_PROJECT_NAME_LENGTH, newProjectName.length());
         }
 
-        return "Project name is not valid";
+        return null;
     }
 
     @RequestMapping("edit-wiplimit-action")
