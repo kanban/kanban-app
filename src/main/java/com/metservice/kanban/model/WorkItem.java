@@ -129,6 +129,33 @@ public class WorkItem {
         return notes;
     }
 
+    public String getNotesAndBlock() {
+        if (isBlocked()) {
+            return StringUtils.defaultIfEmpty(getNotes(), "") + "\n" + getLastBlockedComment();
+        }
+        else {
+            return getNotes();
+        }
+    }
+
+    public String getLastBlockedComment() {
+        WorkItemComment lastComment = null;
+        for (WorkItemComment c : getComments()) {
+            if (isBlockedComment(c) && (lastComment == null || lastComment.getWhenAdded().isBefore(c.getWhenAdded()))) {
+                lastComment = c;
+            }
+        }
+        if (lastComment == null) {
+            return "";
+        }
+        return lastComment.getCommentText() + " [" + lastComment.getAddedBy() + "]";
+    }
+
+    private boolean isBlockedComment(WorkItemComment c) {
+
+        return c.getCommentText().startsWith("Blocked:");
+    }
+
     public void setNotes(String notes) {
         this.notes = notes;
     }

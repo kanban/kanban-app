@@ -214,12 +214,27 @@ public class KanbanBoardController {
         return new RedirectView("../" + boardType + "?scrollTop=" + scrollTop + "&highlight=" + id);
     }
 
-    @RequestMapping(value = "{board}/stop-item-action", method = RequestMethod.POST)
+    @RequestMapping(value = "{board}/block-item-action")
     public synchronized RedirectView stopItemAction(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
-                                                    @RequestParam("id") String id) throws IOException {
+                                                    @RequestParam("itemId") String id,
+                                                    @RequestParam("comment") String comment,
+                                                    @RequestParam("userName") String userName) throws IOException {
 
-        project.stop(parseInt(id));
+        int itemId = parseInt(id);
+
+        WorkItem wi = project.getWorkItemById(itemId);
+
+
+        if (!StringUtils.isEmpty(comment)) {
+            if (!wi.isBlocked()) {
+                wi.addComment(new WorkItemComment(userName, "Blocked: " + comment));
+            }
+            else {
+                wi.addComment(new WorkItemComment(userName, "Unblocked: " + comment));
+            }
+        }
+        project.stop(itemId);
         project.save();
 
         // Redirect

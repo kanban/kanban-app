@@ -72,16 +72,25 @@
 //<![CDATA[
   
 			//Changes the card color to FIREBRICK!
-            function stopStory(id,type) {
+            function blockStory(id, type) {
             	//document.forms["form"].action = getBoard() + "/advance-item-action?id=" + id + "&scrollTop=" + getYOffset();
    			 	//document.forms["form"].submit();
-            	//var item = document.getElementById(id);
+            	var item = document.getElementById("work-item-" + id);
             	//if (item.className=='stopped') {
             		//item.className = type;
             	//}
             	//else { item.className = "stopped"; }
-            	document.forms["form"].action = getBoard() + "/stop-item-action?id=" + id;
-   			 	document.forms["form"].submit();
+            	
+            	//$('#itemId').val(id)
+            	$("#block-dialog-item-id").html(id);
+            	
+            	if (item.className == "blocked") {            		
+                	//document.forms["block-item-form"].action = getBoard() + "/block-item-action";
+       			 	//document.forms["block-item-form"].submit();
+            	}
+            	else {
+            		$("#block-dialog").dialog("open");
+            	}            	
             }
             
 			function markUnmarkToPrint(divId, type, isStopped){
@@ -283,10 +292,39 @@ div[data-role="card"]{
 <%}%>
 
 </style>
+<script type="text/javascript">
+$(function() {
+	$("#block-dialog").dialog({
+		modal: true,
+		autoOpen: false,
+		buttons: {
+			Ok: function() {
+				$.get(getBoard() + "/block-item-action", 
+						{ 
+							itemId: $('#block-dialog-item-id').html(), 
+							userName: $('#userField').val(), 
+							comment: $("#block-comment").val() 
+						}).success(function() { window.location = getBoard(); });
+				
+				$(this).dialog("close");
+			},
+			Cancel: function() {
+				$(this).dialog("close");
+			}
+		}
+	}); 	
+});
+</script>
 </head>
 <body onload="javscript:setPosition(${scrollTop});">
+<div id="block-dialog" title="Block/Unblock work item">
+    <p>Please enter a reason for blocking/unblocking work item <span id="block-dialog-item-id"></span>:</p>
+    <textarea name="block-comment" id="block-comment" rows="5" cols="30"></textarea>
+</div>
     <jsp:include page="include/header.jsp"/>
+
     <form id="form" method="post" action="">
+        <input type="hidden" name="itemId" />
         <table class="kanban" id="kanbantable">
           <thead>
             <tr>
@@ -351,7 +389,7 @@ div[data-role="card"]{
                       
                         <div
                             onclick="javascript:markUnmarkToPrint('work-item-${item.id}','${item.type.name}', ${item.blocked})"
-                            id="work-item-${item.id}" title="Notes: ${fn:escapeXml(item.notes)}"
+                            id="work-item-${item.id}" title="Notes: ${fn:escapeXml(item.notesAndBlock)}"
                             class="${item.type.name} ${item.blocked ? "blocked" : ""}" data-role="card">
                             
                             <div class="age-container" style="background-color:${item.colour}">
@@ -423,8 +461,8 @@ div[data-role="card"]{
                                 <%
                                         }
                                  %>
-                                <a href="javascript:stopStory(${item.id},'${item.type.name}');" class="last">
-                                  <img class="stop" id="stop-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/stop.png" />
+                                <a href="javascript:blockStory(${item.id},'${item.type.name}');" class="last">
+                                  <img class="stop" id="block-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/stop.png" />
                                   <c:choose>
                                     <c:when test="${item.blocked}">Unblock</c:when>
                                     <c:otherwise>Blocked</c:otherwise>
