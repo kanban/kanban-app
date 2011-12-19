@@ -115,7 +115,16 @@
 
 //]]> 
 		</script>
+<c:if test="${highlight != null}">
+<script type="text/javascript">
+//<![CDATA[
+           $(function() {
+        	   markUnmarkToPrint('work-item-${highlight}','','');
+           });
+//]]> 
+		</script>
 
+</c:if>
 <%
     KanbanProject project = (KanbanProject) request.getAttribute("project");
     WorkItemType rootType = project.getWorkItemTypes().getRoot().getValue();

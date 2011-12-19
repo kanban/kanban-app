@@ -131,7 +131,8 @@ public class KanbanBoardController {
                                                @PathVariable("projectName") String projectName,
                                                @RequestParam(value = "scrollTop", required = false) String scrollTop,
                                                @RequestParam(value = "error", required = false) String error,
-                                               @ModelAttribute("workStreams") Map<String, String> workStreams)
+                                               @ModelAttribute("workStreams") Map<String, String> workStreams,
+                                               @RequestParam(value = "highlight", required = false) String highlight)
         throws IOException {
 
         Map<String, Object> model = initBoard("wall", projectName, error, scrollTop);
@@ -139,6 +140,7 @@ public class KanbanBoardController {
         KanbanBoard board = project.getBoard(BoardIdentifier.WALL, workStreams.get(projectName));
 
         model.put("board", board);
+        model.put("highlight", highlight);
 
         return new ModelAndView("/project.jsp", model);
     }
@@ -209,7 +211,7 @@ public class KanbanBoardController {
         project.advance(parseInt(id), currentLocalDate());
         project.save();
 
-        return new RedirectView("../" + boardType + "?scrollTop=" + scrollTop);
+        return new RedirectView("../" + boardType + "?scrollTop=" + scrollTop + "&highlight=" + id);
     }
 
     @RequestMapping(value = "{board}/stop-item-action", method = RequestMethod.POST)
