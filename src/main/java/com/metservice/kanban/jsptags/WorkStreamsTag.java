@@ -18,10 +18,10 @@ public class WorkStreamsTag extends TagSupport {
 
     public int doStartTag() throws JspException {
 
-        if (project != null) {
+        try {
+            if (project != null) {
 
-            try {
-                pageContext.getOut().write("var " + name + " = [");
+                pageContext.getOut().write("var " + name + " = [ ");
 
                 for (String ws : project.getWorkStreams()) {
                     ws = ws.trim();
@@ -50,15 +50,18 @@ public class WorkStreamsTag extends TagSupport {
                     "       $(function() {\n" +
                     "               $('#workStreams').tagit({\n" +
                     "                       tagSource   : workStreams,\n" +
-                    "                       triggerKeys : ['enter','comma'],\n" +
-                    "                       initialTags : [ " + initialTags + "],\n" +
+                    "                       triggerKeys : [ 'enter', 'comma' ],\n" +
+                    "                       initialTags : [ " + initialTags + " ],\n" +
                     "                       select: true" +
                     "               });\n" +
                     "        });\n");
 
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            else {
+                pageContext.getOut().write("ERROR: Project is not set.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return EVAL_PAGE;
     }
