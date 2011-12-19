@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/boards.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/completed.css" />
     
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/completed.js"></script>
+<%--     <script type="text/javascript" src="${pageContext.request.contextPath}/js/completed.js"></script> --%>
 
 <title>Kanban</title>
 <%
