@@ -84,13 +84,7 @@
             	//$('#itemId').val(id)
             	$("#block-dialog-item-id").html(id);
             	
-            	if (item.className == "blocked") {            		
-                	//document.forms["block-item-form"].action = getBoard() + "/block-item-action";
-       			 	//document.forms["block-item-form"].submit();
-            	}
-            	else {
-            		$("#block-dialog").dialog("open");
-            	}            	
+           		$("#block-dialog").dialog("open");
             }
             
 			function markUnmarkToPrint(divId, type, isStopped){
