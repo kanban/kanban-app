@@ -3,6 +3,7 @@ package com.metservice.kanban.jwebunit;
 import static com.metservice.kanban.KanbanService.KANBAN_HOME_PROPERTY_NAME;
 import static com.metservice.kanban.jwebunit.BoardPage.openProject;
 import static org.junit.Assert.assertEquals;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -14,7 +15,12 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import com.metservice.kanban.KanbanService;
+import com.metservice.kanban.model.KanbanProject;
+import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.tests.util.TestUtils;
+import com.metservice.kanban.web.KanbanBoardController;
+import com.metservice.pet.Project;
 
 public class EndToEndTest {
 
@@ -281,7 +287,49 @@ public class EndToEndTest {
                 ));
     }
     
+    @Test
+    public void verifyCompBoardPhaseWidth() throws IOException {
+        
+        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
+        KanbanService service = new KanbanService();
+        String name = "CompTest";
+                
+        KanbanProject project = service.getKanbanProject("Test project");
+        
+        int item = project.addWorkItem(WorkItem.ROOT_WORK_ITEM_ID, project.getWorkItemTypes().getByName("feature"), name, 0, 0, 0, "", "555555", false, "", new LocalDate(2010, 05, 1));
+        
+        WorkItem workItem = project.getWorkItemById(item);
+        
+        workItem.setDate("Backlog", new LocalDate(2011, 05, 2));
+        workItem.setDate("Design", new LocalDate(2011, 05, 5));
+        workItem.setDate("Implement", new LocalDate(2011, 05, 8));
+        workItem.setDate("Accept", new LocalDate(2011, 05, 10));
+        workItem.setDate("Deployed", new LocalDate(2011, 05, 13));
+        workItem.setDate("Bugs", new LocalDate(2011, 05, 18));
+        workItem.setDate("Blocks", new LocalDate(2011, 05, 22));
+        workItem.setDate("Done", new LocalDate(2011, 05, 30));
+        
+        project.save();
+      
+        BoardPage completePage = wallPage.clickCompleteButton();
+        
+        completePage.assertFeatureIsPresent(name);
+        completePage.assertCompleteItemWidthIsCorrect(item, 5, 0);
 
+    }  
+        
+    @Test
+    public void defaultStartDateWhenCumulativeFlowChartOpened() throws IOException {
+        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
+        ChartPage chartPage = wallPage.clickCumulativeFlowChartButton();
+        
+        LocalDate endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
+        String startDate = endDateParsed.minusMonths(KanbanBoardController.DEFAULT_MONTHS_DISPLAY).toString("dd/MM/yyyy");
+        chartPage.assertStartDateEquals(startDate);
+        
+    }
+
+    
     //    @Test
     //    public void userCanDownloadStories() throws IOException {
     //        BoardPage wallPage = openProject("Test project");

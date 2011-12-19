@@ -62,7 +62,7 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 @SessionAttributes("workStreams")
 public class KanbanBoardController {
 
-    private static final int DEFAULT_MONTHS_DISPLAY = 4;
+    public static final int DEFAULT_MONTHS_DISPLAY = 4;
 
     @Autowired
     private KanbanService kanbanService;
