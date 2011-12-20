@@ -7,7 +7,6 @@ import static java.lang.Integer.parseInt;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -37,8 +35,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.HtmlUtils;
-import com.gargoylesoftware.htmlunit.util.UrlUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.metservice.kanban.KanbanService;
@@ -59,9 +55,6 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 
 //TODO This class needs more unit tests.
 
-/**
- * @author Nicholas Malcolm - malcolnich - 300170288
- */
 @Controller
 @RequestMapping("{projectName}")
 @SessionAttributes("workStreams")
@@ -71,7 +64,7 @@ public class KanbanBoardController {
 
     private static final String PROJECT_NAME_INVALID_CHARS = "/\\|<>*?&:\"";
 
-    private static final int DEFAULT_MONTHS_DISPLAY = 4;
+    public static final int DEFAULT_MONTHS_DISPLAY = 4;
 
     @Autowired
     private KanbanService kanbanService;
@@ -225,22 +218,26 @@ public class KanbanBoardController {
 
         WorkItem wi = project.getWorkItemById(itemId);
 
+        project.stop(itemId);
 
         if (!StringUtils.isEmpty(comment)) {
-            if (!wi.isBlocked()) {
-                wi.addComment(new WorkItemComment(userName, "Blocked: " + comment));
-            }
-            else {
-                wi.addComment(new WorkItemComment(userName, "Unblocked: " + comment));
-            }
+            wi.addComment(createBlockedComment(wi.isBlocked(), comment, userName));
         }
-        project.stop(itemId);
         project.save();
 
         // Redirect
         return new RedirectView("../" + boardType);
 
         //return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+    }
+
+    static WorkItemComment createBlockedComment(boolean isBlockedReason, String comment, String userName) {
+        if (isBlockedReason) {
+            return new WorkItemComment(userName, "Blocked: " + comment);
+        }
+        else {
+            return new WorkItemComment(userName, "Unblocked: " + comment);
+        }
     }
 
     private String includeScrollTopPosition(String boardType, String scrollTop) {
@@ -747,10 +744,9 @@ public class KanbanBoardController {
                     + URLEncoder.encode(validProjectNameError, "US-ASCII"));
             }
             kanbanService.renameProject(projectName, newProjectName);
-        } else {
-            // edit project
-            kanbanService.editProject(newProjectName, content);
         }
+        // edit project
+        kanbanService.editProject(newProjectName, content);
         return openProject(projectName, "wall", newProjectName, null, null);
     }
 

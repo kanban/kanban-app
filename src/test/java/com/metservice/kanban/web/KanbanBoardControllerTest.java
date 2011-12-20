@@ -10,11 +10,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.ResponseEntity;
@@ -40,25 +41,36 @@ import com.metservice.kanban.model.KanbanBoard;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.TreeNode;
 import com.metservice.kanban.model.WorkItem;
+import com.metservice.kanban.model.WorkItemComment;
 import com.metservice.kanban.model.WorkItemTree;
 import com.metservice.kanban.model.WorkItemType;
 import com.metservice.kanban.model.WorkItemTypeCollection;
 
 public class KanbanBoardControllerTest {
 
+    Map<String, String> workStreams;
+    KanbanBoardController kanbanController;
+    KanbanProject project;
+    KanbanService kanbanService;
+
+    @Before
+    public void setUp() {
+        workStreams = new HashMap<String, String>();
+        kanbanController = new KanbanBoardController();
+        project = mock(KanbanProject.class);
+        kanbanService = mock(KanbanService.class);
+    }
 
     // TODO Rewrite KanbanController legacy test in this form
 
     @Test
     public void modelContainsKanban() throws IOException {
-        KanbanService kanbanService = mock(KanbanService.class);
-        KanbanProject kanban = mock(KanbanProject.class);
 
-        when(kanbanService.getKanbanProject("project")).thenReturn(kanban);
+        when(kanbanService.getKanbanProject("project")).thenReturn(project);
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
+
         kanbanController.setKanbanService(kanbanService);
-        assertThat(kanbanController.populateProject("project"), is(kanban));
+        assertThat(kanbanController.populateProject("project"), is(project));
     }
 
     //    @Test
@@ -74,9 +86,8 @@ public class KanbanBoardControllerTest {
 
     @Test
     public void canDeleteWorkItems() throws IOException {
-        KanbanProject project = mock(KanbanProject.class);
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
+
         kanbanController.setKanbanService(null);
         RedirectView actualView = kanbanController.deleteWorkItem(project, 3, "wall");
 
@@ -98,7 +109,6 @@ public class KanbanBoardControllerTest {
 
         // Phases by board, persistence and service aren't used
         KanbanProject project = new DefaultKanbanProject(null, null, tree, null, null);
-        KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
 
         ModelAndView modelAndView = kanbanController.editItem(project, "project name", "backlog",
@@ -115,14 +125,12 @@ public class KanbanBoardControllerTest {
         WorkItem feature = new WorkItem(1, type);
         tree.addWorkItem(feature);
 
-        KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-backlog", "10/02/2011");
         request.addParameter("date-completed", "11/02/2011");
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
             "5", "7", "8", "some notes", "FFFFFF", "on", "a, b,  c ", null, request);
@@ -147,11 +155,9 @@ public class KanbanBoardControllerTest {
         WorkItem feature = new WorkItem(1, type);
         tree.addWorkItem(feature);
 
-        KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
         MockHttpServletRequest request = new MockHttpServletRequest();
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", feature.getId(), feature.getParentId(), "new feature name",
             "", "", "", "some notes", "FFFFFF", "on", "", null, request);
@@ -175,13 +181,11 @@ public class KanbanBoardControllerTest {
 
         assertThat(story.getParentId(), is(feature1.getId()));
 
-        KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", story.getId(), feature2.getId(), "new name", "4", "6", "1",
             "new notes", "FFFFFF", "false", "", null, request);
@@ -200,13 +204,11 @@ public class KanbanBoardControllerTest {
         tree.addWorkItem(middleFeature);
         tree.addWorkItem(new WorkItem(2, type));
 
-        KanbanProject project = mock(KanbanProject.class);
         when(project.getWorkItemTree()).thenReturn(tree);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("date-story-phase", "10/02/2011");
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
         kanbanController.editItemAction(project, "wall", middleFeature.getId(), middleFeature.getParentId(),
             "new name", "3", "8", "11", "new notes", "FFFFFF", null, "", null, request);
@@ -218,9 +220,7 @@ public class KanbanBoardControllerTest {
 
     @Test
     public void presentsChartPage() {
-        KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
-        KanbanProject project = mock(KanbanProject.class);
         ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature", "projectName", null, "",
             "");
 
@@ -248,7 +248,6 @@ public class KanbanBoardControllerTest {
         BurnUpChartGenerator chartGenerator = mock(BurnUpChartGenerator.class);
         OutputStream outputStream = mock(OutputStream.class);
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
         kanbanController.setKanbanService(null);
 
         kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), null,
@@ -267,15 +266,14 @@ public class KanbanBoardControllerTest {
         WorkItemType featureType = new WorkItemType("feature-phase");
         WorkItem feature = new WorkItem(99, featureType);
 
-        KanbanProject mockProject = mock(KanbanProject.class);
-        when(mockProject.getWorkItemById(99))
+        when(project.getWorkItemById(99))
                 .thenReturn(feature);
 
-        KanbanBoardController kanbanController = new KanbanBoardController();
-        ResponseEntity<String> responseEntity = kanbanController.addComment(mockProject, 99, "user name", "this is a cool new feature!");
+        ResponseEntity<String> responseEntity = kanbanController.addComment(project, 99, "user name",
+            "this is a cool new feature!");
 
         assertThat(responseEntity, is(notNullValue()));
-        verify(mockProject).save();
+        verify(project).save();
     }
 
     @Test
@@ -301,14 +299,15 @@ public class KanbanBoardControllerTest {
         assertEquals("Project name is too long, maximum allowed length is 32 charactes, but is 76",
             KanbanBoardController
                 .isProjectNameValid("New Project Name which is very long and we dont like such long project names"));
+
+        assertEquals("Project name should not be empty",
+            KanbanBoardController
+                .isProjectNameValid("  "));
     }
 
     @Test
     public void testWallBoard() throws IOException {
-        Map<String, String> workStreams = new HashMap<String, String>();
-        KanbanBoardController kanbanController = new KanbanBoardController();
 
-        KanbanProject project = mock(KanbanProject.class);
         KanbanBoard board = mock(KanbanBoard.class);
 
         when(project.getBoard(eq(BoardIdentifier.WALL), anyString())).thenReturn(board);
@@ -319,16 +318,15 @@ public class KanbanBoardControllerTest {
 
         assertNull(wallBoardResult.getModel().get("highlight"));
         assertEquals(board, wallBoardResult.getModel().get("board"));
+        assertEquals("wall", wallBoardResult.getModel().get("boardType"));
+        assertEquals("project", wallBoardResult.getModel().get("projectName"));
     }
 
     @Test
     public void testBacklogBoard() throws IOException {
-        KanbanBoardController kanbanController = new KanbanBoardController();
-        KanbanProject project = mock(KanbanProject.class);
         KanbanBacklog backlog = mock(KanbanBacklog.class);
         WorkItemType type = new WorkItemType("phase");
         WorkItemTypeCollection workItems = new WorkItemTypeCollection(TreeNode.create(WorkItemType.class, type));
-        Map<String, String> workStreams = new HashMap<String, String>();
 
         when(project.getWorkItemTypes()).thenReturn(workItems);
         when(project.getBacklog(anyString())).thenReturn(backlog);
@@ -339,5 +337,114 @@ public class KanbanBoardControllerTest {
         assertEquals(backlog, backlogBoardResult.getModel().get("kanbanBacklog"));
         assertNotNull(backlogBoardResult.getModel().get("type"));
         assertEquals("phase", backlogBoardResult.getModel().get("phase"));
+        assertEquals("backlog", backlogBoardResult.getModel().get("boardType"));
+        assertEquals("project", backlogBoardResult.getModel().get("projectName"));
+    }
+
+    @Test
+    public void testJournalBoard() throws IOException {
+        when(project.getJournalText()).thenReturn("This is journal");
+        ModelAndView journalBoardResult = kanbanController.journalBoard(project, "project", null, null, workStreams);
+
+        assertEquals("/journal.jsp", journalBoardResult.getViewName());
+        assertEquals("This is journal", journalBoardResult.getModel().get("kanbanJournal"));
+        assertEquals("journal", journalBoardResult.getModel().get("boardType"));
+        assertEquals("project", journalBoardResult.getModel().get("projectName"));
+    }
+
+    @Test
+    public void testCompletedBoard() throws IOException {
+        KanbanBoard completed = mock(KanbanBoard.class);
+        WorkItemType type = new WorkItemType("phase");
+        WorkItemTypeCollection workItems = new WorkItemTypeCollection(TreeNode.create(WorkItemType.class, type));
+
+        when(project.getWorkItemTypes()).thenReturn(workItems);
+        when(project.getCompleted(anyString())).thenReturn(completed);
+
+        ModelAndView completedBoardResult = kanbanController
+            .completedBoard(project, "project", null, null, workStreams);
+
+        assertEquals("/completed.jsp", completedBoardResult.getViewName());
+        assertEquals(completed, completedBoardResult.getModel().get("board"));
+        assertNotNull(completedBoardResult.getModel().get("type"));
+        assertEquals("phase", completedBoardResult.getModel().get("phase"));
+        assertEquals("completed", completedBoardResult.getModel().get("boardType"));
+        assertEquals("project", completedBoardResult.getModel().get("projectName"));
+    }
+
+    @Test
+    public void testCreateBlockedComment() {
+        WorkItemComment blockedComment = KanbanBoardController.createBlockedComment(true, "comment", "user");
+
+        assertEquals("Blocked: comment", blockedComment.getCommentText());
+
+        WorkItemComment unblockedComment = KanbanBoardController.createBlockedComment(false, "comment", "user");
+        assertEquals("Unblocked: comment", unblockedComment.getCommentText());
+    }
+
+    @Test
+    public void setWorkStreamTestForRegularBoard() {
+
+        RedirectView setWorkStreamResult = kanbanController.setWorkStream(project, "project", "wall", "ws1", null,
+            null, workStreams);
+
+        assertEquals("/projects/project/wall", setWorkStreamResult.getUrl());
+        assertEquals("ws1", workStreams.get("project"));
+    }
+
+    @Test
+    public void setWorkStreamTestForCharts() {
+        RedirectView setWorkStreamResult = kanbanController.setWorkStream(project, "project", "chart", "ws1",
+            "cycle-chart",
+            "Story", workStreams);
+
+        assertEquals("/projects/project/chart?chartName=cycle-chart&workItemTypeName=Story",
+            setWorkStreamResult.getUrl());
+        assertEquals("ws1", workStreams.get("project"));
+    }
+
+    @Test
+    public void editProjectActionForRenamingProjectValidProjectName() throws IOException {
+        kanbanController.setKanbanService(kanbanService);
+        when(kanbanService.getKanbanProject("project")).thenReturn(project);
+
+        RedirectView editProjectActionResult = kanbanController.editProjectAction(project, "project", "new project",
+            "content");
+
+        verify(kanbanService).renameProject("project", "new project");
+        verify(kanbanService).editProject("new project", "content");
+        verifyNoMoreInteractions(kanbanService);
+
+        assertEquals("/projects/new project/wall", editProjectActionResult.getUrl());
+    }
+
+    @Test
+    public void editProjectActionForRenamingProjectInvalidProjectNameShouldRedirectError() throws IOException {
+        kanbanController.setKanbanService(kanbanService);
+        when(kanbanService.getKanbanProject("project")).thenReturn(project);
+
+        RedirectView editProjectActionResult = kanbanController.editProjectAction(project, "project",
+            "invalid/project",
+            "content");
+
+        verifyNoMoreInteractions(kanbanService);
+
+        assertEquals(
+            "edit-project?createNewProject=false&error=Project+name+contains+incorrect+characters+at+least+one+of+%28%2F%5C%7C%3C%3E*%3F%26%3A%22%29",
+            editProjectActionResult.getUrl());
+    }
+
+    @Test
+    public void editProjectNameNotChanged() throws IOException {
+        kanbanController.setKanbanService(kanbanService);
+        when(kanbanService.getKanbanProject("project")).thenReturn(project);
+
+        RedirectView editProjectActionResult = kanbanController.editProjectAction(project, "project", "project",
+            "content");
+
+        verify(kanbanService).editProject("project", "content");
+        verifyNoMoreInteractions(kanbanService);
+
+        assertEquals("/projects/project/wall", editProjectActionResult.getUrl());
     }
 }
