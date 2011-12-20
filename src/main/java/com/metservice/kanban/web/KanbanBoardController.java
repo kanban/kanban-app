@@ -55,9 +55,6 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 
 //TODO This class needs more unit tests.
 
-/**
- * @author Nicholas Malcolm - malcolnich - 300170288
- */
 @Controller
 @RequestMapping("{projectName}")
 @SessionAttributes("workStreams")
@@ -221,22 +218,26 @@ public class KanbanBoardController {
 
         WorkItem wi = project.getWorkItemById(itemId);
 
+        project.stop(itemId);
 
         if (!StringUtils.isEmpty(comment)) {
-            if (!wi.isBlocked()) {
-                wi.addComment(new WorkItemComment(userName, "Blocked: " + comment));
-            }
-            else {
-                wi.addComment(new WorkItemComment(userName, "Unblocked: " + comment));
-            }
+            wi.addComment(createBlockedComment(wi.isBlocked(), comment, userName));
         }
-        project.stop(itemId);
         project.save();
 
         // Redirect
         return new RedirectView("../" + boardType);
 
         //return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+    }
+
+    static WorkItemComment createBlockedComment(boolean isBlockedReason, String comment, String userName) {
+        if (isBlockedReason) {
+            return new WorkItemComment(userName, "Blocked: " + comment);
+        }
+        else {
+            return new WorkItemComment(userName, "Unblocked: " + comment);
+        }
     }
 
     private String includeScrollTopPosition(String boardType, String scrollTop) {
@@ -743,10 +744,9 @@ public class KanbanBoardController {
                     + URLEncoder.encode(validProjectNameError, "US-ASCII"));
             }
             kanbanService.renameProject(projectName, newProjectName);
-        } else {
-            // edit project
-            kanbanService.editProject(newProjectName, content);
         }
+        // edit project
+        kanbanService.editProject(newProjectName, content);
         return openProject(projectName, "wall", newProjectName, null, null);
     }
 
