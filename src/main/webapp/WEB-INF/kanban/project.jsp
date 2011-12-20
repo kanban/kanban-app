@@ -89,6 +89,9 @@
             
 			function markUnmarkToPrint(divId, type, isStopped){
 			   var item = document.getElementById(divId);
+			   if (item == null) {
+				   return;
+			   }
 			  if (item.className == 'markedToPrint') {
 			  	if (isStopped) {
 			  		item.className = "blocked";
