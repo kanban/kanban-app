@@ -6,6 +6,8 @@ import static com.metservice.kanban.utils.DateUtils.parseConventionalNewZealandD
 import static java.lang.Integer.parseInt;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -34,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.HtmlUtils;
+import com.gargoylesoftware.htmlunit.util.UrlUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.metservice.kanban.KanbanService;
@@ -61,6 +66,10 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 @RequestMapping("{projectName}")
 @SessionAttributes("workStreams")
 public class KanbanBoardController {
+
+    private static final int MAX_PROJECT_NAME_LENGTH = 32;
+
+    private static final String PROJECT_NAME_INVALID_CHARS = "/\\|<>*?&:\"";
 
     public static final int DEFAULT_MONTHS_DISPLAY = 4;
 
@@ -122,7 +131,8 @@ public class KanbanBoardController {
                                                @PathVariable("projectName") String projectName,
                                                @RequestParam(value = "scrollTop", required = false) String scrollTop,
                                                @RequestParam(value = "error", required = false) String error,
-                                               @ModelAttribute("workStreams") Map<String, String> workStreams)
+                                               @ModelAttribute("workStreams") Map<String, String> workStreams,
+                                               @RequestParam(value = "highlight", required = false) String highlight)
         throws IOException {
 
         Map<String, Object> model = initBoard("wall", projectName, error, scrollTop);
@@ -130,6 +140,7 @@ public class KanbanBoardController {
         KanbanBoard board = project.getBoard(BoardIdentifier.WALL, workStreams.get(projectName));
 
         model.put("board", board);
+        model.put("highlight", highlight);
 
         return new ModelAndView("/project.jsp", model);
     }
@@ -200,15 +211,30 @@ public class KanbanBoardController {
         project.advance(parseInt(id), currentLocalDate());
         project.save();
 
-        return new RedirectView("../" + boardType + "?scrollTop=" + scrollTop);
+        return new RedirectView("../" + boardType + "?scrollTop=" + scrollTop + "&highlight=" + id);
     }
 
-    @RequestMapping(value = "{board}/stop-item-action", method = RequestMethod.POST)
+    @RequestMapping(value = "{board}/block-item-action")
     public synchronized RedirectView stopItemAction(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
-                                                    @RequestParam("id") String id) throws IOException {
+                                                    @RequestParam("itemId") String id,
+                                                    @RequestParam("comment") String comment,
+                                                    @RequestParam("userName") String userName) throws IOException {
 
-        project.stop(parseInt(id));
+        int itemId = parseInt(id);
+
+        WorkItem wi = project.getWorkItemById(itemId);
+
+
+        if (!StringUtils.isEmpty(comment)) {
+            if (!wi.isBlocked()) {
+                wi.addComment(new WorkItemComment(userName, "Blocked: " + comment));
+            }
+            else {
+                wi.addComment(new WorkItemComment(userName, "Unblocked: " + comment));
+            }
+        }
+        project.stop(itemId);
         project.save();
 
         // Redirect
@@ -668,7 +694,8 @@ public class KanbanBoardController {
     @RequestMapping("edit-project")
     public synchronized ModelAndView editProject(@ModelAttribute("project") KanbanProject project,
                                                  @PathVariable("projectName") String projectName,
-                                                 @RequestParam("createNewProject") boolean createNewProject)
+                                                 @RequestParam("createNewProject") boolean createNewProject,
+                                                 @RequestParam(value = "error", required = false) String error)
         throws IOException {
 
         Map<String, Object> model = buildModel(projectName, "wall");
@@ -677,6 +704,7 @@ public class KanbanBoardController {
         model.put("settings", kanbanService
             .getProjectConfiguration(projectName).getKanbanPropertiesFile()
             .getContentAsString());
+        model.put("error", error);
         // Create a new project if true
         if (createNewProject) {
             return new ModelAndView("/createProject.jsp", model);
@@ -712,12 +740,35 @@ public class KanbanBoardController {
 
         if (newProjectName != null && !newProjectName.equals(projectName)) {
             // edit project name
+
+            String validProjectNameError = isProjectNameValid(newProjectName);
+            if (!StringUtils.isEmpty(validProjectNameError)) {
+                return new RedirectView("edit-project?createNewProject=false&error="
+                    + URLEncoder.encode(validProjectNameError, "US-ASCII"));
+            }
             kanbanService.renameProject(projectName, newProjectName);
         } else {
             // edit project
             kanbanService.editProject(newProjectName, content);
         }
         return openProject(projectName, "wall", newProjectName, null, null);
+    }
+
+    static String isProjectNameValid(String newProjectName) {
+
+        if (StringUtils.containsAny(newProjectName, PROJECT_NAME_INVALID_CHARS)) {
+            return String.format("Project name contains incorrect characters at least one of (%s)",
+                PROJECT_NAME_INVALID_CHARS);
+        }
+        if (StringUtils.isEmpty(newProjectName.trim())) {
+            return "Project name should not be empty";
+        }
+        if (newProjectName.length() > MAX_PROJECT_NAME_LENGTH) {
+            return String.format("Project name is too long, maximum allowed length is %d charactes, but is %d",
+                MAX_PROJECT_NAME_LENGTH, newProjectName.length());
+        }
+
+        return null;
     }
 
     @RequestMapping("edit-wiplimit-action")

@@ -34,7 +34,7 @@ public class KanbanBoardControllerLegacyTest {
   public void testBoard() throws IOException {
 
         ModelAndView modelAndView = kanbanController.wallBoard(kanban, "test-project", null, null,
-            new HashMap<String, String>());
+            new HashMap<String, String>(), null);
         assertThat(modelAndView.getViewName(), is("/project.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
@@ -71,7 +71,7 @@ public class KanbanBoardControllerLegacyTest {
 
     @Test
     public void testEditProject() throws IOException {
-        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", false);
+        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", false, null);
         assertThat(modelAndView.getViewName(), is("/editProject.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
@@ -79,7 +79,7 @@ public class KanbanBoardControllerLegacyTest {
 
     @Test
     public void testCreateProject() throws IOException {
-        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", true);
+        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", true, null);
         assertThat(modelAndView.getViewName(), is("/createProject.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
