@@ -338,7 +338,11 @@
 			<id>metservice-releases</id>
 			<url>http://code:8080/nexus/content/repositories/releases/</url>
 		</repository>
-	</distributionManagement>
+        <snapshotRepository>
+            <id>metservice-snapshots</id>
+            <url>http://code:8080/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     
     <reporting>
         <plugins>
