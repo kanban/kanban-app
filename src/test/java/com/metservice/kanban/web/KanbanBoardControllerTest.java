@@ -7,9 +7,11 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -18,7 +20,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -28,8 +32,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.charts.burnup.BurnUpChartGenerator;
+import com.metservice.kanban.model.BoardIdentifier;
 import com.metservice.kanban.model.DefaultKanbanProject;
 import com.metservice.kanban.model.DefaultWorkItemTree;
+import com.metservice.kanban.model.KanbanBacklog;
+import com.metservice.kanban.model.KanbanBoard;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.TreeNode;
 import com.metservice.kanban.model.WorkItem;
@@ -294,5 +301,43 @@ public class KanbanBoardControllerTest {
         assertEquals("Project name is too long, maximum allowed length is 32 charactes, but is 76",
             KanbanBoardController
                 .isProjectNameValid("New Project Name which is very long and we dont like such long project names"));
+    }
+
+    @Test
+    public void testWallBoard() throws IOException {
+        Map<String, String> workStreams = new HashMap<String, String>();
+        KanbanBoardController kanbanController = new KanbanBoardController();
+
+        KanbanProject project = mock(KanbanProject.class);
+        KanbanBoard board = mock(KanbanBoard.class);
+
+        when(project.getBoard(eq(BoardIdentifier.WALL), anyString())).thenReturn(board);
+
+        ModelAndView wallBoardResult = kanbanController.wallBoard(project, "project", null, null, workStreams, null);
+
+        assertEquals("/project.jsp", wallBoardResult.getViewName());
+
+        assertNull(wallBoardResult.getModel().get("highlight"));
+        assertEquals(board, wallBoardResult.getModel().get("board"));
+    }
+
+    @Test
+    public void testBacklogBoard() throws IOException {
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        KanbanProject project = mock(KanbanProject.class);
+        KanbanBacklog backlog = mock(KanbanBacklog.class);
+        WorkItemType type = new WorkItemType("phase");
+        WorkItemTypeCollection workItems = new WorkItemTypeCollection(TreeNode.create(WorkItemType.class, type));
+        Map<String, String> workStreams = new HashMap<String, String>();
+
+        when(project.getWorkItemTypes()).thenReturn(workItems);
+        when(project.getBacklog(anyString())).thenReturn(backlog);
+
+        ModelAndView backlogBoardResult = kanbanController.backlogBoard(project, "project", null, null, workStreams);
+
+        assertEquals("/backlog.jsp", backlogBoardResult.getViewName());
+        assertEquals(backlog, backlogBoardResult.getModel().get("kanbanBacklog"));
+        assertNotNull(backlogBoardResult.getModel().get("type"));
+        assertEquals("phase", backlogBoardResult.getModel().get("phase"));
     }
 }
