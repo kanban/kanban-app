@@ -319,6 +319,8 @@ public class KanbanBoardControllerTest {
 
         assertNull(wallBoardResult.getModel().get("highlight"));
         assertEquals(board, wallBoardResult.getModel().get("board"));
+        assertEquals("wall", wallBoardResult.getModel().get("boardType"));
+        assertEquals("project", wallBoardResult.getModel().get("projectName"));
     }
 
     @Test
@@ -339,5 +341,45 @@ public class KanbanBoardControllerTest {
         assertEquals(backlog, backlogBoardResult.getModel().get("kanbanBacklog"));
         assertNotNull(backlogBoardResult.getModel().get("type"));
         assertEquals("phase", backlogBoardResult.getModel().get("phase"));
+        assertEquals("backlog", backlogBoardResult.getModel().get("boardType"));
+        assertEquals("project", backlogBoardResult.getModel().get("projectName"));
+    }
+
+    @Test
+    public void testJournalBoard() throws IOException {
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        Map<String, String> workStreams = new HashMap<String, String>();
+
+        KanbanProject project = mock(KanbanProject.class);
+        when(project.getJournalText()).thenReturn("This is journal");
+        ModelAndView journalBoardResult = kanbanController.journalBoard(project, "project", null, null, workStreams);
+
+        assertEquals("/journal.jsp", journalBoardResult.getViewName());
+        assertEquals("This is journal", journalBoardResult.getModel().get("kanbanJournal"));
+        assertEquals("journal", journalBoardResult.getModel().get("boardType"));
+        assertEquals("project", journalBoardResult.getModel().get("projectName"));
+    }
+
+    @Test
+    public void testCompletedBoard() throws IOException {
+        KanbanBoardController kanbanController = new KanbanBoardController();
+        KanbanProject project = mock(KanbanProject.class);
+        KanbanBoard completed = mock(KanbanBoard.class);
+        WorkItemType type = new WorkItemType("phase");
+        WorkItemTypeCollection workItems = new WorkItemTypeCollection(TreeNode.create(WorkItemType.class, type));
+        Map<String, String> workStreams = new HashMap<String, String>();
+
+        when(project.getWorkItemTypes()).thenReturn(workItems);
+        when(project.getCompleted(anyString())).thenReturn(completed);
+
+        ModelAndView completedBoardResult = kanbanController
+            .completedBoard(project, "project", null, null, workStreams);
+
+        assertEquals("/completed.jsp", completedBoardResult.getViewName());
+        assertEquals(completed, completedBoardResult.getModel().get("board"));
+        assertNotNull(completedBoardResult.getModel().get("type"));
+        assertEquals("phase", completedBoardResult.getModel().get("phase"));
+        assertEquals("completed", completedBoardResult.getModel().get("boardType"));
+        assertEquals("project", completedBoardResult.getModel().get("projectName"));
     }
 }
