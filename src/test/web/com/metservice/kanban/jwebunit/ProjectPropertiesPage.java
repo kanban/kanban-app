@@ -1,6 +1,7 @@
 package com.metservice.kanban.jwebunit;
 
 import net.sourceforge.jwebunit.junit.WebTester;
+import static org.junit.Assert.assertTrue;
 
 public class ProjectPropertiesPage {
 
@@ -32,4 +33,26 @@ public class ProjectPropertiesPage {
     public void dumpPageSourceToConsole() {
         System.out.println(tester.getPageSource());
     }
+    
+    public ProjectPropertiesPage submitInvalidQuery() {
+        tester.clickButton("submit-query-button");
+        return this;
+    }
+    
+    public void assertErrorDialogIsPresent() {
+        tester.assertElementPresent("error-dialog");
+        String errorTxt = "Project name contains incorrect characters at least one of (/\\|<>*?&:\")";
+        assertTrue(tester.getElementById("error-dialog").getTextContent().trim().contentEquals(errorTxt));
+    }
+    
+    public ProjectPropertiesPage clickErrorDialogOKButton() {
+        tester.clickButtonWithText("Ok");
+        return this;
+    }
+    
+    public void checkProjectName(String name){
+        String projectName = tester.getElementTextByXPath("html/body/form/fieldset[1]/input").trim();
+        assertTrue(projectName.contentEquals(name));
+    }
+    
 }

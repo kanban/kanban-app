@@ -3,7 +3,6 @@ package com.metservice.kanban.jwebunit;
 import static com.metservice.kanban.KanbanService.KANBAN_HOME_PROPERTY_NAME;
 import static com.metservice.kanban.jwebunit.BoardPage.openProject;
 import static org.junit.Assert.assertEquals;
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -20,7 +19,6 @@ import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.tests.util.TestUtils;
 import com.metservice.kanban.web.KanbanBoardController;
-import com.metservice.pet.Project;
 
 public class EndToEndTest {
 
@@ -126,8 +124,7 @@ public class EndToEndTest {
         //        wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
         //        
         //        wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
-        //27/09/11 - feature 2 never gets to the wall. 
-        // TODO: Ask Ben!
+        //27/09/11 - feature 2 never gets to the wall. TODO: Ask Ben!
         //wall.clickEditStoryButton("story").assertParentIs("feature 2");
     }
 
@@ -135,13 +132,10 @@ public class EndToEndTest {
     public void userCanViewAChart() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
                 ChartPage chartPage = page.clickFeatureCycleTimeChartButton();
-        chartPage.assertImageIsValidPng(
-            String.format("cycle-time-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
-                getDefaultStartDate(),
-                getDefaultEndDate()
-                ));
-    }
+                chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");
 
+    }
+    
     String getDefaultEndDate() {
         return LocalDate.fromCalendarFields(Calendar.getInstance()).toString("dd/MM/yyyy");
     }
@@ -149,17 +143,13 @@ public class EndToEndTest {
     String getDefaultStartDate() {
         return LocalDate.fromCalendarFields(Calendar.getInstance()).minusMonths(4).toString("dd/MM/yyyy");
     }
+    
 
     @Test
     public void userCanViewABurnUpChart() throws IOException {
         BoardPage wallPage = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         ChartPage chartPage = wallPage.clickBurnUpChartButton();
-        chartPage.assertImageIsValidPng(
-            String.format(
-                "burn-up-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
-                getDefaultStartDate(),
-                getDefaultEndDate()
-                ));
+        chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=&workStream=");
     }
 
     @Test
@@ -274,17 +264,9 @@ public class EndToEndTest {
         AdminPage adminPage = wallPage.clickAdminButton();
         ProjectPropertiesPage projectPropertiesPage = adminPage.clickEditProject();
         String currentProjectProperties = projectPropertiesPage.getProjectProperties();
-        currentProjectProperties
-            .replace(
-                "workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done",
-                "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
+        currentProjectProperties.replace("workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done", "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
         projectPropertiesPage.enterProjectProperties(currentProjectProperties).clickSubmitQueryButton();
-        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng(
-            String.format(
-                "cycle-time-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
-                getDefaultStartDate(),
-                getDefaultEndDate()
-                ));
+        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");        
     }
     
     @Test
@@ -316,7 +298,7 @@ public class EndToEndTest {
         completePage.assertFeatureIsPresent(name);
         completePage.assertCompleteItemWidthIsCorrect(item, 5, 0);
 
-    }  
+    } 
         
     @Test
     public void defaultStartDateWhenCumulativeFlowChartOpened() throws IOException {
@@ -328,7 +310,40 @@ public class EndToEndTest {
         chartPage.assertStartDateEquals(startDate);
         
     }
-
+    
+    @Test       
+    public void renameProjectWithInvalidCharacter() throws IOException {
+        
+        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
+        AdminPage adminPage = wallPage.clickAdminButton();
+        ProjectPropertiesPage propertiesPage = adminPage.clickEditProject();
+        
+        propertiesPage.enterName("Test project /");
+        propertiesPage.submitInvalidQuery();
+        propertiesPage.assertErrorDialogIsPresent();
+        propertiesPage.clickErrorDialogOKButton();
+        propertiesPage.checkProjectName("Test project");
+        
+    }
+ 
+    @Test
+    public void checkColourChangeOnMove() throws IOException {
+        
+        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
+        KanbanService service = new KanbanService();
+        String name = "xyz";
+                
+        KanbanProject project = service.getKanbanProject("Test project");
+        
+        int item = project.addWorkItem(WorkItem.ROOT_WORK_ITEM_ID, project.getWorkItemTypes().getByName("feature"), name, 0, 0, 0, "", "555555", false, "", new LocalDate(2010, 05, 1));
+        
+        WorkItem workItem = project.getWorkItemById(item);
+        String colour = workItem.getColour().toString();
+        System.out.println(colour);
+        
+        
+    }
+    
     
     //    @Test
     //    public void userCanDownloadStories() throws IOException {
