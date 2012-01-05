@@ -175,6 +175,5 @@ public class BoardPage {
         String itemStyle = tester.getElementAttributeByXPath(".//*[@id='work-item-" + item +"']/div[" + phase + "]", "style");
         assertTrue("Verify phase width in px", itemStyle.toString().contains("width:" + size + "px"));
     }
-
-
+    
 }

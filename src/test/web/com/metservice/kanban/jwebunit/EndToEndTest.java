@@ -3,6 +3,7 @@ package com.metservice.kanban.jwebunit;
 import static com.metservice.kanban.KanbanService.KANBAN_HOME_PROPERTY_NAME;
 import static com.metservice.kanban.jwebunit.BoardPage.openProject;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -327,22 +328,71 @@ public class EndToEndTest {
     }
  
     @Test
-    public void checkColourChangeOnMove() throws IOException {
+    public void checkFeatureClassChangesOnAdvance() throws IOException {
         
-        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
+        BoardPage boardPage = openProject(kanbanHome, "Test project", "/test-project/");
         KanbanService service = new KanbanService();
-        String name = "xyz";
+        String name = "Test";
                 
         KanbanProject project = service.getKanbanProject("Test project");
-        
         int item = project.addWorkItem(WorkItem.ROOT_WORK_ITEM_ID, project.getWorkItemTypes().getByName("feature"), name, 0, 0, 0, "", "555555", false, "", new LocalDate(2010, 05, 1));
         
         WorkItem workItem = project.getWorkItemById(item);
-        String colour = workItem.getColour().toString();
-        System.out.println(colour);
+        workItem.setDate("Backlog", new LocalDate(2011, 05, 2));
+        project.save();
         
+        WallPage wallPage = boardPage.clickWallButton();
+        String elementClass = wallPage.getWorkItemFeatureBackgroundClass(item);
+        assertEquals(elementClass, "feature");
+        
+        wallPage.clickFeatureAdvanceIcon(item);
+        elementClass = wallPage.getWorkItemFeatureBackgroundClass(item);
+        assertEquals(elementClass, "markedToPrint");
         
     }
+    
+    @Test
+    public void checkBlockReason() throws IOException {
+
+        BoardPage board = openProject(kanbanHome, "Test project", "/test-project/");
+        KanbanService service = new KanbanService();
+        String name = "Test";
+        String reason = "Test block functionality";
+                
+        KanbanProject project = service.getKanbanProject("Test project");
+        int item = project.addWorkItem(WorkItem.ROOT_WORK_ITEM_ID, project.getWorkItemTypes().getByName("feature"), name, 0, 0, 0, "", "555555", false, "", new LocalDate(2010, 05, 1));
+        
+        WorkItem workItem = project.getWorkItemById(item);
+        workItem.setDate("Backlog", new LocalDate(2011, 05, 2));
+        project.save();
+        
+        WallPage wall = board.clickWallButton();
+        wall.clickFeatureBlockedButton(item);
+        wall.setFeatureBlockedReason(reason);
+
+        boolean found = false;
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < 5000) {
+            try {
+                found = wall.getNotesForItem(item).contains(reason);
+                // System.out.println(""+wall.getNotesForItem(item));
+            } catch (Error e) {
+                // e.printStackTrace();
+            } catch (NullPointerException e) {
+                // e.printStackTrace();                    
+            }
+            if (found)
+                break;
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        assertTrue(found);            
+        
+    }
+    
     
     
     //    @Test
