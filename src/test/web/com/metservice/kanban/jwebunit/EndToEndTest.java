@@ -133,8 +133,8 @@ public class EndToEndTest {
     public void userCanViewAChart() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
                 ChartPage chartPage = page.clickFeatureCycleTimeChartButton();
-                chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");
-
+                //chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");
+                chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=" + this.getDefaultStartDate() + "&endDate=" + this.getDefaultEndDate() + "&workStream=");
     }
     
     String getDefaultEndDate() {
@@ -150,7 +150,9 @@ public class EndToEndTest {
     public void userCanViewABurnUpChart() throws IOException {
         BoardPage wallPage = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         ChartPage chartPage = wallPage.clickBurnUpChartButton();
-        chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=&workStream=");
+        //chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=&workStream=");
+        chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=" + this.getDefaultStartDate() + "&endDate=" + this.getDefaultEndDate() + "&workStream=");
+
     }
 
     @Test
@@ -267,7 +269,10 @@ public class EndToEndTest {
         String currentProjectProperties = projectPropertiesPage.getProjectProperties();
         currentProjectProperties.replace("workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done", "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
         projectPropertiesPage.enterProjectProperties(currentProjectProperties).clickSubmitQueryButton();
-        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");        
+        
+        //wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");   
+        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=" + this.getDefaultStartDate() + "&endDate=" + this.getDefaultEndDate() + "&workStream=");        
+
     }
     
     @Test
