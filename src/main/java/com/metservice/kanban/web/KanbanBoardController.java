@@ -600,13 +600,15 @@ public class KanbanBoardController {
     }
 
     private String defaultStartDate(String endDate) {
-        LocalDate endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
+        LocalDate endDateParsed;
         if (null != endDate) {
             try {
                 endDateParsed = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
             } catch (ParseException e) {
-                // do nothing
+                endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
             }
+        } else {
+            endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
         }
         return endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY).toString("dd/MM/yyyy");
     }
@@ -632,18 +634,18 @@ public class KanbanBoardController {
 
         List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, workStream);
 
-        LocalDate start = null;
-        LocalDate end = null;
+        LocalDate start;
+        LocalDate end;
 
         try {
             start = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(startDate));
         } catch (ParseException e) {
-            // keep start as null
+            start = null;
         }
         try {
             end = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
         } catch (ParseException e) {
-            // keep end as null
+            end = null;
         }
 
         // add start and end date params here
@@ -900,22 +902,21 @@ public class KanbanBoardController {
         WorkItemType type = project.getWorkItemTypes().getRoot().getValue();
         List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type, workStream);
 
-        LocalDate start = null;
-        LocalDate end = null;
+        LocalDate start;
+        LocalDate end;
 
         try {
             start = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(startDate));
         } catch (ParseException e) {
-            // keep start as null
+            start = null;
         }
         try {
             end = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
         } catch (ParseException e) {
-            // keep end as null
+            end = null;
         }
 
-        chartGenerator.generateBurnUpChart(type, topLevelWorkItems, start,
-            end, outputStream);
+        chartGenerator.generateBurnUpChart(type, topLevelWorkItems, start, end, outputStream);
     }
 
     @RequestMapping("{board}/add-column-action")
