@@ -3,7 +3,6 @@ package com.metservice.kanban.jwebunit;
 import static com.metservice.kanban.KanbanService.KANBAN_HOME_PROPERTY_NAME;
 import static com.metservice.kanban.jwebunit.BoardPage.openProject;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -15,11 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import com.metservice.kanban.KanbanService;
-import com.metservice.kanban.model.KanbanProject;
-import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.tests.util.TestUtils;
-import com.metservice.kanban.web.KanbanBoardController;
 
 public class EndToEndTest {
 
@@ -125,7 +120,8 @@ public class EndToEndTest {
         //        wall.clickAddStoryButton("feature 1").enterName("story").clickSaveButton();
         //        
         //        wall.clickEditStoryButton("story").setParent("feature 2").clickSaveButton();
-        //27/09/11 - feature 2 never gets to the wall. TODO: Ask Ben!
+        //27/09/11 - feature 2 never gets to the wall. 
+        // TODO: Ask Ben!
         //wall.clickEditStoryButton("story").assertParentIs("feature 2");
     }
 
@@ -133,10 +129,13 @@ public class EndToEndTest {
     public void userCanViewAChart() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
                 ChartPage chartPage = page.clickFeatureCycleTimeChartButton();
-                //chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");
-                chartPage.assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=" + this.getDefaultStartDate() + "&endDate=" + this.getDefaultEndDate() + "&workStream=");
+        chartPage.assertImageIsValidPng(
+            String.format("cycle-time-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
+                getDefaultStartDate(),
+                getDefaultEndDate()
+                ));
     }
-    
+
     String getDefaultEndDate() {
         return LocalDate.fromCalendarFields(Calendar.getInstance()).toString("dd/MM/yyyy");
     }
@@ -144,15 +143,17 @@ public class EndToEndTest {
     String getDefaultStartDate() {
         return LocalDate.fromCalendarFields(Calendar.getInstance()).minusMonths(4).toString("dd/MM/yyyy");
     }
-    
 
     @Test
     public void userCanViewABurnUpChart() throws IOException {
         BoardPage wallPage = openProject(kanbanHome, "Test project", "/end-to-end-test/");
         ChartPage chartPage = wallPage.clickBurnUpChartButton();
-        //chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=&endDate=&workStream=");
-        chartPage.assertImageIsValidPng("burn-up-chart.png?level=feature&startDate=" + this.getDefaultStartDate() + "&endDate=" + this.getDefaultEndDate() + "&workStream=");
-
+        chartPage.assertImageIsValidPng(
+            String.format(
+                "burn-up-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
+                getDefaultStartDate(),
+                getDefaultEndDate()
+                ));
     }
 
     @Test
@@ -267,139 +268,20 @@ public class EndToEndTest {
         AdminPage adminPage = wallPage.clickAdminButton();
         ProjectPropertiesPage projectPropertiesPage = adminPage.clickEditProject();
         String currentProjectProperties = projectPropertiesPage.getProjectProperties();
-        currentProjectProperties.replace("workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done", "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
+        currentProjectProperties
+            .replace(
+                "workItemTypes.feature.phases=Backlog,Design,Implement,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done",
+                "workItemTypes.feature.phases=Backlog,Design,Implement,Test,Accept,ReadyToDeploy,Deployed,Bugs,Blocks,Done");
         projectPropertiesPage.enterProjectProperties(currentProjectProperties).clickSubmitQueryButton();
-        
-        //wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=&endDate=&workStream=");   
-        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng("cycle-time-chart.png?level=feature&startDate=" + this.getDefaultStartDate() + "&endDate=" + this.getDefaultEndDate() + "&workStream=");        
+        wallPage.clickFeatureCycleTimeChartButton().assertImageIsValidPng(
+            String.format(
+                "cycle-time-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
+                getDefaultStartDate(),
+                getDefaultEndDate()
+                ));
+    }
+    
 
-    }
-    
-    @Test
-    public void verifyCompBoardPhaseWidth() throws IOException {
-        
-        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
-        KanbanService service = new KanbanService();
-        String name = "CompTest";
-                
-        KanbanProject project = service.getKanbanProject("Test project");
-        
-        int item = project.addWorkItem(WorkItem.ROOT_WORK_ITEM_ID, project.getWorkItemTypes().getByName("feature"), name, 0, 0, 0, "", "555555", false, "", new LocalDate(2010, 05, 1));
-        
-        WorkItem workItem = project.getWorkItemById(item);
-        
-        workItem.setDate("Backlog", new LocalDate(2011, 05, 2));
-        workItem.setDate("Design", new LocalDate(2011, 05, 5));
-        workItem.setDate("Implement", new LocalDate(2011, 05, 8));
-        workItem.setDate("Accept", new LocalDate(2011, 05, 10));
-        workItem.setDate("Deployed", new LocalDate(2011, 05, 13));
-        workItem.setDate("Bugs", new LocalDate(2011, 05, 18));
-        workItem.setDate("Blocks", new LocalDate(2011, 05, 22));
-        workItem.setDate("Done", new LocalDate(2011, 05, 30));
-        
-        project.save();
-      
-        BoardPage completePage = wallPage.clickCompleteButton();
-        
-        completePage.assertFeatureIsPresent(name);
-        completePage.assertCompleteItemWidthIsCorrect(item, 5, 0);
-
-    } 
-        
-    @Test
-    public void defaultStartDateWhenCumulativeFlowChartOpened() throws IOException {
-        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
-        ChartPage chartPage = wallPage.clickCumulativeFlowChartButton();
-        
-        LocalDate endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
-        String startDate = endDateParsed.minusMonths(KanbanBoardController.DEFAULT_MONTHS_DISPLAY).toString("dd/MM/yyyy");
-        chartPage.assertStartDateEquals(startDate);
-        
-    }
-    
-    @Test       
-    public void renameProjectWithInvalidCharacter() throws IOException {
-        
-        BoardPage wallPage = openProject(kanbanHome, "Test project", "/test-project/");
-        AdminPage adminPage = wallPage.clickAdminButton();
-        ProjectPropertiesPage propertiesPage = adminPage.clickEditProject();
-        
-        propertiesPage.enterName("Test project /");
-        propertiesPage.submitInvalidQuery();
-        propertiesPage.assertErrorDialogIsPresent();
-        propertiesPage.clickErrorDialogOKButton();
-        propertiesPage.checkProjectName("Test project");
-        
-    }
- 
-    @Test
-    public void checkFeatureClassChangesOnAdvance() throws IOException {
-        
-        BoardPage boardPage = openProject(kanbanHome, "Test project", "/test-project/");
-        KanbanService service = new KanbanService();
-        String name = "Test";
-                
-        KanbanProject project = service.getKanbanProject("Test project");
-        int item = project.addWorkItem(WorkItem.ROOT_WORK_ITEM_ID, project.getWorkItemTypes().getByName("feature"), name, 0, 0, 0, "", "555555", false, "", new LocalDate(2010, 05, 1));
-        
-        WorkItem workItem = project.getWorkItemById(item);
-        workItem.setDate("Backlog", new LocalDate(2011, 05, 2));
-        project.save();
-        
-        WallPage wallPage = boardPage.clickWallButton();
-        String elementClass = wallPage.getWorkItemFeatureBackgroundClass(item);
-        assertEquals(elementClass, "feature");
-        
-        wallPage.clickFeatureAdvanceIcon(item);
-        elementClass = wallPage.getWorkItemFeatureBackgroundClass(item);
-        assertEquals(elementClass, "markedToPrint");
-        
-    }
-    
-    @Test
-    public void checkBlockReason() throws IOException {
-
-        BoardPage board = openProject(kanbanHome, "Test project", "/test-project/");
-        KanbanService service = new KanbanService();
-        String name = "Test";
-        String reason = "Test block functionality";
-                
-        KanbanProject project = service.getKanbanProject("Test project");
-        int item = project.addWorkItem(WorkItem.ROOT_WORK_ITEM_ID, project.getWorkItemTypes().getByName("feature"), name, 0, 0, 0, "", "555555", false, "", new LocalDate(2010, 05, 1));
-        
-        WorkItem workItem = project.getWorkItemById(item);
-        workItem.setDate("Backlog", new LocalDate(2011, 05, 2));
-        project.save();
-        
-        WallPage wall = board.clickWallButton();
-        wall.clickFeatureBlockedButton(item);
-        wall.setFeatureBlockedReason(reason);
-
-        boolean found = false;
-        long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < 5000) {
-            try {
-                found = wall.getNotesForItem(item).contains(reason);
-                // System.out.println(""+wall.getNotesForItem(item));
-            } catch (Error e) {
-                // e.printStackTrace();
-            } catch (NullPointerException e) {
-                // e.printStackTrace();                    
-            }
-            if (found)
-                break;
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        assertTrue(found);            
-        
-    }
-    
-    
-    
     //    @Test
     //    public void userCanDownloadStories() throws IOException {
     //        BoardPage wallPage = openProject("Test project");

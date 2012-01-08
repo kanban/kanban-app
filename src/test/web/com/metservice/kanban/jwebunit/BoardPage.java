@@ -113,11 +113,6 @@ public class BoardPage {
         return new ChartPage(tester);
     }
     
-    public ChartPage clickCumulativeFlowChartButton() {
-        tester.clickElementByXPath("//a[@id='cumulative-flow-chart-1-button']");
-        return new ChartPage(tester);
-    }
-    
     public ChartPage clickBurnUpChartButton() {
         tester.clickElementByXPath("//a[@id='burn-up-chart-button']");
         return new ChartPage(tester);
@@ -171,9 +166,5 @@ public class BoardPage {
         return this;
     }
 
-    public void assertCompleteItemWidthIsCorrect(int item, int phase, int size) {
-        String itemStyle = tester.getElementAttributeByXPath(".//*[@id='work-item-" + item +"']/div[" + phase + "]", "style");
-        assertTrue("Verify phase width in px", itemStyle.toString().contains("width:" + size + "px"));
-    }
-    
+
 }

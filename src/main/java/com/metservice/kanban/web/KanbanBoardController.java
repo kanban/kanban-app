@@ -71,7 +71,7 @@ public class KanbanBoardController {
 
     private static final String PROJECT_NAME_INVALID_CHARS = "/\\|<>*?&:\"";
 
-    public static final int DEFAULT_MONTHS_DISPLAY = 4;
+    private static final int DEFAULT_MONTHS_DISPLAY = 4;
 
     @Autowired
     private KanbanService kanbanService;

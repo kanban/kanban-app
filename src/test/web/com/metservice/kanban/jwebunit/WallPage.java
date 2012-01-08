@@ -81,7 +81,7 @@ public class WallPage {
 
     public ChartPage clickFeatureCycleTimeChartButton() {
         tester.clickElementByXPath("//div[@id='cycle-time-chart-1-button']");
-        return new ChartPage(tester);      
+        return new ChartPage(tester);
     }
 
     public ChartPage clickBurnUpChartButton() {
@@ -115,25 +115,4 @@ public class WallPage {
         String styleClass = tester.getElementByXPath("//th[text()='" + columnName + "']").getAttribute("class");
         assertTrue(styleClass.contains("brokenWIPLimit"));
     }
-    
-    public String getWorkItemFeatureBackgroundClass(int item) {
-        return tester.getElementAttributeByXPath(".//*[@id='work-item-" + item +"']", "class");
-    }
-
-    public void clickFeatureAdvanceIcon(int item) {
-        tester.clickElementByXPath(".//*[@id='work-item-" + item + "']/div[3]/div[2]/a/img");
-    }
-    
-    public void clickFeatureBlockedButton(int item) {
-        tester.clickElementByXPath(".//*[@id='work-item-" + item + "']/button");
-        tester.assertElementPresentByXPath(".//*[@id='work-item-" + item + "']/div[5]/div/a[2]");
-        tester.clickElementByXPath(".//*[@id='work-item-" + item + "']/div[5]/div/a[2]");
-    }
-    
-    public void setFeatureBlockedReason(String reason) {
-        tester.assertElementPresent("block-comment");
-        tester.getElementById("block-comment").setTextContent(reason);
-        tester.clickElementByXPath("html/body/div[2]/div[11]/div/button[1]");
-    }
-    
 }

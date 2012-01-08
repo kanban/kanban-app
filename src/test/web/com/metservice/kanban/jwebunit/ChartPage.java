@@ -17,10 +17,4 @@ public class ChartPage {
     public void dumpPageSourceToConsole() {
         System.out.println(tester.getPageSource());
     }
-    
-     public void assertStartDateEquals(String startDate) {
-        tester.assertTextFieldEquals("startDate", startDate);
-    }
-    
-    
 }

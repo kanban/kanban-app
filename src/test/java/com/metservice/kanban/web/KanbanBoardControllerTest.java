@@ -6,7 +6,10 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -266,5 +269,30 @@ public class KanbanBoardControllerTest {
 
         assertThat(responseEntity, is(notNullValue()));
         verify(mockProject).save();
+    }
+
+    @Test
+    public void verifyProjectNames() {
+        assertNull(KanbanBoardController.isProjectNameValid("New Project Name"));
+
+        assertEquals("Project name contains incorrect characters at least one of (/\\|<>*?&:\")",
+            KanbanBoardController.isProjectNameValid("New Project Name with bad character/"));
+
+        assertEquals("Project name contains incorrect characters at least one of (/\\|<>*?&:\")",
+            KanbanBoardController.isProjectNameValid("\\"));
+        assertEquals("Project name contains incorrect characters at least one of (/\\|<>*?&:\")",
+            KanbanBoardController.isProjectNameValid("|"));
+        assertEquals("Project name contains incorrect characters at least one of (/\\|<>*?&:\")",
+            KanbanBoardController.isProjectNameValid("<"));
+        assertEquals("Project name contains incorrect characters at least one of (/\\|<>*?&:\")",
+            KanbanBoardController.isProjectNameValid(">"));
+        assertEquals("Project name contains incorrect characters at least one of (/\\|<>*?&:\")",
+            KanbanBoardController.isProjectNameValid("*"));
+        assertEquals("Project name contains incorrect characters at least one of (/\\|<>*?&:\")",
+            KanbanBoardController.isProjectNameValid("\""));
+
+        assertEquals("Project name is too long, maximum allowed length is 32 charactes, but is 76",
+            KanbanBoardController
+                .isProjectNameValid("New Project Name which is very long and we dont like such long project names"));
     }
 }
