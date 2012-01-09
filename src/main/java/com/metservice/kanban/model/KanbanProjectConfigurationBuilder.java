@@ -41,14 +41,14 @@ public class KanbanProjectConfigurationBuilder {
         	
             String[] phases = properties.getPhases(type.getName());
             String[] columnLimits = properties.getPhaseWIPLimit(type.getName());
-            int wipLimit =-1;
-            for (int i=0; i<phases.length; i++) {
-            	try{
+            int wipLimit = -1;
+            for (int i = 0; i < phases.length; i++) {
+                try {
             		wipLimit=Integer.parseInt(columnLimits[i]);
-            	}catch (Exception e) {
+                } catch (Exception e) {
             		// No limit was specified, or it was ""
             		wipLimit = -1;
-				}
+                }
             	wipLimitsByPhase.put(phases[i],wipLimit);
                 workItemTypesByPhase.put(phases[i], type);
             }
@@ -59,7 +59,7 @@ public class KanbanProjectConfigurationBuilder {
             List<KanbanBoardColumn> columns = new ArrayList<KanbanBoardColumn>();
             String[] boardPhases = properties.getPhaseSequence(board);
             String phase = "";
-            for(int i = 0; i < boardPhases.length;i++){
+            for (int i = 0; i < boardPhases.length; i++) {
             	phase = boardPhases[i];
             	columns.add(new KanbanBoardColumn(workItemTypesByPhase.get(phase), phase, wipLimitsByPhase.get(phase)));
             }

@@ -43,8 +43,7 @@ public class PetDao {
             project.setBudget(Integer.parseInt((String) props.get(PET_BUDGET)));
             project.setCostSoFar(Integer.parseInt((String) props.get(PET_COSTSOFAR)));
             project.setEstimatedCostPerPoint(Integer.parseInt((String) props.get(PET_COSTPERPOINT)));
-        }
-        else {
+        } else {
             project.setBudget(0);
             project.setCostSoFar(0);
             project.setEstimatedCostPerPoint(0);

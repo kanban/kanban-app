@@ -26,23 +26,23 @@ public class BurnUpDataModel {
     public BurnUpDataModel(WorkItemType workItemType, List<WorkItem> workItems, LocalDate endDate) {
         this.workItemType = workItemType;
         this.workItems = removeExcludedWorkItems(workItems);
-		if (endDate == null){
-			endDate = DateUtils.currentLocalDate();
-		}
-    	this.startDate = ChartUtils.getFirstDate(workItems);
-		this.endDate = endDate;
+        if (endDate == null) {
+            endDate = DateUtils.currentLocalDate();
+        }
+        this.startDate = ChartUtils.getFirstDate(workItems);
+        this.endDate = endDate;
     }
 
-    
     public BurnUpDataModel(WorkItemType workItemType, List<WorkItem> workItems, LocalDate startDate, LocalDate endDate) {
         this.workItemType = workItemType;
         this.workItems = removeExcludedWorkItems(workItems);
-        if (startDate == null){
-        	startDate = ChartUtils.getFirstDate(workItems);
-        	
-			if (endDate == null){
-				endDate = DateUtils.currentLocalDate();
-			}
+
+        if (startDate == null) {
+            startDate = ChartUtils.getFirstDate(workItems);
+
+            if (endDate == null) {
+                endDate = DateUtils.currentLocalDate();
+            }
 
             if (startDate == null) {
                 startDate = endDate;
@@ -61,7 +61,7 @@ public class BurnUpDataModel {
         }
         return list;
     }
-    
+
     public LocalDate getCurrentDate() {
         return endDate;
     }
@@ -77,7 +77,7 @@ public class BurnUpDataModel {
     public int getCompletedSizeOnDate(LocalDate date) {
         return sumWorkItemSizesWherePhase(is(workItemType.getCompletedPhase()), workItems, date);
     }
-    
+
     public int getTotalSizeOnDate(LocalDate date) {
         return sumWorkItemSizesWherePhase(IS_ANY_PHASE_NAME, workItems, date);
     }
@@ -91,7 +91,8 @@ public class BurnUpDataModel {
     }
 
     private static int sumWorkItemSizesWherePhase(Matcher<String> phaseMatcher,
-            Iterable<WorkItem> workItems, LocalDate onDate) {
+                                                  Iterable<WorkItem> workItems,
+                                                  LocalDate onDate) {
         int sum = 0;
         for (WorkItem workItem : workItems) {
             if (phaseMatcher.matches(workItem.getPhaseOnDate(onDate))) {

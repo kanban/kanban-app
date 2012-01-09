@@ -132,8 +132,7 @@ public class WorkItem {
     public String getNotesAndBlock() {
         if (isBlocked()) {
             return StringUtils.defaultIfEmpty(getNotes(), "") + "\n" + getLastBlockedComment();
-        }
-        else {
+        } else {
             return getNotes();
         }
     }
@@ -168,7 +167,7 @@ public class WorkItem {
         this.excluded = excluded;
     }
 
-    public void setBlocked(boolean blocked){
+    public void setBlocked(boolean blocked) {
     	this.blocked = blocked;
     }
 
@@ -277,9 +276,7 @@ public class WorkItem {
     }
 
     public void stop() {
-    	if (blocked==true) { blocked = false; } else {
-            blocked = true;
-        }
+        blocked = !blocked;
     }
 
     /**
@@ -379,16 +376,15 @@ public class WorkItem {
         return name.substring(0, Math.min(name.length(), 40));
     }
 
-	public void setColour(String colour) {
-		if(colour != null && colour.length() > 0){
-			this.colour = new HtmlColour(colour);
-		}
+    public void setColour(String colour) {
+        if (colour != null && colour.length() > 0) {
+            this.colour = new HtmlColour(colour);
+        }
+    }
 
-	}
-
-	public HtmlColour getColour() {
-		return colour;
-	}
+    public HtmlColour getColour() {
+        return colour;
+    }
 
     public int getWorstCaseEstimate() {
         return worstCaseEstimate;
@@ -427,8 +423,7 @@ public class WorkItem {
     public void setWorkStreamsAsString(String workStream) {
         if (workStream == null) {
             this.workStreams = new ArrayList<String>();
-        }
-        else {
+        } else {
             this.workStreams = new ArrayList<String>();
             for (String ws : StringUtils.split(workStream, ',')) {
                 this.workStreams.add(StringUtils.trim(ws));

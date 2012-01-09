@@ -13,7 +13,8 @@ public class BudgetEntry {
     private WorkItem nextFeature;
     private WorkItem prevFeature;
 
-    public BudgetEntry() {}
+    public BudgetEntry() {
+    }
 
     public void setFeature(WorkItem feature, WorkItem prevFeature, WorkItem nextFeature) {
         this.feature = feature;

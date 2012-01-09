@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.metservice.kanban.KanbanCommentsFile;
+import com.metservice.kanban.KanbanJournalFile;
 import com.metservice.kanban.csv.KanbanCsvFile;
 import com.metservice.kanban.model.DefaultWorkItemTree;
+import com.metservice.kanban.model.KanbanJournalItem;
 import com.metservice.kanban.model.KanbanProjectConfiguration;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemTree;
@@ -26,7 +28,7 @@ import com.metservice.kanban.model.WorkItemType;
  */
 public class KanbanPersistence {
     private final Collection<KanbanCsvFile> files = new ArrayList<KanbanCsvFile>();
-    private File journalFile;
+    private KanbanJournalFile journalFile;
     private KanbanCommentsFile commentsFile;
 
     /**
@@ -42,7 +44,7 @@ public class KanbanPersistence {
             files.add(file);
 
             // should this be done for every Work Item Type?!?
-            journalFile = configuration.getJournalFile();
+            journalFile = configuration.getKanbanJournalFile();
         }
 
         commentsFile = configuration.getKanbanCommentsFile();
@@ -69,15 +71,13 @@ public class KanbanPersistence {
         return index;
     }
 
-    public String journalRead() throws IOException {
-    	String textFile = "";
-    	Scanner sc = new Scanner(journalFile);
-    	while (sc.hasNext()) {
-    		String tmpString = sc.nextLine();
-    		textFile += tmpString;
-    	}
-    	sc.close();
-    	return textFile;
+    public List<KanbanJournalItem> journalRead() throws IOException {
+        return journalFile.getJournalItems();
+    }
+
+    public void journalWrite(List<KanbanJournalItem> items) throws IOException {
+        journalFile.setJournalItems(items);
+        journalFile.writeJournal();
     }
 
     /**
@@ -94,14 +94,14 @@ public class KanbanPersistence {
         commentsFile.writeAllComments(workItems);
     }
 
-    public void journalWrite(String textForFile) throws IOException {
-    	FileOutputStream flusher = new FileOutputStream(journalFile);
-    	flusher.write((new String()).getBytes());
-    	flusher.close();
-    	BufferedWriter writer = new BufferedWriter(new FileWriter(journalFile));
-    	writer.write(textForFile);
-    	writer.close();
-    }
+    //    public void journalWrite(String textForFile) throws IOException {
+    //    	FileOutputStream flusher = new FileOutputStream(journalFile);
+    //    	flusher.write((new String()).getBytes());
+    //    	flusher.close();
+    //    	BufferedWriter writer = new BufferedWriter(new FileWriter(journalFile));
+    //    	writer.write(textForFile);
+    //    	writer.close();
+    //    }
 
     /**
      * Returns the collection of CSV files stored in the KanbanPersistence.

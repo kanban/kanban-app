@@ -151,16 +151,14 @@ public class Project {
         if (kanbanProject == null) {
             completedFeatures.clear();
             plannedFeatures.clear();
-        }
-        else {
+        } else {
             List<WorkItem> workItemList = kanbanProject.getWorkItemTree().getWorkItemList();
 
             for (WorkItem wi : workItemList) {
                 if (wi.isTopLevel()) {
                     if (wi.isCompleted()) {
                         completedFeatures.add(wi);
-                    }
-                    else {
+                    } else {
                         plannedFeatures.add(wi);
                     }
                 }

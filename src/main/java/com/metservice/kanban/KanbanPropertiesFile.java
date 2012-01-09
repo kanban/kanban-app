@@ -2,7 +2,6 @@ package com.metservice.kanban;
 
 import static java.lang.String.format;
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,16 +28,8 @@ public class KanbanPropertiesFile {
         FileReader reader = new FileReader(file);
         try {
             properties.load(reader);
+        } finally {
             reader.close();
-        } finally {
-            closeQuietly(reader);
-        }
-    }
-
-    private static void closeQuietly(Closeable closable) throws IOException {
-        try {
-            closable.close();
-        } finally {
         }
     }
 

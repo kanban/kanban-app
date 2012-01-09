@@ -2,6 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%@page import="org.joda.time.LocalDate"%>
 <%@page import="com.metservice.kanban.utils.WorkingDayUtils"%>
 <%@page import="com.metservice.kanban.model.WorkItem"%>
@@ -36,6 +38,7 @@ border:1px solid grey;
 width:780px;
 padding: 10px;
 }
+
 
 </style>
 
@@ -136,17 +139,81 @@ padding: 10px;
 
 	// -->
 	</script>
-	
+
+<script type="text/javascript">
+
+$(function() {
+
+    $("#journal-add-dialog").dialog({
+
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            Ok: function() {
+                $.get("add-journal-entry", 
+                        { 
+                            userName: $("#userField").val(), 
+                            text: $("#journal-text").val(),
+                            date: $("#journal-date").val()
+                        }).success(function() { window.location = getBoard(); });
+                $(this).dialog("close");
+            },
+            Cancel: function() {
+                $(this).dialog("close");
+            }
+        }
+    }); 
+    $("#add-entry-button").button();
+    $("#journal-date").datepicker({
+    	dateFormat: "yy-mm-dd",
+		showOn: "button",
+		buttonImage: "../../images/calendar.gif",
+		buttonImageOnly: true
+	});
+    $("#add-entry-button").click(function() {
+    	addJournalEntry();
+    });
+});
+
+function addJournalEntry() {
+	$("#journal-text").val("");
+	$("#journal-date").val("");
+	$("#journal-add-dialog").dialog("open");
+}
+
+
+</script>
+
 </head>
 <body onload="javscript:setPosition();">
     <jsp:include page="include/header.jsp"/>
-    <script>
+
+    <div>
+        <a href="#" id="add-entry-button">Add entry</a>    
+    </div>
+    <c:forEach items="${kanbanJournal}" var="item">
+        <div class="journal-entry">
+            <div class="ui-widget-header" style="position: relative;">
+                <span>${item.userName} wrote on ${item.dateStr}</span>
+                <a href="remove-journal-entry?id=${item.id}" style="top: 2px; right: 5px; position: absolute;">
+                    <span class="ui-icon ui-icon-closethick">close</span>
+                </a>
+                
+            </div>
+            <div class="ui-widget-content">${item.text}</div>
+        </div>
+    </c:forEach>
+
+<%--     <div class=textTypingArea>${kanbanJournal}</div> --%>
+
+
+<div id="journal-add-dialog" title="Add journal item">
+
+    <p>Entry date</p><input type="text" id="journal-date" />
+    <p>Journal text:</p>
     
-    </script>
-    
-   
-    <div class=textTypingArea>${kanbanJournal}</div>
-    
-    </textarea>
+    <textarea name="journal-text" id="journal-text" rows="5" cols="30"></textarea>
+</div>
+
 </body>
 </html>

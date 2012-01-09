@@ -56,8 +56,7 @@ public class WorkStreamsTag extends TagSupport {
                     "               });\n" +
                     "        });\n");
 
-            }
-            else {
+            } else {
                 pageContext.getOut().write("ERROR: Project is not set.");
             }
         } catch (IOException e) {
@@ -97,5 +96,4 @@ public class WorkStreamsTag extends TagSupport {
     public void setInitialWorkStream(String initialWorkStream) {
         this.initialWorkStream = initialWorkStream;
     }
-
 }

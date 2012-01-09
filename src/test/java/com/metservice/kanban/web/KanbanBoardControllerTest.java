@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ import com.metservice.kanban.model.DefaultKanbanProject;
 import com.metservice.kanban.model.DefaultWorkItemTree;
 import com.metservice.kanban.model.KanbanBacklog;
 import com.metservice.kanban.model.KanbanBoard;
+import com.metservice.kanban.model.KanbanJournalItem;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.TreeNode;
 import com.metservice.kanban.model.WorkItem;
@@ -343,11 +345,14 @@ public class KanbanBoardControllerTest {
 
     @Test
     public void testJournalBoard() throws IOException {
-        when(project.getJournalText()).thenReturn("This is journal");
+        List<KanbanJournalItem> journal = new ArrayList<KanbanJournalItem>();
+        journal.add(new KanbanJournalItem(1, "2012-01-10", "test", "user"));
+        journal.add(new KanbanJournalItem(2, "2012-01-11", "test 2", "user 2"));
+        when(project.getJournal()).thenReturn(journal);
         ModelAndView journalBoardResult = kanbanController.journalBoard(project, "project", null, null, workStreams);
 
         assertEquals("/journal.jsp", journalBoardResult.getViewName());
-        assertEquals("This is journal", journalBoardResult.getModel().get("kanbanJournal"));
+        assertEquals(journal, journalBoardResult.getModel().get("kanbanJournal"));
         assertEquals("journal", journalBoardResult.getModel().get("boardType"));
         assertEquals("project", journalBoardResult.getModel().get("projectName"));
     }

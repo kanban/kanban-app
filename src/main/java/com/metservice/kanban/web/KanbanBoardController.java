@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -45,6 +46,7 @@ import com.metservice.kanban.charts.cumulativeflow.CumulativeFlowChartBuilder;
 import com.metservice.kanban.charts.cycletime.CycleTimeChartBuilder;
 import com.metservice.kanban.model.BoardIdentifier;
 import com.metservice.kanban.model.KanbanBoard;
+import com.metservice.kanban.model.KanbanJournalItem;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemComment;
@@ -164,7 +166,7 @@ public class KanbanBoardController {
         throws IOException {
 
         Map<String, Object> model = initBoard("journal", projectName, error, scrollTop);
-        model.put("kanbanJournal", project.getJournalText());
+        model.put("kanbanJournal", project.getJournal());
         return new ModelAndView("/journal.jsp", model);
     }
 
@@ -240,8 +242,12 @@ public class KanbanBoardController {
         }
     }
 
-    private String includeScrollTopPosition(String boardType, String scrollTop) {
-        return "../" + boardType + "?scrollTop=" + scrollTop;
+    private String includeScrollTopPosition(String boardType, String scrollTop, String id) {
+        String highlight = "";
+        if (id != null) {
+            highlight = "&highlight=" + id;
+        }
+        return "../" + boardType + "?scrollTop=" + scrollTop + highlight;
     }
 
     /** Creates empty item model to display in add form with preset parent id. **/
@@ -464,7 +470,7 @@ public class KanbanBoardController {
         int targetIdAsInteger = parseInt(targetId);
         project.move(idAsInteger, targetIdAsInteger, after);
         project.save();
-        return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+        return new RedirectView(includeScrollTopPosition(boardType, scrollTop, id));
     }
 
     @RequestMapping("{board}/reorder")
@@ -476,7 +482,7 @@ public class KanbanBoardController {
         project.reorder(id, ids);
         project.save();
 
-        return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
+        return new RedirectView(includeScrollTopPosition(boardType, scrollTop, null));
 
     }
 
@@ -538,15 +544,15 @@ public class KanbanBoardController {
             HttpStatus.OK);
     }
 
-    @RequestMapping("edit-journal-action")
-    public synchronized RedirectView editJournalAction(@ModelAttribute("project") KanbanProject project,
-                                                       @RequestParam("journalText") String journalText,
-                                                       HttpServletRequest request) throws IOException, ParseException {
-
-        project.writeJournalText(journalText);
-        return new RedirectView("journal");
-
-    }
+    //    @RequestMapping("edit-journal-action")
+    //    public synchronized RedirectView editJournalAction(@ModelAttribute("project") KanbanProject project,
+    //                                                       @RequestParam("journalText") String journalText,
+    //                                                       HttpServletRequest request) throws IOException, ParseException {
+    //
+    //        // project.writeJournalText(journalText);
+    //        // TODO add code
+    //        return new RedirectView("journal");
+    //    }
 
     /**
      * Responds to a request to delete an item
@@ -592,7 +598,7 @@ public class KanbanBoardController {
         model.put("imageName", chartName + ".png");
         model.put("startDate", startDate);
         model.put("endDate", endDate);
-        model.put("kanbanJournal", project.getJournalText());
+        model.put("kanbanJournal", project.getJournal());
         model.put("chartName", chartName);
 
         return new ModelAndView("/chart.jsp", model);
@@ -1148,5 +1154,23 @@ public class KanbanBoardController {
     public RedirectView redirectToWall(@PathVariable("projectName") String projectName) {
         return new RedirectView("/projects/" + projectName + "/wall", true);
     }
-}
 
+    @RequestMapping(value = "add-journal-entry", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public synchronized Object addJournalEntry(@ModelAttribute("project") KanbanProject project,
+                                               @PathVariable("projectName") String projectName,
+                                               @RequestParam("userName") String userName,
+                                               @RequestParam("date") String date,
+                                               @RequestParam("text") String journalText) {
+        KanbanJournalItem journalItem = new KanbanJournalItem(date, journalText, userName);
+        project.addJournalItem(journalItem);
+        return journalItem;
+    }
+
+    @RequestMapping("remove-journal-entry")
+    public synchronized RedirectView removeJournalEntry(@ModelAttribute("project") KanbanProject project,
+                                                        @RequestParam("id") Integer id) {
+        project.deleteJournalItem(id);
+        return new RedirectView("journal");
+    }
+}

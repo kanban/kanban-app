@@ -152,7 +152,7 @@ public final class DefaultWorkItemTree implements WorkItemTree {
     
     private List<WorkItem> filteredList(WorkItem workItem, List<WorkItem> workItemList) {
         List<WorkItem> newList = new ArrayList<WorkItem>();
-        for(WorkItem item: workItemList) {
+        for (WorkItem item : workItemList) {
             if (item.getCurrentPhase() == workItem.getCurrentPhase() && item != workItem) {
                 newList.add(item);
             }
@@ -174,7 +174,7 @@ public final class DefaultWorkItemTree implements WorkItemTree {
     public void reorder(WorkItem workItem, List<WorkItem> workItemList) {
         verifyReorder(workItem, workItemList);
         int pos = workItemList.indexOf(workItem);
-        move(workItem, pos == 0 ? null : workItemList.get(pos-1), true);
+        move(workItem, pos == 0 ? null : workItemList.get(pos - 1), true);
     }
 
     @Override
@@ -182,7 +182,7 @@ public final class DefaultWorkItemTree implements WorkItemTree {
         List<WorkItem> siblings = workItemsByParentId.get(workItem.getParentId());
         siblings.remove(workItem);
         int pos = siblings.indexOf(target) + (after ? 1 : 0);
-        siblings.add(pos < 0? siblings.size(): pos, workItem);
+        siblings.add(pos < 0 ? siblings.size() : pos, workItem);
     }
 
     @Override

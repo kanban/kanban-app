@@ -54,10 +54,6 @@ public class ProjectEstimationToolController {
 
         Map<String, Object> model = new HashMap<String, Object>();
 
-
-        // model.put(PET_PROJECT_ATTR, project);
-        //        model.put("project", project.getKanbanProject());
-
         return new ModelAndView(PET_PROJECT_JSP, model);
     }
 

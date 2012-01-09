@@ -13,7 +13,6 @@ import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
-import org.apache.jasper.tagplugins.jstl.If;
 import com.metservice.kanban.model.DefaultKanbanProject;
 import com.metservice.kanban.model.KanbanBoardConfiguration;
 import com.metservice.kanban.model.KanbanProject;
@@ -129,8 +128,7 @@ public class KanbanService {
             Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 
             return result;
-        }
-        else {
+        } else {
             return new ArrayList<String>();
         }
     }
@@ -251,8 +249,7 @@ public class KanbanService {
         if (projectHome.exists()) {
             File file = new File(projectHome, KANBAN_PROPERTIES_FILE_NAME);
             writeStringToFile(file, settings);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("cannot edit a project that does not exist: " + projectName);
         }
     }

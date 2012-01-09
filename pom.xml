@@ -16,6 +16,7 @@
 		<jetty.version>7.4.0.v20110414</jetty.version>
         
         <spring.version>3.1.0.RELEASE</spring.version>
+        <jackson.version>1.9.3</jackson.version>
         <commons.io.version>2.1</commons.io.version>
         <commons.lang.version>2.6</commons.lang.version>
         <commons.collections.version>3.2.1</commons.collections.version>
@@ -226,6 +227,11 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>  
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>

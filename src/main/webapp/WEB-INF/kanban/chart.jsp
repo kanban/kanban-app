@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <style type="text/css">
 
@@ -57,6 +57,17 @@ margin: 5px 0 40px 10px;
         </form>
 
         <div><img src="${imageName}?level=${workItemTypeName}&startDate=${startDate}&endDate=${endDate}&workStream=${workStreams[project.name]}" alt="[chart]" /></div>
-   		<div class=journalArea><h1>Journal</h1>${kanbanJournal}</div>
+   		<div class=journalArea>
+            <h1>Journal</h1>
+            <c:forEach items="${kanbanJournal}" var="item">
+                <div class="journal-entry">
+                    <div class="ui-widget-header" style="position: relative;">
+                        <span>${item.userName} wrote on ${item.dateStr}</span>
+                    </div>
+                    <div class="ui-widget-content">${item.text}</div>
+                </div>
+            </c:forEach>
+        
+        </div>
     </body>
 </html>

@@ -215,3 +215,8 @@ body.welcome {
 	color: black;
 	opacity: 0.6;
 }
+
+.journal-entry {
+    width: 500px;
+    margin: 10px 10px 10px 10px;
+}

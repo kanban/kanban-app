@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.web.KanbanPersistence;
 
@@ -232,7 +233,7 @@ public class DefaultKanbanProject implements KanbanProject {
 
         tree.reorder(tree.getWorkItem(id), list);
     }
-
+/*
     @Override
     public String getJournalText() {
     	String catchString = "";
@@ -252,7 +253,18 @@ public class DefaultKanbanProject implements KanbanProject {
 			e.printStackTrace();
 		}
     }
-
+*/
+    @Override
+    public List<KanbanJournalItem> getJournal() {
+        try {
+            return persistence.journalRead();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    
     public String getName() {
         return name;
     }
@@ -271,5 +283,46 @@ public class DefaultKanbanProject implements KanbanProject {
         return workStreams;
     }
 
+    @Override
+    public void addJournalItem(KanbanJournalItem journalItem) {
+        try {
+            List<KanbanJournalItem> journal = persistence.journalRead();
 
+            journalItem.setId(nextJournalId(journal));
+            journal.add(journalItem);
+            persistence.journalWrite(journal);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int nextJournalId(List<KanbanJournalItem> journal) {
+        int max = 0;
+        for (KanbanJournalItem item : journal) {
+            max = Math.max(max, item.getId());
+        }
+        return max + 1;
+    }
+
+    @Override
+    public void updateJournalItem(KanbanJournalItem journalItem) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void deleteJournalItem(int itemId) {
+        try {
+            List<KanbanJournalItem> journal = persistence.journalRead();
+            for (KanbanJournalItem item : journal) {
+                if (item.getId() == itemId) {
+                    journal.remove(item);
+                    break;
+                }
+            }
+            persistence.journalWrite(journal);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

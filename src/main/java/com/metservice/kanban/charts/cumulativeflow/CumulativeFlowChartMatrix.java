@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.joda.time.LocalDate;
 
-import com.metservice.kanban.charts.ChartUtils;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.utils.WorkingDayUtils;
 
