@@ -359,8 +359,7 @@ public class KanbanBoardController {
 
         if ("print".equals(redirectTo)) {
             return new RedirectView("../print-items?printSelection=" + newId);
-        }
-        else {
+        } else {
             return new RedirectView("../" + board);
         }
     }
@@ -707,9 +706,8 @@ public class KanbanBoardController {
         // Create a new project if true
         if (createNewProject) {
             return new ModelAndView("/createProject.jsp", model);
-        }
-        // else edit the current project
-        else {
+        } else {
+            // else edit the current project
             return new ModelAndView("/editProject.jsp", model);
         }
     }
@@ -778,12 +776,13 @@ public class KanbanBoardController {
         ParseException {
 
         String content = kanbanService
-            .getProjectConfiguration(projectName).getKanbanPropertiesFile()
+            .getProjectConfiguration(projectName)
+            .getKanbanPropertiesFile()
             .getContentAsString();
 
         Scanner sc = new Scanner(content);
         String temp = "";
-        String newContent = "";
+        StringBuilder newContent = new StringBuilder();
 
         //Keep track of how many columns there are
         int totalColumns = 0;
@@ -832,10 +831,10 @@ public class KanbanBoardController {
                 }
                 temp = wipLine + newLimits;
             }
-            newContent += temp + "\n";
+            newContent.append(temp).append('\n');
         }
 
-        kanbanService.editProject(projectName, newContent);
+        kanbanService.editProject(projectName, newContent.toString());
 
         return new ModelAndView("/admin.jsp", null);
     }
@@ -931,10 +930,10 @@ public class KanbanBoardController {
 
         Scanner sc = new Scanner(orig);
         String temp = "";
-        String newContent = "";
+        StringBuilder newContent = new StringBuilder();
         boolean addedCol = false;
 
-        while (sc.hasNext() && name != null && name != "") {
+        while (sc.hasNext() && !StringUtils.isEmpty(name)) {
 
             temp = sc.nextLine();
             if (temp.contains("phases") && !addedCol) {
@@ -942,38 +941,35 @@ public class KanbanBoardController {
                 String[] phases = temp.split(",");
                 String last = phases[phases.length - 1];
                 //FOr when cancel is hit on the add column button
-                if (name.equals("null")) {
-                }
-                else {
+                if (!name.equals("null")) {
                     last = name + "," + last;
                 }
 
                 for (int i = 0; i < phases.length - 1; i++) {
-                    newContent += phases[i] + ",";
+                    newContent.append(phases[i]).append(",");
                 }
-                newContent += last + "\n";
+                newContent.append(last).append("\n");
 
             }
             else if (temp.contains("boards.wall")) {
                 //FOr when cancel is hit on the add column button
                 if (name.equals("null")) {
-                    newContent += temp + "\n";
-                }
-                else {
+                    newContent.append(temp).append("\n");
+                } else {
                     temp += "," + name;
-                    newContent += temp + "\n";
+                    newContent.append(temp).append("\n");
                 }
             }
             else {
-                newContent += temp + "\n";
+                newContent.append(temp).append("\n");
             }
 
         }
         //For when Ok button is pressed and no input is entered
         if (newContent.length() < 10) {
-            newContent = orig;
+            newContent = new StringBuilder(orig);
         }
-        kanbanService.editProject(projectName, newContent);
+        kanbanService.editProject(projectName, newContent.toString());
         return new RedirectView(
             "/projects/" + projectName + "/" + boardType, true);
     }
@@ -990,9 +986,9 @@ public class KanbanBoardController {
 
         Scanner sc = new Scanner(orig);
         String temp = "";
-        String newContent = "";
+        StringBuilder newContent = new StringBuilder();
 
-        while (sc.hasNext() && name != null && name != "") {
+        while (sc.hasNext() && !StringUtils.isEmpty(name)) {
 
             temp = sc.nextLine();
             if (temp.contains(name)) {
@@ -1001,40 +997,40 @@ public class KanbanBoardController {
                 for (int i = 0; i < phases.length; i++) {
 
                     if (phases[i].equals(name)) {
-                        newContent += "Pre - " + name + ",";
+                        newContent.append("Pre - ").append(name).append(",");
                     }
                     if (phases[i].contains(".")) {
-                        newContent += phases[i] + "=";
+                        newContent.append(phases[i]).append("=");
                     }
                     else {
-                        newContent += phases[i] + ",";
+                        newContent.append(phases[i]).append(",");
                     }
 
                 }
-                newContent += "\n";
+                newContent.append("\n");
 
             }
             else if (temp.contains("boards.wall")) {
                 //FOr when cancel is hit on the add column button
                 if (name.equals("null")) {
-                    newContent += temp + "\n";
+                    newContent.append(temp).append("\n");
                 }
                 else {
                     temp += "," + name;
-                    newContent += temp + "\n";
+                    newContent.append(temp).append("\n");
                 }
             }
 
             else {
-                newContent += temp + "\n";
+                newContent.append(temp).append("\n");
             }
 
         }
         if (newContent.length() < 10) {
-            newContent = orig;
+            newContent = new StringBuilder(orig);
         }
 
-        kanbanService.editProject(projectName, newContent);
+        kanbanService.editProject(projectName, newContent.toString());
 
         return new RedirectView(
             "/projects/" + projectName + "/" + boardType, true);
@@ -1052,9 +1048,9 @@ public class KanbanBoardController {
 
         Scanner sc = new Scanner(orig);
         String temp = "";
-        String newContent = "";
+        StringBuilder newContent = new StringBuilder();
 
-        while (sc.hasNext() && name != null && name != "") {
+        while (sc.hasNext() && !StringUtils.isEmpty(name)) {
 
             temp = sc.nextLine();
             if (temp.contains(name)) {
@@ -1062,37 +1058,29 @@ public class KanbanBoardController {
 
                 for (int i = 0; i <= phases.length - 1; i++) {
 
-                    if (phases[i].equals(name)) {
-                        //DO NOTHING
-                    }
-                    else {
+                    if (!phases[i].equals(name)) {
                         if (i == 0) {
-                            newContent += phases[i] + "=";
-                        }
-                        else if (i == phases.length - 1) {
-                            newContent += phases[i];
-                        }
-                        else if (i == phases.length - 2 && name.equals(phases[phases.length - 1])) {
-                            newContent += phases[i];
-                        }
-                        else {
-
-                            newContent += phases[i] + ",";
+                            newContent.append(phases[i]).append("=");
+                        } else if (i == phases.length - 1) {
+                            newContent.append(phases[i]);
+                        } else if (i == phases.length - 2 && name.equals(phases[phases.length - 1])) {
+                            newContent.append(phases[i]);
+                        } else {
+                            newContent.append(phases[i]).append(",");
                         }
                     }
                 }
-                newContent += "\n";
-            }
-            else {
-                newContent += temp + "\n";
+                newContent.append("\n");
+            } else {
+                newContent.append(temp).append("\n");
             }
         }
 
         if (newContent.length() < 10) {
-            newContent = orig;
+            newContent = new StringBuilder(orig);
         }
 
-        kanbanService.editProject(projectName, newContent);
+        kanbanService.editProject(projectName, newContent.toString());
 
         return new RedirectView("/projects/" + projectName + "/" + boardType, true);
     }
@@ -1135,8 +1123,8 @@ public class KanbanBoardController {
         try {
             return Integer.parseInt(sizeStr);
         } catch (NumberFormatException nfe) {
+            return defaultValue;
         }
-        return defaultValue;
     }
 
     @RequestMapping(value = "comment", method = RequestMethod.POST)
@@ -1152,8 +1140,8 @@ public class KanbanBoardController {
         project.save();
 
         String body = gson.toJson(workItemComment);
-        ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-        return response;
+
+        return new ResponseEntity<String>(body, HttpStatus.OK);
     }
 
     @RequestMapping("")
