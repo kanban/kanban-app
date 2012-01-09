@@ -8,11 +8,9 @@ import java.util.NoSuchElementException;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 
-//TODO This class needs unit tests.
 public class Project {
 
     private final List<WorkItem> plannedFeatures = new ArrayList<WorkItem>();
-    private int numberOfIncludedFeatures = 0;
 
     private final List<WorkItem> completedFeatures = new ArrayList<WorkItem>();
 
@@ -26,10 +24,6 @@ public class Project {
 
     public WorkItem getFeature(int id) {
         return plannedFeatures.get(getIndexOfFeature(id));
-    }
-
-    public void setFeature(int id, WorkItem feature) {
-        plannedFeatures.set(getIndexOfFeature(id), feature);
     }
 
     private int getIndexOfFeature(int id) {
@@ -137,56 +131,6 @@ public class Project {
             sum += feature.getAverageCaseEstimate();
         }
         return sum;
-    }
-
-    public void excludeFeature(int id) {
-        int index = getIndexOfFeature(id);
-        if (index >= numberOfIncludedFeatures) {
-            throw new IllegalArgumentException("already excluded: feature id = " + id);
-        }
-
-        plannedFeatures.add(numberOfIncludedFeatures - 1, plannedFeatures.remove(index));
-        numberOfIncludedFeatures--;
-    }
-
-    public void includeFeature(int id) {
-        int index = getIndexOfFeature(id);
-        if (index < numberOfIncludedFeatures) {
-            throw new IllegalArgumentException("already included: feature id = " + id);
-        }
-
-        plannedFeatures.add(numberOfIncludedFeatures, plannedFeatures.remove(index));
-        numberOfIncludedFeatures++;
-    }
-
-    public void moveFeatureUp(int id) {
-        int index = getIndexOfFeature(id);
-        if (index <= 0) {
-            throw new IllegalArgumentException("already at top: featrue id = " + id);
-        }
-
-        WorkItem feature = plannedFeatures.remove(index);
-        plannedFeatures.add(index - 1, feature);
-    }
-
-    public void moveFeatureDown(int id) {
-        int index = getIndexOfFeature(id);
-        if (index >= plannedFeatures.size() - 1) {
-            throw new IllegalArgumentException("already at bottom: id = " + id);
-        }
-
-        WorkItem feature = plannedFeatures.remove(index);
-        plannedFeatures.add(index + 1, feature);
-    }
-
-    public void completeFeature(int id) {
-        int index = getIndexOfFeature(id);
-        WorkItem feature = plannedFeatures.remove(index);
-
-        if (index < numberOfIncludedFeatures) {
-            numberOfIncludedFeatures--;
-        }
-        completedFeatures.add(feature);
     }
 
     public List<WorkItem> getCompletedFeatures() {
