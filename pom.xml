@@ -14,11 +14,30 @@
 		<jetty.kanban.home>${basedir}/sample</jetty.kanban.home>
         
 		<jetty.version>7.4.0.v20110414</jetty.version>
-        <spring.version>3.0.5.RELEASE</spring.version>
         
-        <commons.io.version>1.4</commons.io.version>
-        <commons.lang.version>2.5</commons.lang.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
+        <commons.io.version>2.1</commons.io.version>
+        <commons.lang.version>2.6</commons.lang.version>
         <commons.collections.version>3.2.1</commons.collections.version>
+        <opencsv.version>2.3</opencsv.version>
+        <gson.version>2.1</gson.version>
+        <guava.version>11.0</guava.version>
+        <joda.time.version>2.0</joda.time.version>
+        <jfree.jfreechart.version>1.0.13</jfree.jfreechart.version>
+        <jfree.jcommon.version>1.0.15</jfree.jcommon.version>
+        
+        <!-- logging -->
+        <log4j.version>1.2.16</log4j.version>
+        <slf4j.version>1.6.4</slf4j.version>
+        
+        <!-- testing -->
+        <junit.version>4.10</junit.version>
+        <hamcrest.library.version>1.2.1</hamcrest.library.version>
+        <mockito.version>1.9.0</mockito.version>
+        <spring.mock.version>2.0.3</spring.mock.version>
+        <jwebunit.version>3.0</jwebunit.version>
+        <selenium.htmlunit.driver.version>2.15.0</selenium.htmlunit.driver.version>
+        <jwebunit.htmlunit.plugin.version>2.5</jwebunit.htmlunit.plugin.version>
 	</properties>
 
 	<build>
@@ -160,7 +179,7 @@
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-library</artifactId>
-			<version>1.2.1</version>
+			<version>${hamcrest.library.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -170,7 +189,7 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>1.6.2</version>
+			<version>${joda.time.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -190,17 +209,17 @@
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
-			<version>2.1</version>
+			<version>${opencsv.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>jfree</groupId>
 			<artifactId>jfreechart</artifactId>
-			<version>1.0.13</version>
+			<version>${jfree.jfreechart.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>jfree</groupId>
 			<artifactId>jcommon</artifactId>
-			<version>1.0.15</version>
+			<version>${jfree.jcommon.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -210,22 +229,22 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.0</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<version>${log4j.version}</version>
 		</dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>1.7.2</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>10.0.1</version>
+            <version>${guava.version}</version>
         </dependency>
 
 		<!-- Provided -->
@@ -276,7 +295,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-mock</artifactId>
-			<version>2.0.3</version>
+			<version>${spring.mock.version}</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -288,7 +307,7 @@
 		<dependency>
 			<groupId>net.sourceforge.jwebunit</groupId>
 			<artifactId>jwebunit-core</artifactId>
-			<version>3.0</version>
+			<version>${jwebunit.version}</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -300,7 +319,7 @@
 		<dependency>
 			<groupId>net.sourceforge.jwebunit</groupId>
 			<artifactId>jwebunit-htmlunit-plugin</artifactId>
-			<version>2.5</version>
+			<version>${jwebunit.htmlunit.plugin.version}</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -312,19 +331,19 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-htmlunit-driver</artifactId>
-			<version>2.0rc2</version>
+			<version>${selenium.htmlunit.driver.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit-dep</artifactId>
-			<version>4.10</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.8.5</version>
+			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -352,4 +371,9 @@
             </plugin>
         </plugins>
     </reporting>
+    <url>https://github.com/kanban/kanban-app/</url>
+    <organization>
+        <url>http://www.metservice.com</url>
+        <name>Meteorological Service of New Zealand Limited</name>
+    </organization>
 </project>
