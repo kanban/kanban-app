@@ -134,7 +134,7 @@ public class EndToEndTest {
     @Test
     public void userCanViewAChart() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
-                ChartPage chartPage = page.clickFeatureCycleTimeChartButton();
+        ChartPage chartPage = page.clickFeatureCycleTimeChartButton();
         chartPage.assertImageIsValidPng(
             String.format("cycle-time-chart.png?level=feature&startDate=%s&endDate=%s&workStream=",
                 getDefaultStartDate(),
@@ -143,11 +143,11 @@ public class EndToEndTest {
     }
 
     String getDefaultEndDate() {
-        return LocalDate.fromCalendarFields(Calendar.getInstance()).toString("dd/MM/yyyy");
+        return LocalDate.fromCalendarFields(Calendar.getInstance()).toString("yyyy-MM-dd");
     }
 
     String getDefaultStartDate() {
-        return LocalDate.fromCalendarFields(Calendar.getInstance()).minusMonths(4).toString("dd/MM/yyyy");
+        return LocalDate.fromCalendarFields(Calendar.getInstance()).minusMonths(4).toString("yyyy-MM-dd");
     }
 
     @Test
@@ -324,7 +324,8 @@ public class EndToEndTest {
         ChartPage chartPage = wallPage.clickCumulativeFlowChartButton();
         
         LocalDate endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
-        String startDate = endDateParsed.minusMonths(KanbanBoardController.DEFAULT_MONTHS_DISPLAY).toString("dd/MM/yyyy");
+        String startDate = endDateParsed.minusMonths(KanbanBoardController.DEFAULT_MONTHS_DISPLAY).toString(
+            "yyyy-MM-dd");
         chartPage.assertStartDateEquals(startDate);
         
     }
