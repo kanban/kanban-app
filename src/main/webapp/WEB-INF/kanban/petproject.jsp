@@ -9,7 +9,7 @@
 <head>
 	<title>Project Estimation Tool for Kanban</title>
 	
-	<jsp:include page="../include/header-head.jsp"/>
+	<jsp:include page="include/header-head.jsp"/>
 
 	<script type="text/javascript">
 		function changeProjectProperty(promptName, submitName, oldValue) {
@@ -33,7 +33,7 @@
 </head>
 
 <body class="main">
- 	<jsp:include page="../include/header.jsp"/> 
+ 	<jsp:include page="include/header.jsp"/> 
 	
 	<h1>Project Estimation Tool for Kanban</h1>
 

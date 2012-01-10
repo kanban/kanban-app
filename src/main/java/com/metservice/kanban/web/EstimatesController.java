@@ -23,8 +23,8 @@ public class EstimatesController {
 
     private static final String PET_PROJECT_ATTR = "petproject";
     private static final String KANBAN_PROJECT_ATTR = "project";
-    private static final String PET_PROJECT_JSP = "pet/project.jsp";
-    private static final String PET_FEATURE_JSP = "pet/feature.jsp";
+    private static final String PET_PROJECT_JSP = "petproject.jsp";
+    private static final String PET_FEATURE_JSP = "petfeature.jsp";
 
     @Autowired
     EstimatesDao petDao;
