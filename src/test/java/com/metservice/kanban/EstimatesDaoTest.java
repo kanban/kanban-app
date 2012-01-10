@@ -1,4 +1,4 @@
-package com.metservice.pet;
+package com.metservice.kanban;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -7,16 +7,18 @@ import java.io.IOException;
 import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Test;
+import com.metservice.kanban.EstimatesDao;
 import com.metservice.kanban.KanbanService;
+import com.metservice.kanban.model.EstimatesProject;
 
-public class PetDaoTest {
+public class EstimatesDaoTest {
 
-    PetDao petDao;
+    EstimatesDao petDao;
     KanbanService service;
 
     @Before
     public void setUp() {
-        petDao = new PetDao();
+        petDao = new EstimatesDao();
 
         service = new KanbanService(new File(SystemUtils.getUserDir(), "/target/test-classes"));
         petDao.setKanbanService(service);
@@ -26,7 +28,7 @@ public class PetDaoTest {
     public void afterUpdateProjectEstimatesShouldReturnProperProject() throws IOException {
         String projectname = "test-project";
         
-        Project project = petDao.loadProject(projectname);
+        EstimatesProject project = petDao.loadProject(projectname);
         
         assertNotNull(project);
 
@@ -34,7 +36,7 @@ public class PetDaoTest {
         project.setCostSoFar(100);
         project.setEstimatedCostPerPoint(10);
         
-        Project p2 = petDao.loadProject(projectname);
+        EstimatesProject p2 = petDao.loadProject(projectname);
         
         petDao.storeProjectEstimates(project);
         
@@ -52,7 +54,7 @@ public class PetDaoTest {
         service = mock(KanbanService.class);
         petDao.setKanbanService(service);
 
-        Project project = petDao.loadProject(projectname);
+        EstimatesProject project = petDao.loadProject(projectname);
 
         assertNotNull(project);
 

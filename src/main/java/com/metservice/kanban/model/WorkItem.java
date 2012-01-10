@@ -221,7 +221,7 @@ public class WorkItem {
         LocalDate today = new LocalDate();
 
         // fill missing dates before current phase
-        String currentPhase = determineCurrentPhase();
+        String newCurrentPhase = determineCurrentPhase();
         for (ListIterator<String> i = getType().getPhases().listIterator(getType().getPhases().size()); i.hasPrevious();) {
 
             String phase = i.previous();
@@ -229,7 +229,7 @@ public class WorkItem {
             if (getDate(phase) != null) {
                 previousDate = getDate(phase);
             }
-            if (this.getType().isPhaseBefore(phase, currentPhase) && getDate(phase) == null) {
+            if (this.getType().isPhaseBefore(phase, newCurrentPhase) && getDate(phase) == null) {
                 setDate(phase, previousDate);
             }
         }
@@ -258,13 +258,13 @@ public class WorkItem {
 
 
     private String determineCurrentPhase() {
-        String currentPhase = null;
+        String newCurrentPhase = null;
         for (String phase : type.getPhases()) {
             if (hasDate(phase)) {
-                currentPhase = phase;
+                newCurrentPhase = phase;
             }
         }
-        return currentPhase;
+        return newCurrentPhase;
     }
 
     public boolean isCompleted() {
@@ -361,7 +361,13 @@ public class WorkItem {
 
     @Override
     public boolean equals(Object object) {
-        return object != null && ((WorkItem) object).id == id;
+        if (object == null) {
+            return false;
+        } else if (object instanceof WorkItem) {
+            return ((WorkItem) object).id == id;
+        } else {
+            return false;
+        }
     }
 
     @Override

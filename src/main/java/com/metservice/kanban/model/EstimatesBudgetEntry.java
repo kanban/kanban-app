@@ -1,9 +1,7 @@
-package com.metservice.pet;
+package com.metservice.kanban.model;
 
-import com.metservice.kanban.model.WorkItem;
 
-//TODO This class needs unit tests.
-public class BudgetEntry {
+public class EstimatesBudgetEntry {
 
     private WorkItem feature;
     private int averageCaseCumulativeCost;
@@ -13,10 +11,7 @@ public class BudgetEntry {
     private WorkItem nextFeature;
     private WorkItem prevFeature;
 
-    public BudgetEntry() {
-    }
-
-    public void setFeature(WorkItem feature, WorkItem prevFeature, WorkItem nextFeature) {
+    public EstimatesBudgetEntry(WorkItem feature, WorkItem prevFeature, WorkItem nextFeature) {
         this.feature = feature;
         this.prevFeature = prevFeature;
         this.nextFeature = nextFeature;

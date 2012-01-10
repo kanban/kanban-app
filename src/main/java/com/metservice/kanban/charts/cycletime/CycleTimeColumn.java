@@ -17,8 +17,8 @@ public class CycleTimeColumn {
         fragments = new ArrayList<CycleTimeFragment>();
     }
 
-    public void addFragment(String name, Integer weight) {
-        fragments.add(new CycleTimeFragment(name, weight));
+    public void addFragment(String fragmentName, Integer weight) {
+        fragments.add(new CycleTimeFragment(fragmentName, weight));
     }
 
     public int numberOfFragments() {

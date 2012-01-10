@@ -220,3 +220,7 @@ body.welcome {
     width: 500px;
     margin: 10px 10px 10px 10px;
 }
+
+.journal-text {
+	padding: 3px 3px 3px 3px;
+}

@@ -1,14 +1,12 @@
-package com.metservice.pet;
+package com.metservice.kanban.model;
 
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import com.metservice.kanban.model.KanbanProject;
-import com.metservice.kanban.model.WorkItem;
 
-public class Project {
+public class EstimatesProject {
 
     private final List<WorkItem> plannedFeatures = new ArrayList<WorkItem>();
 
@@ -35,8 +33,8 @@ public class Project {
         throw new NoSuchElementException("feature id = " + id);
     }
 
-    public List<BudgetEntry> getBudgetEntries() {
-        List<BudgetEntry> entries = new ArrayList<BudgetEntry>();
+    public List<EstimatesBudgetEntry> getBudgetEntries() {
+        List<EstimatesBudgetEntry> entries = new ArrayList<EstimatesBudgetEntry>();
 
         for (int i = 0; i < plannedFeatures.size(); i++) {
             WorkItem previous = null;
@@ -48,9 +46,8 @@ public class Project {
                 next = plannedFeatures.get(i + 1);
             }
             WorkItem current = plannedFeatures.get(i);
-            BudgetEntry entry = new BudgetEntry();
+            EstimatesBudgetEntry entry = new EstimatesBudgetEntry(current, previous, next);
 
-            entry.setFeature(current, previous, next);
             entries.add(entry);
         }
 
@@ -62,20 +59,20 @@ public class Project {
         return entries;
     }
 
-    private void calculateCumulativeCostAverageGuess(List<BudgetEntry> entries) {
+    private void calculateCumulativeCostAverageGuess(List<EstimatesBudgetEntry> entries) {
         int cumulativePoints = 0;
 
-        for (BudgetEntry entry : entries) {
+        for (EstimatesBudgetEntry entry : entries) {
             cumulativePoints += entry.getFeature().getAverageCaseEstimate();
 
             entry.setAverageCaseCumulativeCost(costSoFar + cumulativePoints * estimatedCostPerPoint);
         }
     }
 
-    private void calculateCumulativeCostWorstCase(List<BudgetEntry> entries) {
+    private void calculateCumulativeCostWorstCase(List<EstimatesBudgetEntry> entries) {
         int cumulativePointVariance = 0;
 
-        for (BudgetEntry entry : entries) {
+        for (EstimatesBudgetEntry entry : entries) {
             cumulativePointVariance += entry.getFeature().getVariance();
 
             int buffer = (int) round(sqrt(cumulativePointVariance) * estimatedCostPerPoint);
@@ -83,8 +80,8 @@ public class Project {
         }
     }
 
-    private void identifyBudgetOverruns(List<BudgetEntry> entries) {
-        for (BudgetEntry entry : entries) {
+    private void identifyBudgetOverruns(List<EstimatesBudgetEntry> entries) {
+        for (EstimatesBudgetEntry entry : entries) {
             if (entry.getAverageCaseCumulativeCost() > budget) {
                 entry.setOverBudgetInAverageCase(true);
             }

@@ -61,7 +61,7 @@ public class DefaultKanbanProject implements KanbanProject {
      * the first phase on the Kanban board and the date is logged.
 	 * @param parentId - the id of the parent WorkItem
 	 * @param type - the type of the WorkItem
-	 * @param name - the name of the WorkItem
+	 * @param itemName - the name of the WorkItem
 	 * @param averageCaseEstimate - the size of the WorkItem
 	 * @param worstCaseEstimate - the worstCaseEstimate of the WorkItem
 	 * @param importance - the importance of the WorkItem
@@ -69,7 +69,7 @@ public class DefaultKanbanProject implements KanbanProject {
 	 * @param backlogDate - the date that the new WorkItem was added to the project and backlog
      */
     @Override
-    public int addWorkItem(int parentId, WorkItemType type, String name, int averageCaseEstimate, int worstCaseEstimate,
+    public int addWorkItem(int parentId, WorkItemType type, String itemName, int averageCaseEstimate, int worstCaseEstimate,
                             int importance, String notes, String color, boolean excluded, String workStreams,
                             LocalDate backlogDate) {
 
@@ -77,7 +77,7 @@ public class DefaultKanbanProject implements KanbanProject {
 
         WorkItem workItem = new WorkItem(newId, parentId, type);
 
-        workItem.setName(name);
+        workItem.setName(itemName);
         workItem.setAverageCaseEstimate(averageCaseEstimate);
         workItem.setWorstCaseEstimate(worstCaseEstimate);
         workItem.setImportance(importance);

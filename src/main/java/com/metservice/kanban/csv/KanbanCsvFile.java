@@ -94,11 +94,11 @@ public class KanbanCsvFile {
         int tempFilesFound = 0;
 
         File fileToClean;
-        for (String file : files) {
+        for (String aFile : files) {
 
-            fileToClean = new File(directory.getAbsolutePath() + File.separatorChar + file);
+            fileToClean = new File(directory.getAbsolutePath() + File.separatorChar + aFile);
 
-            if (tempFilePattern.matcher(file).matches()) {
+            if (tempFilePattern.matcher(aFile).matches()) {
                 tempFilesFound++;
                 if (tempFilesFound > MAX_TEMPORARY_FILES) {
                     fileToClean.delete();

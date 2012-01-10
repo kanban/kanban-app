@@ -78,13 +78,13 @@ public class KanbanService {
      *                returned
      */
     private String loadKanbanVersion() {
-        Properties version = new Properties();
+        Properties versionProperties = new Properties();
         try {
-            version.load(getClass().getResourceAsStream("/version.txt"));
+            versionProperties.load(getClass().getResourceAsStream("/version.txt"));
         } catch (IOException e) {
             return "";
         }
-        return version.getProperty("version");
+        return versionProperties.getProperty("version");
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.metservice.pet;
+package com.metservice.kanban;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,11 +9,11 @@ import java.io.OutputStream;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.metservice.kanban.KanbanService;
+import com.metservice.kanban.model.EstimatesProject;
 import com.metservice.kanban.model.KanbanProject;
 
 @Service
-public class PetDao {
+public class EstimatesDao {
 
     private static final String PET_PROPERTIES = "pet.properties";
     private static final String PET_COSTPERPOINT = "pet.costperpoint";
@@ -22,11 +22,11 @@ public class PetDao {
 
     private KanbanService kanbanService;
 
-    public Project loadProject(String projectName) throws IOException {
+    public EstimatesProject loadProject(String projectName) throws IOException {
 
         KanbanProject kbProject = kanbanService.getKanbanProject(projectName);
 
-        Project project = new Project();
+        EstimatesProject project = new EstimatesProject();
         project.setProjectName(projectName);
         project.setKanbanProject(kbProject);
 
@@ -52,7 +52,7 @@ public class PetDao {
         return project;
     }
 
-    public void storeProjectEstimates(Project project) throws IOException {
+    public void storeProjectEstimates(EstimatesProject project) throws IOException {
         // store in config file
         Properties props = new Properties();
         props.setProperty(PET_BUDGET, "" + project.getBudget());
@@ -65,7 +65,7 @@ public class PetDao {
         propsOs.close();
     }
 
-    public void storeUpdatedFeatures(Project project) throws IOException {
+    public void storeUpdatedFeatures(EstimatesProject project) throws IOException {
         project.getKanbanProject().save();
     }
 

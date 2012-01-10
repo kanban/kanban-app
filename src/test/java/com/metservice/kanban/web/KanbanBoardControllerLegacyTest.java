@@ -107,7 +107,7 @@ public class KanbanBoardControllerLegacyTest {
     @Test
     public void testMoveItemAction() throws IOException {
         RedirectView view = kanbanController.moveItemAction(kanban, "wall", "2",  "6", true, "512");
-        assertThat(view.getUrl(), is("../wall?scrollTop=512"));
+        assertThat(view.getUrl(), is("../wall?scrollTop=512&highlight=2"));
     }
 
     @Ignore

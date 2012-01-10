@@ -19,11 +19,11 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
         this.cells = createEmptyCellArray(columns);
     }
 
-    private KanbanCell[] createEmptyCellArray(KanbanBoardColumnList columns) {
-        KanbanCell[] array = new KanbanCell[columns.size()];
+    private KanbanCell[] createEmptyCellArray(KanbanBoardColumnList columnList) {
+        KanbanCell[] array = new KanbanCell[columnList.size()];
 
         int i = 0;
-        for (KanbanBoardColumn column : columns) {
+        for (KanbanBoardColumn column : columnList) {
             array[i] = new KanbanCell(column.getWorkItemType());
             i++;
         }

@@ -1,4 +1,4 @@
-package com.metservice.pet;
+package com.metservice.kanban.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -11,15 +11,17 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import com.metservice.kanban.model.EstimatesBudgetEntry;
+import com.metservice.kanban.model.EstimatesProject;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemTree;
 import com.metservice.kanban.model.WorkItemType;
 
 
-public class ProjectTest {
+public class EstimatesProjectTest {
 
-    Project project;
+    EstimatesProject project;
     KanbanProject kanbanProject;
     List<WorkItem> workItems;
     WorkItemTree tree;
@@ -56,7 +58,7 @@ public class ProjectTest {
         workItems.add(workItem5);
         workItems.add(workItem10);
 
-        project = new Project();
+        project = new EstimatesProject();
         project.setEstimatedCostPerPoint(10);
         project.setKanbanProject(kanbanProject);
     }
@@ -83,7 +85,7 @@ public class ProjectTest {
 
     @Test
     public void getBudgetEntries() {
-        List<BudgetEntry> budgetEntries = project.getBudgetEntries();
+        List<EstimatesBudgetEntry> budgetEntries = project.getBudgetEntries();
         assertEquals(2, budgetEntries.size());
         assertEquals(workItem5, budgetEntries.get(0).getFeature());
         assertEquals(workItem10, budgetEntries.get(1).getFeature());

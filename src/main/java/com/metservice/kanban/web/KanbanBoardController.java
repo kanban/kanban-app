@@ -23,6 +23,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +64,8 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 @SessionAttributes("workStreams")
 public class KanbanBoardController {
 
+    private final static Logger logger = LoggerFactory.getLogger(KanbanBoardController.class);
+
     private static final int MAX_PROJECT_NAME_LENGTH = 32;
 
     private static final String PROJECT_NAME_INVALID_CHARS = "/\\|<>*?&:\"";
@@ -83,6 +87,13 @@ public class KanbanBoardController {
         throws IOException {
 
         return kanbanService.getKanbanProject(projectName);
+    }
+
+    @ModelAttribute("service")
+    public synchronized KanbanService populateService()
+        throws IOException {
+
+        return kanbanService;
     }
 
     /*
@@ -589,7 +600,7 @@ public class KanbanBoardController {
             startDate = defaultStartDate(endDate);
         }
         if (StringUtils.isEmpty(endDate)) {
-            endDate = LocalDate.fromCalendarFields(Calendar.getInstance()).toString("dd/MM/yyyy");
+            endDate = LocalDate.fromCalendarFields(Calendar.getInstance()).toString("yyyy-MM-dd");
         }
 
         Map<String, Object> model = initBoard("chart", projectName, error, null);
@@ -615,7 +626,7 @@ public class KanbanBoardController {
         } else {
             endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
         }
-        return endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY).toString("dd/MM/yyyy");
+        return endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY).toString("yyyy-MM-dd");
     }
 
     // TODO check in this class for redundent model.put("kanban...
@@ -643,13 +654,17 @@ public class KanbanBoardController {
         LocalDate end;
 
         try {
-            start = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(startDate));
-        } catch (ParseException e) {
+            start = LocalDate.parse(startDate);
+        } catch (RuntimeException e) {
+            logger.warn("Cannot parse start date {}", startDate);
+            logger.warn("Got exception: " + e);
             start = null;
         }
         try {
-            end = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
-        } catch (ParseException e) {
+            end = LocalDate.parse(endDate);
+        } catch (RuntimeException e) {
+            logger.warn("Cannot parse end date {}", endDate);
+            logger.warn("Got exception: " + e);
             end = null;
         }
 
@@ -911,13 +926,17 @@ public class KanbanBoardController {
         LocalDate end;
 
         try {
-            start = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(startDate));
-        } catch (ParseException e) {
+            start = LocalDate.parse(startDate);
+        } catch (RuntimeException e) {
+            logger.warn("Cannot parse start date {}", startDate);
+            logger.warn("Got exception: " + e);
             start = null;
         }
         try {
-            end = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
-        } catch (ParseException e) {
+            end = LocalDate.parse(endDate);
+        } catch (RuntimeException e) {
+            logger.warn("Cannot parse end date {}", endDate);
+            logger.warn("Got exception: " + e);
             end = null;
         }
 

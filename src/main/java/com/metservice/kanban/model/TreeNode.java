@@ -31,12 +31,12 @@ public class TreeNode<T> {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private TreeNode<T>[] cloneArray(Class<T> valueClass, TreeNode<?>[] children) {
-        TreeNode[] clonedChildren = new TreeNode[children.length];
+    private TreeNode<T>[] cloneArray(Class<T> valueClass, TreeNode<?>[] newChildren) {
+        TreeNode[] clonedChildren = new TreeNode[newChildren.length];
 
-        for (int i = 0; i < children.length; i++) {
+        for (int i = 0; i < newChildren.length; i++) {
 
-            TreeNode<T> child = (TreeNode<T>) children[i];
+            TreeNode<T> child = (TreeNode<T>) newChildren[i];
             clonedChildren[i] = child;
 
             if (!valueClass.equals(child.valueClass)) {

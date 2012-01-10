@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import com.metservice.kanban.EstimatesDao;
 import com.metservice.kanban.KanbanService;
+import com.metservice.kanban.model.EstimatesProject;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
-import com.metservice.pet.PetDao;
-import com.metservice.pet.Project;
 
 //TODO This class needs unit tests.
 @Controller
 @RequestMapping("{projectName}")
-public class ProjectEstimationToolController {
+public class EstimatesController {
 
     private static final String PET_PROJECT_ATTR = "petproject";
     private static final String KANBAN_PROJECT_ATTR = "project";
@@ -27,13 +27,14 @@ public class ProjectEstimationToolController {
     private static final String PET_FEATURE_JSP = "pet/feature.jsp";
 
     @Autowired
-    private PetDao petDao;
+    EstimatesDao petDao;
+
     @Autowired
-    private KanbanService kanbanService;
+    KanbanService kanbanService;
 
     @ModelAttribute(PET_PROJECT_ATTR)
-    public synchronized Project populatePetProject(@PathVariable("projectName") String projectName) throws IOException {
-        Project project = petDao.loadProject(projectName);
+    public synchronized EstimatesProject populatePetProject(@PathVariable("projectName") String projectName) throws IOException {
+        EstimatesProject project = petDao.loadProject(projectName);
 
         return project;
     }
@@ -50,7 +51,7 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("pet-project")
-    public ModelAndView showProject(@ModelAttribute("petproject") Project petProject) {
+    public ModelAndView showProject(@ModelAttribute("petproject") EstimatesProject petProject) {
 
         Map<String, Object> model = new HashMap<String, Object>();
 
@@ -58,7 +59,7 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("pet-set-project-property")
-    public RedirectView setBudget(String name, int value, @ModelAttribute(PET_PROJECT_ATTR) Project project)
+    public RedirectView setBudget(String name, int value, @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project)
         throws IOException {
 
         if (name.equals("budget")) {
@@ -75,7 +76,7 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("pet-edit-feature")
-    public ModelAndView editFeature(int id, @ModelAttribute(PET_PROJECT_ATTR) Project project) {
+    public ModelAndView editFeature(int id, @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("pageTitle", "Edit feature");
         model.put("feature", project.getFeature(id));
@@ -85,13 +86,13 @@ public class ProjectEstimationToolController {
 
     @RequestMapping("pet-save-feature")
     public RedirectView saveFeature(int id, int averageCaseEstimate, int worstCaseEstimate,
-                                    @ModelAttribute(PET_PROJECT_ATTR) Project project)
+                                    @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project)
         throws IOException {
 
         assert id != 0;
 
         // get WI for feature
-        WorkItem workItem = project.getKanbanProject().getWorkItemTree().getWorkItem(id);
+        WorkItem workItem = project.getKanbanProject().getWorkItemById(id);
         // update WI from feature
         workItem.setAverageCaseEstimate(averageCaseEstimate);
         workItem.setWorstCaseEstimate(worstCaseEstimate);
@@ -102,11 +103,11 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("pet-set-feature-included-in-estimates")
-    public RedirectView excludeFeature(int id, boolean value, @ModelAttribute(PET_PROJECT_ATTR) Project project)
+    public RedirectView excludeFeature(int id, boolean value, @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project)
         throws IOException {
         boolean includedInEstimates = value;
 
-        WorkItem feature = project.getFeature(id);
+        WorkItem feature = project.getKanbanProject().getWorkItemById(id);// project.getFeature(id);
         feature.setMustHave(includedInEstimates);
 
         petDao.storeUpdatedFeatures(project);
@@ -115,7 +116,7 @@ public class ProjectEstimationToolController {
     }
 
     @RequestMapping("pet-move-feature")
-    public RedirectView moveFeature(int id, int targetId, String direction, @ModelAttribute(PET_PROJECT_ATTR) Project project)
+    public RedirectView moveFeature(int id, int targetId, String direction, @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project)
         throws IOException {
 
         boolean after = "down".equals(direction);

@@ -25,6 +25,8 @@ import com.metservice.kanban.model.WorkItem;
 
 public class CycleTimeChartBuilder {
 
+
+
     public CategoryDataset createDataset(Collection<WorkItem> listOfItems) throws IOException {
         List<CycleTimeColumn> listOfColumns = convertFromWorkItemToCycleTimeColumns(listOfItems);
         DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
@@ -60,14 +62,9 @@ public class CycleTimeChartBuilder {
         return listOfColumns;
     }
 
-    private void sortByDateOfCompletion(List<WorkItem> selectedWorkItems) {
-        Collections.sort(selectedWorkItems, new Comparator<WorkItem>() {
 
-            @Override
-            public int compare(WorkItem o1, WorkItem o2) {
-                return o1.getDate(o1.getCurrentPhase()).compareTo(o2.getDate(o2.getCurrentPhase()));
-            }
-        });
+    private void sortByDateOfCompletion(List<WorkItem> selectedWorkItems) {
+        Collections.sort(selectedWorkItems, new WorkItemsComparator());
     }
 
     public JFreeChart createChart(CategoryDataset categorydataset) {
@@ -96,4 +93,10 @@ public class CycleTimeChartBuilder {
         return jfreechart;
     }
 
+    static class WorkItemsComparator implements Comparator<WorkItem> {
+        @Override
+        public int compare(WorkItem o1, WorkItem o2) {
+            return o1.getDate(o1.getCurrentPhase()).compareTo(o2.getDate(o2.getCurrentPhase()));
+        }
+    }
 }

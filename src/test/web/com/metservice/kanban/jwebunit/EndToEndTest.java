@@ -16,11 +16,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import com.metservice.kanban.KanbanService;
+import com.metservice.kanban.model.EstimatesProject;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.tests.util.TestUtils;
 import com.metservice.kanban.web.KanbanBoardController;
-import com.metservice.pet.Project;
 
 public class EndToEndTest {
 
