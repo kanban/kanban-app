@@ -45,8 +45,8 @@ public class KanbanDataController {
      */
     @RequestMapping("/download/{projectName}")
     public void download(@PathVariable("projectName") String projectName, 
-        @RequestParam("workItemTypeName") String workItemTypeName,
-        HttpServletResponse response) throws FileNotFoundException, IOException {
+                         @RequestParam("workItemTypeName") String workItemTypeName,
+                         HttpServletResponse response) throws FileNotFoundException, IOException {
         
         KanbanProjectConfiguration configuration = kanbanService.getProjectConfiguration(projectName);
         WorkItemType workItemType = configuration.getWorkItemTypes().getByName(workItemTypeName);

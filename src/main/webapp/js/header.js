@@ -55,8 +55,9 @@ function changeSettings(createNewProject) {
 }
 
 function download(currentProjectName, workItemTypeName) {
-    document.forms["header"].action = getRoot() + "/download/" + currentProjectName + "?workItemTypeName=" + workItemTypeName;
-    document.forms["header"].submit();
+	window.location = getRoot() + "/download/" + currentProjectName + "?workItemTypeName=" + workItemTypeName;
+    //document.forms["header"].action = getRoot() + "/download/" + currentProjectName + "?workItemTypeName=" + workItemTypeName;
+    //document.forms["header"].submit();
 }
 
 function getYOffset() {

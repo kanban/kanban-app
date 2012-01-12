@@ -43,6 +43,13 @@ public class KanbanAdminController {
 		return kanbanService.getKanbanProject(projectName);
 	}
 	
+    @ModelAttribute("service")
+    public synchronized KanbanService populateService()
+        throws IOException {
+
+        return kanbanService;
+    }
+
 	/**
 	 * Default admin view (/{projectName}/admin).
 	 * @param project
