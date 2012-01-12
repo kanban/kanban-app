@@ -314,7 +314,7 @@ $(function() {
 </script>
 </head>
 <body onload="javscript:setPosition(${scrollTop});">
-<div id="block-dialog" title="Block/Unblock work item">
+<div id="block-dialog" title="Block/Unblock work item" style="display: none">
     <p>Please enter a reason for blocking/unblocking work item <span id="block-dialog-item-id"></span>:</p>
     <textarea name="block-comment" id="block-comment" rows="5" cols="30"></textarea>
 </div>

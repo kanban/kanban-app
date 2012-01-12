@@ -121,15 +121,12 @@
         <a id="complete" href="${pageContext.request.contextPath}/projects/${project.name}/completed" class="button">Complete</a>
 
         <c:if test="${boardType == 'wall' || boardType == 'backlog' }">
-        <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
+            <div id="print" class="button" onclick="javascript:printCards();" ><div class ="textOnButton">Print</div></div>
 		</c:if>
-      <!-- Start of graph menu -->
 			
-					<div id="graphs" class="button">
-					  <div class ="textOnButton">
-					    Graphs
-					  </div>
-          </div>
+		<div id="graphs" class="button">
+            <div class ="textOnButton">Charts</div>
+        </div>
           <div id="graph_dropdown">
           
           	<a id="cumulative-flow-chart-1-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=cumulative-flow-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">
@@ -151,10 +148,13 @@
               		<img src="${pageContext.request.contextPath}/images/cycle-time-chart.png" /> ${secondLevel.name}
             	</a>
             </c:if>
+            
+            <a id="burn-up-chart-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=burn-up-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">
+                <img src="${pageContext.request.contextPath}/images/burn-up-chart.png" /> Burn-Up 
+            </a>
+            
           </div>			
 			
-			<!-- End of graph buttons -->
-        <a id="burn-up-chart-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=burn-up-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">Burn-Up Chart</a>
         <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">Estimates</a>
         <a id="admin" href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="button">Admin</a>
     </div>
