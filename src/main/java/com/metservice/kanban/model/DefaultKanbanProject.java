@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
+import com.metservice.kanban.charts.burnup.BurnUpDataModel;
+import com.metservice.kanban.charts.burnup.ProjectedDatasetPopulator;
 import com.metservice.kanban.web.KanbanPersistence;
 
 //TODO This class needs more unit tests.
@@ -324,5 +326,26 @@ public class DefaultKanbanProject implements KanbanProject {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public LocalDate getStartDate() {
+        LocalDate startDate = LocalDate.now();
+        for (WorkItem item : tree.getWorkItemList()) {
+            String backlogPhase = item.getType().getBacklogPhase();
+            LocalDate date = item.getDate(backlogPhase);
+            if (date != null && date.isBefore(startDate)) {
+                startDate = date;
+            }
+        }
+        return startDate;
+    }
+
+    @Override
+    public LocalDate getProjectedEndDate(LocalDate startDate, LocalDate endDate) {
+
+        BurnUpDataModel model = new BurnUpDataModel(getRootWorkItemType(), tree.getWorkItemList(), startDate, endDate);
+        ProjectedDatasetPopulator projectedDatasetPopulator = new ProjectedDatasetPopulator(model);
+        return projectedDatasetPopulator.getProjectedEndDate();
     }
 }

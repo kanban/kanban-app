@@ -64,6 +64,8 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 @SessionAttributes("workStreams")
 public class KanbanBoardController {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     private final static Logger logger = LoggerFactory.getLogger(KanbanBoardController.class);
 
     private static final int MAX_PROJECT_NAME_LENGTH = 32;
@@ -600,7 +602,7 @@ public class KanbanBoardController {
             startDate = defaultStartDate(endDate);
         }
         if (StringUtils.isEmpty(endDate)) {
-            endDate = LocalDate.fromCalendarFields(Calendar.getInstance()).toString("yyyy-MM-dd");
+            endDate = formatDate(LocalDate.now());
         }
 
         Map<String, Object> model = initBoard("chart", projectName, error, null);
@@ -611,22 +613,35 @@ public class KanbanBoardController {
         model.put("endDate", endDate);
         model.put("kanbanJournal", project.getJournal());
         model.put("chartName", chartName);
+        model.put("projectStartDate", formatDate(project.getStartDate()));
+        model.put("currentDate", formatDate(LocalDate.now()));
+        model.put("projectedEndDate",
+                formatDate(project.getProjectedEndDate(LocalDate.parse(startDate), LocalDate.parse(endDate))));
 
         return new ModelAndView("/chart.jsp", model);
+    }
+
+    private String formatDate(LocalDate date) {
+        if (date == null) {
+            return "";
+        }
+        return date.toString(DATE_FORMAT);
     }
 
     private String defaultStartDate(String endDate) {
         LocalDate endDateParsed;
         if (null != endDate) {
             try {
-                endDateParsed = LocalDate.fromDateFields(DateFormat.getDateInstance().parse(endDate));
-            } catch (ParseException e) {
-                endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
+                endDateParsed = LocalDate.parse(endDate);
+            } catch (RuntimeException e) {
+                logger.warn("Cannot parse date {}", endDate);
+                logger.warn("Got exception: " + e);
+                endDateParsed = LocalDate.now();
             }
         } else {
             endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
         }
-        return endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY).toString("yyyy-MM-dd");
+        return formatDate(endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY));
     }
 
     // TODO check in this class for redundent model.put("kanban...

@@ -56,4 +56,8 @@ public interface KanbanProject {
     void deleteJournalItem(int itemId);
 
     Set<String> getWorkStreams();
+
+    LocalDate getStartDate();
+
+    LocalDate getProjectedEndDate(LocalDate startDate, LocalDate endDate);
 }

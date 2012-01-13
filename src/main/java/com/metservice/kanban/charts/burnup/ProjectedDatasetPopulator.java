@@ -21,7 +21,7 @@ public final class ProjectedDatasetPopulator {
         int elapsedDays = model.getWorkingDays().size() - 1;
         double pointsCompletedPerDay = completedSize / elapsedDays;
         
-        if (pointsCompletedPerDay == 0) {
+        if (pointsCompletedPerDay <= 0) {
             return;
         }
 
@@ -33,5 +33,24 @@ public final class ProjectedDatasetPopulator {
             dataset.addValue(completedSize, COMPLETE, date);
             dataset.addValue(totalSize - completedSize, BACKLOG, date);
         }
+    }
+
+    public LocalDate getProjectedEndDate() {
+        double totalSize = model.getTotalSizeOnDate(model.getCurrentDate());
+        double completedSize = model.getCompletedSizeOnDate(model.getCurrentDate());
+
+        int elapsedDays = model.getWorkingDays().size() - 1;
+        double pointsCompletedPerDay = completedSize / elapsedDays;
+
+        if (pointsCompletedPerDay <= 0) {
+            return null;
+        }
+
+        LocalDate date = model.getCurrentDate();
+        while (completedSize <= totalSize - pointsCompletedPerDay) {
+            completedSize += pointsCompletedPerDay;
+            date = nextWorkingDayAfter(date);
+        }
+        return date;
     }
 }
