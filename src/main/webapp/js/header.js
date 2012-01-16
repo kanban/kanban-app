@@ -9,7 +9,8 @@ function getRoot() {
 }
 
 function getProjectUrl() {
-    var pathArray = location.pathname.split('/'); 
+	// replace required by htmlunit!
+    var pathArray = location.pathname.replace("%20"," ").split('/'); 
     return "/" + pathArray[1] + "/" + pathArray[2] + "/" + pathArray[3];
 }
 
