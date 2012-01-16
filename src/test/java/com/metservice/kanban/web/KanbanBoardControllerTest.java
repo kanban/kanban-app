@@ -13,6 +13,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -32,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import com.metservice.kanban.KanbanPropertiesFile;
 import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.charts.burnup.BurnUpChartGenerator;
 import com.metservice.kanban.model.BoardIdentifier;
@@ -41,6 +44,7 @@ import com.metservice.kanban.model.KanbanBacklog;
 import com.metservice.kanban.model.KanbanBoard;
 import com.metservice.kanban.model.KanbanJournalItem;
 import com.metservice.kanban.model.KanbanProject;
+import com.metservice.kanban.model.KanbanProjectConfiguration;
 import com.metservice.kanban.model.TreeNode;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemComment;
@@ -451,5 +455,69 @@ public class KanbanBoardControllerTest {
         verifyNoMoreInteractions(kanbanService);
 
         assertEquals("/projects/project/wall", editProjectActionResult.getUrl());
+    }
+
+    @Test
+    public void redirectToWall() {
+        RedirectView result = kanbanController.redirectToWall("a project");
+        assertEquals("/projects/a project/wall", result.getUrl());
+    }
+
+    @Test
+    public void addJournalEntry() {
+        KanbanJournalItem result = kanbanController.addJournalEntry(project, "project name", "user", "2012-01-16",
+            "a text");
+        assertEquals("user", result.getUserName());
+        assertEquals(LocalDateTime.parse("2012-01-16"), result.getDate());
+        assertEquals("a text", result.getText());
+        verify(project, times(1)).addJournalItem(result);
+    }
+
+    @Test
+    public void removeJournalEntry() {
+        kanbanController.removeJournalEntry(project, 10);
+        verify(project, times(1)).deleteJournalItem(10);
+    }
+
+    @Test
+    public void editColumnSetWipValidInteger() throws IOException {
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        type.setName("feature");
+        WorkItemTypeCollection itemTypes = mock(WorkItemTypeCollection.class);
+        KanbanProjectConfiguration config = mock(KanbanProjectConfiguration.class);
+        KanbanPropertiesFile propertiesFile = mock(KanbanPropertiesFile.class);
+
+        when(project.getWorkItemTypes()).thenReturn(itemTypes);
+        when(itemTypes.getByName("feature")).thenReturn(type);
+
+        when(kanbanService.getProjectConfiguration("a project")).thenReturn(config);
+        when(config.getKanbanPropertiesFile()).thenReturn(propertiesFile);
+        kanbanController.setKanbanService(kanbanService);
+
+        RedirectView result = kanbanController.editColumn(project, "a project", "feature", "Dev", 10);
+        assertEquals("wall", result.getUrl());
+
+        verify(propertiesFile).setColumnWipLimit(type, "Dev", 10);
+    }
+
+    @Test
+    public void editColumnSetWipNull() throws IOException {
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        type.setName("feature");
+        WorkItemTypeCollection itemTypes = mock(WorkItemTypeCollection.class);
+        KanbanProjectConfiguration config = mock(KanbanProjectConfiguration.class);
+        KanbanPropertiesFile propertiesFile = mock(KanbanPropertiesFile.class);
+
+        when(project.getWorkItemTypes()).thenReturn(itemTypes);
+        when(itemTypes.getByName("feature")).thenReturn(type);
+
+        when(kanbanService.getProjectConfiguration("a project")).thenReturn(config);
+        when(config.getKanbanPropertiesFile()).thenReturn(propertiesFile);
+        kanbanController.setKanbanService(kanbanService);
+
+        RedirectView result = kanbanController.editColumn(project, "a project", "feature", "Dev", null);
+        assertEquals("wall", result.getUrl());
+
+        verify(propertiesFile).setColumnWipLimit(type, "Dev", null);
     }
 }

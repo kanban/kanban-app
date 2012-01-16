@@ -60,4 +60,5 @@ public interface KanbanProject {
     LocalDate getStartDate();
 
     LocalDate getProjectedEndDate(LocalDate startDate, LocalDate endDate);
+
 }

@@ -348,4 +348,5 @@ public class DefaultKanbanProject implements KanbanProject {
         ProjectedDatasetPopulator projectedDatasetPopulator = new ProjectedDatasetPopulator(model);
         return projectedDatasetPopulator.getProjectedEndDate();
     }
+
 }

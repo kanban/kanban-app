@@ -26,6 +26,7 @@
 <head>
     <jsp:include page="include/header-head.jsp"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/project.css" />
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/project.js"></script>
 
 <title>Kanban: wall</title>
 <%
@@ -289,32 +290,15 @@ div[data-role="card"]{
 <%}%>
 
 </style>
-<script type="text/javascript">
-$(function() {
-	$("#block-dialog").dialog({
-		modal: true,
-		autoOpen: false,
-		buttons: {
-			Ok: function() {
-				$.get(getBoard() + "/block-item-action", 
-						{ 
-							itemId: $('#block-dialog-item-id').html(), 
-							userName: $('#userField').val(), 
-							comment: $("#block-comment").val() 
-						}).success(function() { window.location = getBoard(); });
-				
-				$(this).dialog("close");
-			},
-			Cancel: function() {
-				$(this).dialog("close");
-			}
-		}
-	}); 	
-});
-</script>
+
 </head>
 <body onload="javscript:setPosition(${scrollTop});">
-<div id="block-dialog" title="Block/Unblock work item" style="display: none">
+<div id="edit-column-dialog" title="Edit column" style="display: none;">
+    Column name: <input id="edit-column-dialog-name" disabled="disabled" /><br/>
+    Column type: <input id="edit-column-dialog-item-type" disabled="disabled" /><br/>
+    WIP Limit: <input id="edit-column-dialog-wipLimit" />    
+</div>
+<div id="block-dialog" title="Block/Unblock work item" style="display: none;">
     <p>Please enter a reason for blocking/unblocking work item <span id="block-dialog-item-id"></span>:</p>
     <textarea name="block-comment" id="block-comment" rows="5" cols="30"></textarea>
 </div>
@@ -346,7 +330,9 @@ $(function() {
                         <c:set var="columnHeaderClass" value="${column.workItemType.name}-header"></c:set>
                     </c:otherwise>
                 </c:choose>
-                <th title="WIP Limit: ${column.WIPLimit > 0 ? column.WIPLimit : "None"}" class="${columnHeaderClass}" id="phase_<%= column_index %>">${column.phase}</th>
+                <th title="WIP Limit: ${column.WIPLimit > 0 ? column.WIPLimit : "None"}" class="${columnHeaderClass}" id="phase_<%= column_index %>">
+                    <span>${column.phase}</span> <div style="float: right"><a class="ui-button-icon-primary ui-icon ui-icon-gear" href="javascript:editColumn('${column.workItemType.name}', '${column.phase}', '${column.WIPLimit}')">XX</a></div>
+                </th>
                 <script>
                 	$(document).ready(function(){
                 		var i = 0; 

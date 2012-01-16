@@ -1191,11 +1191,12 @@ public class KanbanBoardController {
 
     @RequestMapping(value = "add-journal-entry", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public synchronized Object addJournalEntry(@ModelAttribute("project") KanbanProject project,
+    public synchronized KanbanJournalItem addJournalEntry(@ModelAttribute("project") KanbanProject project,
                                                @PathVariable("projectName") String projectName,
                                                @RequestParam("userName") String userName,
                                                @RequestParam("date") String date,
                                                @RequestParam("text") String journalText) {
+
         KanbanJournalItem journalItem = new KanbanJournalItem(date, journalText, userName);
         project.addJournalItem(journalItem);
         return journalItem;
@@ -1206,5 +1207,22 @@ public class KanbanBoardController {
                                                         @RequestParam("id") Integer id) {
         project.deleteJournalItem(id);
         return new RedirectView("journal");
+    }
+
+    @RequestMapping("edit-column-action")
+    public synchronized RedirectView editColumn(@ModelAttribute("project") KanbanProject project,
+                                                @PathVariable("projectName") String projectName,
+                                                @RequestParam("itemType") String itemType,
+                                                @RequestParam("columnName") String columnName,
+                                                @RequestParam("wipLimit") Integer wipLimit) throws IOException {
+
+        WorkItemType workItemtype = project.getWorkItemTypes().getByName(itemType);
+
+        kanbanService
+            .getProjectConfiguration(projectName)
+            .getKanbanPropertiesFile()
+            .setColumnWipLimit(workItemtype, columnName, wipLimit);
+
+        return new RedirectView("wall");
     }
 }

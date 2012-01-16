@@ -8,6 +8,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/colorpicker.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/eye.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/kanban.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/layout.js?ver=1.0.2"></script>
 
 

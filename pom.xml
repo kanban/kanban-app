@@ -135,6 +135,7 @@
 				<configuration>
 					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<webAppConfig>
+                        <defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
 						<contextPath>/kanban</contextPath>
 					</webAppConfig>
 					<systemProperties>

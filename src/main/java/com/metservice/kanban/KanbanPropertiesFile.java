@@ -4,10 +4,16 @@ import static java.lang.String.format;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Properties;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.metservice.kanban.model.BoardIdentifier;
 import com.metservice.kanban.model.HtmlColour;
+import com.metservice.kanban.model.WorkItemType;
 
 //TODO This class needs unit tests.
 
@@ -19,17 +25,33 @@ import com.metservice.kanban.model.HtmlColour;
  */
 public class KanbanPropertiesFile {
 
+    private final static Logger logger = LoggerFactory.getLogger(KanbanPropertiesFile.class);
+
     private File file;
     private Properties properties = new Properties();
 
     public KanbanPropertiesFile(File file) throws IOException {
-        this.file = file;
+        this(new FileReader(file));
 
-        FileReader reader = new FileReader(file);
+        this.file = file;
+    }
+
+    public KanbanPropertiesFile(Reader reader) throws IOException {
         try {
             properties.load(reader);
         } finally {
             reader.close();
+        }
+    }
+
+    private void storeProperties() throws IOException {
+        if (file != null) {
+            FileWriter writer = new FileWriter(file);
+            try {
+                properties.store(writer, "");
+            } finally {
+                writer.close();
+            }
         }
     }
 
@@ -98,7 +120,8 @@ public class KanbanPropertiesFile {
 
     private String[] getCommaSeparatedStrings(String propertyKey) throws IOException {
         String commaSeparatedString = getString(propertyKey);
-        return commaSeparatedString.split(",");
+        return StringUtils.splitPreserveAllTokens(commaSeparatedString, ',');
+        //        return commaSeparatedString.split(",");
     }
 
     /**
@@ -109,7 +132,7 @@ public class KanbanPropertiesFile {
      * @return
      * @throws IOException
      */
-    private String getString(String propertyKey) throws IOException {
+    String getString(String propertyKey) throws IOException {
         String propertyValue = properties.getProperty(propertyKey);
         if (propertyValue == null) {
             throw new IOException("property \"" + propertyKey + "\" missing from " + file);
@@ -126,5 +149,34 @@ public class KanbanPropertiesFile {
         }
         in.close();
         return sb.toString();
+    }
+
+    public void setColumnWipLimit(WorkItemType workItemType, String columnName, Integer wipLimit) throws IOException {
+        
+        logger.info("Setting WIP limit for column {}.{} to {}",
+            new Object[] {
+                workItemType.toString(),
+                columnName,
+                wipLimit
+            });
+        
+        String[] phases = getPhases(workItemType.toString());
+        String[] wipLimits = getCommaSeparatedStrings("workItemTypes." + workItemType + ".wipLimit");
+
+        for (int i = 0; i < phases.length; i++) {
+            if (phases[i].equals(columnName)) {
+                if (wipLimit == null) {
+                    wipLimits[i] = "";
+                }
+                else {
+                    wipLimits[i] = wipLimit.toString();
+                }
+                break;
+            }
+        }
+        String wipLimitsStr = StringUtils.join(wipLimits, ",");
+        properties.put("workItemTypes." + workItemType + ".wipLimit", wipLimitsStr);
+        
+        storeProperties();
     }
 }

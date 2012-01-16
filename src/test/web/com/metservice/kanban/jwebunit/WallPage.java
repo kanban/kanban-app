@@ -107,12 +107,12 @@ public class WallPage {
 
     public void assertWipNotBroken(String columnName) {
 
-        String styleClass = tester.getElementByXPath("//th[text()='" + columnName + "']").getAttribute("class");
+        String styleClass = tester.getElementByXPath("//th[span/text()='" + columnName + "']").getAttribute("class");
         assertFalse(styleClass.contains("brokenWIPLimit"));
     }
 
     public void assertWipBroken(String columnName) {
-        String styleClass = tester.getElementByXPath("//th[text()='" + columnName + "']").getAttribute("class");
+        String styleClass = tester.getElementByXPath("//th[span/text()='" + columnName + "']").getAttribute("class");
         assertTrue(styleClass.contains("brokenWIPLimit"));
     }
 }
