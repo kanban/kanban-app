@@ -81,11 +81,11 @@ margin: 5px 0 40px 10px;
    		<div class=journalArea>
             <h1>Journal</h1>
             <c:forEach items="${kanbanJournal}" var="item">
-                <div class="journal-entry">
+                <div id="journal-entry-${item.id}" class="journal-entry">
                     <div class="ui-widget-header" style="position: relative;">
-                        <span>${item.userName} wrote on ${item.dateStr}</span>
+                        <span id="journal-header-${item.id}">${item.userName} wrote on ${item.dateStr}</span>
                     </div>
-                    <div class="ui-widget-content">${item.text}</div>
+                    <div id="journal-text-${item.id}" class="ui-widget-content">${item.text}</div>
                 </div>
             </c:forEach>
         

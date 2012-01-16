@@ -2,12 +2,10 @@ package com.metservice.kanban.jwebunit;
 
 import net.sourceforge.jwebunit.junit.WebTester;
 
-public class ChartPage {
-
-    private final WebTester tester;
+public class ChartPage extends BoardPage{
 
     public ChartPage(WebTester tester) {
-        this.tester = tester;
+        super(tester);
     }
 
     public void assertImageIsValidPng(String src) {

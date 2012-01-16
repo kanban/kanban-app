@@ -20,8 +20,8 @@ $(function() {
                             text: $("#journal-text").val(),
                             date: $("#journal-date").val()
                         })
-                        .success(function() { 
-                        	window.location = getBoard(); 
+                        .success(function() {
+                        	window.location = getProjectUrl()+'/'+getBoard();
                         	$(this).dialog("close");
                         })
                         .error(function(event) { 

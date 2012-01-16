@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import net.sourceforge.jwebunit.junit.WebTester;
 import org.junit.rules.TemporaryFolder;
+import com.metservice.kanban.jwebunit.util.UntilTrue;
+import com.metservice.kanban.jwebunit.util.WaitFor;
 
 public class BoardPage {
 
@@ -45,6 +47,11 @@ public class BoardPage {
     public BoardPage clickCompleteButton() {
         tester.clickElementByXPath("//a[@id='complete']");
         return this;
+    }
+    
+    public JournalPage clickJournalButton() {
+        tester.clickElementByXPath("//a[@id='journal']");
+        return new JournalPage(tester);
     }
 
     public PETPage clickPETButton() {
@@ -166,14 +173,44 @@ public class BoardPage {
     }
 
     public BoardPage enterQuickName(String nameValue) {
-        tester.clickElementByXPath("//input[@id='quick-editor-name'");
+        tester.clickElementByXPath("//input[@id='quick-editor-name']");
         tester.setTextField("name", nameValue);
+        return this;
+    }
+    
+    public BoardPage setCurrentUser(String nameValue){
+        tester.clickElementByXPath("//input[@id='userField']");
+        tester.setTextField("userField", nameValue);
         return this;
     }
 
     public void assertCompleteItemWidthIsCorrect(int item, int phase, int size) {
         String itemStyle = tester.getElementAttributeByXPath(".//*[@id='work-item-" + item +"']/div[" + phase + "]", "style");
         assertTrue("Verify phase width in px", itemStyle.toString().contains("width:" + size + "px"));
+    }
+    
+    public void assertJournalHeaderIsPresent(String headerText){
+        final String journalHeaderId = "journal-header-1";
+        tester.assertElementPresent(journalHeaderId);
+        tester.assertTextInElement(journalHeaderId, headerText);
+    }
+    
+    public void assertJournalTextIsPresent(String headerText, String journaltext){
+        
+        final String journalTextId = "journal-text-1";
+        
+        int timeout = 5000;
+        int timeBetweenChecks = 100;
+        WaitFor.me(new UntilTrue() {
+            @Override
+            public boolean condition() {
+                tester.assertElementPresent(journalTextId);
+                return true;
+            }
+        }, timeout, timeBetweenChecks);
+        
+        assertJournalHeaderIsPresent(headerText);
+        tester.assertTextInElement(journalTextId, journaltext);
     }
     
 

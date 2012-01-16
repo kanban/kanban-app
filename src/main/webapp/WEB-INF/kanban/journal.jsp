@@ -15,21 +15,21 @@
         <a href="#" id="add-entry-button">Add entry</a>    
     </div>
     <c:forEach items="${kanbanJournal}" var="item">
-        <div class="journal-entry">
+        <div id="journal-entry-${item.id}" class="journal-entry">
             <div class="ui-widget-header" style="position: relative;">
-                <span>${item.userName} wrote on ${item.dateStr}</span>
+                <span id="journal-header-${item.id}">${item.userName} wrote on ${item.dateStr}</span>
                 <a href="remove-journal-entry?id=${item.id}" style="top: 2px; right: 5px; position: absolute;">
                     <span class="ui-icon ui-icon-closethick">close</span>
                 </a>
                 
             </div>
-            <div class="ui-widget-content journal-text">${item.text}</div>
+            <div id="journal-text-${item.id}" class="ui-widget-content journal-text">${item.text}</div>
         </div>
     </c:forEach>
 
     <div id="journal-add-dialog" title="Add journal item">
         <p>Entry date</p>
-        <input type="text" id="journal-date" />
+        <input name="journal-date" type="text" id="journal-date" value="${journal-date}"/>
         <p>Journal text:</p>
         <textarea name="journal-text" id="journal-text" rows="5" cols="30"></textarea>
         <div id="validation-error" class="error">aa</div>

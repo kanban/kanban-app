@@ -105,7 +105,7 @@
             
             <span id="userContainer">
                 Current User
-                <input id="userField" type="text" value="Unknown user" readonly="readonly" />
+                <input id="userField" name="userField" type="text" value="Unknown user" readonly="readonly" />
             </span>
         </div>
 <%--         <div id="add-top-level-item-button" class="button" onclick="javascript:addTopLevel(<%= WorkItem.ROOT_WORK_ITEM_ID%>);" > --%>

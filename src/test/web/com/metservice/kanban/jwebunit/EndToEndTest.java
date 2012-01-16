@@ -101,6 +101,39 @@ public class EndToEndTest {
         page.assertFeatureNotPresent("feature name");
         page.assertFeatureIsPresent("new feature name");
     }
+    
+    @Test
+    public void userCanAddDatedEntriesInTheJournal() throws Exception {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+        JournalPage journalPage = page.clickJournalButton();
+        page.setCurrentUser("Project Champion");
+        journalPage.clickAddEntry().enterJournalDate("2012-01-12").enterJournalText("test journal text").clickOkButton();
+        journalPage.assertJournalTextIsPresent("Project Champion wrote on 2012-01-12", "test journal text");
+        
+        ChartPage cumulativeChartPage = page.clickCumulativeFlowChartButton();
+        cumulativeChartPage.assertJournalTextIsPresent("Project Champion wrote on 2012-01-12", "test journal text");
+        
+        ChartPage featureCycleTimeChartPage = page.clickFeatureCycleTimeChartButton();
+        featureCycleTimeChartPage.assertJournalTextIsPresent("Project Champion wrote on 2012-01-12", "test journal text");
+        
+        ChartPage burnUpChartPage = page.clickBurnUpChartButton();
+        burnUpChartPage.assertJournalTextIsPresent("Project Champion wrote on 2012-01-12", "test journal text");
+    }
+    
+    @Test
+    public void userGetsValidationErrorWhenAddingIncompleteEntriesInTheJournal() throws Exception {
+        BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
+        JournalPage journalPage = page.clickJournalButton();
+        journalPage.clickAddEntry().clickOkButton();
+        journalPage.assertValidationErrorShows("Entry date cannot be empty");
+        journalPage.clickAddEntry().enterJournalDate("2012-01-12").clickOkButton();
+        journalPage.assertValidationErrorShows("Journal text cannot be empty");
+        journalPage.clearEntryDate();
+        journalPage.clickAddEntry().enterJournalText("test journal text").clickOkButton();
+        journalPage.assertValidationErrorShows("Entry date cannot be empty");
+        journalPage.clickCancelButton();
+        journalPage.assertJournalTextIsNotPresent("test journal text");
+    }
 
     @Test
     public void userCanExcludeAWorkItemFromReports() throws IOException {
