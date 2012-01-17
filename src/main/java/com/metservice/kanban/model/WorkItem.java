@@ -73,7 +73,6 @@ public class WorkItem {
         this.id = id;
         this.parentId = parentId;
         this.type = type;
-        this.currentPhase = null;
         this.name = "";
         this.averageCaseEstimate = 0;
         this.importance = 0;
@@ -220,19 +219,7 @@ public class WorkItem {
         String previousPhase = null;
         LocalDate today = new LocalDate();
 
-        // fill missing dates before current phase
-        String newCurrentPhase = determineCurrentPhase();
-        for (ListIterator<String> i = getType().getPhases().listIterator(getType().getPhases().size()); i.hasPrevious();) {
-
-            String phase = i.previous();
-
-            if (getDate(phase) != null) {
-                previousDate = getDate(phase);
-            }
-            if (this.getType().isPhaseBefore(phase, newCurrentPhase) && getDate(phase) == null) {
-                setDate(phase, previousDate);
-            }
-        }
+        previousDate = fillMissingPhaseDates(previousDate);
 
         for (String phase : this.getType().getPhases()) {
             LocalDate date = this.getDate(phase);
@@ -253,6 +240,23 @@ public class WorkItem {
         }
 
         return phaseDurations;
+    }
+
+    private LocalDate fillMissingPhaseDates(LocalDate previousDate) {
+        // fill missing dates before current phase
+        String newCurrentPhase = determineCurrentPhase();
+        for (ListIterator<String> i = getType().getPhases().listIterator(getType().getPhases().size()); i.hasPrevious();) {
+
+            String phase = i.previous();
+
+            if (getDate(phase) != null) {
+                previousDate = getDate(phase);
+            }
+            if (this.getType().isPhaseBefore(phase, newCurrentPhase) && getDate(phase) == null) {
+                setDate(phase, previousDate);
+            }
+        }
+        return previousDate;
     }
 
 

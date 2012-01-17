@@ -2,6 +2,7 @@ package com.metservice.kanban.charts.cycletime;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,7 +94,10 @@ public class CycleTimeChartBuilder {
         return jfreechart;
     }
 
-    static class WorkItemsComparator implements Comparator<WorkItem> {
+    static class WorkItemsComparator implements Comparator<WorkItem>, Serializable {
+
+        private static final long serialVersionUID = -6082364066097720099L;
+
         @Override
         public int compare(WorkItem o1, WorkItem o2) {
             return o1.getDate(o1.getCurrentPhase()).compareTo(o2.getDate(o2.getCurrentPhase()));

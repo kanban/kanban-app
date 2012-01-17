@@ -59,7 +59,7 @@ public class PhasesLengthTag extends TagSupport {
                         "<div class=\"age-item\" style=\"width:" + phaseWidth + "px; background-color: " + currentColor
                             + ";\">\n\n");
                     if (phaseWidth > PHASE_WIDTH_PIX_TO_DISPLAY_NUMBER) {
-                        pageContext.getOut().write("" + phaseDays);
+                        pageContext.getOut().write(Integer.toString(phaseDays));
                     }
                     pageContext.getOut().write("</div>\n");
                 }

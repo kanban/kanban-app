@@ -19,11 +19,13 @@ public class DateUtils {
     public static final DateTimeZone NEW_ZEALAND_TIME = DateTimeZone.forID("Pacific/Auckland");
     
 
-    public static final DateTimeFormatter conventionalNewZealandDateFormat;
-    public static final DateTimeFormatter isoFormat = ISODateTimeFormat.date();
+    public static final DateTimeFormatter CONVENTIONAL_NEW_ZEALAND_DATE_FORMAT;
+    public static final DateTimeFormatter ISO_FORMAT = ISODateTimeFormat.date();
+
+    public static final String DATE_FORMAT_STR = "yyyy-MM-dd";
 
     static {
-        conventionalNewZealandDateFormat = new DateTimeFormatterBuilder()
+        CONVENTIONAL_NEW_ZEALAND_DATE_FORMAT = new DateTimeFormatterBuilder()
                 .appendDayOfMonth(2)
                 .appendLiteral('/')
                 .appendMonthOfYear(2)
@@ -32,12 +34,15 @@ public class DateUtils {
                 .toFormatter();
     }
 
+    private DateUtils() {
+    }
+
     /**Returns a LocalDate parsed in conventional New Zealand (dd/mm/yy) format.
      * @param dateString
      * @return
      */
     public static LocalDate parseConventionalNewZealandDate(String dateString) {
-        return conventionalNewZealandDateFormat.parseDateTime(dateString).toLocalDate();
+        return CONVENTIONAL_NEW_ZEALAND_DATE_FORMAT.parseDateTime(dateString).toLocalDate();
     }
     
     /**
@@ -46,7 +51,7 @@ public class DateUtils {
      * @return
      */
     public static LocalDate parseIsoDate(String dateString) {
-        return isoFormat.parseDateTime(dateString).toLocalDate();
+        return ISO_FORMAT.parseDateTime(dateString).toLocalDate();
     }
 
     /**
@@ -55,7 +60,7 @@ public class DateUtils {
      * @return
      */
     public static String formatConventionalNewZealandDate(LocalDate date) {
-        return date.toString(conventionalNewZealandDateFormat);
+        return date.toString(CONVENTIONAL_NEW_ZEALAND_DATE_FORMAT);
     }
 
     /**
@@ -64,7 +69,7 @@ public class DateUtils {
      * @return
      */
     public static String formatIsoDate(LocalDate date) {
-        return date.toString(isoFormat);
+        return date.toString(ISO_FORMAT);
     }
     
     /**

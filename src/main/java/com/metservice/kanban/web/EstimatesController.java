@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,11 +63,11 @@ public class EstimatesController {
     public RedirectView setBudget(String name, int value, @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project)
         throws IOException {
 
-        if (name.equals("budget")) {
+        if ("budget".equals(name)) {
             project.setBudget(value);
-        } else if (name.equals("costSoFar")) {
+        } else if ("costSoFar".equals(name)) {
             project.setCostSoFar(value);
-        } else if (name.equals("estimatedCostPerPoint")) {
+        } else if ("estimatedCostPerPoint".equals(name)) {
             project.setEstimatedCostPerPoint(value);
         } else {
             throw new IllegalArgumentException("name = " + name);
@@ -89,7 +90,7 @@ public class EstimatesController {
                                     @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project)
         throws IOException {
 
-        assert id != 0;
+        Assert.isTrue(id != 0);
 
         // get WI for feature
         WorkItem workItem = project.getKanbanProject().getWorkItemById(id);
@@ -105,9 +106,10 @@ public class EstimatesController {
     @RequestMapping("pet-set-feature-included-in-estimates")
     public RedirectView excludeFeature(int id, boolean value, @ModelAttribute(PET_PROJECT_ATTR) EstimatesProject project)
         throws IOException {
+
         boolean includedInEstimates = value;
 
-        WorkItem feature = project.getKanbanProject().getWorkItemById(id);// project.getFeature(id);
+        WorkItem feature = project.getKanbanProject().getWorkItemById(id);
         feature.setMustHave(includedInEstimates);
 
         petDao.storeUpdatedFeatures(project);

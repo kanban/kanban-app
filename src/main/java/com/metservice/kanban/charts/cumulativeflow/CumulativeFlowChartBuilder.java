@@ -2,27 +2,44 @@ package com.metservice.kanban.charts.cumulativeflow;
 
 import static com.metservice.kanban.utils.DateUtils.currentLocalDate;
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.annotations.CategoryAnnotation;
+import org.jfree.chart.annotations.CategoryPointerAnnotation;
+import org.jfree.chart.annotations.CategoryTextAnnotation;
+import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.Range;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
+import org.joda.time.Duration;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.metservice.kanban.charts.ChartUtils;
 import com.metservice.kanban.charts.KanbanDrawingSupplier;
+import com.metservice.kanban.model.KanbanJournalItem;
+import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.utils.Day;
+import com.metservice.kanban.utils.WorkingDayUtils;
+import com.metservice.kanban.web.KanbanBoardController;
 
 public class CumulativeFlowChartBuilder {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private final static Logger logger = LoggerFactory.getLogger(CumulativeFlowChartBuilder.class);
 
     public CumulativeFlowChartBuilder(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
@@ -49,6 +66,7 @@ public class CumulativeFlowChartBuilder {
         List<LocalDate> dates = matrix.getOrderedListOfDates();
         double[][] data = matrix.getData();
         Day[] days = getListOfDays(dates);
+
         return DatasetUtilities.createCategoryDataset(getPhasesInInverseOrder(phases), days, data);
     }
 
@@ -61,7 +79,7 @@ public class CumulativeFlowChartBuilder {
         return invertedPhases;
     }
 
-    public JFreeChart createChart(CategoryDataset dataset) {
+    public JFreeChart createChart(CategoryDataset dataset, KanbanProject project) {
 
         JFreeChart chart = ChartFactory.createStackedAreaChart(
             "Cumulative Flow Chart", // chart title
@@ -83,6 +101,9 @@ public class CumulativeFlowChartBuilder {
         plot.setRangeGridlinePaint(Color.GRAY);
         plot.setDrawingSupplier(new KanbanDrawingSupplier(dataset.getRowCount()));
 
+        insertJournalEntries(dataset, project, plot, ((Day) dataset.getColumnKey(0)).getDate(),
+            ((Day) dataset.getColumnKey(dataset.getColumnCount() - 1)).getDate());
+
         final CategoryAxis domainAxis = plot.getDomainAxis();
         domainAxis.setLowerMargin(0.0);
         domainAxis.setUpperMargin(0.0);
@@ -91,8 +112,45 @@ public class CumulativeFlowChartBuilder {
         // change the auto tick unit selection to integer units only...
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        // this is to show annotations when they are above the chart
+        rangeAxis.setUpperMargin(0.12);
 
         return chart;
+    }
+
+    public static void insertJournalEntries(CategoryDataset dataset, KanbanProject project, CategoryPlot plot,
+                                            LocalDate startDate, LocalDate endDate) {
+        for (KanbanJournalItem journalItem : project.getJournal()) {
+            // check if the item is visible on the chart
+            if (!journalItem.getDate().toLocalDate().isBefore(startDate)
+                && !journalItem.getDate().toLocalDate().isAfter(endDate)) {
+
+                int columnId = WorkingDayUtils.getWorkingDaysBetween(startDate, journalItem.getDate().toLocalDate());
+
+                if (columnId < dataset.getColumnCount()) {
+                    String text;
+                    if (journalItem.getText().length() > 12) {
+                        text = journalItem.getText().substring(0, 10) + "...";
+                    } else {
+                        text = journalItem.getText();
+                    }
+
+                    int yValue = 0;
+                    for (int i = 0; i < dataset.getRowCount(); i++) {
+                        yValue += dataset.getValue(i, columnId).intValue();
+                    }
+
+                    CategoryPointerAnnotation annotation = new CategoryPointerAnnotation(text,
+                        dataset.getColumnKey(columnId), yValue, 30);
+                    annotation.setBaseRadius(30);
+                    annotation.setLabelOffset(7);
+                    plot.addAnnotation(annotation);
+                } else {
+                    logger.warn("Cannot display journal entry {} for day {}, not sure why", journalItem.getText(),
+                        journalItem.getDate());
+                }
+            }
+        }
     }
 
     private Day[] getListOfDays(List<LocalDate> dates) {

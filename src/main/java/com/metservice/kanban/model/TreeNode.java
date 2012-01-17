@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.springframework.util.Assert;
 
 public class TreeNode<T> {
 
@@ -21,16 +22,14 @@ public class TreeNode<T> {
     }
 
     private TreeNode(Class<T> valueClass, T value, TreeNode<?>[] children) {
-        if (value == null) {
-            throw new NullPointerException("value is null");
-        }
+        Assert.notNull(value, "value is null");
 
         this.valueClass = valueClass;
         this.value = value;
         this.children = cloneArray(valueClass, children);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private TreeNode<T>[] cloneArray(Class<T> valueClass, TreeNode<?>[] newChildren) {
         TreeNode[] clonedChildren = new TreeNode[newChildren.length];
 

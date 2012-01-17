@@ -1,18 +1,7 @@
 package com.metservice.kanban.csv;
 
-import static com.metservice.kanban.csv.CsvConstants.AVERAGE_CASE_ESIMATE;
-import static com.metservice.kanban.csv.CsvConstants.COLOR_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.EXCLUDED_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.IMPORTANCE_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.MUST_HAVE;
-import static com.metservice.kanban.csv.CsvConstants.NAME_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.NOTES_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.PARENT_ID_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.SIZE_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.STOPPED_COLUMN_NAME;
-import static com.metservice.kanban.csv.CsvConstants.WORK_STREAMS;
-import static com.metservice.kanban.csv.CsvConstants.WORST_CASE_ESIMATE;
+import static com.metservice.kanban.csv.CsvConstants.*;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemType;
@@ -55,7 +44,10 @@ public class DefaultWorkItemParser implements WorkItemParser {
         workItem.setImportance(importance);
         workItem.setNotes(notes);
         workItem.setExcluded(excluded);
-        color = ( (color == null || color == "") ? "ffffff" : color);
+
+        if (StringUtils.isEmpty(color)) {
+            color = "ffffff";
+        }
         
         workItem.setColour(color);
         workItem.setBlocked(stopped);

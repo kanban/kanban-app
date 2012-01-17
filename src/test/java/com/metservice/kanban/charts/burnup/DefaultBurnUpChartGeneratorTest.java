@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import com.metservice.kanban.charts.KanbanDrawingSupplier;
+import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemType;
 
@@ -36,6 +37,7 @@ public class DefaultBurnUpChartGeneratorTest {
     private DefaultBurnUpChartGenerator generator;
     private ArgumentCaptor<JFreeChart> chartCaptor;
     private WorkItemType type;
+    private KanbanProject project;
 
     @Before
     public void before() {
@@ -43,11 +45,12 @@ public class DefaultBurnUpChartGeneratorTest {
         generator = new DefaultBurnUpChartGenerator(writer);
         chartCaptor = ArgumentCaptor.forClass(JFreeChart.class);
         type = new WorkItemType("backlog", "completed");
+        project = mock(KanbanProject.class);
     }
 
     @Test
     public void chartsAre800By600() throws IOException {
-        generator.generateBurnUpChart(type, new ArrayList<WorkItem>(), null, TODAY, mock(OutputStream.class));
+        generator.generateBurnUpChart(project, type, new ArrayList<WorkItem>(), null, TODAY, mock(OutputStream.class));
 
         verify(writer).writeChart(any(OutputStream.class), any(JFreeChart.class), eq(800), eq(600));
     }
@@ -56,7 +59,7 @@ public class DefaultBurnUpChartGeneratorTest {
     public void chartsAreWrittenToTargetOutputStream() throws IOException {
         OutputStream targetOutputStream = mock(OutputStream.class);
 
-        generator.generateBurnUpChart(type, new ArrayList<WorkItem>(), null, TODAY, targetOutputStream);
+        generator.generateBurnUpChart(project, type, new ArrayList<WorkItem>(), null, TODAY, targetOutputStream);
 
         verify(writer).writeChart(eq(targetOutputStream), any(JFreeChart.class), anyInt(), anyInt());
     }
@@ -101,7 +104,7 @@ public class DefaultBurnUpChartGeneratorTest {
     }
 
     private JFreeChart captureGeneratedJFreeChart(WorkItemType type, List<WorkItem> input, LocalDate endDate) throws IOException {
-        generator.generateBurnUpChart(type, input, null, endDate, mock(OutputStream.class));
+        generator.generateBurnUpChart(project, type, input, null, endDate, mock(OutputStream.class));
 
         verify(writer).writeChart(any(OutputStream.class), chartCaptor.capture(), anyInt(), anyInt());
         return chartCaptor.getValue();

@@ -14,7 +14,7 @@ import org.joda.time.LocalDate;
  */
 public class WorkingDayUtils {
 
-    private static final String[] publicHolidays = new String[] {
+    private static final String[] PUBLIC_HOLIDAYS = new String[] {
         "2010-10-25",
         "2010-12-27",
         "2010-12-28",
@@ -27,8 +27,12 @@ public class WorkingDayUtils {
         "2011-06-06",
         "2011-10-24",
         "2011-12-26",
-        "2011-12-27"
+        "2011-12-27",
+        "2012-01-23",
     };
+
+    private WorkingDayUtils() {
+    }
 
     /**
      * Takes two dates and works out the number of working days between them.
@@ -38,11 +42,13 @@ public class WorkingDayUtils {
      */
     public static int getWorkingDaysBetween(LocalDate inceptionDate, LocalDate acceptanceDate) {
         int days = 0;
-        while(inceptionDate.isBefore(acceptanceDate)) {
-            if (isWorkingDay(inceptionDate)) {
+        LocalDate currentDate = inceptionDate;
+
+        while (currentDate.isBefore(acceptanceDate)) {
+            if (isWorkingDay(currentDate)) {
                 days++;
             }
-            inceptionDate = inceptionDate.plusDays(1);
+            currentDate = currentDate.plusDays(1);
         }
         return days;
     }
@@ -56,7 +62,7 @@ public class WorkingDayUtils {
         if (localDate.getDayOfWeek() == SATURDAY || localDate.getDayOfWeek() == SUNDAY) {
             return false;
         }
-        for (String publicHoliday : publicHolidays) {
+        for (String publicHoliday : PUBLIC_HOLIDAYS) {
             if (localDate.toString().equals(publicHoliday)) {
                 return false;
             }

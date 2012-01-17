@@ -23,11 +23,7 @@ public class KanbanAdminController {
     @Autowired
 	private KanbanService kanbanService;
 
-	/**
-	 * Default constructor for KanbanAdminController. Initialises its own KanbanService.
-	 */
-	public KanbanAdminController(){
-	}
+
 	
 	/**
 	 * Helper method to return the current project for the current KanbanService.

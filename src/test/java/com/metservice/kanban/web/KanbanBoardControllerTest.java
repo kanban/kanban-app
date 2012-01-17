@@ -260,7 +260,7 @@ public class KanbanBoardControllerTest {
             outputStream);
         ArgumentCaptor<List> workItemsCaptor = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<OutputStream> outputStreamCaptor = ArgumentCaptor.forClass(OutputStream.class);
-        verify(chartGenerator).generateBurnUpChart(
+        verify(chartGenerator).generateBurnUpChart(eq(project),
             eq(featureType), workItemsCaptor.capture(), (LocalDate) eq(null), (LocalDate) eq(null), outputStreamCaptor.capture());
         assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), hasItems(feature1, feature2));
         assertThat((Iterable<WorkItem>) workItemsCaptor.getValue(), not(hasItem(story)));

@@ -4,12 +4,16 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
+import com.metservice.kanban.web.KanbanBoardController;
 
 public class WorkStreamsTag extends TagSupport {
 
     private static final long serialVersionUID = 3751728956376722504L;
+    private final static Logger logger = LoggerFactory.getLogger(WorkStreamsTag.class);
 
     private String name;
     private KanbanProject project;
@@ -46,21 +50,21 @@ public class WorkStreamsTag extends TagSupport {
 
                 pageContext.getOut().write("'' ];\n");
 
-                pageContext.getOut().write("" +
-                    "       $(function() {\n" +
-                    "               $('#workStreams').tagit({\n" +
-                    "                       tagSource   : workStreams,\n" +
-                    "                       triggerKeys : [ 'enter', 'comma' ],\n" +
-                    "                       initialTags : [ " + initialTags + " ],\n" +
-                    "                       select: true" +
-                    "               });\n" +
-                    "        });\n");
+                pageContext.getOut().write(
+                    "       $(function() {\n"
+                        + "               $('#workStreams').tagit({\n"
+                        + "                       tagSource   : workStreams,\n"
+                        + "                       triggerKeys : [ 'enter', 'comma' ],\n"
+                        + "                       initialTags : [ " + initialTags + " ],\n"
+                        + "                       select: true"
+                        + "               });\n"
+                        + "        });\n");
 
             } else {
                 pageContext.getOut().write("ERROR: Project is not set.");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Got exception handling work streams tag", e);
         }
         return EVAL_PAGE;
     }

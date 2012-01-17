@@ -7,7 +7,6 @@ import static java.lang.Integer.parseInt;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,7 +63,6 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 @SessionAttributes("workStreams")
 public class KanbanBoardController {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private final static Logger logger = LoggerFactory.getLogger(KanbanBoardController.class);
 
@@ -625,7 +623,7 @@ public class KanbanBoardController {
         if (date == null) {
             return "";
         }
-        return date.toString(DATE_FORMAT);
+        return date.toString(DateUtils.DATE_FORMAT_STR);
     }
 
     private String defaultStartDate(String endDate) {
@@ -635,7 +633,7 @@ public class KanbanBoardController {
                 endDateParsed = LocalDate.parse(endDate);
             } catch (RuntimeException e) {
                 logger.warn("Cannot parse date {}", endDate);
-                logger.warn("Got exception: " + e);
+                logger.warn("Got exception: ", e);
                 endDateParsed = LocalDate.now();
             }
         } else {
@@ -672,14 +670,14 @@ public class KanbanBoardController {
             start = LocalDate.parse(startDate);
         } catch (RuntimeException e) {
             logger.warn("Cannot parse start date {}", startDate);
-            logger.warn("Got exception: " + e);
+            logger.warn("Got exception: ", e);
             start = null;
         }
         try {
             end = LocalDate.parse(endDate);
         } catch (RuntimeException e) {
             logger.warn("Cannot parse end date {}", endDate);
-            logger.warn("Got exception: " + e);
+            logger.warn("Got exception: ", e);
             end = null;
         }
 
@@ -687,7 +685,7 @@ public class KanbanBoardController {
         CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder(start, end);
 
         CategoryDataset dataset = builder.createDataset(type.getPhases(), workItemList);
-        JFreeChart chart = builder.createChart(dataset);
+        JFreeChart chart = builder.createChart(dataset, project);
         int width = dataset.getColumnCount() * 15;
         ChartUtilities.writeChartAsPNG(outputStream, chart, width < 800 ? 800 : width, 600);
     }
@@ -944,18 +942,18 @@ public class KanbanBoardController {
             start = LocalDate.parse(startDate);
         } catch (RuntimeException e) {
             logger.warn("Cannot parse start date {}", startDate);
-            logger.warn("Got exception: " + e);
+            logger.warn("Got exception: ", e);
             start = null;
         }
         try {
             end = LocalDate.parse(endDate);
         } catch (RuntimeException e) {
             logger.warn("Cannot parse end date {}", endDate);
-            logger.warn("Got exception: " + e);
+            logger.warn("Got exception: ", e);
             end = null;
         }
 
-        chartGenerator.generateBurnUpChart(type, topLevelWorkItems, start, end, outputStream);
+        chartGenerator.generateBurnUpChart(project, type, topLevelWorkItems, start, end, outputStream);
     }
 
     @RequestMapping("{board}/add-column-action")

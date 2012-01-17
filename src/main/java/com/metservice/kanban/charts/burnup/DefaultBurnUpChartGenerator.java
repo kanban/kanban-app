@@ -14,6 +14,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.joda.time.LocalDate;
 import com.metservice.kanban.charts.KanbanDrawingSupplier;
+import com.metservice.kanban.charts.cumulativeflow.CumulativeFlowChartBuilder;
+import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.model.WorkItemType;
 
@@ -26,16 +28,18 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
     }
 
     @Override
-    public void generateBurnUpChart(WorkItemType type, List<WorkItem> workItems, LocalDate startDate, LocalDate currentDate,
-            OutputStream outputStream) throws IOException {
+    public void generateBurnUpChart(KanbanProject project, WorkItemType type, List<WorkItem> workItems,
+                                    LocalDate startDate, LocalDate currentDate, OutputStream outputStream)
+        throws IOException {
         BurnUpDataModel model = new BurnUpDataModel(type, workItems, startDate, currentDate);
 
         CategoryDataset dataset = new BurnUpDatasetGenerator().createDataset(model);  
-        JFreeChart chart = createChart(dataset);
+        JFreeChart chart = createChart(dataset, project, startDate, currentDate);
         chartWriter.writeChart(outputStream, chart, 800, 600);        
     }
 
-    private JFreeChart createChart(CategoryDataset dataset) {
+    private JFreeChart createChart(CategoryDataset dataset, KanbanProject project, LocalDate startDate,
+                                   LocalDate endDate) {
         JFreeChart chart = ChartFactory.createStackedAreaChart(
             "Burn-Up Chart", // chart title
             "", // domain axis label
@@ -55,6 +59,8 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
         plot.setRangeGridlinePaint(Color.GRAY);
         plot.setDrawingSupplier(new KanbanDrawingSupplier(3));        
 
+        CumulativeFlowChartBuilder.insertJournalEntries(dataset, project, plot, startDate, endDate);
+
         CategoryAxis domainAxis = plot.getDomainAxis();
         domainAxis.setLowerMargin(0.0);
         domainAxis.setUpperMargin(0.0);
@@ -63,6 +69,7 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
         // change the auto tick unit selection to integer units only...
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        rangeAxis.setUpperMargin(0.12);
         
         return chart;
     }

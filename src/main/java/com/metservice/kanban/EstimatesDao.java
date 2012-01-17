@@ -37,8 +37,11 @@ public class EstimatesDao {
         if (propsFile.exists()) {
             InputStream propsIs = new FileInputStream(propsFile);
             Properties props = new Properties();
-            props.load(propsIs);
-            propsIs.close();
+            try {
+                props.load(propsIs);
+            } finally {
+                propsIs.close();
+            }
 
             project.setBudget(Integer.parseInt((String) props.get(PET_BUDGET)));
             project.setCostSoFar(Integer.parseInt((String) props.get(PET_COSTSOFAR)));
@@ -55,14 +58,17 @@ public class EstimatesDao {
     public void storeProjectEstimates(EstimatesProject project) throws IOException {
         // store in config file
         Properties props = new Properties();
-        props.setProperty(PET_BUDGET, "" + project.getBudget());
-        props.setProperty(PET_COSTSOFAR, "" + project.getCostSoFar());
-        props.setProperty(PET_COSTPERPOINT, "" + project.getEstimatedCostPerPoint());
+        props.setProperty(PET_BUDGET, Integer.toString(project.getBudget()));
+        props.setProperty(PET_COSTSOFAR, Integer.toString(project.getCostSoFar()));
+        props.setProperty(PET_COSTPERPOINT, Integer.toString(project.getEstimatedCostPerPoint()));
 
         File propsFile = getPropsFile(project.getProjectName());
         OutputStream propsOs = new FileOutputStream(propsFile);
-        props.store(propsOs, "Project Estimation Tool");
-        propsOs.close();
+        try {
+            props.store(propsOs, "Project Estimation Tool");
+        } finally {
+            propsOs.close();
+        }
     }
 
     public void storeUpdatedFeatures(EstimatesProject project) throws IOException {
@@ -76,7 +82,6 @@ public class EstimatesDao {
 
     private File getPropsFile(String projectName) {
         File home = new File(kanbanService.getHome(), projectName);
-        File propsFile = new File(home, PET_PROPERTIES);
-        return propsFile;
+        return new File(home, PET_PROPERTIES);
     }
 }

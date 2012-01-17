@@ -1,6 +1,7 @@
 package com.metservice.kanban.model;
 
 import org.joda.time.LocalDateTime;
+import com.metservice.kanban.utils.DateUtils;
 
 
 public class KanbanJournalItem implements Comparable<KanbanJournalItem> {
@@ -27,7 +28,7 @@ public class KanbanJournalItem implements Comparable<KanbanJournalItem> {
     }
 
     public String getDateStr() {
-        return date.toString("yyyy-MM-dd");
+        return date.toString(DateUtils.DATE_FORMAT_STR);
     }
 
     public void setDate(LocalDateTime date) {
