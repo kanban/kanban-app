@@ -63,7 +63,7 @@ public class TreeNodeTest {
         assertThat(create(Double.class, 11.0).toString(), is("11.0"));
     }
     
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void throwsExceptionIfValueIsNull() {
         create(Object.class, null);
     }
