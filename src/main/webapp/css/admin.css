@@ -1,0 +1,33 @@
+.admin-menu {
+	width: 300px;
+	list-style:none;
+	margin:0;
+	padding:1px; 
+	background-color:#FFFFFF;
+	border:1px solid #DDDDDD;
+}
+
+.admin-menu a, .admin-menu span {
+	text-decoration: none;
+	
+	display: block;
+	height: 25px;
+	margin-top: 1px;
+	padding-left: 15px;
+	background-color: #EEEEEE;
+	border-left:10px solid #DDDDDD;
+	font-family:arial;
+	font-size:10px;
+	text-transform:uppercase;
+	text-decoration:none;
+	line-height:25px;
+}
+
+
+.admin-menu a {
+	color:#000000;
+}
+
+.admin-menu a:disabled, span {
+	color:#777777;
+}

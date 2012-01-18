@@ -70,8 +70,13 @@ public class WorkItemType {
         this.name = name;
     }
 
+
     public String getBacklogPhase() {
         return phases.get(0);
+    }
+
+    public List<String> getWallPhases() {
+        return phases.subList(1, phases.size() - 1);
     }
 
     public String getCompletedPhase() {

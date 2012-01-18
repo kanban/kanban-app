@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
-import com.metservice.kanban.web.KanbanBoardController;
 
 public class WorkStreamsTag extends TagSupport {
 

@@ -42,6 +42,7 @@ public class PhasesLengthTag extends TagSupport {
             }
 
             List<String> itemPhases = type.getPhases();
+            @SuppressWarnings("unchecked")
             List<String> phases = ListUtils.retainAll(itemPhases, wallPhases);
 
             HtmlColour[] htmlColours = KanbanDrawingSupplier.getHtmlColours(phases.size());

@@ -2,5 +2,59 @@
 	font-family: arial;	font-size: 14px; color: #383838; text-align: center; width:25px;
 }
 
+table {
+  	width: 100%;
+	font-family: arial;
+	font-size: 14px;
+	color: #383838;
+}
 
+td.small {
+	width: 20px;
+}
 
+.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover {
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+}
+
+.showDragHandle {
+	cursor: move;
+}
+
+.advanceIcon {
+	-moz-opacity: 1;
+	opacity: 1;
+	position: relative;
+	width: 16px;
+	height: 16px;
+	cursor:default
+}
+
+.editIcon {
+	-moz-opacity: 1;
+	opacity: 1;
+	position: relative;
+	width: 16px;
+	height: 16px;
+	cursor:default
+}
+
+.horizontalLine {
+	border-top: 1px white solid;
+	height: 30px;
+}
+
+.backlog-table {
+	margin: 10px 0px 0px 0px;
+	border-collapse: collapse;
+}
+
+.customizedHeader {
+	border:1px #989898 dotted;
+	height:30px;
+	width: 164px;
+	font-family:verdana;
+	font-size:14px;
+	color:black;
+}
