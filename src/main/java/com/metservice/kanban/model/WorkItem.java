@@ -185,6 +185,10 @@ public class WorkItem {
         return datesByPhase.get(phase);
     }
 
+    public int getWorkingDaysOnCurrentPhase() {
+        return WorkingDayUtils.getWorkingDaysBetween(getDate(getCurrentPhase()), new LocalDate());
+    }
+
     public Map<String, LocalDate> getDatesByPhase() {
         return datesByPhase;
     }

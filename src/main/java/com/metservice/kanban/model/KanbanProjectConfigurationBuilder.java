@@ -33,7 +33,7 @@ public class KanbanProjectConfigurationBuilder {
 
         return new KanbanProjectConfiguration(projectHome, boardDefinitions, rootWorkItemType, workItemTypes);
     }
-// TODO ROB&SEAN WORK!
+
     private KanbanBoardConfiguration getBoardDefinitions(WorkItemTypeCollection workItemTypes) throws IOException {
         Map<String, WorkItemType> workItemTypesByPhase = new HashMap<String, WorkItemType>();
         Map<String, Integer> wipLimitsByPhase = new HashMap<String, Integer>();
@@ -41,13 +41,18 @@ public class KanbanProjectConfigurationBuilder {
         	
             String[] phases = properties.getPhases(type.getName());
             String[] columnLimits = properties.getPhaseWIPLimit(type.getName());
-            int wipLimit = -1;
+            int wipLimit;
             for (int i = 0; i < phases.length; i++) {
                 try {
-            		wipLimit=Integer.parseInt(columnLimits[i]);
+                    if (columnLimits != null) {
+                        wipLimit = Integer.parseInt(columnLimits[i]);
+                    }
+                    else {
+                        wipLimit = -1;
+                    }
                 } catch (Exception e) {
             		// No limit was specified, or it was ""
-            		wipLimit = -1;
+                    wipLimit = -1;
                 }
             	wipLimitsByPhase.put(phases[i],wipLimit);
                 workItemTypesByPhase.put(phases[i], type);

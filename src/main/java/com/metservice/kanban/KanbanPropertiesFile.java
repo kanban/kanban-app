@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -132,11 +133,11 @@ public class KanbanPropertiesFile {
      * @return
      * @throws IOException
      */
-    String getString(String propertyKey) throws IOException {
+    String getString(String propertyKey) {
         String propertyValue = properties.getProperty(propertyKey);
-        if (propertyValue == null) {
-            throw new IOException("property \"" + propertyKey + "\" missing from " + file);
-        }
+        //        if (propertyValue == null) {
+        //            throw new IOException("property \"" + propertyKey + "\" missing from " + file);
+        //        }
         return propertyValue;
     }
 
@@ -162,6 +163,12 @@ public class KanbanPropertiesFile {
         
         String[] phases = getPhases(workItemType.toString());
         String[] wipLimits = getCommaSeparatedStrings("workItemTypes." + workItemType + ".wipLimit");
+        if (wipLimits == null) {
+            wipLimits = new String[phases.length];
+        }
+        if (wipLimits.length < phases.length) {
+            wipLimits = Arrays.copyOf(wipLimits, phases.length);
+        }
 
         for (int i = 0; i < phases.length; i++) {
             if (phases[i].equals(columnName)) {

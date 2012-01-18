@@ -118,6 +118,11 @@ public class DefaultKanbanProject implements KanbanProject {
         return columnsByBoard.get(boardType);
     }
 
+    @Override
+    public KanbanBoardColumnList getWallColumns() {
+        return getColumns(BoardIdentifier.WALL);
+    }
+
 	/**
 	 * Returns the tree representation of the WorkItems in the project.
 	 * @return the tree representation of all WorkItems on the current Kanban board

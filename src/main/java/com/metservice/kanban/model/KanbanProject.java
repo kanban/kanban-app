@@ -34,6 +34,8 @@ public interface KanbanProject {
 
     KanbanBoardColumnList getColumns(BoardIdentifier boardType);
 
+    KanbanBoardColumnList getWallColumns();
+
     void reparentWorkItem(int id, int newParentId);
 
     KanbanBacklog getBacklog(String workStream);
