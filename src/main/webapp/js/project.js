@@ -30,9 +30,20 @@ $(function() {
     						itemType: $("#edit-column-dialog-item-type").val(),
     						wipLimit: $("#edit-column-dialog-wipLimit").val()
     					})
-    					.success(function() { window.location = getBoard(); })
-    					.error(function() { window.alert("error"); });
-    			$(this).dialog("close");
+    					.success(function(d) { 
+    						if (d.status == "ok") {
+    							window.location = getBoard();
+    							$(this).dialog("close");
+    						}
+    						else {
+    							$("#validation-error").html(d.message);
+    							$("#validation-error").show();
+    						}
+    					})
+    					.error(function() { 
+							$("#validation-error").html("communication error");
+							$("#validation-error").show();
+    					});
     		},
     		Cancel: function() {
     			$(this).dialog("close");
@@ -46,6 +57,7 @@ function editColumn(type, name, wipLimit) {
 	$("#edit-column-dialog-name").val(name);
 	$("#edit-column-dialog-name-original").val(name);
 	$("#edit-column-dialog-item-type").val(type);
+	$("#validation-error").hide();
 	if (wipLimit > 0) {
 		$("#edit-column-dialog-wipLimit").val(wipLimit);
 	}

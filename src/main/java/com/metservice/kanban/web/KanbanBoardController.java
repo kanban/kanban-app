@@ -1210,13 +1210,21 @@ public class KanbanBoardController {
         return new RedirectView("journal");
     }
 
-    @RequestMapping("edit-column-action")
-    public synchronized RedirectView editColumn(@ModelAttribute("project") KanbanProject project,
+    @RequestMapping(value = "edit-column-action", produces = "application/json")
+    @ResponseBody
+    public synchronized JsonStatus editColumn(@ModelAttribute("project") KanbanProject project,
                                                 @PathVariable("projectName") String projectName,
                                                 @RequestParam("itemType") String itemType,
                                                 @RequestParam("columnName") String columnName,
                                                 @RequestParam("newColumnName") String newColumnName,
                                                 @RequestParam("wipLimit") Integer wipLimit) throws IOException {
+
+        if (StringUtils.isEmpty(newColumnName)) {
+            return JsonStatus.createErrorStatus("New column name cannot be empty");
+        }
+        if (wipLimit != null && wipLimit <= 0) {
+            return JsonStatus.createErrorStatus("WIP Limit should be empty or positive value");
+        }
 
         logger.info("Editing column {} to {}, WIP = {}", new Object[] {
             columnName,
@@ -1228,9 +1236,11 @@ public class KanbanBoardController {
         kanbanService.setColumnWipLimit(projectName, workItemtype, columnName, wipLimit);
 
         if (!columnName.equals(newColumnName)) {
-            kanbanService.renameColumn(projectName, workItemtype, columnName, newColumnName);
+            if (!kanbanService.renameColumn(projectName, workItemtype, columnName, newColumnName)) {
+                return JsonStatus.createErrorStatus("Cannot rename column");
+            }
         }
         
-        return new RedirectView("wall");
+        return JsonStatus.createOkStatus("OK");
     }
 }

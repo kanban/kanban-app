@@ -32,7 +32,7 @@
         <input name="journal-date" type="text" id="journal-date" value="${journal-date}"/>
         <p>Journal text:</p>
         <textarea name="journal-text" id="journal-text" rows="5" cols="30"></textarea>
-        <div id="validation-error" class="error">aa</div>
+        <div id="validation-error" class="error"></div>
     </div>
 </body>
 </html>

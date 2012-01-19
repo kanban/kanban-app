@@ -54,7 +54,8 @@
     Column name: <input id="edit-column-dialog-name" /><br/>
     Column type: <input id="edit-column-dialog-item-type" disabled="disabled" /><br/>
     WIP Limit: <input id="edit-column-dialog-wipLimit" />
-    <input type="hidden" id="edit-column-dialog-name-original" />    
+    <input type="hidden" id="edit-column-dialog-name-original" />
+    <div id="validation-error" class="error"></div>    
 </div>
 <div id="block-dialog" title="Block/Unblock work item" style="display: none;">
     <p>Please enter a reason for blocking/unblocking work item <span id="block-dialog-item-id"></span>:</p>

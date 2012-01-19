@@ -89,6 +89,10 @@ public class WorkItemType {
         return indexA < indexB;
     }
 
+    public boolean containsPhase(String phase) {
+        return getPhases().indexOf(phase) >= 0;
+    }
+
     public boolean isPhaseAfter(String phaseA, String phaseB) {
         return !StringUtils.equals(phaseA, phaseB) && !isPhaseBefore(phaseA, phaseB);
     }
