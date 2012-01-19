@@ -186,4 +186,11 @@ public class KanbanPropertiesFile {
         
         storeProperties();
     }
+
+    public void renameColumn(WorkItemType workItemType, String columnName, String newColumnName) {
+        logger.info("Renaming column for WorkItem {} from {} to {} in properties file", new Object[] {
+            workItemType,
+            columnName,
+            newColumnName});
+    }
 }

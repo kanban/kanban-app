@@ -276,4 +276,20 @@ public class KanbanService {
 
         projectHome.renameTo(newProjectHome);
     }
+
+    public void setColumnWipLimit(String projectName, WorkItemType workItemtype, String columnName, Integer wipLimit)
+        throws IOException {
+
+        getProjectConfiguration(projectName).getKanbanPropertiesFile().setColumnWipLimit(workItemtype, columnName,
+            wipLimit);
+    }
+
+    public void renameColumn(String projectName, WorkItemType workItemtype, String columnName, String newColumnName)
+        throws IOException {
+        // rename column in a properties file
+        getProjectConfiguration(projectName).getKanbanPropertiesFile().renameColumn(workItemtype, columnName,
+            newColumnName);
+        // rename column in a CSV file
+    }
+
 }

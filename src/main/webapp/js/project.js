@@ -25,7 +25,8 @@ $(function() {
     		Ok: function() {
     			$.get(getProjectUrl() + "/edit-column-action", 
     					{ 
-    						columnName: $("#edit-column-dialog-name").val(),
+    						columnName: $("#edit-column-dialog-name-original").val(),
+    						newColumnName: $("#edit-column-dialog-name").val(),
     						itemType: $("#edit-column-dialog-item-type").val(),
     						wipLimit: $("#edit-column-dialog-wipLimit").val()
     					})
@@ -43,6 +44,7 @@ $(function() {
 
 function editColumn(type, name, wipLimit) {
 	$("#edit-column-dialog-name").val(name);
+	$("#edit-column-dialog-name-original").val(name);
 	$("#edit-column-dialog-item-type").val(type);
 	if (wipLimit > 0) {
 		$("#edit-column-dialog-wipLimit").val(wipLimit);
@@ -75,7 +77,8 @@ function unblockStory(id, type) {
 	var item = document.getElementById("work-item-" + id);
 	$.get(getBoard() + "/block-item-action", 
 			{ 
-				itemId: id 
+				itemId: id,
+				userName: $('#userField').val()
 			})
 			.success(function() { window.location = getBoard(); })
 			.error(function() { window.alert("error"); }

@@ -225,7 +225,7 @@ public class KanbanBoardController {
                                                     @PathVariable("board") String boardType,
                                                     @RequestParam("itemId") String id,
                                                     @RequestParam(value = "comment", required = false) String comment,
-                                                    @RequestParam(value = "userName", required = false) String userName)
+                                                    @RequestParam("userName") String userName)
         throws IOException {
 
         int itemId = parseInt(id);
@@ -234,9 +234,11 @@ public class KanbanBoardController {
 
         project.stop(itemId);
 
-        if (!StringUtils.isEmpty(comment)) {
-            wi.addComment(createBlockedComment(wi.isBlocked(), comment, userName));
+        if (comment == null) {
+            comment = "";
         }
+
+        wi.addComment(createBlockedComment(wi.isBlocked(), comment, userName));
         project.save();
 
         // Redirect
@@ -1213,15 +1215,22 @@ public class KanbanBoardController {
                                                 @PathVariable("projectName") String projectName,
                                                 @RequestParam("itemType") String itemType,
                                                 @RequestParam("columnName") String columnName,
+                                                @RequestParam("newColumnName") String newColumnName,
                                                 @RequestParam("wipLimit") Integer wipLimit) throws IOException {
+
+        logger.info("Editing column {} to {}, WIP = {}", new Object[] {
+            columnName,
+            newColumnName,
+            wipLimit});
 
         WorkItemType workItemtype = project.getWorkItemTypes().getByName(itemType);
 
-        kanbanService
-            .getProjectConfiguration(projectName)
-            .getKanbanPropertiesFile()
-            .setColumnWipLimit(workItemtype, columnName, wipLimit);
+        kanbanService.setColumnWipLimit(projectName, workItemtype, columnName, wipLimit);
 
+        if (!columnName.equals(newColumnName)) {
+            kanbanService.renameColumn(projectName, workItemtype, columnName, newColumnName);
+        }
+        
         return new RedirectView("wall");
     }
 }

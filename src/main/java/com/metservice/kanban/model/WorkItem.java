@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import com.google.common.base.Preconditions;
+import com.metservice.kanban.utils.DateUtils;
 import com.metservice.kanban.utils.WorkingDayUtils;
 
 /**
@@ -134,6 +135,20 @@ public class WorkItem {
         } else {
             return getNotes();
         }
+    }
+
+    public String getLastComment() {
+        WorkItemComment lastComment = null;
+        for (WorkItemComment c : getComments()) {
+            if (lastComment == null || lastComment.getWhenAdded().isBefore(c.getWhenAdded())) {
+                lastComment = c;
+            }
+        }
+        if (lastComment == null) {
+            return "no comments";
+        }
+        return lastComment.getCommentText() + " [" + lastComment.getAddedBy() + " @ "
+            + lastComment.getWhenAdded().toString(DateUtils.DATE_FORMAT_STR) + "]";
     }
 
     public String getLastBlockedComment() {

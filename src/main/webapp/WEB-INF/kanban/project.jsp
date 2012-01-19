@@ -51,9 +51,10 @@
 </head>
 <body onload="javscript:setPosition(${scrollTop});">
 <div id="edit-column-dialog" title="Edit column" style="display: none;">
-    Column name: <input id="edit-column-dialog-name" disabled="disabled" /><br/>
+    Column name: <input id="edit-column-dialog-name" /><br/>
     Column type: <input id="edit-column-dialog-item-type" disabled="disabled" /><br/>
-    WIP Limit: <input id="edit-column-dialog-wipLimit" />    
+    WIP Limit: <input id="edit-column-dialog-wipLimit" />
+    <input type="hidden" id="edit-column-dialog-name-original" />    
 </div>
 <div id="block-dialog" title="Block/Unblock work item" style="display: none;">
     <p>Please enter a reason for blocking/unblocking work item <span id="block-dialog-item-id"></span>:</p>
@@ -114,7 +115,7 @@
                               
                                 <div
                                     onclick="javascript:markUnmarkToPrint('work-item-${item.id}','${item.type.name}-card-colour', ${item.blocked})"
-                                    id="work-item-${item.id}" title="Notes: ${fn:escapeXml(item.notesAndBlock)}"
+                                    id="work-item-${item.id}" title="Last comment: ${fn:escapeXml(item.lastComment)}"
                                     class="${item.type.name}-card-colour ${item.blocked ? "blocked" : ""}" data-role="card">
                                     
                                     <div class="age-container" style="background-color:${item.colour}">
