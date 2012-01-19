@@ -494,10 +494,10 @@ public class KanbanBoardControllerTest {
         when(config.getKanbanPropertiesFile()).thenReturn(propertiesFile);
         kanbanController.setKanbanService(kanbanService);
 
-        RedirectView result = kanbanController.editColumn(project, "a project", "feature", "Dev", "Dev", 10);
-        assertEquals("wall", result.getUrl());
+        JsonStatus result = kanbanController.editColumn(project, "a project", "feature", "Dev", "Dev", 10);
+        assertEquals("ok", result.status);
 
-        verify(propertiesFile).setColumnWipLimit(type, "Dev", 10);
+        verify(kanbanService).setColumnWipLimit("a project", type, "Dev", 10);
     }
 
     @Test
@@ -515,9 +515,9 @@ public class KanbanBoardControllerTest {
         when(config.getKanbanPropertiesFile()).thenReturn(propertiesFile);
         kanbanController.setKanbanService(kanbanService);
 
-        RedirectView result = kanbanController.editColumn(project, "a project", "feature", "Dev", "Dev", null);
-        assertEquals("wall", result.getUrl());
+        JsonStatus result = kanbanController.editColumn(project, "a project", "feature", "Dev", "Dev", null);
+        assertEquals("ok", result.status);
 
-        verify(propertiesFile).setColumnWipLimit(type, "Dev", null);
+        verify(kanbanService).setColumnWipLimit("a project", type, "Dev", null);
     }
 }

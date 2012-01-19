@@ -116,7 +116,7 @@
                               
                                 <div
                                     onclick="javascript:markUnmarkToPrint('work-item-${item.id}','${item.type.name}-card-colour', ${item.blocked})"
-                                    id="work-item-${item.id}" title="Last comment: ${fn:escapeXml(item.lastComment)}"
+                                    id="work-item-${item.id}" title="Last comment: ${empty item.lastComment ? 'no comments' :  fn:escapeXml(item.lastComment)}"
                                     class="${item.type.name}-card-colour ${item.blocked ? "blocked" : ""}" data-role="card">
                                     
                                     <div class="age-container" style="background-color:${item.colour}">

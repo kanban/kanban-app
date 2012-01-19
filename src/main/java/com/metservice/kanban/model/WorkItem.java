@@ -145,7 +145,7 @@ public class WorkItem {
             }
         }
         if (lastComment == null) {
-            return "no comments";
+            return "";
         }
         return lastComment.getCommentText() + " [" + lastComment.getAddedBy() + " @ "
             + lastComment.getWhenAdded().toString(DateUtils.DATE_FORMAT_STR) + "]";
