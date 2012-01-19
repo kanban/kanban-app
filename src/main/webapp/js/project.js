@@ -65,9 +65,22 @@ function blockStory(id, type) {
 	//else { item.className = "stopped"; }
 	
 	//$('#itemId').val(id)
+	
 	$("#block-dialog-item-id").html(id);
 	
-		$("#block-dialog").dialog("open");
+	$("#block-dialog").dialog("open");
+}
+
+function unblockStory(id, type) {
+	var item = document.getElementById("work-item-" + id);
+	$.get(getBoard() + "/block-item-action", 
+			{ 
+				itemId: id 
+			})
+			.success(function() { window.location = getBoard(); })
+			.error(function() { window.alert("error"); }
+	);
+	
 }
 
 function markUnmarkToPrint(divId, type, isStopped){

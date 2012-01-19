@@ -224,8 +224,9 @@ public class KanbanBoardController {
     public synchronized RedirectView stopItemAction(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
                                                     @RequestParam("itemId") String id,
-                                                    @RequestParam("comment") String comment,
-                                                    @RequestParam("userName") String userName) throws IOException {
+                                                    @RequestParam(value = "comment", required = false) String comment,
+                                                    @RequestParam(value = "userName", required = false) String userName)
+        throws IOException {
 
         int itemId = parseInt(id);
 

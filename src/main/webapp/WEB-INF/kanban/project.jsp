@@ -179,13 +179,20 @@
                                         <%
                                                 }
                                          %>
-                                        <a href="javascript:blockStory(${item.id},'${item.type.name}');" class="last">
-                                          <img class="stop" id="block-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/stop.png" />
                                           <c:choose>
-                                            <c:when test="${item.blocked}">Unblock</c:when>
-                                            <c:otherwise>Blocked</c:otherwise>
+                                            <c:when test="${item.blocked}">
+                                                <a href="javascript:unblockStory(${item.id},'${item.type.name}');" class="last">
+                                                  <img class="stop" id="block-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/stop.png" />
+                                                    Unblock
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="javascript:blockStory(${item.id},'${item.type.name}');" class="last">
+                                                  <img class="stop" id="block-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/stop.png" />
+                                                    Blocked
+                                                </a>    
+                                            </c:otherwise>
                                           </c:choose>
-                                        </a>
                                       </div>
                                     </div>
                                     
