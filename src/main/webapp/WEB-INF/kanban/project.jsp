@@ -13,23 +13,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <jsp:include page="include/header-head.jsp"/>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/project.css" />
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/project.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/project.css?version=${service.version}" />
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/project.js?version=${service.version}"></script>
 
 <title>Kanban: wall</title>
 
-<script type="text/javascript">
-	
-	</script>
 <c:if test="${highlight != null}">
-<script type="text/javascript">
-//<![CDATA[
-           $(function() {
-        	   markUnmarkToPrint('work-item-${highlight}','','');
-           });
-//]]> 
-		</script>
-
+    <script type="text/javascript">
+    //<![CDATA[
+               $(function() {
+            	   markUnmarkToPrint('work-item-${highlight}','','');
+               });
+    //]]> 
+    </script>
 </c:if>
 <%
     KanbanProject project = (KanbanProject) request.getAttribute("project");

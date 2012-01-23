@@ -4,8 +4,8 @@
 <html>
 <head>
 	<jsp:include page="include/header-head.jsp"/>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/admin.css" />
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/admin.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/admin.css?version=${service.version}" />
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/admin.js?version=${service.version}"></script>
 </head>
 <body>
 	<jsp:include page="include/header.jsp" />

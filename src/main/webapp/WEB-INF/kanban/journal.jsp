@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<jsp:include page="include/header-head.jsp"/>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/journal.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/journal.js?version=${service.version}"></script>
 	<title>Kanban: journal</title>
 </head>
 

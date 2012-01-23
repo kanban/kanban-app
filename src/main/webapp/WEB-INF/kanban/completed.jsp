@@ -8,8 +8,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<jsp:include page="include/header-head.jsp"/>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/boards.css" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/completed.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/completed.css?version=${service.version}" />
     
     <title>Kanban: complete</title>
 

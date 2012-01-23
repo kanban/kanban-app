@@ -26,7 +26,7 @@ margin: 5px 0 40px 10px;
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
     	<jsp:include page="include/header-head.jsp"/>
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/chart.css"/>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/chart.css?version=${service.version}"/>
 
         <script>
         $(function() {

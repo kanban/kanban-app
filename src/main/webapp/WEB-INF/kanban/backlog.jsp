@@ -6,9 +6,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<jsp:include page="include/header-head.jsp"/>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/boards.css" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/backlog.css" />
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/backlog.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/backlog.css?version=${service.version}" />
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/backlog.js?version=${service.version}"></script>
 
     <title>Kanban: backlog</title>
     
