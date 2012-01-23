@@ -60,10 +60,9 @@ $(document).ready(function(){
       
     	//Change the content to an input tag and autopopulate the value
     	var newInput = $("<input />")
-    			.attr("data-role", $(this)
-    			.attr("data-role"))
-    			.attr("originalValue", $(this).html().trim())
-    			.css("width", "50%").val($(this).text().trim());
+    		    .attr("data-role", $(this).attr("data-role"))
+    			.attr("originalValue", $(this).html())
+    			.css("width", "50%").val($(this).text());
     	$(this).html("").append(newInput);
     	newInput.focus();
       

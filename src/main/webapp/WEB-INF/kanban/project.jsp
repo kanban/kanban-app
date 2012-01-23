@@ -57,8 +57,8 @@
     <input type="hidden" id="edit-column-dialog-name-original" />
     <div id="validation-error" class="error"></div>    
 </div>
-<div id="block-dialog" title="Block/Unblock work item" style="display: none;">
-    <p>Please enter a reason for blocking/unblocking work item <span id="block-dialog-item-id"></span>:</p>
+<div id="block-dialog" title="Block work item" style="display: none;">
+    <p>Please enter a reason for blocking work item <span id="block-dialog-item-id"></span>:</p>
     <textarea name="block-comment" id="block-comment" rows="5" cols="30"></textarea>
 </div>
     <jsp:include page="include/header.jsp"/>
