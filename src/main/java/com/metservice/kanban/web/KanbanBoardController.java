@@ -631,7 +631,7 @@ public class KanbanBoardController {
 
     private String defaultStartDate(String endDate) {
         LocalDate endDateParsed;
-        if (null != endDate) {
+        if (!StringUtils.isEmpty(endDate)) {
             try {
                 endDateParsed = LocalDate.parse(endDate);
             } catch (RuntimeException e) {
@@ -942,14 +942,22 @@ public class KanbanBoardController {
         LocalDate end;
 
         try {
-            start = LocalDate.parse(startDate);
+            if (StringUtils.isNotEmpty(startDate)) {
+                start = LocalDate.parse(startDate);
+            } else {
+                start = null;
+            }
         } catch (RuntimeException e) {
             logger.warn("Cannot parse start date {}", startDate);
             logger.warn("Got exception: ", e);
             start = null;
         }
         try {
-            end = LocalDate.parse(endDate);
+            if (StringUtils.isNotEmpty(endDate)) {
+                end = LocalDate.parse(endDate);
+            } else {
+                end = null;
+            }
         } catch (RuntimeException e) {
             logger.warn("Cannot parse end date {}", endDate);
             logger.warn("Got exception: ", e);

@@ -51,6 +51,7 @@ import com.metservice.kanban.model.WorkItemComment;
 import com.metservice.kanban.model.WorkItemTree;
 import com.metservice.kanban.model.WorkItemType;
 import com.metservice.kanban.model.WorkItemTypeCollection;
+import com.metservice.kanban.utils.DateUtils;
 
 public class KanbanBoardControllerTest {
 
@@ -256,8 +257,7 @@ public class KanbanBoardControllerTest {
 
         kanbanController.setKanbanService(null);
 
-        kanbanController.burnUpChartPng(project, chartGenerator, new Date().toString(), new Date().toString(), null,
-            outputStream);
+        kanbanController.burnUpChartPng(project, chartGenerator, null, null, null, outputStream);
         ArgumentCaptor<List> workItemsCaptor = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<OutputStream> outputStreamCaptor = ArgumentCaptor.forClass(OutputStream.class);
         verify(chartGenerator).generateBurnUpChart(eq(project),
