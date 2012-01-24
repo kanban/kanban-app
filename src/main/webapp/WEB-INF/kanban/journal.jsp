@@ -27,7 +27,7 @@
         </div>
     </c:forEach>
 
-    <div id="journal-add-dialog" title="Add journal item">
+    <div id="journal-add-dialog" title="Add journal item" style="display: none;">
         <p>Entry date</p>
         <input name="journal-date" type="text" id="journal-date" value="${journal-date}"/>
         <p>Journal text:</p>
