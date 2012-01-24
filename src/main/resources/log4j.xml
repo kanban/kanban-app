@@ -22,6 +22,16 @@
         <level value="info"/>
     </logger>
     
+    <logger name="com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl">
+      <!-- Skip problems with 'Expected content type of 'application/javascript' or 'application/ecmascript'' messages -->
+        <level value="error" />
+    </logger>
+    
+    <logger name="com.gargoylesoftware.htmlunit.DefaultCssErrorHandler">
+      <!-- Skip problems with 'CSS error: null [22:115] Error in expression.' messages (jQuery CSS) -->
+        <level value="error" />
+    </logger>
+    
     <root>
         <priority value="warn" />
         <appender-ref ref="console" />
