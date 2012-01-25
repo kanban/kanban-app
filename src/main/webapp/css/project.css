@@ -1,5 +1,6 @@
 .blocked {
-	background: #FF0033 !important;
+	background: #FFAAAA !important;
+	border: solid red 3px;
 }
 
 .brokenWIPLimit {
