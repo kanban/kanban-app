@@ -137,3 +137,13 @@ function advance(id, phase){
 function setPosition(position) {
 	window.scrollTo(0, position);
 }
+
+/*
+$(function() {
+	$("#charts_button").button({
+		icons: {
+			secondary: "ui-icon-triangle-1-s"
+		}
+	});
+});
+*/
