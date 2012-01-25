@@ -29,7 +29,7 @@
         <table id="completed-table" class="kanban">
 			<thead>
 				<tr class="customizedHeader typeColour">
-					<th colspan="6">${phase}</th>
+					<th colspan="7">${phase}</th>
 				</tr>
 			</thead>
                 <tr class="subHeader typeColour">
@@ -38,6 +38,7 @@
 					<th>Name</th>
                     <th></th>
 					<th>Size</th>
+                    <th>Completed date</th>
 					<th> 
                         <c:forEach var="phase" items="${type.wallPhases}" varStatus="i">
                             <span class="age-legend" style="background-color:${htmlColours[i.count-1]}">${phase}</span>
@@ -82,9 +83,11 @@
                                   <div style="background-color:${item.colour}; width: 10px; height: 10px; border: 1px solid #aaa; margin: 5px">
                                   </div>
                                 </td>
-                                <td class="size, padded">${item.averageCaseEstimate}
+                                <td class="size padded">${item.averageCaseEstimate}
                                 </td>
-                                <td class="age, padded">
+                                <td class="completeDate padded">
+                                ${item.lastPhaseDate }</td>
+                                <td class="age padded">
                                     <div id="work-item-${item.id}" class="${item.type.name}">
                                         <kanban:phasesLengths workItem="${item}" project="${project}" type="${type}"/>
                                     </div>      

@@ -3,6 +3,8 @@ package com.metservice.kanban.model;
 import static java.util.Arrays.asList;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class KanbanBoardColumnList extends AbstractList<KanbanBoardColumn> {
@@ -46,9 +48,19 @@ public class KanbanBoardColumnList extends AbstractList<KanbanBoardColumn> {
     }
 
     public List<WorkItem> filter(List<WorkItem> workItems) {
+
+        return filter(workItems, null);
+    }
+
+    public List<WorkItem> filter(List<WorkItem> workItems, Comparator<WorkItem> workItemComparator) {
         List<WorkItem> filteredWorkItems = new ArrayList<WorkItem>();
 
-        for (WorkItem workItem : workItems) {
+        List<WorkItem> workItemsList = new ArrayList<WorkItem>(workItems);
+        if (workItemComparator != null) {
+            Collections.sort(workItemsList, workItemComparator);
+        }
+
+        for (WorkItem workItem : workItemsList) {
             if (containsPhase(workItem.getCurrentPhase())) {
                 filteredWorkItems.add(workItem);
             }

@@ -59,6 +59,7 @@ public class KanbanBoardControllerTest {
     KanbanBoardController kanbanController;
     KanbanProject project;
     KanbanService kanbanService;
+    WorkItemTypeCollection workItemTypes;
 
     @Before
     public void setUp() {
@@ -66,6 +67,8 @@ public class KanbanBoardControllerTest {
         kanbanController = new KanbanBoardController();
         project = mock(KanbanProject.class);
         kanbanService = mock(KanbanService.class);
+        workItemTypes = mock(WorkItemTypeCollection.class);
+        when(project.getWorkItemTypes()).thenReturn(workItemTypes);
     }
 
     // TODO Rewrite KanbanController legacy test in this form
@@ -228,7 +231,26 @@ public class KanbanBoardControllerTest {
     @Test
     public void presentsChartPage() {
         kanbanController.setKanbanService(null);
+        when(workItemTypes.getByName("feature")).thenReturn(new WorkItemType("Dev", "Completed"));
         ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature", "projectName", null, "",
+            "");
+
+        assertThat(modelAndView.getViewName(), is("/chart.jsp"));
+        assertThat((String) modelAndView.getModelMap().get("workItemTypeName"), is("feature"));
+        assertThat((String) modelAndView.getModelMap().get("imageName"), is("cool-chart.png"));
+    }
+
+    @Test
+    public void forNotExistingWorkItemTypePresentsChartForRootItem() {
+        WorkItemType workItem = new WorkItemType("Dev", "Completed");
+        workItem.setName("feature");
+        kanbanController.setKanbanService(null);
+        when(workItemTypes.getByName("feature")).thenReturn(workItem);
+        when(workItemTypes.getByName("feature12")).thenThrow(new IllegalArgumentException("unknown phase"));
+        TreeNode<WorkItemType> node = mock(TreeNode.class);
+        when(workItemTypes.getRoot()).thenReturn(node);
+        when(node.getValue()).thenReturn(workItem);
+        ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature12", "projectName", null, "",
             "");
 
         assertThat(modelAndView.getViewName(), is("/chart.jsp"));

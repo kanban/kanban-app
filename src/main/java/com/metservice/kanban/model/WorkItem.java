@@ -3,6 +3,7 @@ package com.metservice.kanban.model;
 import static com.metservice.kanban.utils.DateUtils.parseIsoDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -19,6 +20,9 @@ import com.metservice.kanban.utils.WorkingDayUtils;
  *
  */
 public class WorkItem {
+
+    public final static Comparator<WorkItem> LAST_PHASE_DATE_COMPARATOR = new LastPhaseDateComparator();
+
     public static final int ROOT_WORK_ITEM_ID = 0;
 
     private final int id;
@@ -202,6 +206,10 @@ public class WorkItem {
 
     public int getWorkingDaysOnCurrentPhase() {
         return WorkingDayUtils.getWorkingDaysBetween(getDate(getCurrentPhase()), new LocalDate());
+    }
+
+    public LocalDate getLastPhaseDate() {
+        return getDate(currentPhase);
     }
 
     public Map<String, LocalDate> getDatesByPhase() {
@@ -469,5 +477,12 @@ public class WorkItem {
             return true;
         }
         return workStreams.contains(workStream);
+    }
+
+    static class LastPhaseDateComparator implements Comparator<WorkItem> {
+        @Override
+        public int compare(WorkItem o1, WorkItem o2) {
+            return o2.getLastPhaseDate().compareTo(o1.getLastPhaseDate());
+        }
     }
 }
