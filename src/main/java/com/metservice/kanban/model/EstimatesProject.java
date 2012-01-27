@@ -4,7 +4,9 @@ import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import org.joda.time.LocalDate;
 
 public class EstimatesProject {
 
@@ -14,7 +16,7 @@ public class EstimatesProject {
 
     private int budget = 0;
     private int estimatedCostPerPoint = 0;
-    private int costSoFar = 0;
+    private Map<LocalDate, Integer> costDailyMap;
 
     private String projectName;
 
@@ -61,6 +63,7 @@ public class EstimatesProject {
 
     private void calculateCumulativeCostAverageGuess(List<EstimatesBudgetEntry> entries) {
         int cumulativePoints = 0;
+        int costSoFar = getCostSoFar();
 
         for (EstimatesBudgetEntry entry : entries) {
             cumulativePoints += entry.getFeature().getAverageCaseEstimate();
@@ -99,12 +102,12 @@ public class EstimatesProject {
         return budget;
     }
 
-    public void setCostSoFar(int costSoFar) {
-        this.costSoFar = costSoFar;
-    }
-
     public int getCostSoFar() {
-        return costSoFar;
+        int result = 0;
+        for (LocalDate day : costDailyMap.keySet()) {
+            result += costDailyMap.get(day);
+        }
+        return result;
     }
 
     public void setEstimatedCostPerPoint(int estimatedCostPerPoint) {
@@ -165,5 +168,13 @@ public class EstimatesProject {
 
     public KanbanProject getKanbanProject() {
         return kanbanProject;
+    }
+
+    public void setDayCosts(Map<LocalDate, Integer> costDailyMap) {
+        this.costDailyMap = costDailyMap;
+    }
+
+    public Map<LocalDate, Integer> getDayCosts() {
+        return costDailyMap;
     }
 }

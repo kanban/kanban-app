@@ -2,27 +2,18 @@ package com.metservice.kanban.charts.cumulativeflow;
 
 import static com.metservice.kanban.utils.DateUtils.currentLocalDate;
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.annotations.CategoryAnnotation;
 import org.jfree.chart.annotations.CategoryPointerAnnotation;
-import org.jfree.chart.annotations.CategoryTextAnnotation;
-import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.Range;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
-import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +24,6 @@ import com.metservice.kanban.model.KanbanProject;
 import com.metservice.kanban.model.WorkItem;
 import com.metservice.kanban.utils.Day;
 import com.metservice.kanban.utils.WorkingDayUtils;
-import com.metservice.kanban.web.KanbanBoardController;
 
 public class CumulativeFlowChartBuilder {
 

@@ -161,9 +161,13 @@
                 <img src="${pageContext.request.contextPath}/images/burn-up-chart.png" /> Burn-Up 
             </a>
             
-          </div>			
+            <a id="estimates-chart-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=estimates-burn-up-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">
+                <img src="${pageContext.request.contextPath}/images/burn-up-chart.png" /> Estimates Burn-Up 
+            </a>
+            
+          </div>
 			
-        <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/pet-project" class="button">Estimates</a>
+        <a id="pet" href="${pageContext.request.contextPath}/projects/${project.name}/estimates" class="button">Estimates</a>
         <a id="admin" href="${pageContext.request.contextPath}/projects/${project.name}/admin" class="button">Admin</a>
     </div>
     
