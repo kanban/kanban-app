@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -136,10 +138,13 @@ public class KanbanBoardController {
     public synchronized ModelAndView wallBoard(@ModelAttribute("project") KanbanProject project,
                                                @PathVariable("projectName") String projectName,
                                                @RequestParam(value = "scrollTop", required = false) String scrollTop,
-                                               @RequestParam(value = "error", required = false) String error,
                                                @ModelAttribute("workStreams") Map<String, String> workStreams,
-                                               @RequestParam(value = "highlight", required = false) String highlight)
+                                               @RequestParam(value = "highlight", required = false) String highlight,
+                                               Model oldModel,
+                                               RedirectAttributes redirectAttributes)
         throws IOException {
+
+        String error = (String) oldModel.asMap().get("error");
 
         Map<String, Object> model = initBoard("wall", projectName, error, scrollTop);
         
@@ -155,9 +160,11 @@ public class KanbanBoardController {
     public synchronized ModelAndView backlogBoard(@ModelAttribute("project") KanbanProject project,
                                                   @PathVariable("projectName") String projectName,
                                                   @RequestParam(value = "scrollTop", required = false) String scrollTop,
-                                                  @RequestParam(value = "error", required = false) String error,
-                                                  @ModelAttribute("workStreams") Map<String, String> workStreams)
+                                                  @ModelAttribute("workStreams") Map<String, String> workStreams,
+                                                  Model oldModel)
         throws IOException {
+
+        String error = (String) oldModel.asMap().get("error");
 
         Map<String, Object> model = initBoard("backlog", projectName, error, scrollTop);
 
@@ -172,9 +179,11 @@ public class KanbanBoardController {
     public synchronized ModelAndView journalBoard(@ModelAttribute("project") KanbanProject project,
                                                   @PathVariable("projectName") String projectName,
                                                   @RequestParam(value = "scrollTop", required = false) String scrollTop,
-                                                  @RequestParam(value = "error", required = false) String error,
-                                                  @ModelAttribute("workStreams") Map<String, String> workStreams)
+                                                  @ModelAttribute("workStreams") Map<String, String> workStreams,
+                                                  Model oldModel)
         throws IOException {
+
+        String error = (String) oldModel.asMap().get("error");
 
         Map<String, Object> model = initBoard("journal", projectName, error, scrollTop);
         model.put("kanbanJournal", project.getJournal());
@@ -185,10 +194,11 @@ public class KanbanBoardController {
     public synchronized ModelAndView completedBoard(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("projectName") String projectName,
                                                     @RequestParam(value = "scrollTop", required = false) String scrollTop,
-                                                    @RequestParam(value = "error", required = false) String error,
-                                                    @ModelAttribute("workStreams") Map<String, String> workStreams)
+                                                    @ModelAttribute("workStreams") Map<String, String> workStreams,
+                                                    Model oldModel)
         throws IOException {
 
+        String error = (String) oldModel.asMap().get("error");
         Map<String, Object> model = initBoard("completed", projectName, error, scrollTop);
 
         model.put("type", project.getWorkItemTypes().getRoot().getValue());
@@ -203,15 +213,18 @@ public class KanbanBoardController {
                                                        @PathVariable("board") String boardType,
                                                        @RequestParam("id") String id,
                                                        @RequestParam("phase") String phase,
-                                                       @RequestParam(value = "scrollTop", required = false) Integer scrollTop)
+                                                       @RequestParam(value = "scrollTop", required = false) Integer scrollTop,
+                                                       RedirectAttributes redirectAttributes)
         throws IOException {
 
         // check item hasn't already been advanced
         WorkItem workItem = project.getWorkItemById(Integer.parseInt(id));
         if (!workItem.getCurrentPhase().equals(phase)) {
-            //TODO display error to user
-            return new RedirectView("../" + boardType
-                    + "?error=Your board view was out of date, your request has been canceled and the board has been updated. Please review the board now and apply your changes.");
+            redirectAttributes
+                .addFlashAttribute(
+                    "error",
+                    "Your board view was out of date, your request has been canceled and the board has been updated. Please review the board now and apply your changes.");
+            return new RedirectView("../" + boardType);
         }
 
         project.advance(parseInt(id), currentLocalDate());
@@ -595,9 +608,9 @@ public class KanbanBoardController {
                                            @RequestParam("chartName") String chartName,
                                            @RequestParam("workItemTypeName") String workItemTypeName,
                                            @PathVariable("projectName") String projectName,
-                                           @RequestParam(value = "error", required = false) String error,
                                            @RequestParam(value = "startDate", required = false) String startDate,
-                                           @RequestParam(value = "endDate", required = false) String endDate) {
+                                           @RequestParam(value = "endDate", required = false) String endDate,
+                                           Model oldModel) {
 
         if (StringUtils.isEmpty(startDate)) {
             startDate = defaultStartDate(endDate);
@@ -612,6 +625,7 @@ public class KanbanBoardController {
             workItemTypeName = project.getWorkItemTypes().getRoot().getValue().getName();
         }
 
+        String error = (String) oldModel.asMap().get("error");
         Map<String, Object> model = initBoard("chart", projectName, error, null);
 
         model.put("workItemTypeName", workItemTypeName);
@@ -736,7 +750,7 @@ public class KanbanBoardController {
     public synchronized ModelAndView editProject(@ModelAttribute("project") KanbanProject project,
                                                  @PathVariable("projectName") String projectName,
                                                  @RequestParam("createNewProject") boolean createNewProject,
-                                                 @RequestParam(value = "error", required = false) String error)
+                                                 Model oldModel)
         throws IOException {
 
         Map<String, Object> model = buildModel(projectName, "wall");
@@ -745,6 +759,7 @@ public class KanbanBoardController {
         model.put("settings", kanbanService
             .getProjectConfiguration(projectName).getKanbanPropertiesFile()
             .getContentAsString());
+        String error = (String) oldModel.asMap().get("error");
         model.put("error", error);
         // Create a new project if true
         if (createNewProject) {
