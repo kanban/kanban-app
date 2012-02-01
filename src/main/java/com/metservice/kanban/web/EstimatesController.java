@@ -43,7 +43,7 @@ public class EstimatesController {
     KanbanService kanbanService;
 
     @ModelAttribute(ESTIMATES_PROJECT_ATTR)
-    public synchronized EstimatesProject populatePetProject(@PathVariable("projectName") String projectName) throws IOException {
+    public synchronized EstimatesProject populateEstimatesProject(@PathVariable("projectName") String projectName) throws IOException {
         EstimatesProject project = estimatesDao.loadProject(projectName);
 
         return project;
@@ -61,7 +61,7 @@ public class EstimatesController {
     }
 
     @RequestMapping("estimates")
-    public ModelAndView showProject(@ModelAttribute("petproject") EstimatesProject estimatesProject) {
+    public ModelAndView showProject(@ModelAttribute(ESTIMATES_PROJECT_ATTR) EstimatesProject estimatesProject) {
 
         Map<String, Object> model = new HashMap<String, Object>();
 

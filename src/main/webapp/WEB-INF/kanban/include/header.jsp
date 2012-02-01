@@ -57,7 +57,7 @@
 }
 */
 </style>
-    <c:if test="${error != null}">
+    <c:if test="${!empty error}">
         <div id="error-dialog" title="Error">
             ${error}
         </div>

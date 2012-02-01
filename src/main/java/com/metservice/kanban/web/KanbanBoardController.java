@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +40,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.metservice.kanban.EstimatesDao;
 import com.metservice.kanban.KanbanService;
 import com.metservice.kanban.charts.burnup.BurnUpChartGenerator;
 import com.metservice.kanban.charts.burnup.DefaultBurnUpChartGenerator;
@@ -48,6 +48,7 @@ import com.metservice.kanban.charts.burnup.DefaultChartWriter;
 import com.metservice.kanban.charts.cumulativeflow.CumulativeFlowChartBuilder;
 import com.metservice.kanban.charts.cycletime.CycleTimeChartBuilder;
 import com.metservice.kanban.model.BoardIdentifier;
+import com.metservice.kanban.model.EstimatesProject;
 import com.metservice.kanban.model.KanbanBoard;
 import com.metservice.kanban.model.KanbanJournalItem;
 import com.metservice.kanban.model.KanbanProject;
@@ -66,6 +67,10 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 public class KanbanBoardController {
 
 
+    private static final int DEFAULT_CHART_WIDTH = 800;
+
+    private static final int DEFAULT_CHART_HEIGHT = 600;
+
     private final static Logger logger = LoggerFactory.getLogger(KanbanBoardController.class);
 
     private static final int MAX_PROJECT_NAME_LENGTH = 32;
@@ -76,6 +81,9 @@ public class KanbanBoardController {
 
     @Autowired
     private KanbanService kanbanService;
+    @Autowired
+    EstimatesDao estimatesDao;
+
     private Gson gson;
 
     public KanbanBoardController() {
@@ -89,6 +97,14 @@ public class KanbanBoardController {
         throws IOException {
 
         return kanbanService.getKanbanProject(projectName);
+    }
+
+    @ModelAttribute("estimatesProject")
+    public synchronized EstimatesProject populateEstimatesProject(@PathVariable("projectName") String projectName)
+        throws IOException {
+        EstimatesProject project = estimatesDao.loadProject(projectName);
+
+        return project;
     }
 
     @ModelAttribute("service")
@@ -140,11 +156,9 @@ public class KanbanBoardController {
                                                @RequestParam(value = "scrollTop", required = false) String scrollTop,
                                                @ModelAttribute("workStreams") Map<String, String> workStreams,
                                                @RequestParam(value = "highlight", required = false) String highlight,
-                                               Model oldModel,
+                                               @ModelAttribute("error") String error,
                                                RedirectAttributes redirectAttributes)
         throws IOException {
-
-        String error = (String) oldModel.asMap().get("error");
 
         Map<String, Object> model = initBoard("wall", projectName, error, scrollTop);
         
@@ -161,10 +175,9 @@ public class KanbanBoardController {
                                                   @PathVariable("projectName") String projectName,
                                                   @RequestParam(value = "scrollTop", required = false) String scrollTop,
                                                   @ModelAttribute("workStreams") Map<String, String> workStreams,
-                                                  Model oldModel)
+                                                  @ModelAttribute("error") String error)
         throws IOException {
 
-        String error = (String) oldModel.asMap().get("error");
 
         Map<String, Object> model = initBoard("backlog", projectName, error, scrollTop);
 
@@ -180,10 +193,8 @@ public class KanbanBoardController {
                                                   @PathVariable("projectName") String projectName,
                                                   @RequestParam(value = "scrollTop", required = false) String scrollTop,
                                                   @ModelAttribute("workStreams") Map<String, String> workStreams,
-                                                  Model oldModel)
+                                                  @ModelAttribute("error") String error)
         throws IOException {
-
-        String error = (String) oldModel.asMap().get("error");
 
         Map<String, Object> model = initBoard("journal", projectName, error, scrollTop);
         model.put("kanbanJournal", project.getJournal());
@@ -195,10 +206,9 @@ public class KanbanBoardController {
                                                     @PathVariable("projectName") String projectName,
                                                     @RequestParam(value = "scrollTop", required = false) String scrollTop,
                                                     @ModelAttribute("workStreams") Map<String, String> workStreams,
-                                                    Model oldModel)
+                                                    @ModelAttribute("error") String error)
         throws IOException {
 
-        String error = (String) oldModel.asMap().get("error");
         Map<String, Object> model = initBoard("completed", projectName, error, scrollTop);
 
         model.put("type", project.getWorkItemTypes().getRoot().getValue());
@@ -610,7 +620,7 @@ public class KanbanBoardController {
                                            @PathVariable("projectName") String projectName,
                                            @RequestParam(value = "startDate", required = false) String startDate,
                                            @RequestParam(value = "endDate", required = false) String endDate,
-                                           Model oldModel) {
+                                           @ModelAttribute("error") String error) {
 
         if (StringUtils.isEmpty(startDate)) {
             startDate = defaultStartDate(endDate);
@@ -625,7 +635,6 @@ public class KanbanBoardController {
             workItemTypeName = project.getWorkItemTypes().getRoot().getValue().getName();
         }
 
-        String error = (String) oldModel.asMap().get("error");
         Map<String, Object> model = initBoard("chart", projectName, error, null);
 
         model.put("workItemTypeName", workItemTypeName);
@@ -686,23 +695,8 @@ public class KanbanBoardController {
 
         List<WorkItem> workItemList = project.getWorkItemTree().getWorkItemsOfType(type, workStream);
 
-        LocalDate start;
-        LocalDate end;
-
-        try {
-            start = LocalDate.parse(startDate);
-        } catch (RuntimeException e) {
-            logger.warn("Cannot parse start date {}", startDate);
-            logger.warn("Got exception: ", e);
-            start = null;
-        }
-        try {
-            end = LocalDate.parse(endDate);
-        } catch (RuntimeException e) {
-            logger.warn("Cannot parse end date {}", endDate);
-            logger.warn("Got exception: ", e);
-            end = null;
-        }
+        LocalDate start = DateUtils.parseDate(startDate, null);
+        LocalDate end = DateUtils.parseDate(endDate, null);
 
         // add start and end date params here
         CumulativeFlowChartBuilder builder = new CumulativeFlowChartBuilder(start, end);
@@ -710,7 +704,8 @@ public class KanbanBoardController {
         CategoryDataset dataset = builder.createDataset(type.getPhases(), workItemList);
         JFreeChart chart = builder.createChart(dataset, project);
         int width = dataset.getColumnCount() * 15;
-        ChartUtilities.writeChartAsPNG(outputStream, chart, width < 800 ? 800 : width, 600);
+        ChartUtilities.writeChartAsPNG(outputStream, chart, width < DEFAULT_CHART_WIDTH ? DEFAULT_CHART_WIDTH : width,
+            DEFAULT_CHART_HEIGHT);
     }
 
     @RequestMapping("cycle-time-chart.png")
@@ -729,7 +724,8 @@ public class KanbanBoardController {
             .getCompletedWorkItemsInOrderOfCompletion(workItemList));
         JFreeChart chart = builder.createChart(dataset);
         int width = dataset.getColumnCount() * 15;
-        ChartUtilities.writeChartAsPNG(outputStream, chart, width < 800 ? 800 : width, 600);
+        ChartUtilities.writeChartAsPNG(outputStream, chart, width < DEFAULT_CHART_WIDTH ? DEFAULT_CHART_WIDTH : width,
+            DEFAULT_CHART_HEIGHT);
     }
 
     /**
@@ -750,7 +746,7 @@ public class KanbanBoardController {
     public synchronized ModelAndView editProject(@ModelAttribute("project") KanbanProject project,
                                                  @PathVariable("projectName") String projectName,
                                                  @RequestParam("createNewProject") boolean createNewProject,
-                                                 Model oldModel)
+                                                 @ModelAttribute("error") String error)
         throws IOException {
 
         Map<String, Object> model = buildModel(projectName, "wall");
@@ -759,7 +755,6 @@ public class KanbanBoardController {
         model.put("settings", kanbanService
             .getProjectConfiguration(projectName).getKanbanPropertiesFile()
             .getContentAsString());
-        String error = (String) oldModel.asMap().get("error");
         model.put("error", error);
         // Create a new project if true
         if (createNewProject) {
@@ -962,30 +957,27 @@ public class KanbanBoardController {
         LocalDate start;
         LocalDate end;
 
-        try {
-            if (StringUtils.isNotEmpty(startDate)) {
-                start = LocalDate.parse(startDate);
-            } else {
-                start = null;
-            }
-        } catch (RuntimeException e) {
-            logger.warn("Cannot parse start date {}", startDate);
-            logger.warn("Got exception: ", e);
-            start = null;
-        }
-        try {
-            if (StringUtils.isNotEmpty(endDate)) {
-                end = LocalDate.parse(endDate);
-            } else {
-                end = null;
-            }
-        } catch (RuntimeException e) {
-            logger.warn("Cannot parse end date {}", endDate);
-            logger.warn("Got exception: ", e);
-            end = null;
-        }
+        start = DateUtils.parseDate(startDate, null);
+        end = DateUtils.parseDate(endDate, null);
 
         chartGenerator.generateBurnUpChart(project, type, topLevelWorkItems, start, end, outputStream);
+    }
+
+    @RequestMapping("estimates-burn-up-chart.png")
+    public synchronized void estimatesBurnupChartPng(@ModelAttribute("estimatesProject") EstimatesProject project,
+                                                     @ModelAttribute("chartGenerator") BurnUpChartGenerator chartGenerator,
+                                                     @RequestParam("startDate") String startDate,
+                                                     @RequestParam("endDate") String endDate,
+                                                     OutputStream outputStream) throws IOException {
+
+        WorkItemTree tree = project.getKanbanProject().getWorkItemTree();
+        WorkItemType type = project.getKanbanProject().getWorkItemTypes().getRoot().getValue();
+        List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type, null);
+
+        LocalDate start = DateUtils.parseDate(startDate, null);
+        LocalDate end = DateUtils.parseDate(endDate, null);
+
+        chartGenerator.generateEstimatesBurnUpChart(project, type, topLevelWorkItems, start, end, outputStream);
     }
 
     @RequestMapping("{board}/add-column-action")

@@ -54,8 +54,9 @@
                                 
                                 <td class="edit, padded">
                                     <div class="editIcon">
-                                        <img class="edit" alt="Edit" id="edit-work-item-${item.id}-button" onclick="javascript:edit(${item.id});"
-                                            src="${pageContext.request.contextPath}/images/edit.png" />
+                                        <a href="${pageContext.request.contextPath}/projects/${projectName}/completed/edit-item?id=${item.id}">
+                                            <img id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" />
+                                        </a>
                                     </div>
                                 </td>
             					<c:choose>

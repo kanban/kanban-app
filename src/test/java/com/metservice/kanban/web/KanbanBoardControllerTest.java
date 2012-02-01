@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,6 @@ import com.metservice.kanban.model.WorkItemComment;
 import com.metservice.kanban.model.WorkItemTree;
 import com.metservice.kanban.model.WorkItemType;
 import com.metservice.kanban.model.WorkItemTypeCollection;
-import com.metservice.kanban.utils.DateUtils;
 
 public class KanbanBoardControllerTest {
 
@@ -232,8 +230,8 @@ public class KanbanBoardControllerTest {
     public void presentsChartPage() {
         kanbanController.setKanbanService(null);
         when(workItemTypes.getByName("feature")).thenReturn(new WorkItemType("Dev", "Completed"));
-        ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature", "projectName", null, "",
-            "");
+        ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature", "projectName", "",
+            "", "");
 
         assertThat(modelAndView.getViewName(), is("/chart.jsp"));
         assertThat((String) modelAndView.getModelMap().get("workItemTypeName"), is("feature"));
@@ -250,8 +248,8 @@ public class KanbanBoardControllerTest {
         TreeNode<WorkItemType> node = mock(TreeNode.class);
         when(workItemTypes.getRoot()).thenReturn(node);
         when(node.getValue()).thenReturn(workItem);
-        ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature12", "projectName", null, "",
-            "");
+        ModelAndView modelAndView = kanbanController.chart(project, "cool-chart", "feature12", "projectName", "",
+            "", "");
 
         assertThat(modelAndView.getViewName(), is("/chart.jsp"));
         assertThat((String) modelAndView.getModelMap().get("workItemTypeName"), is("feature"));
@@ -340,7 +338,8 @@ public class KanbanBoardControllerTest {
 
         when(project.getBoard(eq(BoardIdentifier.WALL), anyString())).thenReturn(board);
 
-        ModelAndView wallBoardResult = kanbanController.wallBoard(project, "project", null, null, workStreams, null);
+        ModelAndView wallBoardResult = kanbanController.wallBoard(project, "project", null, workStreams, null,
+            "", null);
 
         assertEquals("/project.jsp", wallBoardResult.getViewName());
 
@@ -359,7 +358,8 @@ public class KanbanBoardControllerTest {
         when(project.getWorkItemTypes()).thenReturn(workItems);
         when(project.getBacklog(anyString())).thenReturn(backlog);
 
-        ModelAndView backlogBoardResult = kanbanController.backlogBoard(project, "project", null, null, workStreams);
+        ModelAndView backlogBoardResult = kanbanController.backlogBoard(project, "project", null, workStreams,
+            "");
 
         assertEquals("/backlog.jsp", backlogBoardResult.getViewName());
         assertEquals(backlog, backlogBoardResult.getModel().get("kanbanBacklog"));
@@ -375,7 +375,8 @@ public class KanbanBoardControllerTest {
         journal.add(new KanbanJournalItem(1, "2012-01-10", "test", "user"));
         journal.add(new KanbanJournalItem(2, "2012-01-11", "test 2", "user 2"));
         when(project.getJournal()).thenReturn(journal);
-        ModelAndView journalBoardResult = kanbanController.journalBoard(project, "project", null, null, workStreams);
+        ModelAndView journalBoardResult = kanbanController.journalBoard(project, "project", null, workStreams,
+            "");
 
         assertEquals("/journal.jsp", journalBoardResult.getViewName());
         assertEquals(journal, journalBoardResult.getModel().get("kanbanJournal"));
@@ -393,7 +394,7 @@ public class KanbanBoardControllerTest {
         when(project.getCompleted(anyString())).thenReturn(completed);
 
         ModelAndView completedBoardResult = kanbanController
-            .completedBoard(project, "project", null, null, workStreams);
+            .completedBoard(project, "project", null, workStreams, "");
 
         assertEquals("/completed.jsp", completedBoardResult.getViewName());
         assertEquals(completed, completedBoardResult.getModel().get("board"));

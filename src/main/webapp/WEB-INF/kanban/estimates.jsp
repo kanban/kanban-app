@@ -19,7 +19,7 @@
 	
 	<h1>Project Estimation Tool for Kanban</h1>
 
-<!-- 	<form action="pet-set-project-property"> -->
+ 	<form action="pet-set-project-property"> 
 		<table class="pet">
 			<tr>
 				<td>Budget</td>
@@ -49,7 +49,7 @@
 				</td>
 			</tr>
 		</table>
-<!-- 	</form> -->
+	</form>
 
 	<h2>Planned features</h2>
 

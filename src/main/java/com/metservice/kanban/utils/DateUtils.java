@@ -1,20 +1,23 @@
 package com.metservice.kanban.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //TODO This class needs unit tests.
 
 
 /**
- * @author Janella Espinas, Liam O'Connor
- * 
  * Helper class for dates, specifically configured for New Zealand timezone.
  */
 public class DateUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
     public static final DateTimeZone NEW_ZEALAND_TIME = DateTimeZone.forID("Pacific/Auckland");
     
@@ -78,5 +81,21 @@ public class DateUtils {
      */
     public static LocalDate currentLocalDate() {
         return new LocalDate(NEW_ZEALAND_TIME);
+    }
+
+    public static LocalDate parseDate(String startDate, LocalDate defaultValue) {
+        LocalDate start;
+        try {
+            if (StringUtils.isNotEmpty(startDate)) {
+                start = LocalDate.parse(startDate);
+            } else {
+                start = defaultValue;
+            }
+        } catch (RuntimeException e) {
+            logger.warn("Cannot parse date {}", startDate);
+            logger.warn("Got exception: ", e);
+            start = defaultValue;
+        }
+        return start;
     }
 }
