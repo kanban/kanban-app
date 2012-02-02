@@ -623,7 +623,7 @@ public class KanbanBoardController {
                                            @ModelAttribute("error") String error) {
 
         if (StringUtils.isEmpty(startDate)) {
-            startDate = defaultStartDate(endDate);
+            startDate = defaultStartDate(endDate, project.getStartDate());
         }
         if (StringUtils.isEmpty(endDate)) {
             endDate = formatDate(LocalDate.now());
@@ -658,7 +658,7 @@ public class KanbanBoardController {
         return date.toString(DateUtils.DATE_FORMAT_STR);
     }
 
-    private String defaultStartDate(String endDate) {
+    private String defaultStartDate(String endDate, LocalDate earliestDate) {
         LocalDate endDateParsed;
         if (!StringUtils.isEmpty(endDate)) {
             try {
@@ -671,7 +671,11 @@ public class KanbanBoardController {
         } else {
             endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
         }
-        return formatDate(endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY));
+        LocalDate result = endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY);
+        if (result.isBefore(earliestDate)) {
+            result = earliestDate;
+        }
+        return formatDate(result);
     }
 
     // TODO check in this class for redundent model.put("kanban...
@@ -963,8 +967,8 @@ public class KanbanBoardController {
         chartGenerator.generateBurnUpChart(project, type, topLevelWorkItems, start, end, outputStream);
     }
 
-    @RequestMapping("estimates-burn-up-chart.png")
-    public synchronized void estimatesBurnupChartPng(@ModelAttribute("estimatesProject") EstimatesProject project,
+    @RequestMapping("estimates-burn-down-chart.png")
+    public synchronized void estimatesBurnDownChartPng(@ModelAttribute("estimatesProject") EstimatesProject project,
                                                      @ModelAttribute("chartGenerator") BurnUpChartGenerator chartGenerator,
                                                      @RequestParam("startDate") String startDate,
                                                      @RequestParam("endDate") String endDate,

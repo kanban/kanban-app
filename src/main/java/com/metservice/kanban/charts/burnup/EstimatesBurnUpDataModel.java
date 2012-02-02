@@ -108,7 +108,6 @@ public class EstimatesBurnUpDataModel {
         Pair<Integer, LocalDate> lastBudgedEntry = getLastBudgedEntry();
         int remainingFeaturePointForBudget = getRemainingFeaturePointForBudget(lastBudgedEntry);
         return lastBudgedEntry.first * getAllFeaturePoints() / (getAllFeaturePoints() - remainingFeaturePointForBudget);
-        //        return 90;
     }
 
     public Integer getBudget() {

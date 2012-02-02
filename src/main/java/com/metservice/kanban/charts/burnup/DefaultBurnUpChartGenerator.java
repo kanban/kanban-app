@@ -102,7 +102,7 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
     private JFreeChart createEstimatesChart(XYDataset dataset, KanbanProject project, LocalDate startDate,
                                             LocalDate endDate, EstimatesBurnUpDataModel model) {
         JFreeChart chart = ChartFactory.createXYLineChart(
-            "Estimates Burn-Up Chart", // chart title
+            "Estimates Burn-Down Chart", // chart title
             "$ spent", // domain axis label
             "feature points", // range axis label
             dataset, // data
