@@ -2,31 +2,37 @@ package com.metservice.kanban.charts.burnup;
 
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.joda.time.LocalDate;
 import com.google.gson.internal.Pair;
 
 public class EstimatesBurnUpDatasetGenerator {
 
-    public CategoryDataset createDataset(EstimatesBurnUpDataModel model) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    public XYDataset createDataset(EstimatesBurnUpDataModel model) {
+        XYSeriesCollection dataset = new XYSeriesCollection();
 
-        Integer currentBudget = 0;
+        double currentBudget = 0;
         int remainingFeaturePoints = model.getAllFeaturePoints();
 
-        dataset.addValue(remainingFeaturePoints, "feature points", currentBudget);
+        XYSeries plannedBudgedSeries = new XYSeries("Planned budget");
+        XYSeries projectedBudgedSeries = new XYSeries("Estimated budget");
+        XYSeries currentBudgedSeries = new XYSeries("Current budget");
+
+        currentBudgedSeries.add(currentBudget, (double) remainingFeaturePoints);
 
         for (Pair<Integer, LocalDate> budgetEntry : model.getBudgetEntries()) {
             remainingFeaturePoints = model.getRemainingFeaturePointForBudget(budgetEntry);
-            dataset.addValue(remainingFeaturePoints, "feature points", budgetEntry.first);
+            currentBudgedSeries.add((double) budgetEntry.first, remainingFeaturePoints);
         }
 
-        if (model.getProjectedBudgetConsumed() < model.getBudget()) {
-            dataset.addValue(0, "projected feature points", model.getProjectedBudgetConsumed());
-            dataset.addValue(0, "projected feature points", model.getBudget());
-        }
-        else {
-            dataset.addValue(model.getProjectedEndOfMoneyPoints(), "remaining f", model.getBudget());
-        }
+        plannedBudgedSeries.add(0, model.getAllFeaturePoints());
+        plannedBudgedSeries.add((double) model.getBudget(), 0);
+        //
+        projectedBudgedSeries.add(0, model.getAllFeaturePoints());
+        projectedBudgedSeries.add((double) model.getProjectedBudgetConsumed(), 0);
 
 
 
@@ -37,6 +43,9 @@ public class EstimatesBurnUpDatasetGenerator {
         ProjectedDatasetPopulator projectedPopulator = new ProjectedDatasetPopulator(model);
         projectedPopulator.populateDataset(dataset);
          */
+        dataset.addSeries(plannedBudgedSeries);
+        dataset.addSeries(projectedBudgedSeries);
+        dataset.addSeries(currentBudgedSeries);
 
         return dataset;
     }

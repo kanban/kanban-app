@@ -7,13 +7,21 @@ import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.CategoryPointerAnnotation;
+import org.jfree.chart.annotations.XYAnnotation;
+import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.xy.XYDataset;
 import org.joda.time.LocalDate;
+import com.google.gson.internal.Pair;
 import com.metservice.kanban.charts.KanbanDrawingSupplier;
 import com.metservice.kanban.charts.cumulativeflow.CumulativeFlowChartBuilder;
 import com.metservice.kanban.model.EstimatesProject;
@@ -59,7 +67,7 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
         plot.setDomainGridlinesVisible(true);
         plot.setDomainGridlinePaint(Color.GRAY);
         plot.setRangeGridlinePaint(Color.GRAY);
-        plot.setDrawingSupplier(new KanbanDrawingSupplier(3));        
+        plot.setDrawingSupplier(new KanbanDrawingSupplier(3));
 
         CumulativeFlowChartBuilder.insertJournalEntries(dataset, project, plot, startDate, endDate);
 
@@ -84,19 +92,19 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
         EstimatesBurnUpDataModel model = new EstimatesBurnUpDataModel(type, workItems, startDate, currentDate,
             estimatesProject);
 
-        CategoryDataset dataset = new EstimatesBurnUpDatasetGenerator().createDataset(model);
+        XYDataset dataset = new EstimatesBurnUpDatasetGenerator().createDataset(model);
         JFreeChart chart = createEstimatesChart(dataset, estimatesProject.getKanbanProject(), startDate, currentDate,
             model);
         chartWriter.writeChart(outputStream, chart, 800, 600);
 
     }
 
-    private JFreeChart createEstimatesChart(CategoryDataset dataset, KanbanProject project, LocalDate startDate,
+    private JFreeChart createEstimatesChart(XYDataset dataset, KanbanProject project, LocalDate startDate,
                                             LocalDate endDate, EstimatesBurnUpDataModel model) {
-        JFreeChart chart = ChartFactory.createStackedAreaChart(
+        JFreeChart chart = ChartFactory.createXYLineChart(
             "Estimates Burn-Up Chart", // chart title
             "$ spent", // domain axis label
-            "points", // range axis label
+            "feature points", // range axis label
             dataset, // data
             PlotOrientation.VERTICAL, // orientation
             true, // include legend
@@ -104,31 +112,34 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
             false
             );
 
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+
+        XYPlot plot = (XYPlot) chart.getPlot();
         plot.setForegroundAlpha(1f);
         plot.setBackgroundPaint(Color.WHITE);
         plot.setDomainGridlinesVisible(true);
         plot.setDomainGridlinePaint(Color.GRAY);
         plot.setRangeGridlinePaint(Color.GRAY);
-        plot.setDrawingSupplier(new KanbanDrawingSupplier(3));
 
-        CumulativeFlowChartBuilder.insertJournalEntries(dataset, project, plot, startDate, endDate);
-
-        CategoryAxis domainAxis = plot.getDomainAxis();
+        ValueAxis domainAxis = plot.getDomainAxis();
         domainAxis.setLowerMargin(0.0);
-        domainAxis.setUpperMargin(0.0);
-        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+        domainAxis.setUpperMargin(0.1);
 
         // change the auto tick unit selection to integer units only...
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         rangeAxis.setUpperMargin(0.12);
 
-        CategoryPointerAnnotation annotation = new CategoryPointerAnnotation("Budget",
+        XYAnnotation annotation = new XYPointerAnnotation("Budget",
             model.getBudget(), 0, 30);
-        annotation.setBaseRadius(30);
-        annotation.setLabelOffset(7);
         plot.addAnnotation(annotation);
+
+        Pair<Integer, LocalDate> lastBudgedEntry = model.getLastBudgedEntry();
+        annotation = new XYPointerAnnotation("Last budget entry",
+            lastBudgedEntry.first, model.getRemainingFeaturePointForBudget(lastBudgedEntry), 30);
+        plot.addAnnotation(annotation);
+
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        plot.setRenderer(renderer);
 
         return chart;
     }

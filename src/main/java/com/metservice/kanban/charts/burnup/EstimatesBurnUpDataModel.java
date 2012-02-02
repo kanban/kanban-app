@@ -97,12 +97,18 @@ public class EstimatesBurnUpDataModel {
         return points;
     }
 
-    public int getProjectedEndOfMoneyPoints() {
-        return 2;
+    public Pair<Integer, LocalDate> getLastBudgedEntry() {
+        List<Pair<Integer, LocalDate>> budgetEntries = getBudgetEntries();
+        return budgetEntries.get(budgetEntries.size() - 1);
     }
 
+
+
     public Integer getProjectedBudgetConsumed() {
-        return 90;
+        Pair<Integer, LocalDate> lastBudgedEntry = getLastBudgedEntry();
+        int remainingFeaturePointForBudget = getRemainingFeaturePointForBudget(lastBudgedEntry);
+        return lastBudgedEntry.first * getAllFeaturePoints() / (getAllFeaturePoints() - remainingFeaturePointForBudget);
+        //        return 90;
     }
 
     public Integer getBudget() {
