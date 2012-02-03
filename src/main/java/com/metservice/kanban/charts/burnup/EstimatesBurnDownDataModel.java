@@ -84,7 +84,9 @@ public class EstimatesBurnDownDataModel {
     }
 
     public Pair<Integer, LocalDate> getLastBudgedEntry() {
-        List<Pair<Integer, LocalDate>> budgetEntries = getBudgetEntries();
+        if (budgetEntries == null || budgetEntries.size() == 0) {
+            return null;
+        }
         return budgetEntries.get(budgetEntries.size() - 1);
     }
 
@@ -96,6 +98,11 @@ public class EstimatesBurnDownDataModel {
 
     int computeProjectedBudgedConsumed() {
         Pair<Integer, LocalDate> lastBudgedEntry = getLastBudgedEntry();
+        if (lastBudgedEntry == null) {
+            logger.info("Trying to getProjectedBudget with no budget recorded, should return infinity");
+            // just some large value to indicate that sth is wrong
+            return getBudget() * 5;
+        }
         int remainingFeaturePointForBudget = getRemainingFeaturePointForBudget(lastBudgedEntry);
 
         if (allFeaturePoints - remainingFeaturePointForBudget != 0) {

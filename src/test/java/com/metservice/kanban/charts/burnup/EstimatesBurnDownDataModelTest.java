@@ -106,6 +106,14 @@ public class EstimatesBurnDownDataModelTest {
     }
 
     @Test
+    public void getLastBudgetEntryReturnsNullForEmptyList() {
+        when(estimatesProject.getDayCosts()).thenReturn(new TreeMap<LocalDate, Integer>());
+        model = new EstimatesBurnDownDataModel(workItems, estimatesProject);
+        Pair<Integer, LocalDate> lastBudgedEntry = model.getLastBudgedEntry();
+        assertEquals(null, lastBudgedEntry);
+    }
+
+    @Test
     public void computeProjectedBudgedConsumed() {
         workItems.get(0).advance(LocalDate.parse("2012-01-01"));
         workItems.get(0).advance(LocalDate.parse("2012-01-02"));

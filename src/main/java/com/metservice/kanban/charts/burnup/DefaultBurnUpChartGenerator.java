@@ -127,10 +127,12 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
         plot.addAnnotation(annotation);
 
         Pair<Integer, LocalDate> lastBudgedEntry = model.getLastBudgedEntry();
-        annotation = new XYPointerAnnotation("Last budget entry",
-            lastBudgedEntry.first, model.getRemainingFeaturePointForBudget(lastBudgedEntry), -0.9);
-        annotation.setLabelOffset(10);
-        plot.addAnnotation(annotation);
+        if (lastBudgedEntry != null) {
+            annotation = new XYPointerAnnotation("Last budget entry",
+                lastBudgedEntry.first, model.getRemainingFeaturePointForBudget(lastBudgedEntry), -0.9);
+            annotation.setLabelOffset(10);
+            plot.addAnnotation(annotation);
+        }
 
         annotation = new XYPointerAnnotation("Estimated budget",
             model.getProjectedBudgetConsumed(), 0, -0.9);
