@@ -43,8 +43,10 @@ margin: 5px 0 40px 10px;
     			buttonImage: "../../images/calendar.gif",
     			buttonImageOnly: true
         	});
+        });
+        $(function() {
         	$("#chartName").val($("#chartName").val().substring(0, $("#chartName").val().length - 4));
-        	if ($("#chartName").val() == "cycle-time-chart"){
+        	if ($("#chartName").val() == "cycle-time-chart" || $("#chartName").val() == "estimates-burn-down-chart"){
         		$("form#dateForm").hide();
         	}
         });
@@ -61,12 +63,11 @@ margin: 5px 0 40px 10px;
 	   			<tr><td>End date:</td><td><input name="endDate" id="endDate" type="text"  value="${endDate}"/></td></tr>
                 <tr><td colspan="2">
         		    <input type="submit" value="OK" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
-           			<input type="hidden" name="chartName" id="chartName" value="${imageName}"/>
-           			<input type="text" name="workItemTypeName" id="workItemTypeName" value="${workItemTypeName}" style="display:none;"/>
+                    <input type="text" name="workItemTypeName" id="workItemTypeName" value="${workItemTypeName}" style="display:none;"/>
+                    <input type="hidden" name="chartName" id="chartName" value="${imageName}"/>
                 </td></tr>
             </table>                
         </form>
-
         <div><img src="${imageName}?level=${workItemTypeName}&startDate=${startDate}&endDate=${endDate}&workStream=${workStreams[project.name]}" alt="[chart]" /></div>
         
         <c:if test="${imageName == 'burn-up-chart.png'}">

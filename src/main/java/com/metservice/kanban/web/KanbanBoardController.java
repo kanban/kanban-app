@@ -672,7 +672,7 @@ public class KanbanBoardController {
             endDateParsed = LocalDate.fromCalendarFields(Calendar.getInstance());
         }
         LocalDate result = endDateParsed.minusMonths(DEFAULT_MONTHS_DISPLAY);
-        if (result.isBefore(earliestDate)) {
+        if (earliestDate != null && result.isBefore(earliestDate)) {
             result = earliestDate;
         }
         return formatDate(result);
@@ -969,19 +969,14 @@ public class KanbanBoardController {
 
     @RequestMapping("estimates-burn-down-chart.png")
     public synchronized void estimatesBurnDownChartPng(@ModelAttribute("estimatesProject") EstimatesProject project,
-                                                     @ModelAttribute("chartGenerator") BurnUpChartGenerator chartGenerator,
-                                                     @RequestParam("startDate") String startDate,
-                                                     @RequestParam("endDate") String endDate,
-                                                     OutputStream outputStream) throws IOException {
+                                                       @ModelAttribute("chartGenerator") BurnUpChartGenerator chartGenerator,
+                                                       OutputStream outputStream) throws IOException {
 
         WorkItemTree tree = project.getKanbanProject().getWorkItemTree();
         WorkItemType type = project.getKanbanProject().getWorkItemTypes().getRoot().getValue();
         List<WorkItem> topLevelWorkItems = tree.getWorkItemsOfType(type, null);
 
-        LocalDate start = DateUtils.parseDate(startDate, null);
-        LocalDate end = DateUtils.parseDate(endDate, null);
-
-        chartGenerator.generateEstimatesBurnUpChart(project, type, topLevelWorkItems, start, end, outputStream);
+        chartGenerator.generateEstimatesBurnUpChart(project, topLevelWorkItems, outputStream);
     }
 
     @RequestMapping("{board}/add-column-action")

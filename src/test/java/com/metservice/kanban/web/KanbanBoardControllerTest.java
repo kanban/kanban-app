@@ -245,6 +245,7 @@ public class KanbanBoardControllerTest {
         kanbanController.setKanbanService(null);
         when(workItemTypes.getByName("feature")).thenReturn(workItem);
         when(workItemTypes.getByName("feature12")).thenThrow(new IllegalArgumentException("unknown phase"));
+        @SuppressWarnings("unchecked")
         TreeNode<WorkItemType> node = mock(TreeNode.class);
         when(workItemTypes.getRoot()).thenReturn(node);
         when(node.getValue()).thenReturn(workItem);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
 import org.joda.time.LocalDate;
 
 public class EstimatesProject {
@@ -16,7 +17,7 @@ public class EstimatesProject {
 
     private int budget = 0;
     private int estimatedCostPerPoint = 0;
-    private Map<LocalDate, Integer> costDailyMap;
+    private Map<LocalDate, Integer> costDailyMap = new TreeMap<LocalDate, Integer>();
 
     private String projectName;
 

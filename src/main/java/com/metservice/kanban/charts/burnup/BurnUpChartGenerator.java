@@ -15,8 +15,8 @@ public interface BurnUpChartGenerator {
                                     LocalDate startDate, LocalDate currentDate, OutputStream outputStream)
         throws IOException;
 
-    public void generateEstimatesBurnUpChart(EstimatesProject project, WorkItemType type, List<WorkItem> workItems,
-                                             LocalDate startDate, LocalDate currentDate, OutputStream outputStream)
+    public void generateEstimatesBurnUpChart(EstimatesProject project, List<WorkItem> workItems,
+                                             OutputStream outputStream)
         throws IOException;
 
 }

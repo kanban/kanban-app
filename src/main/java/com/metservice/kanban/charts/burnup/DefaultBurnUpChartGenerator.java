@@ -6,8 +6,6 @@ import java.io.OutputStream;
 import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.annotations.CategoryPointerAnnotation;
-import org.jfree.chart.annotations.XYAnnotation;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
@@ -16,7 +14,6 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.xy.XYDataset;
@@ -85,22 +82,17 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
     }
 
     @Override
-    public void generateEstimatesBurnUpChart(EstimatesProject estimatesProject, WorkItemType type,
-                                             List<WorkItem> workItems,
-                                             LocalDate startDate, LocalDate currentDate, OutputStream outputStream)
-        throws IOException {
-        EstimatesBurnUpDataModel model = new EstimatesBurnUpDataModel(type, workItems, startDate, currentDate,
-            estimatesProject);
+    public void generateEstimatesBurnUpChart(EstimatesProject estimatesProject, List<WorkItem> workItems,
+                                             OutputStream outputStream) throws IOException {
+        EstimatesBurnDownDataModel model = new EstimatesBurnDownDataModel(workItems, estimatesProject);
 
-        XYDataset dataset = new EstimatesBurnUpDatasetGenerator().createDataset(model);
-        JFreeChart chart = createEstimatesChart(dataset, estimatesProject.getKanbanProject(), startDate, currentDate,
-            model);
+        XYDataset dataset = new EstimatesBurnDownDatasetGenerator().createDataset(model);
+        JFreeChart chart = createEstimatesChart(dataset, estimatesProject.getKanbanProject(), model);
         chartWriter.writeChart(outputStream, chart, 800, 600);
 
     }
 
-    private JFreeChart createEstimatesChart(XYDataset dataset, KanbanProject project, LocalDate startDate,
-                                            LocalDate endDate, EstimatesBurnUpDataModel model) {
+    private JFreeChart createEstimatesChart(XYDataset dataset, KanbanProject project, EstimatesBurnDownDataModel model) {
         JFreeChart chart = ChartFactory.createXYLineChart(
             "Estimates Burn-Down Chart", // chart title
             "$ spent", // domain axis label
@@ -129,13 +121,25 @@ public class DefaultBurnUpChartGenerator implements BurnUpChartGenerator {
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         rangeAxis.setUpperMargin(0.12);
 
-        XYAnnotation annotation = new XYPointerAnnotation("Budget",
-            model.getBudget(), 0, 30);
+        XYPointerAnnotation annotation = new XYPointerAnnotation("Budget",
+            model.getBudget(), 0, -0.9);
+        annotation.setLabelOffset(10);
         plot.addAnnotation(annotation);
 
         Pair<Integer, LocalDate> lastBudgedEntry = model.getLastBudgedEntry();
         annotation = new XYPointerAnnotation("Last budget entry",
-            lastBudgedEntry.first, model.getRemainingFeaturePointForBudget(lastBudgedEntry), 30);
+            lastBudgedEntry.first, model.getRemainingFeaturePointForBudget(lastBudgedEntry), -0.9);
+        annotation.setLabelOffset(10);
+        plot.addAnnotation(annotation);
+
+        annotation = new XYPointerAnnotation("Estimated budget",
+            model.getProjectedBudgetConsumed(), 0, -0.9);
+        annotation.setLabelOffset(10);
+        plot.addAnnotation(annotation);
+
+        annotation = new XYPointerAnnotation("Project start",
+            0, model.getAllFeaturePoints(), -0.5);
+        annotation.setLabelOffset(15);
         plot.addAnnotation(annotation);
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();

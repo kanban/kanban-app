@@ -45,7 +45,7 @@ public class EstimatesDaoTest {
         p2 = estimatesDao.loadProject(projectname);
         
         assertEquals(1234, p2.getBudget());
-        assertEquals(100, p2.getCostSoFar());
+        assertEquals(0, p2.getCostSoFar());
         assertEquals(10, p2.getEstimatedCostPerPoint());
     }
 
