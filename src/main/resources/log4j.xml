@@ -5,12 +5,36 @@
     <appender name="console" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d %-5p %c{1} - %m%n" />
+            <param name="ConversionPattern" value="%d %-5p %c - %m%n" />
         </layout>
     </appender>
+    
+    <appender name="file" class="org.apache.log4j.FileAppender">
+        <param name="File" value="/var/log/kanban.log" />
+        <param name="Append" value="true" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p %c - %m%n" />
+        </layout>
+    </appender>    
+    
+    
+    <logger name="com.metservice">
+        <level value="info"/>
+    </logger>
+    
+    <logger name="com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl">
+      <!-- Skip problems with 'Expected content type of 'application/javascript' or 'application/ecmascript'' messages -->
+        <level value="error" />
+    </logger>
+    
+    <logger name="com.gargoylesoftware.htmlunit.DefaultCssErrorHandler">
+      <!-- Skip problems with 'CSS error: null [22:115] Error in expression.' messages (jQuery CSS) -->
+        <level value="error" />
+    </logger>
     
     <root>
         <priority value="warn" />
         <appender-ref ref="console" />
+        <appender-ref ref="file" />
     </root>
 </log4j:configuration>

@@ -1,6 +1,7 @@
 package com.metservice.kanban.model;
 
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -11,7 +12,6 @@ public class WorkItemTypeTest {
     @Test
     public void knowsTheOrderOfPhases() {
         WorkItemType type = new WorkItemType("phase 1", "phase 2");
-
         assertThat(type.getPhaseAfter("phase 1"), is("phase 2"));
     }
 
@@ -64,6 +64,13 @@ public class WorkItemTypeTest {
         assertThat(type.getCompletedPhase(), is("phase 2"));
     }
     
+    @Test
+    public void knownWallPhases() {
+        WorkItemType type = new WorkItemType("phase 1", "phase 2", "phase 3", "phase 4");
+        assertThat(type.getWallPhases(), org.hamcrest.Matchers.hasSize(2));
+        assertThat(type.getWallPhases(), hasItems("phase 2", "phase 3"));
+    }
+
     @Test
     public void testIsPhaseBefore() {
         WorkItemType type = new WorkItemType("phase 1", "phase 2", "phase 3");

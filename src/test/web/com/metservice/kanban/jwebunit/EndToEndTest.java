@@ -231,6 +231,7 @@ public class EndToEndTest {
     }
 
     @Test
+    @Ignore("this requirement is not longer valid - displaying comments instead of notes")
     public void quotesAreEscapedOnWall() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
 
@@ -249,6 +250,7 @@ public class EndToEndTest {
     }
 
     @Test
+    @Ignore("this requirement is not longer valid - displaying comments instead of notes")
     public void htmlEntitiesAreEscapedOnWall() throws IOException {
         BoardPage page = openProject(kanbanHome, "Test project", "/end-to-end-test/");
 

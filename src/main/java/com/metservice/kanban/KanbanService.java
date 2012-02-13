@@ -3,6 +3,8 @@ package com.metservice.kanban;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.writeStringToFile;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +15,8 @@ import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 import com.metservice.kanban.model.DefaultKanbanProject;
 import com.metservice.kanban.model.KanbanBoardConfiguration;
 import com.metservice.kanban.model.KanbanProject;
@@ -276,4 +280,56 @@ public class KanbanService {
 
         projectHome.renameTo(newProjectHome);
     }
+
+    public void setColumnWipLimit(String projectName, WorkItemType workItemtype, String columnName, Integer wipLimit)
+        throws IOException {
+
+        getProjectConfiguration(projectName).getKanbanPropertiesFile().setColumnWipLimit(workItemtype, columnName,
+            wipLimit);
+    }
+
+    public boolean renameColumn(String projectName, WorkItemType workItemType, String columnName, String newColumnName)
+        throws IOException
+    {
+        // check if column exists
+        if (!workItemType.containsPhase(columnName)) {
+            return false;
+        }
+        if (workItemType.containsPhase(newColumnName)) {
+            return false;
+        }
+        // rename column in a properties file
+        try {
+            getProjectConfiguration(projectName).getKanbanPropertiesFile().renameColumn(workItemType, columnName,
+                newColumnName);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        // rename column in a CSV file
+
+        KanbanProjectConfiguration configuration = getProjectConfiguration(projectName);
+
+        CSVReader csvReader = new CSVReader(new FileReader(configuration.getDataFile(workItemType)));
+        List<String[]> items;
+        try {
+            items = csvReader.readAll();
+            for (int i = 0; i < items.get(0).length; i++) {
+                if (items.get(0)[i].equals(columnName)) {
+                    items.get(0)[i] = newColumnName;
+                    break;
+                }
+            }
+        } finally {
+            csvReader.close();
+        }
+
+        CSVWriter csvWriter = new CSVWriter(new FileWriter(configuration.getDataFile(workItemType)));
+        try {
+            csvWriter.writeAll(items);
+        } finally {
+            csvWriter.close();
+        }
+        return true;
+    }
+
 }

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<jsp:include page="include/header-head.jsp"/>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/journal.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/journal.js?version=${service.version}"></script>
 	<title>Kanban: journal</title>
 </head>
 
@@ -27,12 +27,12 @@
         </div>
     </c:forEach>
 
-    <div id="journal-add-dialog" title="Add journal item">
+    <div id="journal-add-dialog" title="Add journal item" style="display: none;">
         <p>Entry date</p>
         <input name="journal-date" type="text" id="journal-date" value="${journal-date}"/>
         <p>Journal text:</p>
         <textarea name="journal-text" id="journal-text" rows="5" cols="30"></textarea>
-        <div id="validation-error" class="error">aa</div>
+        <div id="validation-error" class="error"></div>
     </div>
 </body>
 </html>

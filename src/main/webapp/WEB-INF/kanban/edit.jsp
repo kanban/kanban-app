@@ -6,8 +6,8 @@
 
 <head>
     <jsp:include page="include/header-head.jsp" />
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/edit.css" />
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/edit.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/edit.css?version=${service.version}" />
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/edit.js?version=${service.version}"></script>
 
     <title>Kanban: edit a work item</title>
     <script type="text/javascript">

@@ -1,8 +1,12 @@
 package com.metservice.kanban.jwebunit.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WaitFor {
     
+    private final static Logger logger = LoggerFactory.getLogger(WaitFor.class);
+
     public static void me(UntilTrue untilTrue, int orMaxMills, int millsBetweenChecks) {
         
         // we time out at maxTime
@@ -21,13 +25,13 @@ public class WaitFor {
             
             // wait for next check
             try {
-                System.out.println("waiting");
+                logger.info("waiting");
                 Thread.sleep(millsBetweenChecks);
             } catch (Exception e) {
             }
         }
         
-        System.err.println("WaitFor timed out");
+        logger.error("WaitFor timed out");
     }
 
 }

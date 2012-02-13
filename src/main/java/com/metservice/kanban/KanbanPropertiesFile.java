@@ -7,10 +7,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import com.metservice.kanban.model.BoardIdentifier;
 import com.metservice.kanban.model.HtmlColour;
 import com.metservice.kanban.model.WorkItemType;
@@ -121,7 +123,6 @@ public class KanbanPropertiesFile {
     private String[] getCommaSeparatedStrings(String propertyKey) throws IOException {
         String commaSeparatedString = getString(propertyKey);
         return StringUtils.splitPreserveAllTokens(commaSeparatedString, ',');
-        //        return commaSeparatedString.split(",");
     }
 
     /**
@@ -132,11 +133,11 @@ public class KanbanPropertiesFile {
      * @return
      * @throws IOException
      */
-    String getString(String propertyKey) throws IOException {
+    String getString(String propertyKey) {
         String propertyValue = properties.getProperty(propertyKey);
-        if (propertyValue == null) {
-            throw new IOException("property \"" + propertyKey + "\" missing from " + file);
-        }
+        //        if (propertyValue == null) {
+        //            throw new IOException("property \"" + propertyKey + "\" missing from " + file);
+        //        }
         return propertyValue;
     }
 
@@ -162,6 +163,12 @@ public class KanbanPropertiesFile {
         
         String[] phases = getPhases(workItemType.toString());
         String[] wipLimits = getCommaSeparatedStrings("workItemTypes." + workItemType + ".wipLimit");
+        if (wipLimits == null) {
+            wipLimits = new String[phases.length];
+        }
+        if (wipLimits.length < phases.length) {
+            wipLimits = Arrays.copyOf(wipLimits, phases.length);
+        }
 
         for (int i = 0; i < phases.length; i++) {
             if (phases[i].equals(columnName)) {
@@ -175,8 +182,43 @@ public class KanbanPropertiesFile {
             }
         }
         String wipLimitsStr = StringUtils.join(wipLimits, ",");
-        properties.put("workItemTypes." + workItemType + ".wipLimit", wipLimitsStr);
+        properties.put(String.format("workItemTypes.%s.wipLimit", workItemType.getName()), wipLimitsStr);
         
+        storeProperties();
+    }
+
+    public void renameColumn(WorkItemType workItemType, String columnName, String newColumnName) throws IOException {
+        logger.info("Renaming column for WorkItem {} from {} to {} in properties file", new Object[] {
+            workItemType,
+            columnName,
+            newColumnName});
+        
+        boolean columnFound = false;
+
+        String[] phases = getCommaSeparatedStrings(String.format("workItemTypes.%s.phases", workItemType.getName()));
+
+        for (int i = 0;i < phases.length;i++) {
+            if (phases[i].equals(columnName)) {
+                phases[i] = newColumnName;
+                columnFound = true;
+                break;
+            }
+        }
+        Assert.isTrue(columnFound, String.format("Column %s cannot be found in properties file", columnName));
+
+        String newPhases = StringUtils.join(phases, ",");
+        properties.put(String.format("workItemTypes.%s.phases", workItemType.getName()), newPhases);
+        
+        String[] boardPhases = getCommaSeparatedStrings("boards.wall");
+
+        for (int i = 0;i < boardPhases.length;i++) {
+                if (boardPhases[i].equals(columnName)) {
+                    boardPhases[i] = newColumnName;
+                }
+        }
+        String newboardPhases = StringUtils.join(boardPhases, ",");
+        properties.put("boards.wall", newboardPhases);
+
         storeProperties();
     }
 }

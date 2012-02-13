@@ -70,8 +70,13 @@ public class WorkItemType {
         this.name = name;
     }
 
+
     public String getBacklogPhase() {
         return phases.get(0);
+    }
+
+    public List<String> getWallPhases() {
+        return phases.subList(1, phases.size() - 1);
     }
 
     public String getCompletedPhase() {
@@ -82,6 +87,10 @@ public class WorkItemType {
         int indexA = getPhases().indexOf(phaseA);
         int indexB = getPhases().indexOf(phaseB);
         return indexA < indexB;
+    }
+
+    public boolean containsPhase(String phase) {
+        return getPhases().indexOf(phase) >= 0;
     }
 
     public boolean isPhaseAfter(String phaseA, String phaseB) {

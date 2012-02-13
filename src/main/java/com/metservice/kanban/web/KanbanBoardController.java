@@ -224,8 +224,9 @@ public class KanbanBoardController {
     public synchronized RedirectView stopItemAction(@ModelAttribute("project") KanbanProject project,
                                                     @PathVariable("board") String boardType,
                                                     @RequestParam("itemId") String id,
-                                                    @RequestParam("comment") String comment,
-                                                    @RequestParam("userName") String userName) throws IOException {
+                                                    @RequestParam(value = "comment", required = false) String comment,
+                                                    @RequestParam("userName") String userName)
+        throws IOException {
 
         int itemId = parseInt(id);
 
@@ -233,9 +234,11 @@ public class KanbanBoardController {
 
         project.stop(itemId);
 
-        if (!StringUtils.isEmpty(comment)) {
-            wi.addComment(createBlockedComment(wi.isBlocked(), comment, userName));
+        if (comment == null) {
+            comment = "";
         }
+
+        wi.addComment(createBlockedComment(wi.isBlocked(), comment, userName));
         project.save();
 
         // Redirect
@@ -628,7 +631,7 @@ public class KanbanBoardController {
 
     private String defaultStartDate(String endDate) {
         LocalDate endDateParsed;
-        if (null != endDate) {
+        if (!StringUtils.isEmpty(endDate)) {
             try {
                 endDateParsed = LocalDate.parse(endDate);
             } catch (RuntimeException e) {
@@ -939,14 +942,22 @@ public class KanbanBoardController {
         LocalDate end;
 
         try {
-            start = LocalDate.parse(startDate);
+            if (StringUtils.isNotEmpty(startDate)) {
+                start = LocalDate.parse(startDate);
+            } else {
+                start = null;
+            }
         } catch (RuntimeException e) {
             logger.warn("Cannot parse start date {}", startDate);
             logger.warn("Got exception: ", e);
             start = null;
         }
         try {
-            end = LocalDate.parse(endDate);
+            if (StringUtils.isNotEmpty(endDate)) {
+                end = LocalDate.parse(endDate);
+            } else {
+                end = null;
+            }
         } catch (RuntimeException e) {
             logger.warn("Cannot parse end date {}", endDate);
             logger.warn("Got exception: ", e);
@@ -1207,20 +1218,37 @@ public class KanbanBoardController {
         return new RedirectView("journal");
     }
 
-    @RequestMapping("edit-column-action")
-    public synchronized RedirectView editColumn(@ModelAttribute("project") KanbanProject project,
+    @RequestMapping(value = "edit-column-action", produces = "application/json")
+    @ResponseBody
+    public synchronized JsonStatus editColumn(@ModelAttribute("project") KanbanProject project,
                                                 @PathVariable("projectName") String projectName,
                                                 @RequestParam("itemType") String itemType,
                                                 @RequestParam("columnName") String columnName,
+                                                @RequestParam("newColumnName") String newColumnName,
                                                 @RequestParam("wipLimit") Integer wipLimit) throws IOException {
+
+        if (StringUtils.isEmpty(newColumnName)) {
+            return JsonStatus.createErrorStatus("New column name cannot be empty");
+        }
+        if (wipLimit != null && wipLimit <= 0) {
+            return JsonStatus.createErrorStatus("WIP Limit should be empty or positive value");
+        }
+
+        logger.info("Editing column {} to {}, WIP = {}", new Object[] {
+            columnName,
+            newColumnName,
+            wipLimit});
 
         WorkItemType workItemtype = project.getWorkItemTypes().getByName(itemType);
 
-        kanbanService
-            .getProjectConfiguration(projectName)
-            .getKanbanPropertiesFile()
-            .setColumnWipLimit(workItemtype, columnName, wipLimit);
+        kanbanService.setColumnWipLimit(projectName, workItemtype, columnName, wipLimit);
 
-        return new RedirectView("wall");
+        if (!columnName.equals(newColumnName)) {
+            if (!kanbanService.renameColumn(projectName, workItemtype, columnName, newColumnName)) {
+                return JsonStatus.createErrorStatus("Cannot rename column");
+            }
+        }
+        
+        return JsonStatus.createOkStatus("OK");
     }
 }

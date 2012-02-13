@@ -42,3 +42,38 @@ td.padded {
     padding-left: 4px;
     padding-right: 2px;
 }
+
+.customizedHeader {
+    border-top:1px #989898 dotted;
+    border-left:1px #989898 dotted;
+    border-right:1px #989898 dotted;
+    width: 164px;
+    height:30px;
+    font-family:verdana;
+    font-size:14px;
+    color:black;
+}
+
+.subHeader {
+    border-bottom:1px #989898 dotted;
+    border-left:1px #989898 dotted;
+    border-right:1px #989898 dotted;
+    height:10px;
+    font-family:verdana;
+    font-size:10px;
+    color:black;
+}
+
+.row:hover {
+    border: 1px black solid;
+    margin: 1px 1px 1px 1px;
+    padding: 2px 2px 2px 2px;
+}
+
+.row {
+    border: 1px #C8C8C8 dotted;
+    height: 30px;
+    font-family: arial;
+    font-size: 14px;
+    color: #383838;
+}

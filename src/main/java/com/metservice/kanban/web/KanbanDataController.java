@@ -21,6 +21,7 @@ import com.metservice.kanban.model.WorkItemType;
  * @author Janella Espinas, Liam O'Connor
  */
 @Controller
+@RequestMapping("{projectName}")
 public class KanbanDataController {
 
     @Autowired
@@ -43,7 +44,7 @@ public class KanbanDataController {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    @RequestMapping("/download/{projectName}")
+    @RequestMapping("download")
     public void download(@PathVariable("projectName") String projectName, 
                          @RequestParam("workItemTypeName") String workItemTypeName,
                          HttpServletResponse response) throws FileNotFoundException, IOException {
