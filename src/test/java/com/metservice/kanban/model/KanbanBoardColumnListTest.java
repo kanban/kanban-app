@@ -85,4 +85,26 @@ public class KanbanBoardColumnListTest {
         assertThat(filteredWorkItems, hasItem(workItem1));
         assertThat(filteredWorkItems, not(hasItem(workItem2)));
     }
+
+    @Test
+    public void filterWorksWithComparator() {
+        WorkItem workItem1 = new WorkItem(1, featureType);
+        workItem1.advance(LocalDate.parse("2012-01-10"));
+
+        WorkItem workItem2 = new WorkItem(2, featureType);
+        workItem2.advance(LocalDate.parse("2012-01-06"));
+
+        WorkItem workItem3 = new WorkItem(3, featureType);
+        workItem3.advance(LocalDate.parse("2012-01-16"));
+
+        List<WorkItem> workItems = asList(workItem1, workItem2, workItem3);
+
+        KanbanBoardColumn column = new KanbanBoardColumn(featureType, "phase 1");
+        KanbanBoardColumnList columnList = new KanbanBoardColumnList(column);
+
+        List<WorkItem> filteredWorkItems = columnList.filter(workItems, WorkItem.LAST_PHASE_DATE_COMPARATOR);
+
+        List<WorkItem> expectedWorkItems = asList(workItem3, workItem1, workItem2);
+        assertThat(filteredWorkItems, is(expectedWorkItems));
+    }
 }

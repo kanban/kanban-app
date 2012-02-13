@@ -7,6 +7,11 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $("#graphs").click(function(){
+        	var pos = $(this).position();
+        	$("#graph_dropdown").css({
+        		left: pos.left + "px",
+        		top: (pos.top + 35) + "px" 
+        	});
             $("#graph_dropdown").fadeToggle();
             $("#graphs").toggleClass("active");
         });
@@ -127,6 +132,9 @@
 		<div id="graphs" class="button">
             <div class ="textOnButton">Charts</div>
         </div>
+        
+<!--             <button id="charts_button">Charts2</button> -->
+
           <div id="graph_dropdown">
           
           	<a id="cumulative-flow-chart-1-button" href="${pageContext.request.contextPath}/projects/${project.name}/chart?chartName=cumulative-flow-chart&workItemTypeName=${project.workItemTypes.root.value.name}" class="button">

@@ -21,7 +21,7 @@ public class KanbanBoardBuilderTest {
         KanbanBoardBuilder builder = new KanbanBoardBuilder(
             new KanbanBoardColumnList(new KanbanBoardColumn(type, "phase")), workItemTypes, tree);
 
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         assertThat(board.getCell(0, 0).getWorkItem(), is(workItem1));
         assertThat(board.getCell(1, 0).getWorkItem(), is(workItem2));
@@ -53,7 +53,7 @@ public class KanbanBoardBuilderTest {
             workItemTypes,
             tree);
 
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         assertThat(board.getCell(0, 0).getWorkItem(), is(workItem1));
         assertThat(board.getCell(0, 1).getWorkItem(), is(workItem2));
@@ -83,7 +83,7 @@ public class KanbanBoardBuilderTest {
                 new KanbanBoardColumn(storyType, "phase 2")),
             workItemTypes,
             tree);
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         assertThat(board.getCell(0, 0).getWorkItem(), is(feature));
         assertThat(board.getCell(0, 1).getWorkItem(), is(story1));
@@ -110,7 +110,7 @@ public class KanbanBoardBuilderTest {
                 new KanbanBoardColumn(featureType, "feature phase")),
             workItemTypes,
             tree);
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         Iterator<KanbanBoardRow> rowIterator = board.iterator();
         KanbanBoardRow topRow = rowIterator.next();
@@ -137,7 +137,7 @@ public class KanbanBoardBuilderTest {
                 new KanbanBoardColumn(featureType, "on-board")),
             new WorkItemTypeCollection(TreeNode.create(WorkItemType.class, featureType)),
             tree);
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         Iterator<KanbanBoardRow> rowIterator = board.iterator();
         KanbanBoardRow topRow = rowIterator.next();
@@ -165,7 +165,7 @@ public class KanbanBoardBuilderTest {
                 new KanbanBoardColumn(featureType, "phase")),
             new WorkItemTypeCollection(TreeNode.create(WorkItemType.class, featureType)),
             tree);
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         assertThat(board.getCell(0, 0).getWorkItemAbove(), nullValue());
         assertThat(board.getCell(0, 0).getWorkItemBelow(), is(feature2));
@@ -201,7 +201,7 @@ public class KanbanBoardBuilderTest {
                 new KanbanBoardColumn(storyType, "phase 2")),
             workItemTypes,
             tree);
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         assertThat(board.getCell(0, 1).getWorkItemAbove(), nullValue());
         assertThat(board.getCell(0, 1).getWorkItemBelow(), is(story2));
@@ -233,7 +233,7 @@ public class KanbanBoardBuilderTest {
                 new KanbanBoardColumn(featureType, "phase 2")),
             workItemTypes,
             tree);
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         assertThat(board.getCell(0, 0).getWorkItemAbove(), nullValue());
         assertThat(board.getCell(0, 0).getWorkItemBelow(), is(feature2));
@@ -261,7 +261,7 @@ public class KanbanBoardBuilderTest {
                 new KanbanBoardColumn(type, "on-board")),
             new WorkItemTypeCollection(TreeNode.create(WorkItemType.class, type)),
             tree);
-        KanbanBoard board = builder.build(null);
+        KanbanBoard board = builder.build(null, null);
 
         assertThat(board.getCell(0, 0).getWorkItemBelow(), is(workItem3));
         assertThat(board.getCell(1, 0).getWorkItemAbove(), is(workItem1));

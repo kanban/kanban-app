@@ -178,7 +178,7 @@ public class DefaultKanbanProject implements KanbanProject {
     public KanbanBoard getBoard(BoardIdentifier boardType, String workStream) {
         KanbanBoardBuilder kanbanBoardBuilder = new KanbanBoardBuilder(columnsByBoard.get(boardType), workItemTypes,
             tree);
-        return kanbanBoardBuilder.build(workStream);
+        return kanbanBoardBuilder.build(workStream, null);
     }
 
     /**
@@ -203,9 +203,8 @@ public class DefaultKanbanProject implements KanbanProject {
         KanbanBoardBuilder kanbanBoardBuilder = new KanbanBoardBuilder(
             new KanbanBoardColumnList(
                 new KanbanBoardColumn(getRootWorkItemType(), getRootWorkItemType().getCompletedPhase())),
-            workItemTypes,
-            tree);
-        return kanbanBoardBuilder.build(workStream);
+            workItemTypes, tree);
+        return kanbanBoardBuilder.build(workStream, WorkItem.LAST_PHASE_DATE_COMPARATOR);
     }
 
 	/**

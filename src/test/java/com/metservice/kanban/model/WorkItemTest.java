@@ -7,9 +7,11 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.isNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import org.hamcrest.core.IsNull;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,6 +77,29 @@ public class WorkItemTest {
         assertThat(workItem.getPhaseOnDate(formatter.parse("20/02/2011")), is("phase3"));
         assertThat(workItem.getPhaseOnDate(formatter.parse("20/02/2012")), is("phase3"));
 
+    }
+
+    @Test
+    public void testGetLastPhaseDate() throws ParseException {
+        WorkItem workItem = new WorkItem(1, type);
+
+        assertThat(workItem.getLastPhaseDate(), is(nullValue()));
+
+        workItem.advance(formatter.parse("20/01/2012"));
+        assertThat(workItem.getLastPhaseDate(), is(formatter.parse("20/01/2012")));
+        assertThat(workItem.getCurrentPhase(), is("feature"));
+
+        workItem.advance(formatter.parse("21/01/2012"));
+        assertThat(workItem.getLastPhaseDate(), is(formatter.parse("21/01/2012")));
+        assertThat(workItem.getCurrentPhase(), is("phase1"));
+
+        workItem.advance(formatter.parse("22/01/2012"));
+        assertThat(workItem.getLastPhaseDate(), is(formatter.parse("22/01/2012")));
+        assertThat(workItem.getCurrentPhase(), is("phase2"));
+
+        workItem.advance(formatter.parse("23/01/2012"));
+        assertThat(workItem.getLastPhaseDate(), is(formatter.parse("23/01/2012")));
+        assertThat(workItem.getCurrentPhase(), is("phase3"));
     }
 
     @Test

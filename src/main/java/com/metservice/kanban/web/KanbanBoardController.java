@@ -606,6 +606,12 @@ public class KanbanBoardController {
             endDate = formatDate(LocalDate.now());
         }
 
+        try {
+            project.getWorkItemTypes().getByName(workItemTypeName);
+        } catch (IllegalArgumentException exception) {
+            workItemTypeName = project.getWorkItemTypes().getRoot().getValue().getName();
+        }
+
         Map<String, Object> model = initBoard("chart", projectName, error, null);
 
         model.put("workItemTypeName", workItemTypeName);
