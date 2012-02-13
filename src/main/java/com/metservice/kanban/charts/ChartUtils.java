@@ -8,20 +8,21 @@ import com.metservice.kanban.model.WorkItem;
 
 /**
  * Helper class for creating Charts.
+ * 
  * @author Janella Espinas, Chris Cooper
- *
  */
 public final class ChartUtils {
 
-    public static List<LocalDate> getWorkingDaysForWorkItems(List<WorkItem> workItems, LocalDate startDate, LocalDate endDate) {
-        if (startDate == null){
-        	startDate = ChartUtils.getFirstDate(workItems);
+    public static List<LocalDate> getWorkingDaysForWorkItems(List<WorkItem> workItems, LocalDate startDate,
+                                                             LocalDate endDate) {
+        if (startDate == null) {
+            startDate = ChartUtils.getFirstDate(workItems);
 
             if (startDate == null) {
                 startDate = endDate;
             }
         }
-    	return getWorkingDays(startDate, endDate);
+        return getWorkingDays(startDate, endDate);
     }
 
     public static LocalDate getFirstDate(Iterable<WorkItem> workItems) {
@@ -59,6 +60,5 @@ public final class ChartUtils {
         return date;
     }
 
-    private ChartUtils() {
-    }
+    private ChartUtils() {}
 }

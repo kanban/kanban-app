@@ -35,12 +35,7 @@ $(function() {
         }
     });
     $("#add-entry-button").button();
-    $("#journal-date").datepicker({
-    	dateFormat: "yy-mm-dd",
-		showOn: "button",
-		buttonImage: "../../images/calendar.gif",
-		buttonImageOnly: true
-	});
+    applyDatepicker("#journal-date");
     $("#add-entry-button").click(function() {
     	addJournalEntry();
     });

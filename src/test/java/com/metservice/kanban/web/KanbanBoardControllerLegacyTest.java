@@ -33,8 +33,8 @@ public class KanbanBoardControllerLegacyTest {
   @Test
   public void testBoard() throws IOException {
 
-        ModelAndView modelAndView = kanbanController.wallBoard(kanban, "test-project", null, null,
-            new HashMap<String, String>(), null);
+        ModelAndView modelAndView = kanbanController.wallBoard(kanban, "test-project", null,
+            new HashMap<String, String>(), null, "", null);
         assertThat(modelAndView.getViewName(), is("/project.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
@@ -71,7 +71,7 @@ public class KanbanBoardControllerLegacyTest {
 
     @Test
     public void testEditProject() throws IOException {
-        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", false, null);
+        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", false, "");
         assertThat(modelAndView.getViewName(), is("/editProject.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
@@ -79,7 +79,7 @@ public class KanbanBoardControllerLegacyTest {
 
     @Test
     public void testCreateProject() throws IOException {
-        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", true, null);
+        ModelAndView modelAndView = kanbanController.editProject(kanban, "test-project", true, "");
         assertThat(modelAndView.getViewName(), is("/createProject.jsp"));
         assertThat((String) modelAndView.getModel().get("projectName"), is("test-project"));
         assertThat((String) modelAndView.getModel().get("boardType"), is("wall"));
@@ -88,7 +88,7 @@ public class KanbanBoardControllerLegacyTest {
     @Ignore
     @Test
     public void testAdvanceItemAction() throws IOException {
-        RedirectView view = kanbanController.advanceItemAction(kanban, "wall", "1", "phase", null);
+        RedirectView view = kanbanController.advanceItemAction(kanban, "wall", "1", "phase", null, null);
         assertThat(view.getUrl(), is("../wall"));
     }
 

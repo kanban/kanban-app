@@ -55,7 +55,7 @@
                                 <td class="edit, padded">
                                     <div class="editIcon">
                                         <a href="${pageContext.request.contextPath}/projects/${projectName}/completed/edit-item?id=${item.id}">
-                                                <img id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" />
+                                            <img id="edit-work-item-${item.id}-button" src="${pageContext.request.contextPath}/images/edit.png" />
                                         </a>
                                     </div>
                                 </td>
