@@ -12,7 +12,7 @@ import com.metservice.kanban.model.WorkItem;
 public class WorkStreamsTag extends TagSupport {
 
     private static final long serialVersionUID = 3751728956376722504L;
-    private final static Logger logger = LoggerFactory.getLogger(WorkStreamsTag.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WorkStreamsTag.class);
 
     private String name;
     private KanbanProject project;
@@ -63,7 +63,7 @@ public class WorkStreamsTag extends TagSupport {
                 pageContext.getOut().write("ERROR: Project is not set.");
             }
         } catch (IOException e) {
-            logger.error("Got exception handling work streams tag", e);
+            LOGGER.error("Got exception handling work streams tag", e);
         }
         return EVAL_PAGE;
     }

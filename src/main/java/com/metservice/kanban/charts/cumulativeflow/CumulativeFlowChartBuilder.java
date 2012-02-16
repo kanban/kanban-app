@@ -29,7 +29,7 @@ public class CumulativeFlowChartBuilder {
 
     private LocalDate startDate;
     private LocalDate endDate;
-    private final static Logger logger = LoggerFactory.getLogger(CumulativeFlowChartBuilder.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CumulativeFlowChartBuilder.class);
 
     public CumulativeFlowChartBuilder(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
@@ -136,7 +136,7 @@ public class CumulativeFlowChartBuilder {
                     annotation.setLabelOffset(7);
                     plot.addAnnotation(annotation);
                 } else {
-                    logger.warn("Cannot display journal entry {} for day {}, not sure why", journalItem.getText(),
+                    LOGGER.warn("Cannot display journal entry {} for day {}, not sure why", journalItem.getText(),
                         journalItem.getDate());
                 }
             }

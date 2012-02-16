@@ -35,7 +35,7 @@ public class KanbanHomeController {
      * @throws IOException
      */
     @RequestMapping("/create-home")
-    public View createKanbanHome() throws FileNotFoundException, IOException {
+    public View createKanbanHome() throws IOException {
         File home = kanbanService.getHome();
         home.mkdirs();
 

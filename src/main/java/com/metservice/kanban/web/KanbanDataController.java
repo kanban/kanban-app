@@ -47,7 +47,7 @@ public class KanbanDataController {
     @RequestMapping("download")
     public void download(@PathVariable("projectName") String projectName, 
                          @RequestParam("workItemTypeName") String workItemTypeName,
-                         HttpServletResponse response) throws FileNotFoundException, IOException {
+                         HttpServletResponse response) throws IOException {
         
         KanbanProjectConfiguration configuration = kanbanService.getProjectConfiguration(projectName);
         WorkItemType workItemType = configuration.getWorkItemTypes().getByName(workItemTypeName);
@@ -56,7 +56,7 @@ public class KanbanDataController {
         File file = configuration.getDataFile(workItemType);
         response.setContentType("text/csv");
         response.setContentLength((int)file.length());
-        response.setHeader("Content-Disposition","attachment; filename=\"" + file.getName() +"\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
         IOUtils.copy(new FileInputStream(file), response.getOutputStream());
     }
 

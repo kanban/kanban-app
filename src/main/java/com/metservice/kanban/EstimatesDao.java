@@ -22,7 +22,7 @@ import com.metservice.kanban.utils.DateUtils;
 @Service
 public class EstimatesDao {
 
-    private final static Logger logger = LoggerFactory.getLogger(EstimatesDao.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(EstimatesDao.class);
 
     private static final String PET_PROPERTIES = "pet.properties";
     private static final String PET_COSTPERPOINT = "pet.costperpoint";
@@ -78,8 +78,8 @@ public class EstimatesDao {
                 String[] dayAndCost = StringUtils.split(dayAndCostStr, "\\|");
                 result.put(LocalDate.parse(dayAndCost[0]), Integer.parseInt(dayAndCost[1]));
             } catch (Exception e) {
-                logger.error("Error getting cost daily map for item {}", dayAndCostStr);
-                logger.error("Got exception", e);
+                LOGGER.error("Error getting cost daily map for item {}", dayAndCostStr);
+                LOGGER.error("Got exception", e);
             }
         }
 

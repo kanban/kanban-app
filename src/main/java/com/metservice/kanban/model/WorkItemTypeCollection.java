@@ -39,7 +39,7 @@ public class WorkItemTypeCollection extends AbstractCollection<WorkItemType> {
         if (root.getValue().equals(type)) {
             return root;
         }
-        for(TreeNode<WorkItemType> itemType: root.getChildren()) {
+        for (TreeNode<WorkItemType> itemType : root.getChildren()) {
             if (itemType.getValue().equals(type)) {
                 return itemType;
             }

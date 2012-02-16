@@ -29,7 +29,7 @@ import com.metservice.kanban.model.WorkItem;
 @RequestMapping("{projectName}")
 public class EstimatesController {
 
-    private final static Logger logger = LoggerFactory.getLogger(EstimatesController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(EstimatesController.class);
 
     private static final String ESTIMATES_PROJECT_ATTR = "estimatesproject";
     private static final String KANBAN_PROJECT_ATTR = "project";
@@ -159,9 +159,9 @@ public class EstimatesController {
                     Integer cost = Integer.parseInt(d.cost);
                     dailyCosts.put(date, cost);
                 } catch (Exception e) {
-                    logger.warn("Error parsing data for daily costs date = {}, cost = {}, skipping this value", d.date,
+                    LOGGER.warn("Error parsing data for daily costs date = {}, cost = {}, skipping this value", d.date,
                         d.cost);
-                    logger.warn("Got exception", e);
+                    LOGGER.warn("Got exception", e);
                 }
             }
         }
@@ -182,6 +182,8 @@ public class EstimatesController {
             this.cost = cost;
         }
 
-        public Data() {}
+        public Data() {
+
+        }
     }
 }

@@ -98,7 +98,7 @@ public class CumulativeFlowChartMatrix {
 
         int startIndex = dates.indexOf(startDateCorrected) == -1 ? 0 : dates.indexOf(startDateCorrected);
         int endIndex = dates.indexOf(endDateCorrected) == -1 ? dates.size() : dates.indexOf(endDateCorrected) + 1;
-        if (endIndex > dates.size()){
+        if (endIndex > dates.size()) {
         	endIndex = dates.size();
         }
         dates = dates.subList(startIndex, endIndex);

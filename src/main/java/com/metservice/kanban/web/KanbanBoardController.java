@@ -71,7 +71,7 @@ public class KanbanBoardController {
 
     private static final int DEFAULT_CHART_HEIGHT = 600;
 
-    private final static Logger logger = LoggerFactory.getLogger(KanbanBoardController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(KanbanBoardController.class);
 
     private static final int MAX_PROJECT_NAME_LENGTH = 32;
 
@@ -662,8 +662,8 @@ public class KanbanBoardController {
             try {
                 endDateParsed = LocalDate.parse(endDate);
             } catch (RuntimeException e) {
-                logger.warn("Cannot parse date {}", endDate);
-                logger.warn("Got exception: ", e);
+                LOGGER.warn("Cannot parse date {}", endDate);
+                LOGGER.warn("Got exception: ", e);
                 endDateParsed = LocalDate.now();
             }
         } else {
@@ -1244,7 +1244,7 @@ public class KanbanBoardController {
             return JsonStatus.createErrorStatus("WIP Limit should be empty or positive value");
         }
 
-        logger.info("Editing column {} to {}, WIP = {}", new Object[] {
+        LOGGER.info("Editing column {} to {}, WIP = {}", new Object[] {
             columnName,
             newColumnName,
             wipLimit});

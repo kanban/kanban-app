@@ -80,7 +80,7 @@ public class WorkItemType {
     }
 
     public String getCompletedPhase() {
-        return phases.get(phases.size()-1);
+        return phases.get(phases.size() - 1);
     }
 
     public boolean isPhaseBefore(String phaseA, String phaseB) {

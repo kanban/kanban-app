@@ -6,7 +6,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KanbanBacklog extends AbstractList<KanbanCell>{
+public class KanbanBacklog extends AbstractList<KanbanCell> {
 
     private final List<KanbanCell> cells;
     

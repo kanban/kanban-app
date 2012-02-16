@@ -17,10 +17,9 @@ import org.slf4j.LoggerFactory;
  */
 public class DateUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(DateUtils.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(DateUtils.class);
 
     public static final DateTimeZone NEW_ZEALAND_TIME = DateTimeZone.forID("Pacific/Auckland");
-    
 
     public static final DateTimeFormatter CONVENTIONAL_NEW_ZEALAND_DATE_FORMAT;
     public static final DateTimeFormatter ISO_FORMAT = ISODateTimeFormat.date();
@@ -92,8 +91,8 @@ public class DateUtils {
                 start = defaultValue;
             }
         } catch (RuntimeException e) {
-            logger.warn("Cannot parse date {}", startDate);
-            logger.warn("Got exception: ", e);
+            LOGGER.warn("Cannot parse date {}", startDate);
+            LOGGER.warn("Got exception: ", e);
             start = defaultValue;
         }
         return start;

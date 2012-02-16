@@ -234,7 +234,7 @@ public class DefaultKanbanProject implements KanbanProject {
     @Override
     public void reorder(Integer id, Integer[] newIdList) {
         List<WorkItem> list = new ArrayList<WorkItem>();
-        for(Integer i: newIdList) {
+        for (Integer i : newIdList) {
             list.add(tree.getWorkItem(i));
         }
 

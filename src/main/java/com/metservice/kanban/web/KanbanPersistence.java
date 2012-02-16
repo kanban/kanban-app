@@ -1,15 +1,9 @@
 package com.metservice.kanban.web;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
-
 import com.metservice.kanban.KanbanCommentsFile;
 import com.metservice.kanban.KanbanJournalFile;
 import com.metservice.kanban.csv.KanbanCsvFile;

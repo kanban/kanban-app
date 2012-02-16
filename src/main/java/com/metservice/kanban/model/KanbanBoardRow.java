@@ -109,8 +109,7 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
     
     public Collection<KanbanCell> listOfCellsOfType(WorkItemType type) {
         ArrayList<KanbanCell> list = new ArrayList<KanbanCell>();
-        for(KanbanCell cell: cells)
-        {
+        for (KanbanCell cell : cells) {
             if (!cell.isEmptyCell() && cell.getWorkItemType().equals(type)) {
                 list.add(cell);
             }

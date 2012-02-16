@@ -60,5 +60,7 @@ public final class ChartUtils {
         return date;
     }
 
-    private ChartUtils() {}
+    private ChartUtils() {
+
+    }
 }

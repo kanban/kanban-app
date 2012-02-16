@@ -11,7 +11,7 @@ import com.metservice.kanban.model.WorkItem;
 
 public class EstimatesBurnDownDataModel {
 
-    private final static Logger logger = LoggerFactory.getLogger(EstimatesBurnDownDataModel.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(EstimatesBurnDownDataModel.class);
 
     private final List<WorkItem> workItems;
     private final EstimatesProject estimatesProject;
@@ -99,7 +99,7 @@ public class EstimatesBurnDownDataModel {
     int computeProjectedBudgedConsumed() {
         Pair<Integer, LocalDate> lastBudgedEntry = getLastBudgedEntry();
         if (lastBudgedEntry == null) {
-            logger.info("Trying to getProjectedBudget with no budget recorded, should return infinity");
+            LOGGER.info("Trying to getProjectedBudget with no budget recorded, should return infinity");
             // just some large value to indicate that sth is wrong
             return getBudget() * 5;
         }
@@ -110,7 +110,7 @@ public class EstimatesBurnDownDataModel {
                 / (allFeaturePoints - remainingFeaturePointForBudget);
         }
         else {
-            logger.info("Trying to getProjectedBudget with no finished work items, should return infinity");
+            LOGGER.info("Trying to getProjectedBudget with no finished work items, should return infinity");
             // just some large value to indicate that sth is wrong
             return getBudget() * 5;
         }

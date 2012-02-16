@@ -27,7 +27,7 @@ import com.metservice.kanban.model.WorkItemType;
  */
 public class KanbanPropertiesFile {
 
-    private final static Logger logger = LoggerFactory.getLogger(KanbanPropertiesFile.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(KanbanPropertiesFile.class);
 
     private File file;
     private Properties properties = new Properties();
@@ -154,7 +154,7 @@ public class KanbanPropertiesFile {
 
     public void setColumnWipLimit(WorkItemType workItemType, String columnName, Integer wipLimit) throws IOException {
         
-        logger.info("Setting WIP limit for column {}.{} to {}",
+        LOGGER.info("Setting WIP limit for column {}.{} to {}",
             new Object[] {
                 workItemType.toString(),
                 columnName,
@@ -188,7 +188,7 @@ public class KanbanPropertiesFile {
     }
 
     public void renameColumn(WorkItemType workItemType, String columnName, String newColumnName) throws IOException {
-        logger.info("Renaming column for WorkItem {} from {} to {} in properties file", new Object[] {
+        LOGGER.info("Renaming column for WorkItem {} from {} to {} in properties file", new Object[] {
             workItemType,
             columnName,
             newColumnName});

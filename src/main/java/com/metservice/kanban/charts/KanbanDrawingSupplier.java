@@ -14,7 +14,7 @@ import com.metservice.kanban.model.HtmlColour;
 @SuppressWarnings("serial")
 public class KanbanDrawingSupplier extends DefaultDrawingSupplier {
 
-    private static final HueRebalancer hueRebalancer = new HueRebalancer(0.0f, 0.09f, 0.2f, 0.3f, 0.55f, 0.63f, 0.76f, 1.0f);
+    private static final HueRebalancer HUE_REBALANCER = new HueRebalancer(0.0f, 0.09f, 0.2f, 0.3f, 0.55f, 0.63f, 0.76f, 1.0f);
     private int numberOfSeries;
 
     /**
@@ -35,7 +35,7 @@ public class KanbanDrawingSupplier extends DefaultDrawingSupplier {
         Color[] colours = new Color[numberOfSeries];
         for (int i = 0; i < numberOfSeries; i++) {
             double rawHue = (double) i / (double) numberOfSeries;
-            double rebalancedHue = hueRebalancer.balance(rawHue);
+            double rebalancedHue = HUE_REBALANCER.balance(rawHue);
             colours[i] = Color.getHSBColor((float) rebalancedHue, 0.75f, 1.0f);
         }
         return colours;
