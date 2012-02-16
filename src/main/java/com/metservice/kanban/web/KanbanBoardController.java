@@ -266,8 +266,6 @@ public class KanbanBoardController {
 
         // Redirect
         return new RedirectView("../" + boardType);
-
-        //return new RedirectView(includeScrollTopPosition(boardType, scrollTop));
     }
 
     static WorkItemComment createBlockedComment(boolean isBlockedReason, String comment, String userName) {
@@ -294,7 +292,7 @@ public class KanbanBoardController {
                                              @RequestParam("id") int id) throws IOException {
 
         // Search for parent id
-        WorkItem parent = project.getWorkItemTree().getWorkItem(id);
+        WorkItem parent = project.getWorkItemById(id);
 
         WorkItemType type = project.getWorkItemTypes().getRoot().getValue();
         String parentName = "";
@@ -304,7 +302,7 @@ public class KanbanBoardController {
         if (parent != null) {
             parentName = parent.getName();
             parentId = parent.getId();
-            type = project.getWorkItemTypes().getTreeNode(parent.getType()).getChild(0).getValue();
+            type = project.getChildType(parent.getType());
             legend = "Add a " + type + " to " + parentName;
         }
 

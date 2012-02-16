@@ -63,4 +63,5 @@ public interface KanbanProject {
 
     LocalDate getProjectedEndDate(LocalDate startDate, LocalDate endDate);
 
+    WorkItemType getChildType(WorkItemType parentType);
 }

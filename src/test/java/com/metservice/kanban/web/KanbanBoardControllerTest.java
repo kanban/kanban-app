@@ -10,12 +10,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,9 +32,13 @@ import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import org.springframework.web.servlet.view.RedirectView;
 import com.metservice.kanban.KanbanPropertiesFile;
 import com.metservice.kanban.KanbanService;
@@ -543,5 +550,169 @@ public class KanbanBoardControllerTest {
         assertEquals("ok", result.status);
 
         verify(kanbanService).setColumnWipLimit("a project", type, "Dev", null);
+    }
+
+    @Test
+    public void editColumnSetWipLessThan0() throws IOException {
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        type.setName("feature");
+        WorkItemTypeCollection itemTypes = mock(WorkItemTypeCollection.class);
+        KanbanProjectConfiguration config = mock(KanbanProjectConfiguration.class);
+        KanbanPropertiesFile propertiesFile = mock(KanbanPropertiesFile.class);
+
+        when(project.getWorkItemTypes()).thenReturn(itemTypes);
+        when(itemTypes.getByName("feature")).thenReturn(type);
+
+        when(kanbanService.getProjectConfiguration("a project")).thenReturn(config);
+        when(config.getKanbanPropertiesFile()).thenReturn(propertiesFile);
+        kanbanController.setKanbanService(kanbanService);
+
+        JsonStatus result = kanbanController.editColumn(project, "a project", "feature", "Dev", "Dev", -1);
+        assertEquals("error", result.status);
+        assertEquals("WIP Limit should be empty or positive value", result.message);
+
+        verifyZeroInteractions(kanbanService);
+    }
+    @Test
+    public void editColumnColumnNameEmpty() throws IOException {
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        type.setName("feature");
+        WorkItemTypeCollection itemTypes = mock(WorkItemTypeCollection.class);
+        KanbanProjectConfiguration config = mock(KanbanProjectConfiguration.class);
+        KanbanPropertiesFile propertiesFile = mock(KanbanPropertiesFile.class);
+
+        when(project.getWorkItemTypes()).thenReturn(itemTypes);
+        when(itemTypes.getByName("feature")).thenReturn(type);
+
+        when(kanbanService.getProjectConfiguration("a project")).thenReturn(config);
+        when(config.getKanbanPropertiesFile()).thenReturn(propertiesFile);
+        kanbanController.setKanbanService(kanbanService);
+
+        JsonStatus result = kanbanController.editColumn(project, "a project", "feature", "Dev", "", null);
+        assertEquals("error", result.status);
+        assertEquals("New column name cannot be empty", result.message);
+
+        verifyZeroInteractions(kanbanService);
+    }
+
+    @Test
+    public void advanceItemAction() throws IOException {
+        RedirectAttributes redirectAttr = new RedirectAttributesModelMap();
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        WorkItem wi = new WorkItem(1, type);
+        wi.advance(LocalDate.now());
+        wi.advance(LocalDate.now());
+        when(project.getWorkItemById(1)).thenReturn(wi);
+
+        RedirectView result = kanbanController.advanceItemAction(project, "wall", "1", "Dev", 0, redirectAttr);
+
+        assertEquals("../wall?scrollTop=0&highlight=1", result.getUrl());
+        assertNull(redirectAttr.getFlashAttributes().get("error"));
+        verify(project).advance(eq(1), any(LocalDate.class));
+        verify(project).save();
+    }
+
+    @Test
+    public void advanceItemActionWrongPhase() throws IOException {
+        RedirectAttributes redirectAttr = new RedirectAttributesModelMap();
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        WorkItem wi = new WorkItem(1, type);
+        wi.advance(LocalDate.now());
+        when(project.getWorkItemById(1)).thenReturn(wi);
+
+        RedirectView result = kanbanController.advanceItemAction(project, "wall", "1", "Dev", 0, redirectAttr);
+        assertEquals("../wall", result.getUrl());
+        assertEquals(
+            "Your board view was out of date, your request has been canceled and the board has been updated. Please review the board now and apply your changes.",
+            redirectAttr.getFlashAttributes().get("error"));
+    }
+
+    @Test
+    public void stopItemAction() throws IOException {
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        final WorkItem wi = new WorkItem(1, type);
+        wi.advance(LocalDate.now());
+        when(project.getWorkItemById(1)).thenReturn(wi);
+        doAnswer(new Answer<Void>() {
+
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                wi.setBlocked(true);
+                return null;
+            }
+        }).when(project).stop(1);
+
+        RedirectView result = kanbanController.stopItemAction(project, "wall", "1", "comment", "user");
+
+        assertEquals("../wall", result.getUrl());
+        verify(project).save();
+        List<WorkItemComment> comments = wi.getComments();
+        assertEquals(1, comments.size());
+        assertEquals("Blocked: comment", comments.get(0).getCommentText());
+        assertEquals("user", comments.get(0).getAddedBy());
+    }
+    
+    @Test
+    public void stopItemActionNullComment() throws IOException {
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        final WorkItem wi = new WorkItem(1, type);
+        wi.advance(LocalDate.now());
+        when(project.getWorkItemById(1)).thenReturn(wi);
+        doAnswer(new Answer<Void>() {
+
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                wi.setBlocked(true);
+                return null;
+            }
+        }).when(project).stop(1);
+
+        RedirectView result = kanbanController.stopItemAction(project, "wall", "1", null, "user");
+
+        assertEquals("../wall", result.getUrl());
+        verify(project).save();
+        List<WorkItemComment> comments = wi.getComments();
+        assertEquals(1, comments.size());
+        assertEquals("Blocked: ", comments.get(0).getCommentText());
+        assertEquals("user", comments.get(0).getAddedBy());
+    }    
+
+    @Test
+    public void addItemTopLevel() throws IOException {
+        WorkItemType rootType = new WorkItemType("Backlog", "Dev", "Done");
+        rootType.setName("feature");
+        TreeNode<WorkItemType> rootNode = TreeNode.create(WorkItemType.class, rootType);
+        when(workItemTypes.getRoot()).thenReturn(rootNode);
+
+        ModelAndView result = kanbanController.addItem(project, "abcd", 0);
+        assertEquals("/add.jsp", result.getViewName());
+        assertEquals("Add feature", result.getModel().get("legend"));
+        assertEquals(0, result.getModel().get("parentId"));
+        assertEquals(rootType, result.getModel().get("type"));
+        assertEquals(true, result.getModel().get("topLevel"));
+    }
+
+    @Test
+    public void addItemNotTopLevel() throws IOException {
+        WorkItemType rootType = new WorkItemType("Backlog", "Dev", "Done");
+        rootType.setName("feature");
+        WorkItemType type = new WorkItemType("Backlog", "Dev", "Done");
+        type.setName("story");
+
+        WorkItem parentItem = new WorkItem(1, rootType);
+        parentItem.setName("feature name");
+
+        TreeNode<WorkItemType> rootNode = TreeNode.create(WorkItemType.class, rootType);
+        when(workItemTypes.getRoot()).thenReturn(rootNode);
+        when(project.getWorkItemById(1)).thenReturn(parentItem);
+        when(project.getChildType(rootType)).thenReturn(type);
+
+        ModelAndView result = kanbanController.addItem(project, "abcd", 1);
+        assertEquals("/add.jsp", result.getViewName());
+        assertEquals("Add a story to feature name", result.getModel().get("legend"));
+        assertEquals(1, result.getModel().get("parentId"));
+        assertEquals(type, result.getModel().get("type"));
+        // not sure if this is what we want, probably should be false
+        assertEquals(true, result.getModel().get("topLevel"));
     }
 }

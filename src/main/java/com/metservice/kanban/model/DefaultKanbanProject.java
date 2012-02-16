@@ -346,4 +346,9 @@ public class DefaultKanbanProject implements KanbanProject {
         return projectedDatasetPopulator.getProjectedEndDate();
     }
 
+    @Override
+    public WorkItemType getChildType(WorkItemType parentType) {
+        return getWorkItemTypes().getTreeNode(parentType).getChild(0).getValue();
+    }
+
 }
