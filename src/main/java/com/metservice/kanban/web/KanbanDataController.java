@@ -2,7 +2,6 @@ package com.metservice.kanban.web;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
@@ -41,7 +40,6 @@ public class KanbanDataController {
      * @param projectName - the name of the project
      * @param workItemTypeName - the type of WorkItem
      * @param response - the HttpServlet for the site
-     * @throws FileNotFoundException
      * @throws IOException
      */
     @RequestMapping("download")
@@ -55,7 +53,7 @@ public class KanbanDataController {
         // copies and saves the csv file
         File file = configuration.getDataFile(workItemType);
         response.setContentType("text/csv");
-        response.setContentLength((int)file.length());
+        response.setContentLength((int) file.length());
         response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
         IOUtils.copy(new FileInputStream(file), response.getOutputStream());
     }

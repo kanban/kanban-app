@@ -11,7 +11,7 @@ import com.metservice.kanban.model.WorkItem;
 
 public class EstimatesBurnDownDataModel {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EstimatesBurnDownDataModel.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EstimatesBurnDownDataModel.class);
 
     private final List<WorkItem> workItems;
     private final EstimatesProject estimatesProject;
@@ -108,8 +108,7 @@ public class EstimatesBurnDownDataModel {
         if (allFeaturePoints - remainingFeaturePointForBudget != 0) {
             return lastBudgedEntry.first * allFeaturePoints
                 / (allFeaturePoints - remainingFeaturePointForBudget);
-        }
-        else {
+        } else {
             LOGGER.info("Trying to getProjectedBudget with no finished work items, should return infinity");
             // just some large value to indicate that sth is wrong
             return getBudget() * 5;

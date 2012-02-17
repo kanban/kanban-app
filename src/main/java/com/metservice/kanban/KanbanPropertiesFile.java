@@ -27,7 +27,7 @@ import com.metservice.kanban.model.WorkItemType;
  */
 public class KanbanPropertiesFile {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(KanbanPropertiesFile.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KanbanPropertiesFile.class);
 
     private File file;
     private Properties properties = new Properties();
@@ -174,8 +174,7 @@ public class KanbanPropertiesFile {
             if (phases[i].equals(columnName)) {
                 if (wipLimit == null) {
                     wipLimits[i] = "";
-                }
-                else {
+                } else {
                     wipLimits[i] = wipLimit.toString();
                 }
                 break;
@@ -197,7 +196,7 @@ public class KanbanPropertiesFile {
 
         String[] phases = getCommaSeparatedStrings(String.format("workItemTypes.%s.phases", workItemType.getName()));
 
-        for (int i = 0;i < phases.length;i++) {
+        for (int i = 0; i < phases.length; i++) {
             if (phases[i].equals(columnName)) {
                 phases[i] = newColumnName;
                 columnFound = true;
@@ -211,7 +210,7 @@ public class KanbanPropertiesFile {
         
         String[] boardPhases = getCommaSeparatedStrings("boards.wall");
 
-        for (int i = 0;i < boardPhases.length;i++) {
+        for (int i = 0; i < boardPhases.length; i++) {
                 if (boardPhases[i].equals(columnName)) {
                     boardPhases[i] = newColumnName;
                 }

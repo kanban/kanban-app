@@ -22,7 +22,7 @@ import com.metservice.kanban.utils.DateUtils;
 @Service
 public class EstimatesDao {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EstimatesDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EstimatesDao.class);
 
     private static final String PET_PROPERTIES = "pet.properties";
     private static final String PET_COSTPERPOINT = "pet.costperpoint";

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DateUtils {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(DateUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DateUtils.class);
 
     public static final DateTimeZone NEW_ZEALAND_TIME = DateTimeZone.forID("Pacific/Auckland");
 

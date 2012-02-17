@@ -21,7 +21,7 @@ import com.metservice.kanban.utils.WorkingDayUtils;
  */
 public class WorkItem {
 
-    public final static Comparator<WorkItem> LAST_PHASE_DATE_COMPARATOR = new LastPhaseDateComparator();
+    public static final Comparator<WorkItem> LAST_PHASE_DATE_COMPARATOR = new LastPhaseDateComparator();
 
     public static final int ROOT_WORK_ITEM_ID = 0;
 

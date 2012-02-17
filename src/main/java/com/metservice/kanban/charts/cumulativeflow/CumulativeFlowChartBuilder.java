@@ -27,9 +27,10 @@ import com.metservice.kanban.utils.WorkingDayUtils;
 
 public class CumulativeFlowChartBuilder {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CumulativeFlowChartBuilder.class);
+
     private LocalDate startDate;
     private LocalDate endDate;
-    private final static Logger LOGGER = LoggerFactory.getLogger(CumulativeFlowChartBuilder.class);
 
     public CumulativeFlowChartBuilder(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;

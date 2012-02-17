@@ -66,12 +66,11 @@ import com.metservice.kanban.utils.JsonLocalDateTimeConvertor;
 @SessionAttributes("workStreams")
 public class KanbanBoardController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(KanbanBoardController.class);
 
     private static final int DEFAULT_CHART_WIDTH = 800;
 
     private static final int DEFAULT_CHART_HEIGHT = 600;
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(KanbanBoardController.class);
 
     private static final int MAX_PROJECT_NAME_LENGTH = 32;
 
@@ -271,8 +270,7 @@ public class KanbanBoardController {
     static WorkItemComment createBlockedComment(boolean isBlockedReason, String comment, String userName) {
         if (isBlockedReason) {
             return new WorkItemComment(userName, "Blocked: " + comment);
-        }
-        else {
+        } else {
             return new WorkItemComment(userName, "Unblocked: " + comment);
         }
     }
@@ -306,7 +304,7 @@ public class KanbanBoardController {
             legend = "Add a " + type + " to " + parentName;
         }
 
-        Map<String,Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<String, Object>();
 
         model.put("legend", legend);
         model.put("parentId", parentId);
@@ -474,8 +472,7 @@ public class KanbanBoardController {
     
         if ("print".equals(redirectTo)) {
             return new RedirectView("../print-items?printSelection=" + id);
-        }
-        else {
+        } else {
             return new RedirectView("../" + boardType);
         }
     }
@@ -1018,8 +1015,7 @@ public class KanbanBoardController {
                     temp += "," + name;
                     newContent.append(temp).append("\n");
                 }
-            }
-            else {
+            } else {
                 newContent.append(temp).append("\n");
             }
 
@@ -1060,27 +1056,22 @@ public class KanbanBoardController {
                     }
                     if (phases[i].contains(".")) {
                         newContent.append(phases[i]).append("=");
-                    }
-                    else {
+                    } else {
                         newContent.append(phases[i]).append(",");
                     }
 
                 }
                 newContent.append("\n");
 
-            }
-            else if (temp.contains("boards.wall")) {
+            } else if (temp.contains("boards.wall")) {
                 //FOr when cancel is hit on the add column button
                 if (name.equals("null")) {
                     newContent.append(temp).append("\n");
-                }
-                else {
+                } else {
                     temp += "," + name;
                     newContent.append(temp).append("\n");
                 }
-            }
-
-            else {
+            } else {
                 newContent.append(temp).append("\n");
             }
 

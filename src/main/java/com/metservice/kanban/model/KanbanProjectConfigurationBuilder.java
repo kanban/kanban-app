@@ -21,7 +21,7 @@ public class KanbanProjectConfigurationBuilder {
     private final File projectHome;
     private final KanbanPropertiesFile properties;
 
-    public KanbanProjectConfigurationBuilder(File kanbanHome,String projectName) throws IOException {
+    public KanbanProjectConfigurationBuilder(File kanbanHome, String projectName) throws IOException {
         projectHome = new File(kanbanHome, projectName);
         properties = new KanbanPropertiesFile(new File(projectHome, "kanban.properties"));
     }
@@ -46,15 +46,14 @@ public class KanbanProjectConfigurationBuilder {
                 try {
                     if (columnLimits != null) {
                         wipLimit = Integer.parseInt(columnLimits[i]);
-                    }
-                    else {
+                    } else {
                         wipLimit = -1;
                     }
                 } catch (Exception e) {
             		// No limit was specified, or it was ""
                     wipLimit = -1;
                 }
-            	wipLimitsByPhase.put(phases[i],wipLimit);
+                wipLimitsByPhase.put(phases[i], wipLimit);
                 workItemTypesByPhase.put(phases[i], type);
             }
         }

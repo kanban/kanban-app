@@ -29,7 +29,7 @@ import com.metservice.kanban.model.WorkItem;
 @RequestMapping("{projectName}")
 public class EstimatesController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EstimatesController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EstimatesController.class);
 
     private static final String ESTIMATES_PROJECT_ATTR = "estimatesproject";
     private static final String KANBAN_PROJECT_ATTR = "project";

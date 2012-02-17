@@ -1,7 +1,6 @@
 package com.metservice.kanban.web;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.commons.io.IOUtils;
@@ -31,7 +30,6 @@ public class KanbanHomeController {
     /**
      * Creating the directory and files for the Sample Kanban Project.
      * @return the index view for the Kanban application
-     * @throws FileNotFoundException
      * @throws IOException
      */
     @RequestMapping("/create-home")
