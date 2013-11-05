@@ -5,7 +5,7 @@ Please endeavour to keep to these standards when maintaining and extending this 
   * Eliminate duplication mercilessly. If you are repeatedly writing the same code, refactor so that the repeated code
     is separated out into one place.
   * Simplify mercilessly. If there is a simpler way to express something, refactor.
-  * Developer all new code test-first.
+  * Develop all new code test-first.
   * Spring, JSP and web container configuration is tested by end-to-end tests in the src/test/web folder. These tests
     are slow (on the order of a second each) so only use them for testing things you can't test with unit tests.
   * Unit tests should be fast. As of writing the entire suite (102 tests) runs in 0.875 seconds. Keep to this standard.
