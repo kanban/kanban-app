@@ -135,9 +135,15 @@
                                     </div>
                                     
                                     <div class="icons">
+                                      <div class="topIcon">
+                                        <c:if test="${cell.workItemAbove != null}" >
+                                          <img onclick="javascript:move(${item.id}, ${cell.workItemTop.id}, false);"
+                                               src="${pageContext.request.contextPath}/images/go-top.png" />
+                                          </c:if>
+                                      </div>
                                       <div class="upIcon">
                                         <c:if test="${cell.workItemAbove != null}">
-                                          <img onclick="javascript:move(${item.id}, ${cell.workItemAbove.id}, false);" 
+                                          <img onclick="javascript:move(${item.id}, ${cell.workItemAbove.id}, false);"
                                                src="${pageContext.request.contextPath}/images/go-up.png" />
                                           </c:if>
                                       </div>

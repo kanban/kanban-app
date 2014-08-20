@@ -14,8 +14,8 @@ public class KanbanBoardTest {
 
         KanbanBoard board = new KanbanBoard(new KanbanBoardColumnList(new KanbanBoardColumn(type, "phase 1"),
             new KanbanBoardColumn(type, "phase 2")));
-        board.insert(feature1, null, null);
-        board.insert(feature2, null, null);
+        board.insert(feature1, null, null, null);
+        board.insert(feature2, null, null, null);
 
         assertThat(board.getCell(0, 0).getWorkItem(), is(feature1));
         assertThat(board.getCell(0, 1).getWorkItem(), is(feature2));
@@ -28,8 +28,8 @@ public class KanbanBoardTest {
         WorkItem feature2 = new WorkItem(2, type, "phase");
 
         KanbanBoard board = new KanbanBoard(new KanbanBoardColumnList(new KanbanBoardColumn(type, "phase")));
-        board.insert(feature1, null, null);
-        board.insert(feature2, null, null);
+        board.insert(feature1, null, null, null);
+        board.insert(feature2, null, null, null);
 
         assertThat(board.getCell(0, 0).getWorkItem(), is(feature1));
         assertThat(board.getCell(1, 0).getWorkItem(), is(feature2));
@@ -43,7 +43,7 @@ public class KanbanBoardTest {
         WorkItem feature3 = new WorkItem(3, type, "phase");
 
         KanbanBoard board = new KanbanBoard(new KanbanBoardColumnList(new KanbanBoardColumn(type, "phase")));
-        board.insert(feature1, feature2, feature3);
+        board.insert(feature1, feature2, feature3, null);
 
         KanbanCell cell = board.getCell(0, 0);
         assertThat(cell.getWorkItemAbove(), is(feature2));
