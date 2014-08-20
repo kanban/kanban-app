@@ -37,7 +37,7 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
         return cells[index].isEmptyCell();
     }
 
-    public void insert(WorkItem workItem, WorkItem workItemAbove, WorkItem workItemBelow) {
+    public void insert(WorkItem workItem, WorkItem workItemAbove, WorkItem workItemBelow, WorkItem workItemTop) {
         String phase = workItem.getCurrentPhase();
         
         int index = columns.getIndexOfPhase(phase);
@@ -46,6 +46,7 @@ public class KanbanBoardRow implements Iterable<KanbanCell>, Cloneable {
         cell.setWorkItem(workItem);
         cell.setWorkItemAbove(workItemAbove);
         cell.setWorkItemBelow(workItemBelow);
+        cell.setWorkItemTop(workItemTop);
     }
 
     public void merge(KanbanBoardRow otherRow) {
