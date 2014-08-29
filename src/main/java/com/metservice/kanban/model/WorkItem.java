@@ -24,6 +24,8 @@ public class WorkItem {
     public static final Comparator<WorkItem> LAST_PHASE_DATE_COMPARATOR = new LastPhaseDateComparator();
 
     public static final int ROOT_WORK_ITEM_ID = 0;
+    private static final String NEWLINE = "\n";
+    private static final String NO_ITEM = "-";
 
     private final int id;
     private final int parentId;
@@ -135,10 +137,39 @@ public class WorkItem {
 
     public String getNotesAndBlock() {
         if (isBlocked()) {
-            return StringUtils.defaultIfEmpty(getNotes(), "") + "\n" + getLastBlockedComment();
+            return StringUtils.defaultIfEmpty(getNotes(), "") + NEWLINE + getLastBlockedComment();
         } else {
             return getNotes();
         }
+    }
+
+    public String getQuickOverview() {
+        StringBuilder overview = new StringBuilder();
+
+        overview.append("Importance : "). append(getImportance()).append(NEWLINE);
+
+        overview.append("Streams : ");
+        if (getWorkStreams().isEmpty()) {
+            overview.append(NO_ITEM);
+        } else {
+            for (String s : getWorkStreams()) {
+                overview.append(" ").append(s);
+            }
+        }
+        overview.append(NEWLINE);
+
+        final String notes = getNotes();
+        overview.append("Notes : ").append(
+                (notes != null ? notes : NO_ITEM)
+        ).append(NEWLINE);
+
+
+        final String lastComment = getLastComment();
+        overview.append("Last comment : ").append(
+                "".equals(lastComment) ? NO_ITEM : lastComment
+        ).append(NEWLINE);
+
+        return overview.toString();
     }
 
     public String getLastComment() {
