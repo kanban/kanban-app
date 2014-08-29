@@ -45,7 +45,7 @@ public class KanbanBoard implements Iterable<KanbanBoardRow> {
         }
     }
 
-    public void insert(WorkItem workItem, WorkItem workItemAbove, WorkItem workItemBelow) {
+    public void insert(WorkItem workItem, WorkItem workItemAbove, WorkItem workItemBelow, WorkItem workItemTop) {
         KanbanBoardRow targetRow = null;
         for (KanbanBoardRow row : this) {
             if (row.canAdd(workItem)) {
@@ -58,7 +58,7 @@ public class KanbanBoard implements Iterable<KanbanBoardRow> {
             targetRow = new KanbanBoardRow(columns);
             rows.add(targetRow);
         }
-        targetRow.insert(workItem, workItemAbove, workItemBelow);
+        targetRow.insert(workItem, workItemAbove, workItemBelow, workItemTop);
     }
 
     @Override

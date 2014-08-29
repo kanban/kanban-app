@@ -15,8 +15,8 @@ public class KanbanBoardRowTest {
         KanbanBoardColumnList columns = new KanbanBoardColumnList(new KanbanBoardColumn(type, "phase 1"),
             new KanbanBoardColumn(type, "phase 2"));
         KanbanBoardRow row = new KanbanBoardRow(columns);
-        row.insert(feature1, null, null);
-        row.insert(feature2, null, null);
+        row.insert(feature1, null, null, null);
+        row.insert(feature2, null, null, null);
 
         assertThat(row.getCell(0).getWorkItem(), is(feature1));
         assertThat(row.getCell(1).getWorkItem(), is(feature2));
@@ -41,7 +41,7 @@ public class KanbanBoardRowTest {
 
         KanbanBoardColumnList columns = new KanbanBoardColumnList(new KanbanBoardColumn(type, "phase"));
         KanbanBoardRow row = new KanbanBoardRow(columns);
-        row.insert(feature1, null, null);
+        row.insert(feature1, null, null, null);
 
         assertThat(row.canAdd(feature2), is(false));
     }
@@ -55,7 +55,7 @@ public class KanbanBoardRowTest {
 
         KanbanBoardColumnList columns = new KanbanBoardColumnList(new KanbanBoardColumn(type, "phase"));
         KanbanBoardRow originalRow = new KanbanBoardRow(columns);
-        originalRow.insert(feature1, feature2, feature3);
+        originalRow.insert(feature1, feature2, feature3, null);
 
         KanbanBoardRow clonedRow = originalRow.clone();
 

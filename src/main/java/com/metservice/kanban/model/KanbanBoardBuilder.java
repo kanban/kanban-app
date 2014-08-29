@@ -1,5 +1,7 @@
 package com.metservice.kanban.model;
 
+import com.metservice.kanban.utils.WorkItemUtils;
+
 import static com.metservice.kanban.model.WorkItem.ROOT_WORK_ITEM_ID;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,6 +47,7 @@ public class KanbanBoardBuilder {
             workStream);
         List<KanbanCell> cells = new ArrayList<KanbanCell>();
         List<WorkItem> list = columns.filter(workItems);
+        WorkItem workItemTop = WorkItemUtils.topWorkItem(list);
         // create cell for each workitem
         for (int i = 0; i < list.size(); i++) {
             WorkItem workItem = list.get(i);
@@ -55,6 +58,7 @@ public class KanbanBoardBuilder {
                 cell.setWorkItem(workItem);
                 cell.setWorkItemAbove(workItemBefore);
                 cell.setWorkItemBelow(workItemAfter);
+                cell.setWorkItemTop(workItemTop);
                 cells.add(cell);
             }
         }
@@ -64,15 +68,16 @@ public class KanbanBoardBuilder {
 	 * Generates a Kanban board from a given root WorkItem.
 	 * @param workItemTypeTreeNode - the root WorkItemTreeNode with which to generate the board from
 	 * @param workItem - the root WorkItem for this Kanban board
-	 * @param workItemBefore - the WorkItem immediately before the given root 
+	 * @param workItemBefore - the WorkItem immediately before the given root
 	 * @param workItemAfter - the WorkItem immediately after the given root
-	 * @return the generated Kanban board
+	 * @param workItemTop - first WorkItem
+     * @return the generated Kanban board
 	 */
     private KanbanBoard build(TreeNode<WorkItemType> workItemTypeTreeNode, WorkItem workItem, WorkItem workItemBefore,
-                              WorkItem workItemAfter, String workStream) {
+                              WorkItem workItemAfter, String workStream, WorkItem workItemTop) {
 		KanbanBoard board = new KanbanBoard(columns);
 		if (isVisible(workItem)) {
-			board.insert(workItem, workItemBefore, workItemAfter);
+			board.insert(workItem, workItemBefore, workItemAfter, workItemTop);
 			// build child boards and merge them with the main Kanban board
 			for (TreeNode<WorkItemType> childType : workItemTypeTreeNode.getChildren()) {
 				// combine child boards depending on the type of the WorkItem
@@ -113,12 +118,13 @@ public class KanbanBoardBuilder {
 
         List<WorkItem> list = columns.filter(workItems, workItemComparator);
 
+        WorkItem workItemTop = WorkItemUtils.topWorkItem(list);
 		for (int i = 0; i < list.size(); i++) {
 			WorkItem workItem = list.get(i);
 			WorkItem workItemBefore = (i - 1) >= 0 ? list.get(i - 1) : null;
 			WorkItem workItemAfter = (i + 1) < list.size() ? list.get(i + 1) : null;
 			// build the corresponding child board format it
-            KanbanBoard childBoard = build(type, workItem, workItemBefore, workItemAfter, workStream);
+            KanbanBoard childBoard = build(type, workItem, workItemBefore, workItemAfter, workStream, workItemTop);
 			board.stack(childBoard);
 		}
 		return board;
@@ -134,12 +140,13 @@ public class KanbanBoardBuilder {
         for (KanbanBoardColumn column : columns) {
             List<WorkItem> sublist = new KanbanBoardColumnList(column).filter(workItems, workItemComparator);
 
+            WorkItem workItemTop = WorkItemUtils.topWorkItem(sublist);
             for (int i = 0; i < sublist.size(); i++) {
                 WorkItem workItem = sublist.get(i);
                 WorkItem workItemBefore = (i - 1) >= 0 ? sublist.get(i - 1) : null;
                 WorkItem workItemAfter = (i + 1) < sublist.size() ? sublist.get(i + 1) : null;
                 // insert the WorkItem into the appropriate position in the list
-                board.insert(workItem, workItemBefore, workItemAfter);
+                board.insert(workItem, workItemBefore, workItemAfter, workItemTop);
             }
         }
         return board;

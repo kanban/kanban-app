@@ -168,7 +168,7 @@ table#headercopy .feature-header{
 	text-align: left;
 }
 
-.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover,.stopIcon:hover
+.topIcon:hover,.upIcon:hover,.advanceIcon:hover,.downIcon:hover,.editIcon:hover,.addIcon:hover,.stopIcon:hover
 	{
 	-moz-opacity: 0.5;
 	opacity: 0.5;
@@ -181,12 +181,12 @@ table#headercopy .feature-header{
   top: 10px;
 }
 
-.upIcon, .downIcon, .advanceItem{
+.topIcon, .upIcon, .downIcon, .advanceItem{
   width: 16px;
   height: 16px;
 }
 
-.upIcon, .downIcon {
+.topIcon, .upIcon, .downIcon {
 	position: relative;
 	right: 10px;
 }
@@ -215,7 +215,7 @@ table#headercopy .feature-header{
 }
 
 div[data-role="card"]{
-  height: 60px;
+  height: 75px;
 	width: 95%;
 	margin: 1px;
 	padding: 3px;

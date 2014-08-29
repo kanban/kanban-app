@@ -11,6 +11,7 @@ public class KanbanCell implements Cloneable {
     private WorkItem workItem;
     private WorkItem workItemAbove;
     private WorkItem workItemBelow;
+    private WorkItem workItemTop;
 
     public KanbanCell(WorkItemType workItemType) {
         this.workItemType = workItemType;
@@ -19,7 +20,7 @@ public class KanbanCell implements Cloneable {
     public boolean isEmptyCell() {
         return workItem == null;
     }
-    
+
     public WorkItem getWorkItem() {
         return workItem;
     }
@@ -39,7 +40,15 @@ public class KanbanCell implements Cloneable {
     public WorkItem getWorkItemBelow() {
         return workItemBelow;
     }
-    
+
+    public WorkItem getWorkItemTop() {
+        return workItemTop;
+    }
+
+    public void setWorkItemTop(WorkItem workItemTop) {
+        this.workItemTop = workItemTop;
+    }
+
     public WorkItemType getWorkItemType() {
         return workItemType;
     }
