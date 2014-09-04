@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+
+import com.metservice.kanban.utils.MessageUtils;
 import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
@@ -216,9 +218,9 @@ public class KanbanService {
      * then an {@link IllegalArgumentException} is thrown and the project is not
      * created.
      * <p>
-     * 
-     * @param {@link String} newProjectName
-     * @param {@link String} settings
+     *
+     * @param newProjectName  project name
+     * @param settings  project settings
      * @throws IOException
      */
     public void createProject(String newProjectName, String settings) throws IOException {
@@ -230,7 +232,16 @@ public class KanbanService {
         }
 
         //Creates the project folder and writes the settings to '[newProjectName].kanban.properties'
-        newProjectHome.mkdir();
+        try {
+            if ( ! newProjectHome.mkdir() )  {
+                throw new IllegalArgumentException("cannot create project " + MessageUtils.decorateSingleQuotes(newProjectName) +". "
+                                                + "Please check permissions on folder " + MessageUtils.decorateSingleQuotes( newProjectHome.getParentFile().getAbsolutePath()) );
+            }
+        }
+        catch (SecurityException e) {
+            throw new IllegalArgumentException("cannot create project " + MessageUtils.decorateSingleQuotes(newProjectName) +". "
+                    + "Please check permissions on folder " + MessageUtils.decorateSingleQuotes( newProjectHome.getParentFile().getAbsolutePath()) );
+        }
         File file = new File(newProjectHome, KANBAN_PROPERTIES_FILE_NAME);
         writeStringToFile(file, settings);
     }

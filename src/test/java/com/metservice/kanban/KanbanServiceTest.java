@@ -10,6 +10,8 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
+
+import com.metservice.kanban.utils.MessageUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -76,6 +78,24 @@ public class KanbanServiceTest {
 
         KanbanService kanbanService = new KanbanService(kanbanHome.getRoot());
         kanbanService.createProject("Test project", "some new settings");
+    }
+
+    @Test
+    public void refusesToCreateAProjectWithoutPermissions() throws IOException {
+        if (! kanbanHome.getRoot().setReadOnly()) {
+            throw new RuntimeException("Has no permissions to set folder " +
+                    MessageUtils.decorateSingleQuotes(kanbanHome.getRoot().getAbsolutePath()) + " as read-only");
+        }
+
+        KanbanService kanbanService = new KanbanService(kanbanHome.getRoot());
+        try {
+            kanbanService.createProject("Test project no permissions", "some new settings");
+        } catch (IllegalArgumentException e) {
+            final String message = e.getMessage();
+            if ( ! message.contains("cannot create project") && ! message.contains(kanbanHome.getRoot().getAbsolutePath()) ) {
+                 throw e;
+            }
+        }
     }
 
     @Test
